@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd web && npm install",
+  "buildCommand": "cd web && npm run build",
+  "outputDirectory": "web/dist",
+  "regions": ["gru1"],
+  "functions": {
+    "api/solve.go": {
+      "maxDuration": 300
+    }
+  }
+}

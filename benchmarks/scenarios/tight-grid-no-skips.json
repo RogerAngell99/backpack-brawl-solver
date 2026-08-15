@@ -1,0 +1,28 @@
+{
+  "name": "tight-grid-no-skips",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "000000000",
+    "000000000"
+  ],
+  "items": {
+    "brainsquasher": 1,
+    "brown_rat": 1,
+    "cauldron": 1,
+    "excalibur": 1,
+    "mallet": 1,
+    "mystery_stew": 1,
+    "reinforced_shield": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": true,
+  "repair_search": true,
+  "priorities": [
+    "craft:mystery_stew"
+  ]
+}

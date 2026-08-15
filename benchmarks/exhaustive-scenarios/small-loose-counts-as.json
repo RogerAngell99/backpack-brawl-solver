@@ -1,0 +1,25 @@
+{
+  "name": "small-loose-counts-as",
+  "grid": [
+    "111100000",
+    "111100000",
+    "000000000",
+    "000000000",
+    "000000000",
+    "000000000"
+  ],
+  "items": {
+    "mana_crystal": 1,
+    "starbloom": 1,
+    "starlight_potion": 1,
+    "rock": 1
+  },
+  "top": 3,
+  "workers": 1,
+  "max_nodes": 0,
+  "no_skips": false,
+  "repair_search": false,
+  "priorities": [
+    "star_source:mana_crystal"
+  ]
+}

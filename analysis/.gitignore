@@ -1,0 +1,8 @@
+source/
+unity-input/
+il2cpp/
+derived/*/items/assets/
+derived/*/runtime/runtime.json
+derived/*/runtime*/
+derived/*/normalized/items.json
+derived/*/normalized/recipes.json

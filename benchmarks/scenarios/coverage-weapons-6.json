@@ -1,0 +1,29 @@
+{
+  "name": "coverage-weapons-6",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "doombringer": 1,
+    "ragnarok": 1,
+    "royal_seax": 1,
+    "rune_of_r_lyeh": 1,
+    "shaman_s_talisman": 1,
+    "venomous_pincer": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": true,
+  "repair_search": true,
+  "priorities": [
+    "star_source:rune_of_r_lyeh",
+    "star_source:venomous_pincer",
+    "star_source:shaman_s_talisman"
+  ]
+}

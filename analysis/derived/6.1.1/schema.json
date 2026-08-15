@@ -1,0 +1,575 @@
+{
+  "available": true,
+  "classes": {
+    "ItemCombinationData": {
+      "fields": [
+        {
+          "type": "List<RecipeData>",
+          "name": "recipes",
+          "offset": "0x18"
+        },
+        {
+          "type": "ItemCombinationHighlight",
+          "name": "highlightPrefab",
+          "offset": "0x20"
+        },
+        {
+          "type": "ItemMergeParticle",
+          "name": "particlesPrefab",
+          "offset": "0x28"
+        },
+        {
+          "type": "DraggableItem",
+          "name": "draggableItemPrefab",
+          "offset": "0x30"
+        },
+        {
+          "type": "GameObject",
+          "name": "mergeEffectPrefab",
+          "offset": "0x38"
+        },
+        {
+          "type": "GameObject",
+          "name": "destroyItemEffectPrefab",
+          "offset": "0x40"
+        },
+        {
+          "type": "TweenSettings",
+          "name": "combinationTweenSettings",
+          "offset": "0x48"
+        },
+        {
+          "type": "TweenSettings<float>",
+          "name": "combinationColorTweenSettings",
+          "offset": "0x78"
+        },
+        {
+          "type": "float",
+          "name": "delayBeforeStartMerge",
+          "offset": "0xB8"
+        },
+        {
+          "type": "uint",
+          "name": "craftingBoostStartCost",
+          "offset": "0xBC"
+        },
+        {
+          "type": "uint",
+          "name": "craftingBoostCostIncrease",
+          "offset": "0xC0"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ItemCombinationEntry": {
+      "fields": [
+        {
+          "type": "string",
+          "name": "editorDisplayName",
+          "offset": "0x10"
+        },
+        {
+          "type": "ItemDefinitionBuilder",
+          "name": "primary",
+          "offset": "0x18"
+        },
+        {
+          "type": "ItemDefinitionBuilder[]",
+          "name": "secondaries",
+          "offset": "0x20"
+        },
+        {
+          "type": "ItemDefinitionBuilder",
+          "name": "result",
+          "offset": "0x28"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "RecipeData": {
+      "fields": [
+        {
+          "type": "ItemCombinationEntry[]",
+          "name": "combinations",
+          "offset": "0x18"
+        },
+        {
+          "type": "Hero",
+          "name": "hero",
+          "offset": "0x20"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "BaseShape": {
+      "fields": [
+        {
+          "type": "List<Point>",
+          "name": "<points>k__BackingField",
+          "offset": "0x10"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ItemDefinition": {
+      "fields": [
+        {
+          "type": "string",
+          "name": "_assetId",
+          "offset": "0x10"
+        },
+        {
+          "type": "readonly ItemDefinitionBuilder",
+          "name": "<builder>k__BackingField",
+          "offset": "0x18"
+        },
+        {
+          "type": "string",
+          "name": "<id>k__BackingField",
+          "offset": "0x20"
+        },
+        {
+          "type": "string",
+          "name": "<displayName>k__BackingField",
+          "offset": "0x28"
+        },
+        {
+          "type": "ItemType[]",
+          "name": "<itemTypes>k__BackingField",
+          "offset": "0x30"
+        },
+        {
+          "type": "Price",
+          "name": "<price>k__BackingField",
+          "offset": "0x38"
+        },
+        {
+          "type": "Rarity",
+          "name": "<rarity>k__BackingField",
+          "offset": "0x40"
+        },
+        {
+          "type": "ItemLayer",
+          "name": "<layer>k__BackingField",
+          "offset": "0x44"
+        },
+        {
+          "type": "ItemMaterialType",
+          "name": "<materialType>k__BackingField",
+          "offset": "0x48"
+        },
+        {
+          "type": "BaseShape",
+          "name": "<baseShape>k__BackingField",
+          "offset": "0x50"
+        },
+        {
+          "type": "BaseShape",
+          "name": "<starShape>k__BackingField",
+          "offset": "0x58"
+        },
+        {
+          "type": "List<IItemStat>",
+          "name": "<stats>k__BackingField",
+          "offset": "0x60"
+        },
+        {
+          "type": "List<ConfigurableItemDefinition.SignalActionEntry>",
+          "name": "<typedSignals>k__BackingField",
+          "offset": "0x68"
+        },
+        {
+          "type": "IAction",
+          "name": "<onUpdate>k__BackingField",
+          "offset": "0x70"
+        },
+        {
+          "type": "IAction",
+          "name": "<onStart>k__BackingField",
+          "offset": "0x78"
+        },
+        {
+          "type": "IAction",
+          "name": "<onInit>k__BackingField",
+          "offset": "0x80"
+        },
+        {
+          "type": "IStarCondition",
+          "name": "<starCondition>k__BackingField",
+          "offset": "0x88"
+        },
+        {
+          "type": "LocalizedString[]",
+          "name": "<tooltips>k__BackingField",
+          "offset": "0x90"
+        },
+        {
+          "type": "Sprite",
+          "name": "<primarySprite>k__BackingField",
+          "offset": "0x98"
+        },
+        {
+          "type": "Sprite",
+          "name": "<secondarySprite>k__BackingField",
+          "offset": "0xA0"
+        },
+        {
+          "type": "float",
+          "name": "<primarySpriteRotation>k__BackingField",
+          "offset": "0xA8"
+        },
+        {
+          "type": "ItemPrefabSetup.IItemCollectionSetup",
+          "name": "<itemPrefabSetup>k__BackingField",
+          "offset": "0xB0"
+        },
+        {
+          "type": "UnlockSource",
+          "name": "<unlockSource>k__BackingField",
+          "offset": "0xB8"
+        },
+        {
+          "type": "ItemDefinitionBuilder",
+          "name": "<unlockedByOtherItem>k__BackingField",
+          "offset": "0xC0"
+        },
+        {
+          "type": "ItemLevels",
+          "name": "<itemLevels>k__BackingField",
+          "offset": "0xC8"
+        },
+        {
+          "type": "Vector2",
+          "name": "<recipeCenter>k__BackingField",
+          "offset": "0xD0"
+        },
+        {
+          "type": "Hero[]",
+          "name": "<connectedHeroes>k__BackingField",
+          "offset": "0xD8"
+        },
+        {
+          "type": "ParticleSystem",
+          "name": "<destructionParticleOverride>k__BackingField",
+          "offset": "0xE0"
+        },
+        {
+          "type": "SoundConfig",
+          "name": "<customActivationSound>k__BackingField",
+          "offset": "0xE8"
+        },
+        {
+          "type": "SoundConfig",
+          "name": "<customPlacementSound>k__BackingField",
+          "offset": "0xF0"
+        },
+        {
+          "type": "TooltipExtraMetricType",
+          "name": "<tooltipExtraMetricType>k__BackingField",
+          "offset": "0xF8"
+        },
+        {
+          "type": "bool",
+          "name": "<isInMaintenanceMode>k__BackingField",
+          "offset": "0xFC"
+        },
+        {
+          "type": "ItemModificationAssetGuidReference",
+          "name": "<itemModification>k__BackingField",
+          "offset": "0x100"
+        },
+        {
+          "type": "string",
+          "name": "<itemModificationStringFormat>k__BackingField",
+          "offset": "0x108"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ConfigurableItemDefinition": {
+      "fields": [
+        {
+          "type": "string",
+          "name": "_cachedName",
+          "offset": "0x18"
+        },
+        {
+          "type": "string",
+          "name": "_customDisplayName",
+          "offset": "0x20"
+        },
+        {
+          "type": "ItemPrefabSetup",
+          "name": "_itemPrefabSetup",
+          "offset": "0x28"
+        },
+        {
+          "type": "ParticleSystem",
+          "name": "_destructionParticleOverride",
+          "offset": "0x30"
+        },
+        {
+          "type": "Hero[]",
+          "name": "_connectedHeroes",
+          "offset": "0x38"
+        },
+        {
+          "type": "ItemType[]",
+          "name": "_itemTypes",
+          "offset": "0x40"
+        },
+        {
+          "type": "TooltipExtraMetricType",
+          "name": "_tooltipExtraMetricType",
+          "offset": "0x48"
+        },
+        {
+          "type": "int",
+          "name": "_coinPrice",
+          "offset": "0x4C"
+        },
+        {
+          "type": "Rarity",
+          "name": "_rarity",
+          "offset": "0x50"
+        },
+        {
+          "type": "ItemLayer",
+          "name": "_itemLayer",
+          "offset": "0x54"
+        },
+        {
+          "type": "UnlockSource",
+          "name": "_unlockSource",
+          "offset": "0x58"
+        },
+        {
+          "type": "bool",
+          "name": "_markAsRecipeInLevelUnlock",
+          "offset": "0x5C"
+        },
+        {
+          "type": "ItemMaterialType",
+          "name": "_materialType",
+          "offset": "0x60"
+        },
+        {
+          "type": "ItemDefinitionBuilder",
+          "name": "_unlockedByOtherItem",
+          "offset": "0x68"
+        },
+        {
+          "type": "bool",
+          "name": "_useDynamicLevels",
+          "offset": "0x70"
+        },
+        {
+          "type": "ConfigurableItemDefinition",
+          "name": "_useLevelValueOfOtherItem",
+          "offset": "0x78"
+        },
+        {
+          "type": "ItemLevels",
+          "name": "_levels",
+          "offset": "0x80"
+        },
+        {
+          "type": "IDynamicItemLevelBuilder",
+          "name": "_dynamicLevels",
+          "offset": "0x88"
+        },
+        {
+          "type": "LocalizedString[]",
+          "name": "_tooltips",
+          "offset": "0x90"
+        },
+        {
+          "type": "bool",
+          "name": "_useCustomItemModificationFormat",
+          "offset": "0x98"
+        },
+        {
+          "type": "string",
+          "name": "_customItemModificationStringFormat",
+          "offset": "0xA0"
+        },
+        {
+          "type": "IStarCondition",
+          "name": "_starCondition",
+          "offset": "0xA8"
+        },
+        {
+          "type": "List<IItemStat>",
+          "name": "_stats",
+          "offset": "0xB0"
+        },
+        {
+          "type": "IAction",
+          "name": "_onInit",
+          "offset": "0xB8"
+        },
+        {
+          "type": "IAction",
+          "name": "_onUpdate",
+          "offset": "0xC0"
+        },
+        {
+          "type": "List<ConfigurableItemDefinition.SignalActionEntry>",
+          "name": "_signalActions",
+          "offset": "0xC8"
+        },
+        {
+          "type": "ItemModificationAssetGuidReference",
+          "name": "_itemModification",
+          "offset": "0xD0"
+        },
+        {
+          "type": "GenerateItemSound",
+          "name": "_overrideSoundType",
+          "offset": "0xD8"
+        },
+        {
+          "type": "bool",
+          "name": "_useCustomActivationSound",
+          "offset": "0xDC"
+        },
+        {
+          "type": "SoundConfig",
+          "name": "_customActivationSoundConfig",
+          "offset": "0xE0"
+        },
+        {
+          "type": "bool",
+          "name": "_useCustomPlacementSound",
+          "offset": "0xE8"
+        },
+        {
+          "type": "SoundConfig",
+          "name": "_customPlacementSoundConfig",
+          "offset": "0xF0"
+        },
+        {
+          "type": "ItemLevels",
+          "name": "_dynamicLevelsCache",
+          "offset": "0xF8"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ItemPrefabSetup": {
+      "fields": [
+        {
+          "type": "ItemPrefabSetup.IItemCollectionSetup",
+          "name": "_uiOverride",
+          "offset": "0x20"
+        },
+        {
+          "type": "Transform",
+          "name": "_recipeCenterOverride",
+          "offset": "0x28"
+        },
+        {
+          "type": "static Nullable<bool>",
+          "name": "_promptedRebuildColliders",
+          "offset": "0x0"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ItemStarSlot": {
+      "fields": [
+        {
+          "type": "SpriteRenderer",
+          "name": "_sprite",
+          "offset": "0x20"
+        },
+        {
+          "type": "Sprite",
+          "name": "_hasEffect",
+          "offset": "0x28"
+        },
+        {
+          "type": "Sprite",
+          "name": "_noEffect",
+          "offset": "0x30"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ModifyItemStat": {
+      "fields": [
+        {
+          "type": "static IModifyItemStatLocaleProvider",
+          "name": "<localeProvider>k__BackingField",
+          "offset": "0x0"
+        },
+        {
+          "type": "ItemStatSelector",
+          "name": "_statType",
+          "offset": "0x10"
+        },
+        {
+          "type": "float",
+          "name": "_value",
+          "offset": "0x18"
+        },
+        {
+          "type": "ModifyItemStat.ModifierType",
+          "name": "_modifierType",
+          "offset": "0x1C"
+        },
+        {
+          "type": "bool",
+          "name": "<isHidden>k__BackingField",
+          "offset": "0x20"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ItemLevels": {
+      "fields": [
+        {
+          "type": "ItemLevelsBase",
+          "name": "_baseLevels",
+          "offset": "0x10"
+        },
+        {
+          "type": "List<ItemLevels.ItemLevelOverride>",
+          "name": "_overrides",
+          "offset": "0x18"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    },
+    "ItemLevelsBase": {
+      "fields": [
+        {
+          "type": "Rarity",
+          "name": "_rarity",
+          "offset": "0x18"
+        },
+        {
+          "type": "LocalizedString",
+          "name": "_levelBonusTooltip",
+          "offset": "0x20"
+        },
+        {
+          "type": "int",
+          "name": "_visualLevelOffset",
+          "offset": "0x28"
+        },
+        {
+          "type": "ItemLevelsBase.ItemUpgradeTier[]",
+          "name": "_upgradeCosts",
+          "offset": "0x30"
+        },
+        {
+          "type": "IItemLevel[]",
+          "name": "_levels",
+          "offset": "0x38"
+        }
+      ],
+      "source": "il2cpp/dump.cs"
+    }
+  }
+}

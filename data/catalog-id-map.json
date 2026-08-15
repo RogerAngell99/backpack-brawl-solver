@@ -1,0 +1,13 @@
+{
+  "runtime_to_catalog": {
+    "rat": "brown_rat",
+    "fish": "carp",
+    "harp": "discordant_harp",
+    "magic_orb": "frostflame_orb",
+    "knights_aegis": "knight_s_aegis",
+    "knights_blessing": "knight_s_blessing",
+    "knights_razor": "knight_s_razor",
+    "knights_sigil": "knight_s_sigil",
+    "marshmellow": "marshmallow"
+  }
+}

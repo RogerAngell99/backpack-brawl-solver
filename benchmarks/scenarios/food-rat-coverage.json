@@ -1,0 +1,41 @@
+{
+  "name": "food-rat-coverage",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "apple": 1,
+    "banana": 1,
+    "blue_chilly_cheese": 1,
+    "brown_rat": 1,
+    "moldemort": 1,
+    "muck_rat": 1,
+    "pitahaya": 1,
+    "ratomelon": 1,
+    "spice": 1,
+    "succulent_cheese": 1,
+    "watermelon": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": false,
+  "repair_search": true,
+  "coverage_groups": [
+    {
+      "name": "Food",
+      "sources": ["spice", "pitahaya", "apple", "banana", "watermelon"],
+      "targets": ["pitahaya", "apple", "banana", "watermelon", "ratomelon"]
+    },
+    {
+      "name": "Rat",
+      "sources": ["brown_rat", "muck_rat"],
+      "targets": ["brown_rat", "muck_rat", "ratomelon"]
+    }
+  ]
+}

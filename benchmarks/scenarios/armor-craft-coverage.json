@@ -1,0 +1,49 @@
+{
+  "name": "armor-craft-coverage",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "bolstered_helmet": 1,
+    "fur_boots": 1,
+    "heater_shield": 1,
+    "iron_bar": 1,
+    "knight_s_sigil": 1,
+    "leather_boots": 1,
+    "reinforced_shield": 1,
+    "scalemail": 1,
+    "stunbreaker_shield": 1,
+    "wooden_buckler": 2
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": false,
+  "repair_search": true,
+  "coverage_groups": [
+    {
+      "name": "Armor",
+      "sources": ["knight_s_sigil"],
+      "targets": [
+        "bolstered_helmet",
+        "fur_boots",
+        "heater_shield",
+        "leather_boots",
+        "reinforced_shield",
+        "scalemail",
+        "stunbreaker_shield",
+        "wooden_buckler"
+      ]
+    }
+  ],
+  "priorities": [
+    "craft:heater_shield",
+    "craft:reinforced_shield",
+    "craft:fur_boots"
+  ]
+}

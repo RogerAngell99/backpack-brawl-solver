@@ -1,0 +1,65 @@
+{
+  "name": "star-relocation-refine",
+  "grid": [
+    "111111100",
+    "111111100",
+    "111111111",
+    "111111111",
+    "110000000",
+    "110000000"
+  ],
+  "items": {
+    "cactrio": 1,
+    "champion_s_ripper": 1,
+    "gloves_of_power": 1,
+    "ironwill_banner": 1,
+    "magic_essence": 1,
+    "poison_dagger": 1,
+    "power_stone": 1,
+    "prickly_potion": 1,
+    "stunbreaker_shield": 1,
+    "succulent": 1,
+    "tenacity_potion": 1,
+    "tusk": 1,
+    "twinmaw": 1,
+    "wooden_buckler": 1
+  },
+  "top": 2,
+  "workers": 16,
+  "max_nodes": 30000000,
+  "no_skips": false,
+  "stop_on_coverage_ceiling": false,
+  "repair_search": true,
+  "priorities": [
+    "craft:spiked_shield",
+    "coverage_group:0",
+    "coverage_group:1",
+    "star_source:ironwill_banner",
+    "star_source:magic_essence"
+  ],
+  "coverage_groups": [
+    {
+      "name": "Group 1",
+      "sources": [
+        "power_stone"
+      ],
+      "targets": [
+        "poison_dagger",
+        "champion_s_ripper",
+        "twinmaw",
+        "power_stone"
+      ]
+    },
+    {
+      "name": "Group 2",
+      "sources": [
+        "gloves_of_power"
+      ],
+      "targets": [
+        "champion_s_ripper",
+        "twinmaw",
+        "gloves_of_power"
+      ]
+    }
+  ]
+}

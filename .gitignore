@@ -1,0 +1,30 @@
+__pycache__/
+node_modules/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+build/
+dist/
+web/dist/
+*.egg-info/
+*.exe
+*.test
+coverage.out
+tmp-*.png
+
+.vercel
+
+# Data-mining inputs and large generated evidence.
+analysis/*.apkm
+analysis/*.apk
+analysis/derived/*/runtime*/
+analysis/derived/*/normalized/items.json
+analysis/derived/*/normalized/recipes.json
+
+# Web assets are generated from the canonical root data during the build.
+web/public/data/
+web/public/assets/
+web/public/scenarios/
+web/public/wasm/

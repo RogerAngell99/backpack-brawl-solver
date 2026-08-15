@@ -1,0 +1,13 @@
+{
+  "runtime_file": "analysis\\derived\\6.1.1\\runtime-final\\runtime.json",
+  "items": 1196,
+  "items_with_stats": 811,
+  "items_with_levels": 1196,
+  "items_with_shapes": 1196,
+  "items_with_star_positions": 551,
+  "recipes": 488,
+  "unresolved": [
+    "star_status",
+    "level_effects.stat_target when ItemStatSelector is opaque"
+  ]
+}

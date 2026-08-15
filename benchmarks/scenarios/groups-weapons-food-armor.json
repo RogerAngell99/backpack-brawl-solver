@@ -1,0 +1,48 @@
+{
+  "name": "groups-weapons-food-armor",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "apple": 1,
+    "banana": 1,
+    "bolstered_helmet": 1,
+    "excalibur": 1,
+    "fine_sword": 1,
+    "gloves_of_power": 1,
+    "knight_s_sigil": 1,
+    "piercing_lance": 1,
+    "pitahaya": 1,
+    "power_stone": 1,
+    "scalemail": 1,
+    "spice": 1,
+    "stunbreaker_shield": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": false,
+  "repair_search": true,
+  "coverage_groups": [
+    {
+      "name": "Weapons",
+      "sources": ["piercing_lance", "gloves_of_power", "power_stone"],
+      "targets": ["excalibur", "fine_sword", "piercing_lance"]
+    },
+    {
+      "name": "Armor",
+      "sources": ["knight_s_sigil"],
+      "targets": ["scalemail", "bolstered_helmet", "stunbreaker_shield"]
+    },
+    {
+      "name": "Food",
+      "sources": ["spice"],
+      "targets": ["apple", "banana", "pitahaya"]
+    }
+  ]
+}

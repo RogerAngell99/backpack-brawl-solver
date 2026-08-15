@@ -1,0 +1,1988 @@
+{
+  "generated_at": "2026-05-10T04:59:54Z",
+  "catalog_path": "data/catalog.json",
+  "scenario_dir": "benchmarks/exhaustive-scenarios",
+  "budgets": [
+    0
+  ],
+  "repeat": 3,
+  "workers": 1,
+  "top": 1,
+  "repair_search_mode": "scenario",
+  "runs": [
+    {
+      "scenario": "small-coverage-belt",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-coverage-belt.json",
+      "budget": 0,
+      "repeat": 1,
+      "repair_search": false,
+      "elapsed_ms": 11,
+      "nodes_per_second": 363213.3278866135,
+      "score": {
+        "priority_counts": [
+          2
+        ],
+        "crafts": 1,
+        "stars": 2,
+        "items": 4
+      },
+      "layout_key": "000|cactus|000|000|000;001|leather_belt|000|001|001;002|mana_potion|000|000|003;003|water_potion|000|001|000;",
+      "search": {
+        "nodes_explored": 4090,
+        "nodes_per_second": 363213.3278866135,
+        "limited": false,
+        "refined": false,
+        "coverage_sources": [
+          "leather_belt"
+        ],
+        "coverage_target_count": 2,
+        "coverage_ceiling": [
+          {
+            "covered_sources": 1,
+            "target_count": 2
+          }
+        ],
+        "coverage_ceiling_reached": true,
+        "coverage_bound_checks": 2121,
+        "coverage_pruned_nodes": 1733,
+        "exact_bound_checks": 388,
+        "exact_bound_pruned_nodes": 8,
+        "coverage_seed_nodes": 1969,
+        "coverage_seed_candidates": 256,
+        "coverage_seed_best": "1/1=2"
+      },
+      "coverage_summaries": [
+        {
+          "name": "Potions",
+          "sources": [
+            "leather_belt"
+          ],
+          "target_item_ids": [
+            "water_potion",
+            "mana_potion"
+          ],
+          "summary": "1/1=2"
+        }
+      ],
+      "crafts": [
+        "prickly_potion:water_potion#3:cactus#0"
+      ],
+      "solution": {
+        "score": {
+          "crafts": 1,
+          "stars": 2,
+          "items": 4,
+          "priority_counts": [
+            2
+          ]
+        },
+        "search": {
+          "nodes_explored": 4090,
+          "nodes_per_second": 363213.3278866135,
+          "limited": false,
+          "refined": false,
+          "coverage_sources": [
+            "leather_belt"
+          ],
+          "coverage_target_count": 2,
+          "coverage_ceiling": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "coverage_ceiling_reached": true,
+          "coverage_bound_checks": 2121,
+          "coverage_pruned_nodes": 1733,
+          "exact_bound_checks": 388,
+          "exact_bound_pruned_nodes": 8,
+          "coverage_seed_nodes": 1969,
+          "coverage_seed_candidates": 256,
+          "coverage_seed_best": "1/1=2"
+        },
+        "coverage": {
+          "name": "Potions",
+          "sources": [
+            "leather_belt"
+          ],
+          "target_item_ids": [
+            "water_potion",
+            "mana_potion"
+          ],
+          "buckets": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "targets": [
+            {
+              "target_instance": "mana_potion#2",
+              "target_item_id": "mana_potion",
+              "covered_sources": [
+                "leather_belt"
+              ],
+              "covered_count": 1
+            },
+            {
+              "target_instance": "water_potion#3",
+              "target_item_id": "water_potion",
+              "covered_sources": [
+                "leather_belt"
+              ],
+              "covered_count": 1
+            }
+          ],
+          "summary": "1/1=2"
+        },
+        "coverage_groups": [
+          {
+            "name": "Potions",
+            "sources": [
+              "leather_belt"
+            ],
+            "target_item_ids": [
+              "water_potion",
+              "mana_potion"
+            ],
+            "buckets": [
+              {
+                "covered_sources": 1,
+                "target_count": 2
+              }
+            ],
+            "targets": [
+              {
+                "target_instance": "mana_potion#2",
+                "target_item_id": "mana_potion",
+                "covered_sources": [
+                  "leather_belt"
+                ],
+                "covered_count": 1
+              },
+              {
+                "target_instance": "water_potion#3",
+                "target_item_id": "water_potion",
+                "covered_sources": [
+                  "leather_belt"
+                ],
+                "covered_count": 1
+              }
+            ],
+            "summary": "1/1=2"
+          }
+        ],
+        "placements": [
+          {
+            "instance_id": "cactus#0",
+            "item_id": "cactus",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "leather_belt#1",
+            "item_id": "leather_belt",
+            "rotation": 0,
+            "origin": [
+              1,
+              1
+            ],
+            "cells": [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                3
+              ]
+            ]
+          },
+          {
+            "instance_id": "mana_potion#2",
+            "item_id": "mana_potion",
+            "rotation": 0,
+            "origin": [
+              0,
+              3
+            ],
+            "cells": [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "water_potion#3",
+            "item_id": "water_potion",
+            "rotation": 0,
+            "origin": [
+              1,
+              0
+            ],
+            "cells": [
+              [
+                1,
+                0
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [
+          {
+            "result": "prickly_potion",
+            "anchor_instance": "water_potion#3",
+            "ingredient_instances": [
+              "cactus#0"
+            ]
+          }
+        ],
+        "stars": [
+          {
+            "source_instance": "leather_belt#1",
+            "target_instance": "water_potion#3",
+            "star_position": [
+              1,
+              0
+            ],
+            "effect_text": "Star Potion gains +1 more use."
+          },
+          {
+            "source_instance": "leather_belt#1",
+            "target_instance": "mana_potion#2",
+            "star_position": [
+              1,
+              3
+            ],
+            "effect_text": "Star Potion gains +1 more use."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-coverage-belt",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-coverage-belt.json",
+      "budget": 0,
+      "repeat": 2,
+      "repair_search": false,
+      "elapsed_ms": 11,
+      "nodes_per_second": 355673.8236240467,
+      "score": {
+        "priority_counts": [
+          2
+        ],
+        "crafts": 1,
+        "stars": 2,
+        "items": 4
+      },
+      "layout_key": "000|cactus|000|000|000;001|leather_belt|000|001|001;002|mana_potion|000|000|003;003|water_potion|000|001|000;",
+      "search": {
+        "nodes_explored": 4090,
+        "nodes_per_second": 355673.8236240467,
+        "limited": false,
+        "refined": false,
+        "coverage_sources": [
+          "leather_belt"
+        ],
+        "coverage_target_count": 2,
+        "coverage_ceiling": [
+          {
+            "covered_sources": 1,
+            "target_count": 2
+          }
+        ],
+        "coverage_ceiling_reached": true,
+        "coverage_bound_checks": 2121,
+        "coverage_pruned_nodes": 1733,
+        "exact_bound_checks": 388,
+        "exact_bound_pruned_nodes": 8,
+        "coverage_seed_nodes": 1969,
+        "coverage_seed_candidates": 256,
+        "coverage_seed_best": "1/1=2"
+      },
+      "coverage_summaries": [
+        {
+          "name": "Potions",
+          "sources": [
+            "leather_belt"
+          ],
+          "target_item_ids": [
+            "water_potion",
+            "mana_potion"
+          ],
+          "summary": "1/1=2"
+        }
+      ],
+      "crafts": [
+        "prickly_potion:water_potion#3:cactus#0"
+      ],
+      "solution": {
+        "score": {
+          "crafts": 1,
+          "stars": 2,
+          "items": 4,
+          "priority_counts": [
+            2
+          ]
+        },
+        "search": {
+          "nodes_explored": 4090,
+          "nodes_per_second": 355673.8236240467,
+          "limited": false,
+          "refined": false,
+          "coverage_sources": [
+            "leather_belt"
+          ],
+          "coverage_target_count": 2,
+          "coverage_ceiling": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "coverage_ceiling_reached": true,
+          "coverage_bound_checks": 2121,
+          "coverage_pruned_nodes": 1733,
+          "exact_bound_checks": 388,
+          "exact_bound_pruned_nodes": 8,
+          "coverage_seed_nodes": 1969,
+          "coverage_seed_candidates": 256,
+          "coverage_seed_best": "1/1=2"
+        },
+        "coverage": {
+          "name": "Potions",
+          "sources": [
+            "leather_belt"
+          ],
+          "target_item_ids": [
+            "water_potion",
+            "mana_potion"
+          ],
+          "buckets": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "targets": [
+            {
+              "target_instance": "mana_potion#2",
+              "target_item_id": "mana_potion",
+              "covered_sources": [
+                "leather_belt"
+              ],
+              "covered_count": 1
+            },
+            {
+              "target_instance": "water_potion#3",
+              "target_item_id": "water_potion",
+              "covered_sources": [
+                "leather_belt"
+              ],
+              "covered_count": 1
+            }
+          ],
+          "summary": "1/1=2"
+        },
+        "coverage_groups": [
+          {
+            "name": "Potions",
+            "sources": [
+              "leather_belt"
+            ],
+            "target_item_ids": [
+              "water_potion",
+              "mana_potion"
+            ],
+            "buckets": [
+              {
+                "covered_sources": 1,
+                "target_count": 2
+              }
+            ],
+            "targets": [
+              {
+                "target_instance": "mana_potion#2",
+                "target_item_id": "mana_potion",
+                "covered_sources": [
+                  "leather_belt"
+                ],
+                "covered_count": 1
+              },
+              {
+                "target_instance": "water_potion#3",
+                "target_item_id": "water_potion",
+                "covered_sources": [
+                  "leather_belt"
+                ],
+                "covered_count": 1
+              }
+            ],
+            "summary": "1/1=2"
+          }
+        ],
+        "placements": [
+          {
+            "instance_id": "cactus#0",
+            "item_id": "cactus",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "leather_belt#1",
+            "item_id": "leather_belt",
+            "rotation": 0,
+            "origin": [
+              1,
+              1
+            ],
+            "cells": [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                3
+              ]
+            ]
+          },
+          {
+            "instance_id": "mana_potion#2",
+            "item_id": "mana_potion",
+            "rotation": 0,
+            "origin": [
+              0,
+              3
+            ],
+            "cells": [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "water_potion#3",
+            "item_id": "water_potion",
+            "rotation": 0,
+            "origin": [
+              1,
+              0
+            ],
+            "cells": [
+              [
+                1,
+                0
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [
+          {
+            "result": "prickly_potion",
+            "anchor_instance": "water_potion#3",
+            "ingredient_instances": [
+              "cactus#0"
+            ]
+          }
+        ],
+        "stars": [
+          {
+            "source_instance": "leather_belt#1",
+            "target_instance": "water_potion#3",
+            "star_position": [
+              1,
+              0
+            ],
+            "effect_text": "Star Potion gains +1 more use."
+          },
+          {
+            "source_instance": "leather_belt#1",
+            "target_instance": "mana_potion#2",
+            "star_position": [
+              1,
+              3
+            ],
+            "effect_text": "Star Potion gains +1 more use."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-coverage-belt",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-coverage-belt.json",
+      "budget": 0,
+      "repeat": 3,
+      "repair_search": false,
+      "elapsed_ms": 13,
+      "nodes_per_second": 302577.45686976594,
+      "score": {
+        "priority_counts": [
+          2
+        ],
+        "crafts": 1,
+        "stars": 2,
+        "items": 4
+      },
+      "layout_key": "000|cactus|000|000|000;001|leather_belt|000|001|001;002|mana_potion|000|000|003;003|water_potion|000|001|000;",
+      "search": {
+        "nodes_explored": 4090,
+        "nodes_per_second": 302577.45686976594,
+        "limited": false,
+        "refined": false,
+        "coverage_sources": [
+          "leather_belt"
+        ],
+        "coverage_target_count": 2,
+        "coverage_ceiling": [
+          {
+            "covered_sources": 1,
+            "target_count": 2
+          }
+        ],
+        "coverage_ceiling_reached": true,
+        "coverage_bound_checks": 2121,
+        "coverage_pruned_nodes": 1733,
+        "exact_bound_checks": 388,
+        "exact_bound_pruned_nodes": 8,
+        "coverage_seed_nodes": 1969,
+        "coverage_seed_candidates": 256,
+        "coverage_seed_best": "1/1=2"
+      },
+      "coverage_summaries": [
+        {
+          "name": "Potions",
+          "sources": [
+            "leather_belt"
+          ],
+          "target_item_ids": [
+            "water_potion",
+            "mana_potion"
+          ],
+          "summary": "1/1=2"
+        }
+      ],
+      "crafts": [
+        "prickly_potion:water_potion#3:cactus#0"
+      ],
+      "solution": {
+        "score": {
+          "crafts": 1,
+          "stars": 2,
+          "items": 4,
+          "priority_counts": [
+            2
+          ]
+        },
+        "search": {
+          "nodes_explored": 4090,
+          "nodes_per_second": 302577.45686976594,
+          "limited": false,
+          "refined": false,
+          "coverage_sources": [
+            "leather_belt"
+          ],
+          "coverage_target_count": 2,
+          "coverage_ceiling": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "coverage_ceiling_reached": true,
+          "coverage_bound_checks": 2121,
+          "coverage_pruned_nodes": 1733,
+          "exact_bound_checks": 388,
+          "exact_bound_pruned_nodes": 8,
+          "coverage_seed_nodes": 1969,
+          "coverage_seed_candidates": 256,
+          "coverage_seed_best": "1/1=2"
+        },
+        "coverage": {
+          "name": "Potions",
+          "sources": [
+            "leather_belt"
+          ],
+          "target_item_ids": [
+            "water_potion",
+            "mana_potion"
+          ],
+          "buckets": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "targets": [
+            {
+              "target_instance": "mana_potion#2",
+              "target_item_id": "mana_potion",
+              "covered_sources": [
+                "leather_belt"
+              ],
+              "covered_count": 1
+            },
+            {
+              "target_instance": "water_potion#3",
+              "target_item_id": "water_potion",
+              "covered_sources": [
+                "leather_belt"
+              ],
+              "covered_count": 1
+            }
+          ],
+          "summary": "1/1=2"
+        },
+        "coverage_groups": [
+          {
+            "name": "Potions",
+            "sources": [
+              "leather_belt"
+            ],
+            "target_item_ids": [
+              "water_potion",
+              "mana_potion"
+            ],
+            "buckets": [
+              {
+                "covered_sources": 1,
+                "target_count": 2
+              }
+            ],
+            "targets": [
+              {
+                "target_instance": "mana_potion#2",
+                "target_item_id": "mana_potion",
+                "covered_sources": [
+                  "leather_belt"
+                ],
+                "covered_count": 1
+              },
+              {
+                "target_instance": "water_potion#3",
+                "target_item_id": "water_potion",
+                "covered_sources": [
+                  "leather_belt"
+                ],
+                "covered_count": 1
+              }
+            ],
+            "summary": "1/1=2"
+          }
+        ],
+        "placements": [
+          {
+            "instance_id": "cactus#0",
+            "item_id": "cactus",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "leather_belt#1",
+            "item_id": "leather_belt",
+            "rotation": 0,
+            "origin": [
+              1,
+              1
+            ],
+            "cells": [
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                3
+              ]
+            ]
+          },
+          {
+            "instance_id": "mana_potion#2",
+            "item_id": "mana_potion",
+            "rotation": 0,
+            "origin": [
+              0,
+              3
+            ],
+            "cells": [
+              [
+                0,
+                3
+              ],
+              [
+                1,
+                3
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "water_potion#3",
+            "item_id": "water_potion",
+            "rotation": 0,
+            "origin": [
+              1,
+              0
+            ],
+            "cells": [
+              [
+                1,
+                0
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [
+          {
+            "result": "prickly_potion",
+            "anchor_instance": "water_potion#3",
+            "ingredient_instances": [
+              "cactus#0"
+            ]
+          }
+        ],
+        "stars": [
+          {
+            "source_instance": "leather_belt#1",
+            "target_instance": "water_potion#3",
+            "star_position": [
+              1,
+              0
+            ],
+            "effect_text": "Star Potion gains +1 more use."
+          },
+          {
+            "source_instance": "leather_belt#1",
+            "target_instance": "mana_potion#2",
+            "star_position": [
+              1,
+              3
+            ],
+            "effect_text": "Star Potion gains +1 more use."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-craft-chain",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-craft-chain.json",
+      "budget": 0,
+      "repeat": 1,
+      "repair_search": false,
+      "elapsed_ms": 10,
+      "nodes_per_second": 155139.6062288843,
+      "score": {
+        "priority_counts": [
+          1
+        ],
+        "crafts": 1,
+        "stars": 1,
+        "items": 3
+      },
+      "layout_key": "000|whetstone|000|000|000;001|wooden_sword|000|000|001;002|wooden_sword|000|000|002;",
+      "search": {
+        "nodes_explored": 1598,
+        "nodes_per_second": 155139.6062288843,
+        "limited": false,
+        "refined": true,
+        "exact_bound_checks": 255,
+        "exact_bound_pruned_nodes": 1
+      },
+      "crafts": [
+        "iron_sword:wooden_sword#1:wooden_sword#2"
+      ],
+      "solution": {
+        "score": {
+          "crafts": 1,
+          "stars": 1,
+          "items": 3,
+          "priority_counts": [
+            1
+          ]
+        },
+        "search": {
+          "nodes_explored": 1598,
+          "nodes_per_second": 155139.6062288843,
+          "limited": false,
+          "refined": true,
+          "exact_bound_checks": 255,
+          "exact_bound_pruned_nodes": 1
+        },
+        "placements": [
+          {
+            "instance_id": "whetstone#0",
+            "item_id": "whetstone",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": [
+              [
+                0,
+                -1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "instance_id": "wooden_sword#1",
+            "item_id": "wooden_sword",
+            "rotation": 0,
+            "origin": [
+              0,
+              1
+            ],
+            "cells": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "wooden_sword#2",
+            "item_id": "wooden_sword",
+            "rotation": 0,
+            "origin": [
+              0,
+              2
+            ],
+            "cells": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [
+          {
+            "result": "iron_sword",
+            "anchor_instance": "wooden_sword#1",
+            "ingredient_instances": [
+              "wooden_sword#2"
+            ]
+          }
+        ],
+        "stars": [
+          {
+            "source_instance": "whetstone#0",
+            "target_instance": "wooden_sword#1",
+            "star_position": [
+              0,
+              1
+            ],
+            "effect_text": "Star Melee or Ranged Weapon gains +1 Damage and +5% Crit Chance."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-craft-chain",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-craft-chain.json",
+      "budget": 0,
+      "repeat": 2,
+      "repair_search": false,
+      "elapsed_ms": 8,
+      "nodes_per_second": 195032.64783059745,
+      "score": {
+        "priority_counts": [
+          1
+        ],
+        "crafts": 1,
+        "stars": 1,
+        "items": 3
+      },
+      "layout_key": "000|whetstone|000|000|000;001|wooden_sword|000|000|001;002|wooden_sword|000|000|002;",
+      "search": {
+        "nodes_explored": 1598,
+        "nodes_per_second": 195032.64783059745,
+        "limited": false,
+        "refined": true,
+        "exact_bound_checks": 255,
+        "exact_bound_pruned_nodes": 1
+      },
+      "crafts": [
+        "iron_sword:wooden_sword#1:wooden_sword#2"
+      ],
+      "solution": {
+        "score": {
+          "crafts": 1,
+          "stars": 1,
+          "items": 3,
+          "priority_counts": [
+            1
+          ]
+        },
+        "search": {
+          "nodes_explored": 1598,
+          "nodes_per_second": 195032.64783059745,
+          "limited": false,
+          "refined": true,
+          "exact_bound_checks": 255,
+          "exact_bound_pruned_nodes": 1
+        },
+        "placements": [
+          {
+            "instance_id": "whetstone#0",
+            "item_id": "whetstone",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": [
+              [
+                0,
+                -1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "instance_id": "wooden_sword#1",
+            "item_id": "wooden_sword",
+            "rotation": 0,
+            "origin": [
+              0,
+              1
+            ],
+            "cells": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "wooden_sword#2",
+            "item_id": "wooden_sword",
+            "rotation": 0,
+            "origin": [
+              0,
+              2
+            ],
+            "cells": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [
+          {
+            "result": "iron_sword",
+            "anchor_instance": "wooden_sword#1",
+            "ingredient_instances": [
+              "wooden_sword#2"
+            ]
+          }
+        ],
+        "stars": [
+          {
+            "source_instance": "whetstone#0",
+            "target_instance": "wooden_sword#1",
+            "star_position": [
+              0,
+              1
+            ],
+            "effect_text": "Star Melee or Ranged Weapon gains +1 Damage and +5% Crit Chance."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-craft-chain",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-craft-chain.json",
+      "budget": 0,
+      "repeat": 3,
+      "repair_search": false,
+      "elapsed_ms": 10,
+      "nodes_per_second": 158421.73094081492,
+      "score": {
+        "priority_counts": [
+          1
+        ],
+        "crafts": 1,
+        "stars": 1,
+        "items": 3
+      },
+      "layout_key": "000|whetstone|000|000|000;001|wooden_sword|000|000|001;002|wooden_sword|000|000|002;",
+      "search": {
+        "nodes_explored": 1598,
+        "nodes_per_second": 158421.73094081492,
+        "limited": false,
+        "refined": true,
+        "exact_bound_checks": 255,
+        "exact_bound_pruned_nodes": 1
+      },
+      "crafts": [
+        "iron_sword:wooden_sword#1:wooden_sword#2"
+      ],
+      "solution": {
+        "score": {
+          "crafts": 1,
+          "stars": 1,
+          "items": 3,
+          "priority_counts": [
+            1
+          ]
+        },
+        "search": {
+          "nodes_explored": 1598,
+          "nodes_per_second": 158421.73094081492,
+          "limited": false,
+          "refined": true,
+          "exact_bound_checks": 255,
+          "exact_bound_pruned_nodes": 1
+        },
+        "placements": [
+          {
+            "instance_id": "whetstone#0",
+            "item_id": "whetstone",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": [
+              [
+                0,
+                -1
+              ],
+              [
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "instance_id": "wooden_sword#1",
+            "item_id": "wooden_sword",
+            "rotation": 0,
+            "origin": [
+              0,
+              1
+            ],
+            "cells": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "wooden_sword#2",
+            "item_id": "wooden_sword",
+            "rotation": 0,
+            "origin": [
+              0,
+              2
+            ],
+            "cells": [
+              [
+                0,
+                2
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [
+          {
+            "result": "iron_sword",
+            "anchor_instance": "wooden_sword#1",
+            "ingredient_instances": [
+              "wooden_sword#2"
+            ]
+          }
+        ],
+        "stars": [
+          {
+            "source_instance": "whetstone#0",
+            "target_instance": "wooden_sword#1",
+            "star_position": [
+              0,
+              1
+            ],
+            "effect_text": "Star Melee or Ranged Weapon gains +1 Damage and +5% Crit Chance."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-loose-counts-as",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-loose-counts-as.json",
+      "budget": 0,
+      "repeat": 1,
+      "repair_search": false,
+      "elapsed_ms": 11,
+      "nodes_per_second": 280919.74204004457,
+      "score": {
+        "priority_counts": [
+          2
+        ],
+        "crafts": 0,
+        "stars": 3,
+        "items": 4
+      },
+      "layout_key": "000|mana_crystal|000|000|000;001|rock|000|000|003;002|starbloom|090|000|001;003|starlight_potion|090|001|000;",
+      "search": {
+        "nodes_explored": 3328,
+        "nodes_per_second": 280919.74204004457,
+        "limited": false,
+        "refined": false,
+        "coverage_sources": [
+          "mana_crystal"
+        ],
+        "coverage_target_count": 2,
+        "coverage_ceiling": [
+          {
+            "covered_sources": 1,
+            "target_count": 2
+          }
+        ],
+        "coverage_ceiling_reached": true,
+        "coverage_bound_checks": 1465,
+        "coverage_pruned_nodes": 833,
+        "exact_bound_checks": 632,
+        "coverage_seed_nodes": 1863,
+        "coverage_seed_candidates": 256,
+        "coverage_seed_best": "1/1=2"
+      },
+      "coverage_summaries": [
+        {
+          "name": "Coverage",
+          "sources": [
+            "mana_crystal"
+          ],
+          "summary": "1/1=2"
+        }
+      ],
+      "solution": {
+        "score": {
+          "crafts": 0,
+          "stars": 3,
+          "items": 4,
+          "priority_counts": [
+            2
+          ]
+        },
+        "search": {
+          "nodes_explored": 3328,
+          "nodes_per_second": 280919.74204004457,
+          "limited": false,
+          "refined": false,
+          "coverage_sources": [
+            "mana_crystal"
+          ],
+          "coverage_target_count": 2,
+          "coverage_ceiling": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "coverage_ceiling_reached": true,
+          "coverage_bound_checks": 1465,
+          "coverage_pruned_nodes": 833,
+          "exact_bound_checks": 632,
+          "coverage_seed_nodes": 1863,
+          "coverage_seed_candidates": 256,
+          "coverage_seed_best": "1/1=2"
+        },
+        "coverage": {
+          "name": "Coverage",
+          "sources": [
+            "mana_crystal"
+          ],
+          "buckets": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "targets": [
+            {
+              "target_instance": "starbloom#2",
+              "target_item_id": "starbloom",
+              "covered_sources": [
+                "mana_crystal"
+              ],
+              "covered_count": 1
+            },
+            {
+              "target_instance": "starlight_potion#3",
+              "target_item_id": "starlight_potion",
+              "covered_sources": [
+                "mana_crystal"
+              ],
+              "covered_count": 1
+            }
+          ],
+          "summary": "1/1=2"
+        },
+        "placements": [
+          {
+            "instance_id": "mana_crystal#0",
+            "item_id": "mana_crystal",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": [
+              [
+                -1,
+                0
+              ],
+              [
+                0,
+                -1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          {
+            "instance_id": "rock#1",
+            "item_id": "rock",
+            "rotation": 0,
+            "origin": [
+              0,
+              3
+            ],
+            "cells": [
+              [
+                0,
+                3
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "starbloom#2",
+            "item_id": "starbloom",
+            "rotation": 90,
+            "origin": [
+              0,
+              1
+            ],
+            "cells": [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            "star_positions": [
+              [
+                1,
+                2
+              ],
+              [
+                -1,
+                1
+              ]
+            ]
+          },
+          {
+            "instance_id": "starlight_potion#3",
+            "item_id": "starlight_potion",
+            "rotation": 90,
+            "origin": [
+              1,
+              0
+            ],
+            "cells": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [],
+        "stars": [
+          {
+            "source_instance": "mana_crystal#0",
+            "target_instance": "starbloom#2",
+            "star_position": [
+              0,
+              1
+            ],
+            "effect_text": "Gain 1 Mana per Star Starbloom."
+          },
+          {
+            "source_instance": "mana_crystal#0",
+            "target_instance": "starlight_potion#3",
+            "star_position": [
+              1,
+              0
+            ],
+            "effect_text": "Gain 1 Mana per Star Starbloom."
+          },
+          {
+            "source_instance": "starbloom#2",
+            "target_instance": "starlight_potion#3",
+            "star_position": [
+              1,
+              2
+            ],
+            "effect_text": "On Star activation: 35% chance to gain 1 Mana."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-loose-counts-as",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-loose-counts-as.json",
+      "budget": 0,
+      "repeat": 2,
+      "repair_search": false,
+      "elapsed_ms": 13,
+      "nodes_per_second": 249312.66715110836,
+      "score": {
+        "priority_counts": [
+          2
+        ],
+        "crafts": 0,
+        "stars": 3,
+        "items": 4
+      },
+      "layout_key": "000|mana_crystal|000|000|000;001|rock|000|000|003;002|starbloom|090|000|001;003|starlight_potion|090|001|000;",
+      "search": {
+        "nodes_explored": 3328,
+        "nodes_per_second": 249312.66715110836,
+        "limited": false,
+        "refined": false,
+        "coverage_sources": [
+          "mana_crystal"
+        ],
+        "coverage_target_count": 2,
+        "coverage_ceiling": [
+          {
+            "covered_sources": 1,
+            "target_count": 2
+          }
+        ],
+        "coverage_ceiling_reached": true,
+        "coverage_bound_checks": 1465,
+        "coverage_pruned_nodes": 833,
+        "exact_bound_checks": 632,
+        "coverage_seed_nodes": 1863,
+        "coverage_seed_candidates": 256,
+        "coverage_seed_best": "1/1=2"
+      },
+      "coverage_summaries": [
+        {
+          "name": "Coverage",
+          "sources": [
+            "mana_crystal"
+          ],
+          "summary": "1/1=2"
+        }
+      ],
+      "solution": {
+        "score": {
+          "crafts": 0,
+          "stars": 3,
+          "items": 4,
+          "priority_counts": [
+            2
+          ]
+        },
+        "search": {
+          "nodes_explored": 3328,
+          "nodes_per_second": 249312.66715110836,
+          "limited": false,
+          "refined": false,
+          "coverage_sources": [
+            "mana_crystal"
+          ],
+          "coverage_target_count": 2,
+          "coverage_ceiling": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "coverage_ceiling_reached": true,
+          "coverage_bound_checks": 1465,
+          "coverage_pruned_nodes": 833,
+          "exact_bound_checks": 632,
+          "coverage_seed_nodes": 1863,
+          "coverage_seed_candidates": 256,
+          "coverage_seed_best": "1/1=2"
+        },
+        "coverage": {
+          "name": "Coverage",
+          "sources": [
+            "mana_crystal"
+          ],
+          "buckets": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "targets": [
+            {
+              "target_instance": "starbloom#2",
+              "target_item_id": "starbloom",
+              "covered_sources": [
+                "mana_crystal"
+              ],
+              "covered_count": 1
+            },
+            {
+              "target_instance": "starlight_potion#3",
+              "target_item_id": "starlight_potion",
+              "covered_sources": [
+                "mana_crystal"
+              ],
+              "covered_count": 1
+            }
+          ],
+          "summary": "1/1=2"
+        },
+        "placements": [
+          {
+            "instance_id": "mana_crystal#0",
+            "item_id": "mana_crystal",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": [
+              [
+                -1,
+                0
+              ],
+              [
+                0,
+                -1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          {
+            "instance_id": "rock#1",
+            "item_id": "rock",
+            "rotation": 0,
+            "origin": [
+              0,
+              3
+            ],
+            "cells": [
+              [
+                0,
+                3
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "starbloom#2",
+            "item_id": "starbloom",
+            "rotation": 90,
+            "origin": [
+              0,
+              1
+            ],
+            "cells": [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            "star_positions": [
+              [
+                1,
+                2
+              ],
+              [
+                -1,
+                1
+              ]
+            ]
+          },
+          {
+            "instance_id": "starlight_potion#3",
+            "item_id": "starlight_potion",
+            "rotation": 90,
+            "origin": [
+              1,
+              0
+            ],
+            "cells": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [],
+        "stars": [
+          {
+            "source_instance": "mana_crystal#0",
+            "target_instance": "starbloom#2",
+            "star_position": [
+              0,
+              1
+            ],
+            "effect_text": "Gain 1 Mana per Star Starbloom."
+          },
+          {
+            "source_instance": "mana_crystal#0",
+            "target_instance": "starlight_potion#3",
+            "star_position": [
+              1,
+              0
+            ],
+            "effect_text": "Gain 1 Mana per Star Starbloom."
+          },
+          {
+            "source_instance": "starbloom#2",
+            "target_instance": "starlight_potion#3",
+            "star_position": [
+              1,
+              2
+            ],
+            "effect_text": "On Star activation: 35% chance to gain 1 Mana."
+          }
+        ]
+      }
+    },
+    {
+      "scenario": "small-loose-counts-as",
+      "scenario_path": "benchmarks\\exhaustive-scenarios\\small-loose-counts-as.json",
+      "budget": 0,
+      "repeat": 3,
+      "repair_search": false,
+      "elapsed_ms": 12,
+      "nodes_per_second": 267287.768050759,
+      "score": {
+        "priority_counts": [
+          2
+        ],
+        "crafts": 0,
+        "stars": 3,
+        "items": 4
+      },
+      "layout_key": "000|mana_crystal|000|000|000;001|rock|000|000|003;002|starbloom|090|000|001;003|starlight_potion|090|001|000;",
+      "search": {
+        "nodes_explored": 3328,
+        "nodes_per_second": 267287.768050759,
+        "limited": false,
+        "refined": false,
+        "coverage_sources": [
+          "mana_crystal"
+        ],
+        "coverage_target_count": 2,
+        "coverage_ceiling": [
+          {
+            "covered_sources": 1,
+            "target_count": 2
+          }
+        ],
+        "coverage_ceiling_reached": true,
+        "coverage_bound_checks": 1465,
+        "coverage_pruned_nodes": 833,
+        "exact_bound_checks": 632,
+        "coverage_seed_nodes": 1863,
+        "coverage_seed_candidates": 256,
+        "coverage_seed_best": "1/1=2"
+      },
+      "coverage_summaries": [
+        {
+          "name": "Coverage",
+          "sources": [
+            "mana_crystal"
+          ],
+          "summary": "1/1=2"
+        }
+      ],
+      "solution": {
+        "score": {
+          "crafts": 0,
+          "stars": 3,
+          "items": 4,
+          "priority_counts": [
+            2
+          ]
+        },
+        "search": {
+          "nodes_explored": 3328,
+          "nodes_per_second": 267287.768050759,
+          "limited": false,
+          "refined": false,
+          "coverage_sources": [
+            "mana_crystal"
+          ],
+          "coverage_target_count": 2,
+          "coverage_ceiling": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "coverage_ceiling_reached": true,
+          "coverage_bound_checks": 1465,
+          "coverage_pruned_nodes": 833,
+          "exact_bound_checks": 632,
+          "coverage_seed_nodes": 1863,
+          "coverage_seed_candidates": 256,
+          "coverage_seed_best": "1/1=2"
+        },
+        "coverage": {
+          "name": "Coverage",
+          "sources": [
+            "mana_crystal"
+          ],
+          "buckets": [
+            {
+              "covered_sources": 1,
+              "target_count": 2
+            }
+          ],
+          "targets": [
+            {
+              "target_instance": "starbloom#2",
+              "target_item_id": "starbloom",
+              "covered_sources": [
+                "mana_crystal"
+              ],
+              "covered_count": 1
+            },
+            {
+              "target_instance": "starlight_potion#3",
+              "target_item_id": "starlight_potion",
+              "covered_sources": [
+                "mana_crystal"
+              ],
+              "covered_count": 1
+            }
+          ],
+          "summary": "1/1=2"
+        },
+        "placements": [
+          {
+            "instance_id": "mana_crystal#0",
+            "item_id": "mana_crystal",
+            "rotation": 0,
+            "origin": [
+              0,
+              0
+            ],
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "star_positions": [
+              [
+                -1,
+                0
+              ],
+              [
+                0,
+                -1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                0
+              ]
+            ]
+          },
+          {
+            "instance_id": "rock#1",
+            "item_id": "rock",
+            "rotation": 0,
+            "origin": [
+              0,
+              3
+            ],
+            "cells": [
+              [
+                0,
+                3
+              ]
+            ],
+            "star_positions": []
+          },
+          {
+            "instance_id": "starbloom#2",
+            "item_id": "starbloom",
+            "rotation": 90,
+            "origin": [
+              0,
+              1
+            ],
+            "cells": [
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                2
+              ]
+            ],
+            "star_positions": [
+              [
+                1,
+                2
+              ],
+              [
+                -1,
+                1
+              ]
+            ]
+          },
+          {
+            "instance_id": "starlight_potion#3",
+            "item_id": "starlight_potion",
+            "rotation": 90,
+            "origin": [
+              1,
+              0
+            ],
+            "cells": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "star_positions": []
+          }
+        ],
+        "crafts": [],
+        "stars": [
+          {
+            "source_instance": "mana_crystal#0",
+            "target_instance": "starbloom#2",
+            "star_position": [
+              0,
+              1
+            ],
+            "effect_text": "Gain 1 Mana per Star Starbloom."
+          },
+          {
+            "source_instance": "mana_crystal#0",
+            "target_instance": "starlight_potion#3",
+            "star_position": [
+              1,
+              0
+            ],
+            "effect_text": "Gain 1 Mana per Star Starbloom."
+          },
+          {
+            "source_instance": "starbloom#2",
+            "target_instance": "starlight_potion#3",
+            "star_position": [
+              1,
+              2
+            ],
+            "effect_text": "On Star activation: 35% chance to gain 1 Mana."
+          }
+        ]
+      }
+    }
+  ]
+}

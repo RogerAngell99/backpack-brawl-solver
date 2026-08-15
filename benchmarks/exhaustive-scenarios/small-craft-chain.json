@@ -1,0 +1,23 @@
+{
+  "name": "small-craft-chain",
+  "grid": [
+    "111100000",
+    "111100000",
+    "000000000",
+    "000000000",
+    "000000000",
+    "000000000"
+  ],
+  "items": {
+    "wooden_sword": 2,
+    "whetstone": 1
+  },
+  "top": 3,
+  "workers": 1,
+  "max_nodes": 0,
+  "no_skips": false,
+  "repair_search": false,
+  "priorities": [
+    "craft:iron_sword"
+  ]
+}

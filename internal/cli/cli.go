@@ -1,0 +1,475 @@
+package cli
+
+import (
+	"encoding/json"
+	"flag"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"runtime"
+	"time"
+
+	"backpack-brawl-solver/internal/benchmark"
+	"backpack-brawl-solver/internal/catalog"
+	"backpack-brawl-solver/internal/geometry"
+	"backpack-brawl-solver/internal/model"
+	"backpack-brawl-solver/internal/render"
+	"backpack-brawl-solver/internal/scenario"
+	"backpack-brawl-solver/internal/solver"
+	"backpack-brawl-solver/internal/wikihtml"
+)
+
+func Run(args []string, stdout io.Writer, stderr io.Writer) int {
+	if len(args) == 0 {
+		printUsage(stderr)
+		return 2
+	}
+
+	switch args[0] {
+	case "validate-catalog":
+		return runValidateCatalog(args[1:], stdout, stderr)
+	case "review-catalog":
+		return runReviewCatalog(args[1:], stdout, stderr)
+	case "solve":
+		return runSolve(args[1:], stdout, stderr)
+	case "import-wiki":
+		return runImportWiki(args[1:], stdout, stderr)
+	case "import-html":
+		return runImportHTML(args[1:], stdout, stderr)
+	case "benchmark-scenarios":
+		return runBenchmarkScenarios(args[1:], stdout, stderr)
+	case "compare-benchmarks":
+		return runCompareBenchmarks(args[1:], stdout, stderr)
+	case "-h", "--help", "help":
+		printUsage(stdout)
+		return 0
+	default:
+		fmt.Fprintf(stderr, "unknown command %q\n", args[0])
+		printUsage(stderr)
+		return 2
+	}
+}
+
+func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("benchmark-scenarios", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	dir := flags.String("dir", filepath.Join("benchmarks", "scenarios"), "Directory containing scenario JSON files")
+	budgetsText := flags.String("budgets", benchmark.FormatBudgets(benchmark.DefaultBudgets), "Comma-separated node budgets")
+	repeat := flags.Int("repeat", 3, "Number of repetitions per scenario and budget")
+	workers := flags.Int("workers", 1, "Number of solver workers")
+	top := flags.Int("top", 1, "Number of solutions to keep")
+	repairSearchMode := flags.String("repair-search-mode", benchmark.RepairSearchModeScenario, "Repair search override: scenario, on, or off")
+	out := flags.String("out", "", "Path to write benchmark JSON; stdout when empty")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if *repeat <= 0 {
+		fmt.Fprintln(stderr, "ERROR: --repeat must be positive")
+		return 2
+	}
+	if *workers <= 0 {
+		fmt.Fprintln(stderr, "ERROR: --workers must be positive")
+		return 2
+	}
+	if *top <= 0 {
+		fmt.Fprintln(stderr, "ERROR: --top must be positive")
+		return 2
+	}
+	budgets, err := benchmark.ParseBudgets(*budgetsText)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	if err := benchmark.ValidateRepairSearchMode(*repairSearchMode); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+
+	report, err := benchmark.RunScenarios(benchmark.RunConfig{
+		CatalogPath:      *catalogPath,
+		ScenarioDir:      *dir,
+		Budgets:          budgets,
+		Repeat:           *repeat,
+		Workers:          *workers,
+		Top:              *top,
+		RepairSearchMode: *repairSearchMode,
+	})
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	content, err := json.MarshalIndent(report, "", "  ")
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	if *out == "" {
+		fmt.Fprintln(stdout, string(content))
+		return 0
+	}
+	if err := os.WriteFile(*out, append(content, '\n'), 0o600); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "Wrote %d benchmark runs to %s\n", len(report.Runs), *out)
+	return 0
+}
+
+func runCompareBenchmarks(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("compare-benchmarks", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if flags.NArg() != 2 {
+		fmt.Fprintln(stderr, "ERROR: compare-benchmarks expects baseline and current JSON files")
+		return 2
+	}
+
+	baseline, err := benchmark.LoadReport(flags.Arg(0))
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	current, err := benchmark.LoadReport(flags.Arg(1))
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	comparison, err := benchmark.CompareReports(baseline, current)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	benchmark.FormatComparison(stdout, comparison)
+	if comparison.ScoreLosses > 0 {
+		return 1
+	}
+	return 0
+}
+
+func runReviewCatalog(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("review-catalog", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+
+	loaded, err := catalog.Load(*catalogPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	fmt.Fprintln(stdout, render.CatalogReviewText(loaded))
+	return 0
+}
+
+func runValidateCatalog(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("validate-catalog", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+
+	loaded, err := catalog.Load(*catalogPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	warnings, errors := catalog.Validate(loaded)
+	for _, warning := range warnings {
+		fmt.Fprintf(stdout, "WARNING: %s\n", warning)
+	}
+	for _, validationError := range errors {
+		fmt.Fprintf(stdout, "ERROR: %s\n", validationError)
+	}
+	if len(errors) > 0 {
+		return 1
+	}
+	fmt.Fprintf(stdout, "Catalog valid: %d items, %d recipes\n", len(loaded.Items), len(loaded.Recipes))
+	return 0
+}
+
+func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("solve", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	scenarioPath := flags.String("scenario", "", "Path to a scenario JSON file")
+	itemsSpec := flags.String("items", "", "Comma-separated item ids, with optional id:count syntax")
+	gridText := flags.String("grid", "", "Inline 6x9 grid, rows separated by / or newlines")
+	gridFile := flags.String("grid-file", "", "Path to a text file containing a 6x9 grid")
+	top := flags.Int("top", 3, "Number of solutions to print")
+	maxNodes := flags.Int64("max-nodes", 200000, "Search node limit; 0 means no limit")
+	noSkips := flags.Bool("no-skips", false, "Require every inventory item to be placed")
+	stopOnCoverageCeiling := flags.Bool("stop-on-coverage-ceiling", false, "Stop early when the top coverage bucket reaches its theoretical ceiling")
+	repairSearch := flags.Bool("repair-search", true, "Run deterministic repair search for limited solves")
+	jsonOutput := flags.Bool("json", false, "Print machine-readable JSON")
+	workers := flags.Int("workers", runtime.NumCPU(), "Number of search workers")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+
+	setFlags := explicitlySetFlags(flags)
+	itemIDs, effectiveGridText, effectiveGridFile, effectiveTop, effectiveMaxNodes, effectiveNoSkips, effectiveStopOnCoverageCeiling, effectiveRepairSearch, effectiveWorkers, effectivePriorities, effectiveCoverageGroups, err := solveInputsFromFlags(
+		*scenarioPath,
+		*itemsSpec,
+		*gridText,
+		*gridFile,
+		*top,
+		*maxNodes,
+		*noSkips,
+		*stopOnCoverageCeiling,
+		*repairSearch,
+		*workers,
+		setFlags,
+	)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+
+	if effectiveTop <= 0 {
+		fmt.Fprintln(stderr, "ERROR: --top must be positive")
+		return 2
+	}
+	if effectiveWorkers <= 0 {
+		fmt.Fprintln(stderr, "ERROR: --workers must be positive")
+		return 2
+	}
+	if effectiveMaxNodes < 0 {
+		fmt.Fprintln(stderr, "ERROR: --max-nodes must be non-negative")
+		return 2
+	}
+
+	loaded, err := catalog.Load(*catalogPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	gridMask, err := gridMaskFromArgs(effectiveGridText, effectiveGridFile)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+
+	startedAt := time.Now()
+	solutions, err := solver.SolveLayout(loaded, itemIDs, gridMask, solver.Config{
+		TopN:                  effectiveTop,
+		AllowSkips:            !effectiveNoSkips,
+		MaxNodes:              effectiveMaxNodes,
+		Workers:               effectiveWorkers,
+		Priorities:            effectivePriorities,
+		CoverageGroups:        effectiveCoverageGroups,
+		StopOnCoverageCeiling: effectiveStopOnCoverageCeiling,
+		RepairSearch:          effectiveRepairSearch && effectiveMaxNodes > 0,
+	})
+	elapsed := time.Since(startedAt)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+
+	if *jsonOutput {
+		content, err := render.SolutionsJSON(solutions)
+		if err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 1
+		}
+		fmt.Fprintln(stdout, string(content))
+		return 0
+	}
+
+	if len(solutions) == 0 {
+		fmt.Fprintf(stdout, "Solved in %s\n", formatDuration(elapsed))
+		fmt.Fprintln(stdout, "No solutions found.")
+		return 1
+	}
+	applyNodesPerSecond(solutions, elapsed)
+	fmt.Fprintf(stdout, "Solved in %s\n", formatDuration(elapsed))
+	for idx, solution := range solutions {
+		fmt.Fprintf(stdout, "=== Solution %d ===\n", idx+1)
+		fmt.Fprintln(stdout, render.SolutionText(solution, gridMask))
+	}
+	return 0
+}
+
+func formatDuration(duration time.Duration) string {
+	if duration < time.Second {
+		return fmt.Sprintf("%d ms", duration.Milliseconds())
+	}
+	return fmt.Sprintf("%.2f s", duration.Seconds())
+}
+
+func applyNodesPerSecond(solutions []model.Solution, elapsed time.Duration) {
+	if elapsed <= 0 {
+		return
+	}
+	for idx := range solutions {
+		if solutions[idx].Search.NodesExplored == 0 {
+			continue
+		}
+		solutions[idx].Search.NodesPerSecond = float64(solutions[idx].Search.NodesExplored) / elapsed.Seconds()
+	}
+}
+
+func solveInputsFromFlags(
+	scenarioPath string,
+	itemsSpec string,
+	gridText string,
+	gridFile string,
+	top int,
+	maxNodes int64,
+	noSkips bool,
+	stopOnCoverageCeiling bool,
+	repairSearch bool,
+	workers int,
+	setFlags map[string]bool,
+) ([]string, string, string, int, int64, bool, bool, bool, int, []string, []model.CoverageGroup, error) {
+	effectiveItemsSpec := itemsSpec
+	effectiveGridText := gridText
+	effectiveGridFile := gridFile
+	effectiveTop := top
+	effectiveMaxNodes := maxNodes
+	effectiveNoSkips := noSkips
+	effectiveStopOnCoverageCeiling := stopOnCoverageCeiling
+	effectiveRepairSearch := repairSearch
+	effectiveWorkers := workers
+	var effectivePriorities []string
+	var effectiveCoverageGroups []model.CoverageGroup
+
+	if scenarioPath != "" {
+		loadedScenario, err := scenario.Load(scenarioPath)
+		if err != nil {
+			return nil, "", "", 0, 0, false, false, false, 0, nil, nil, err
+		}
+		effectivePriorities = append([]string(nil), loadedScenario.Priorities...)
+		effectiveCoverageGroups = loadedScenario.ModelCoverageGroups()
+		if !setFlags["grid"] && !setFlags["grid-file"] && len(loadedScenario.Grid) > 0 {
+			effectiveGridText = loadedScenario.GridText()
+			effectiveGridFile = ""
+		}
+		if !setFlags["top"] && loadedScenario.Top != nil {
+			effectiveTop = *loadedScenario.Top
+		}
+		if !setFlags["max-nodes"] && loadedScenario.MaxNodes != nil {
+			effectiveMaxNodes = *loadedScenario.MaxNodes
+		}
+		if !setFlags["no-skips"] && loadedScenario.NoSkips != nil {
+			effectiveNoSkips = *loadedScenario.NoSkips
+		}
+		if !setFlags["stop-on-coverage-ceiling"] && loadedScenario.StopOnCoverageCeiling != nil {
+			effectiveStopOnCoverageCeiling = *loadedScenario.StopOnCoverageCeiling
+		}
+		if !setFlags["repair-search"] && loadedScenario.RepairSearch != nil {
+			effectiveRepairSearch = *loadedScenario.RepairSearch
+		}
+		if !setFlags["workers"] && loadedScenario.Workers != nil {
+			effectiveWorkers = *loadedScenario.Workers
+		}
+		if !setFlags["items"] {
+			return loadedScenario.ItemIDs(), effectiveGridText, effectiveGridFile, effectiveTop, effectiveMaxNodes, effectiveNoSkips, effectiveStopOnCoverageCeiling, effectiveRepairSearch, effectiveWorkers, effectivePriorities, effectiveCoverageGroups, nil
+		}
+	}
+
+	if effectiveItemsSpec == "" {
+		return nil, "", "", 0, 0, false, false, false, 0, nil, nil, fmt.Errorf("--items is required unless --scenario is provided")
+	}
+	itemIDs, err := solver.ParseInventorySpec(effectiveItemsSpec)
+	if err != nil {
+		return nil, "", "", 0, 0, false, false, false, 0, nil, nil, err
+	}
+	return itemIDs, effectiveGridText, effectiveGridFile, effectiveTop, effectiveMaxNodes, effectiveNoSkips, effectiveStopOnCoverageCeiling, effectiveRepairSearch, effectiveWorkers, effectivePriorities, effectiveCoverageGroups, nil
+}
+
+func explicitlySetFlags(flags *flag.FlagSet) map[string]bool {
+	set := map[string]bool{}
+	flags.Visit(func(flag *flag.Flag) {
+		set[flag.Name] = true
+	})
+	return set
+}
+
+func runImportWiki(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("import-wiki", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	fmt.Fprintln(stdout, "Wiki import is a planned helper, not required by the v1 solver.")
+	fmt.Fprintln(stdout, "Direct wiki.gg access can be blocked by Cloudflare, so imported data must be reviewed.")
+	if flags.NArg() > 0 {
+		fmt.Fprintln(stdout, "Requested URLs:")
+		for _, url := range flags.Args() {
+			fmt.Fprintf(stdout, "  %s\n", url)
+		}
+	}
+	fmt.Fprintln(stdout, "For now, add or edit items in data/catalog.json and run validate-catalog.")
+	return 0
+}
+
+func runImportHTML(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("import-html", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	jsonOutput := flags.Bool("json", false, "Print machine-readable JSON instead of review text")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if flags.NArg() < 1 {
+		fmt.Fprintln(stderr, "ERROR: import-html expects one or more saved HTML files or directories")
+		return 2
+	}
+
+	proposals, err := wikihtml.ExtractPaths(flags.Args())
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	if !*jsonOutput {
+		fmt.Fprintln(stdout, wikihtml.ReviewText(proposals))
+		return 0
+	}
+
+	var content []byte
+	if len(proposals) == 1 {
+		content, err = wikihtml.MarshalProposal(proposals[0])
+	} else {
+		content, err = wikihtml.MarshalProposals(proposals)
+	}
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	fmt.Fprintln(stdout, string(content))
+	return 0
+}
+
+func gridMaskFromArgs(gridText string, gridFile string) (uint64, error) {
+	if gridFile != "" {
+		content, err := os.ReadFile(gridFile)
+		if err != nil {
+			return 0, err
+		}
+		return geometry.ParseGridText(string(content))
+	}
+	if gridText != "" {
+		return geometry.ParseGridText(gridText)
+	}
+	return geometry.FullGridMask(), nil
+}
+
+func printUsage(writer io.Writer) {
+	fmt.Fprintln(writer, "Usage: backpack-brawl-solver <command> [options]")
+	fmt.Fprintln(writer, "")
+	fmt.Fprintln(writer, "Commands:")
+	fmt.Fprintln(writer, "  validate-catalog")
+	fmt.Fprintln(writer, "  review-catalog")
+	fmt.Fprintln(writer, "  solve")
+	fmt.Fprintln(writer, "  import-wiki")
+	fmt.Fprintln(writer, "  import-html")
+	fmt.Fprintln(writer, "  benchmark-scenarios")
+	fmt.Fprintln(writer, "  compare-benchmarks")
+}

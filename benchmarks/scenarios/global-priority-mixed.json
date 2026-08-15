@@ -1,0 +1,46 @@
+{
+  "name": "global-priority-mixed",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "banana": 1,
+    "fine_sword": 1,
+    "knight_s_sigil": 1,
+    "magic_essence": 1,
+    "piercing_lance": 1,
+    "power_stone": 1,
+    "scalemail": 1,
+    "skull_cap": 1,
+    "stunbreaker_shield": 1,
+    "water_potion": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": false,
+  "repair_search": true,
+  "priorities": [
+    "coverage_group:1",
+    "star_source:magic_essence",
+    "coverage_group:0",
+    "craft:endurance_potion"
+  ],
+  "coverage_groups": [
+    {
+      "name": "Weapons",
+      "sources": ["power_stone"],
+      "targets": ["fine_sword", "piercing_lance"]
+    },
+    {
+      "name": "Armor",
+      "sources": ["knight_s_sigil"],
+      "targets": ["scalemail", "skull_cap", "stunbreaker_shield"]
+    }
+  ]
+}

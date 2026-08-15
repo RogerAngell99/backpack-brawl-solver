@@ -1,0 +1,34 @@
+{
+  "name": "user-powerstone-crafts-no-skips",
+  "grid": [
+    "000110000",
+    "111110000",
+    "111111111",
+    "111111111",
+    "000000000",
+    "000000000"
+  ],
+  "items": {
+    "banana": 1,
+    "brown_rat": 1,
+    "cactrio": 1,
+    "champion_s_ripper": 1,
+    "mallet": 1,
+    "nightshade": 1,
+    "power_stone": 1,
+    "skull_cap": 1,
+    "water_potion": 1,
+    "wooden_buckler": 1
+  },
+  "top": 1,
+  "workers": 16,
+  "max_nodes": 0,
+  "no_skips": true,
+  "repair_search": false,
+  "priorities": [
+    "star_source:power_stone",
+    "craft:stunbreaker_shield",
+    "craft:poison_potion",
+    "craft:endurance_potion"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "name": "craft-chain-weapons",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "amethyst_blade": 1,
+    "amethyst_pendant": 1,
+    "brainsquasher": 1,
+    "fine_sword": 1,
+    "iron_sword": 1,
+    "mallet": 1,
+    "whetstone": 1,
+    "wooden_club": 2,
+    "wooden_sword": 2
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": false,
+  "repair_search": true,
+  "priorities": [
+    "craft:iron_sword",
+    "craft:fine_sword",
+    "craft:amethyst_blade",
+    "craft:mallet",
+    "craft:brainsquasher"
+  ]
+}

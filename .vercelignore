@@ -1,0 +1,17 @@
+# Keep the upload focused on the application and canonical data.
+.git/
+.vercel/
+analysis/
+benchmarks/
+build/
+tmp-*.png
+
+# Generated or installed web artifacts are recreated by the build.
+web/node_modules/
+web/dist/
+web/public/
+
+# Local tooling and caches.
+*.log
+__pycache__/
+coverage.out

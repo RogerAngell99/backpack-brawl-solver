@@ -1,0 +1,35 @@
+{
+  "name": "magic-ranged-crafts",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "belt_of_firethrowing": 1,
+    "cinderstaff": 1,
+    "hungry_wand": 1,
+    "leather_belt": 1,
+    "mana_crystal": 1,
+    "mana_potion": 1,
+    "searing_wand": 1,
+    "starbloom": 2,
+    "starlight_potion": 1,
+    "wicked_stick": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": false,
+  "repair_search": true,
+  "priorities": [
+    "craft:hungry_wand",
+    "craft:cinderstaff",
+    "craft:starlight_potion",
+    "craft:belt_of_firethrowing",
+    "star_source:mana_crystal"
+  ]
+}

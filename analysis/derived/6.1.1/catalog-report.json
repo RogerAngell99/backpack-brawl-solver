@@ -1,0 +1,9946 @@
+{
+  "catalog_items": 1196,
+  "catalog_recipes": 477,
+  "runtime_items": 1196,
+  "runtime_recipes": 488,
+  "valid_runtime_recipes": 470,
+  "matched_ids": 170,
+  "new_ids": [
+    "a_hug_in_a_mug",
+    "abyssal_embrace",
+    "adamantite_axepick",
+    "adamantite_forge_hammer",
+    "adamantite_ore",
+    "admiralty_anchor",
+    "aeonglass",
+    "aged_grape_juice",
+    "all_seeing_bat",
+    "amberheart_amulet",
+    "amethyst",
+    "amethyst_dancer",
+    "ancestral_spirit",
+    "ancient_grog",
+    "ancient_relic",
+    "ancient_soul",
+    "animal_affinity",
+    "aping_acolyte",
+    "apophian_saif",
+    "arboreal_defender",
+    "arcane_astrolabe",
+    "arcane_bolt_blaster",
+    "arcane_core",
+    "arcane_crystal",
+    "arcane_starcharter",
+    "arcanefly",
+    "arctic_core",
+    "aristorat",
+    "armor_pack",
+    "arrow_sheath",
+    "aspirant_s_axe",
+    "astral_gloves",
+    "astral_reaver",
+    "autotrigger",
+    "axe_of_abraxas",
+    "axe_shaped_present",
+    "bag_of_bargains",
+    "bag_of_flour",
+    "bag_of_lost_souls",
+    "bag_of_maggots",
+    "bag_of_wilful_burden",
+    "ball_of_thread",
+    "banana_shaped_present",
+    "bandage",
+    "barbed_spring",
+    "bargain_hunter",
+    "bargain_of_blinding_fortunes",
+    "bargain_of_borrowed_time",
+    "bargain_of_exhausting_strength",
+    "bargain_of_fleeting_shelter",
+    "bargain_of_hollow_retribution",
+    "bargain_of_maddening_recovery",
+    "bargain_of_meager_sips",
+    "bargain_of_restless_vigor",
+    "bargain_of_searing_salves",
+    "bargain_of_shared_sorcery",
+    "bargain_of_stumbling_speed",
+    "bargain_of_surfeited_feasts",
+    "bargain_of_tainted_transfusion",
+    "barkskin_horn",
+    "barkweave_basket",
+    "bat_visor",
+    "bear_visage",
+    "beautiful_bouquet",
+    "bellringer_beetle",
+    "berserker_helmet",
+    "berserker_potion",
+    "berserker_sack",
+    "big_chocolate_gift_box",
+    "big_clockwork_bomb",
+    "big_present",
+    "bite_trap",
+    "black_cat",
+    "black_dragon_whelpling",
+    "blast_furnace_bellows",
+    "blasted_gull",
+    "blazegaze",
+    "blazing_berry",
+    "blightbringer",
+    "blind_bake_pie",
+    "blind_fury_potion",
+    "blood_moon_berry",
+    "blood_siphon_potion",
+    "blooddrinker",
+    "bloodrage_axe",
+    "bloodsoaked_bandage",
+    "bloodsport_spatha",
+    "bloodsucker_s_visage",
+    "bloodthorn",
+    "bloodwood_spear",
+    "bloody_backpack",
+    "blossoming_friendship",
+    "blue_dragon_whelpling",
+    "blueberry_bliss",
+    "bolstering_bag",
+    "bolt_cutter",
+    "bolt_quiver",
+    "bolts",
+    "bombus",
+    "bonebreaker_s_bludgeon",
+    "bonecrusher",
+    "bonesaw",
+    "boo_bar",
+    "book_of_dark_secrets",
+    "book_of_ephemeral_earth",
+    "book_of_everlasting_flame",
+    "bookie_s_coin_purse",
+    "boom_barrel",
+    "boomer",
+    "boomscrolling_i",
+    "boomscrolling_ii",
+    "boomscrolling_iii",
+    "boomscrolling_iv",
+    "boomslang",
+    "bosun_s_monocular",
+    "bottom_trawl",
+    "bottomless_stocking",
+    "boulder",
+    "bouquet_of_roses",
+    "box_of_chocolates",
+    "bramblebat",
+    "brambleheart",
+    "bramblethorn_thicket",
+    "briarthorn",
+    "bright_vision_goggles",
+    "brimstone_powder",
+    "briny_fish_basket",
+    "briny_mystery_egg",
+    "broken_oar",
+    "bronze_beetle",
+    "bronzebark_carnyx",
+    "bucket_of_nightmares",
+    "bullseye_bamboozles_i",
+    "bullseye_bamboozles_ii",
+    "bullseye_bamboozles_iii",
+    "bullseye_bamboozles_iv",
+    "bumblerat",
+    "bunny_basket",
+    "butter",
+    "buzzing_bouquet",
+    "buzzing_bungalow",
+    "buzzing_mystery_egg",
+    "caged_songbird",
+    "calloused_conditioning",
+    "campfire_skillet",
+    "candy_corn",
+    "candy_swirl",
+    "canopic_jar",
+    "captain_s_cap",
+    "carnage_saw",
+    "cash_flow_catering",
+    "cast_iron_anchor",
+    "cast_net",
+    "cat_o_lantern",
+    "cat_whisker_whisk",
+    "cataclysm",
+    "caterpillar",
+    "cemetery_sweeper",
+    "ceremonial_lathi",
+    "chain_lightning_codex",
+    "chained_twin_choppers",
+    "chainmail",
+    "champion_bee",
+    "champion_s_laurels",
+    "champion_s_syrup",
+    "changing_of_the_gourd_i",
+    "changing_of_the_gourd_ii",
+    "changing_of_the_gourd_iii",
+    "changing_of_the_gourd_iv",
+    "charcuterie_shield",
+    "charged_girdle",
+    "charged_tesseract",
+    "cheese",
+    "cheese_board_buckler",
+    "cheese_wheel_of_fortune",
+    "chef_s_hat",
+    "chef_s_knife",
+    "chitinous_coagulation",
+    "chum_bucket",
+    "cleansomatic",
+    "clockwork",
+    "cocoonling",
+    "coldfin_cod",
+    "concentrated_dilution_liquid",
+    "contender_s_cleaver",
+    "core_reactor",
+    "corny_corn",
+    "corrupted_shroom",
+    "corruptor_s_wisdom",
+    "count_ratula",
+    "counterfeit_coin",
+    "crab_trap",
+    "creepy_doll",
+    "critical_sack",
+    "croissant",
+    "croissant_crossbow",
+    "cronenberg_kibble",
+    "croquette",
+    "crowbane",
+    "crowbar",
+    "crowdpleaser_s_crusher",
+    "crownwood",
+    "crownwood_lur",
+    "crystal_ball",
+    "crystal_cluster",
+    "crystal_golem",
+    "crystal_shard",
+    "cursed_candy",
+    "cursed_dagger",
+    "cutting_board_bag",
+    "cyclone_gem",
+    "danger_candle",
+    "dark_iron_anvil",
+    "dark_omen",
+    "darkvision_faceguard",
+    "deathbringer",
+    "deathdart_dispenser",
+    "deathhowl",
+    "deathshot",
+    "deathtouch_jelly",
+    "deepsea_candiru",
+    "defender_s_shield",
+    "delicate_matter_converter",
+    "dendromancy_rod",
+    "diamond",
+    "diamond_covered_toecaps",
+    "diamond_dust",
+    "donut",
+    "doomsday_oarfish",
+    "dormant_dragon_egg",
+    "double_ender",
+    "dragon_bone",
+    "dragon_claw",
+    "dragon_s_tail_jelly",
+    "dragon_scale",
+    "dragonbone_club",
+    "dragonbreath_chili",
+    "dragonfang",
+    "dragonfang_talisman",
+    "dragonflower",
+    "dragonleaf",
+    "dragonleaf_acorn",
+    "dragonleaf_sapling",
+    "dragonscale_belt",
+    "dragonscale_cuirass",
+    "drakefly",
+    "drakerider_s_javelin",
+    "dreadleaf",
+    "drift_net",
+    "drillbot",
+    "dull_oyster_shucker",
+    "dumbbell",
+    "duneshaper_jazerant",
+    "durable_matter_converter",
+    "duskreaver",
+    "dustwind_turban",
+    "dusty_book",
+    "eagle_eye_amulet",
+    "eat_fresh",
+    "edge_calibrator",
+    "egg_bunny",
+    "electric_crown",
+    "electric_seasnake",
+    "electrobat",
+    "electrostatic_scroll",
+    "elemental_confluence",
+    "elemental_core",
+    "elemental_greatstaff",
+    "elemental_mystery_egg",
+    "elemental_whetstone",
+    "elementium_bulwark",
+    "elementium_golem",
+    "elementium_ore",
+    "elixir_express_3000",
+    "elven_blade",
+    "emerald",
+    "emerald_scarab",
+    "emperor_cobra",
+    "enchanted_whetstone",
+    "enchanter_s_antlers",
+    "engraved_was",
+    "enhanced_drillbot",
+    "enhanced_endurance",
+    "enhanced_performance_potion",
+    "enlightened_bell",
+    "equilibrium",
+    "eternal_heart",
+    "eternity_essence",
+    "everdrift_anchor",
+    "evergreen_arc",
+    "exhaustion_stone",
+    "experimental_ice_cream",
+    "expiry_discount",
+    "extra_long_present",
+    "eyeball",
+    "eyeball_vessel",
+    "ez_share_gas_mask",
+    "fancy_big_present",
+    "fancy_long_present",
+    "fancy_small_present",
+    "fancy_tiny_present",
+    "fang_the_rattleslang",
+    "fanny_pack",
+    "faulty_compass",
+    "faunakinesis",
+    "feather_of_trollmotius",
+    "feathered_first_mate",
+    "fecundity",
+    "feeling_the_heat_i",
+    "feeling_the_heat_ii",
+    "feeling_the_heat_iii",
+    "feeling_the_heat_iv",
+    "feral_cat",
+    "fermented_grape_juice",
+    "fetching_familiar",
+    "fiery_quiver",
+    "filled_chocolate_circle",
+    "filled_chocolate_clover",
+    "filled_chocolate_egg",
+    "filled_chocolate_heart",
+    "filled_chocolate_moon",
+    "filled_chocolate_shield",
+    "filled_chocolate_square",
+    "filled_chocolate_star",
+    "filled_chocolate_triangle",
+    "final_blow",
+    "finely_ground_gravel",
+    "fingerprintless_gloves",
+    "finishing_flourish",
+    "fire_lord_s_brand",
+    "firebug",
+    "firestarter",
+    "fisherman_s_hook",
+    "fishing_harpoon",
+    "fishing_rod",
+    "fishmonger_s_favor",
+    "fists_of_flame",
+    "five_leaf_cave_clover",
+    "flail_of_atonement",
+    "flame_bolt",
+    "flamescale_seadrake",
+    "flaming_sword",
+    "flash_freeze",
+    "flash_potion",
+    "flashbang",
+    "flashy_boots",
+    "flotsam",
+    "fluttercatcher",
+    "flying_broom",
+    "folded_steel",
+    "food_festival",
+    "fools_gold",
+    "forest_mower",
+    "forest_spirit",
+    "forgemaster_s_tongs",
+    "fortified_sanjiegun",
+    "foul_brew",
+    "frost_bolts",
+    "frost_quiver",
+    "frostbite_ring",
+    "frostwing",
+    "full_plate_splatterguard",
+    "fulmination_hammer",
+    "funky_fundue",
+    "fury_edge",
+    "fury_fungus",
+    "fuzzy_mystery_egg",
+    "fuzzy_sous_chef",
+    "galvanic_armor",
+    "gambler_s_fortitude",
+    "game_night_guile",
+    "gear",
+    "gem_studded_forgeplate",
+    "gemforged_warpick",
+    "gemfused_workboots",
+    "gemstone_forge_hammer",
+    "genie_of_exotic_elixirs",
+    "genie_of_fabulous_feasts",
+    "genie_of_glittering_gifts",
+    "genie_of_mystical_menageries",
+    "genie_of_tantalizing_trinkets",
+    "genie_of_wondrous_weaponry",
+    "getting_hammered_i",
+    "getting_hammered_ii",
+    "getting_hammered_iii",
+    "giant_chocolate_gift_box",
+    "giant_s_belt",
+    "gladiator_s_emblem",
+    "gladiatrix_girdle",
+    "gladius",
+    "glaring_bulb",
+    "glass_sphere",
+    "glass_sprite",
+    "glasshead",
+    "gleaming_kunai",
+    "glimmering_yatagan",
+    "glittercall_magpie",
+    "gobituary_dart",
+    "goblin_gizmo",
+    "goblin_spice_mix",
+    "gobliterator_dart",
+    "gobnoxious_dart",
+    "god_king_khopesh",
+    "gold_attuned_shovel",
+    "gold_elixir",
+    "gold_ore",
+    "gold_scarab",
+    "goldcrest",
+    "golden_clover",
+    "golden_egg",
+    "golden_eggnog",
+    "golden_gravel",
+    "golden_omelette",
+    "goliathfly",
+    "gothic_shield",
+    "gourd_grimace",
+    "grab_bag",
+    "grandma_s_dusty_blast_box",
+    "grandpaw_s_cookbook",
+    "grandpaw_s_pepper_mill",
+    "grape_burst",
+    "grape_juice_cask",
+    "grapes",
+    "grapeshot_slinger",
+    "graveyard_skullduggery_i",
+    "graveyard_skullduggery_ii",
+    "graveyard_skullduggery_iii",
+    "graveyard_skullduggery_iv",
+    "graveyard_soil",
+    "green_dragon_whelpling",
+    "green_thumb_prickery_i",
+    "green_thumb_prickery_ii",
+    "green_thumb_prickery_iii",
+    "green_thumb_prickery_iv",
+    "grilled_cheese",
+    "grim_scythe",
+    "grovekeeper_crown",
+    "guppy",
+    "gururangutan",
+    "hag_s_cauldron",
+    "hag_s_hatred",
+    "hailstorm_scepter",
+    "hammer_shaped_present",
+    "hand_crossbow",
+    "hand_file",
+    "harper_sonic_dart_sling",
+    "harvest_skull",
+    "haunted_bat",
+    "having_it_bolt_ways_i",
+    "having_it_bolt_ways_ii",
+    "having_it_bolt_ways_iii",
+    "having_it_bolt_ways_iv",
+    "head_chef_s_skewer",
+    "headliner_s_halberd",
+    "healing_seed",
+    "heart_of_the_mountain",
+    "heartleaf",
+    "hearts_ablaze",
+    "heartstring_lyre",
+    "heartwood",
+    "heavenly_skull",
+    "holy_essence",
+    "holy_libram",
+    "honey_bee",
+    "hooded_cowl",
+    "hooked_dagger",
+    "hot_choconut",
+    "huddle_up",
+    "huge_chocolate_gift_box",
+    "hunter_s_bow",
+    "hunting_knife",
+    "hurricane_focus",
+    "hypnodisc_deflector",
+    "i_saw_what_you_did_i",
+    "i_saw_what_you_did_ii",
+    "i_saw_what_you_did_iii",
+    "i_saw_what_you_did_iv",
+    "ice_age_boomer",
+    "iceburn_scepter",
+    "impossible_bottle",
+    "improvised_smokebomb",
+    "inconspicuous_fedora",
+    "indomitable_snowman",
+    "infernal_ashes",
+    "infernal_cog",
+    "infernal_tide",
+    "infinity_essence",
+    "infinity_sight",
+    "ingobnito_mask",
+    "instant_eternity",
+    "intense_incense",
+    "iron_bolt",
+    "iron_chisel",
+    "iron_egg_mastery",
+    "iron_forge_hammer",
+    "iron_ore",
+    "ironhowl",
+    "ironwood_boltcaster",
+    "it_fell_off_a_sleigh",
+    "ivory_knife",
+    "jack_o_lantern",
+    "jackalope",
+    "jade_dagger",
+    "jade_stone",
+    "jambiya",
+    "jelly_jar",
+    "jetsam",
+    "just_desserts",
+    "karmic_essence",
+    "keen_edges",
+    "kelvin_s_tome",
+    "ki_flow_cord",
+    "kill_command",
+    "kiritsuke_knife",
+    "kitchen_aides",
+    "kitsune_spirit_mask",
+    "kitten_s_oven_mittens",
+    "knighttime_break_in_i",
+    "knighttime_break_in_ii",
+    "knighttime_break_in_iii",
+    "knighttime_break_in_iv",
+    "koneko_steel_knife",
+    "lantern",
+    "lanternbug",
+    "large_water_potion",
+    "lava_boulder",
+    "lava_dagger",
+    "lava_golem",
+    "lava_rock",
+    "lb_7_gobstacle_skippers",
+    "leafblade_skean",
+    "leafbound_striders",
+    "leafing_in_a_hurry_i",
+    "leafing_in_a_hurry_ii",
+    "leafing_in_a_hurry_iii",
+    "leafing_in_a_hurry_iv",
+    "leaky_prototype",
+    "length_of_rope",
+    "let_the_crowd_decide",
+    "leviathan",
+    "lifeless_mystery_egg",
+    "light_bow",
+    "lightning_in_a_bottle",
+    "lightning_rod",
+    "lightning_sprite",
+    "lily_pad_prince",
+    "line_cook_s_apron",
+    "liquid_electricity",
+    "living_legend_s_longsword",
+    "living_staff",
+    "loaf_of_bread",
+    "lobster_pot",
+    "lockpick_dart",
+    "loincloth_of_fortitude",
+    "long_present",
+    "lost_runeword",
+    "lost_symbol",
+    "love_is_in_the_air",
+    "love_letter",
+    "lucky_ratomelon",
+    "lumber_jacked_i",
+    "lumber_jacked_ii",
+    "lumber_jacked_iii",
+    "lumber_jacked_iv",
+    "lumps_of_coal",
+    "magic_carpet",
+    "magic_wrapping_paper",
+    "magnetronic_retrieval_rod",
+    "main_event_maul",
+    "makeshift_oar",
+    "mala_necklace",
+    "man_o_lorian_helmet",
+    "mana_recycler",
+    "mana_strudel",
+    "mango_delight",
+    "manuka_honey",
+    "mars_flytrap",
+    "martial_monkey",
+    "mature_oakheart",
+    "mealtime_metabolism",
+    "meat_cleaver",
+    "mechanized_armor",
+    "medium_bag",
+    "mega_strike_jewel",
+    "melange",
+    "merman_s_delight",
+    "midas_touch",
+    "midori_bolt",
+    "midori_quiver",
+    "midori_smokebomb",
+    "midori_toxin",
+    "mimic",
+    "mining_helmet",
+    "mining_pick",
+    "molten_core_creeper",
+    "moon_scarab",
+    "moonlit_blade",
+    "morning_fog",
+    "mossfur_squirrel",
+    "mysterious_lamp",
+    "mystic_rat",
+    "naughty_or_nice",
+    "nebula_jelly",
+    "neptune_s_wrath",
+    "nice_spice_rack",
+    "night_angler",
+    "nightingale",
+    "nightsong_raven",
+    "no_cost_too_high",
+    "nor_easter_hat",
+    "noxious_lantern",
+    "noxious_red_mush",
+    "oakblood_glaive",
+    "oakheart_acorn",
+    "oakheart_sapling",
+    "oakheart_sprout",
+    "ocarina_of_thyme",
+    "octorius",
+    "odd_cod",
+    "odd_mystery_egg",
+    "oddly_shaped_present",
+    "oil",
+    "oil_of_vitriol",
+    "oilskin_slicker",
+    "one_more_wish",
+    "operation_crustacean_i",
+    "operation_crustacean_ii",
+    "operation_crustacean_iii",
+    "operation_crustacean_iv",
+    "operation_fermentation_i",
+    "operation_fermentation_ii",
+    "operation_fermentation_iii",
+    "operation_fermentation_iv",
+    "painkiller_pitweed",
+    "pantry_power",
+    "paring_knife",
+    "partial_invisibility_cloak",
+    "parts_satchel",
+    "pebbles_the_golem_lord",
+    "perennial_recurve",
+    "perfectly_normal_crab",
+    "performance_bonus",
+    "performance_potion",
+    "perpetual_stew",
+    "pet_collar",
+    "pet_rock",
+    "pet_trainer_s_whistle",
+    "photosynthesis",
+    "pinewhisper_thrush",
+    "pinktail",
+    "pitmaster_s_poker",
+    "placebo_potion",
+    "plague_ichor",
+    "plague_rat",
+    "plaguebringer_s_pendant",
+    "planner_s_pack",
+    "pleasant_green_paste",
+    "pliers",
+    "plunder_and_lightning_i",
+    "plunder_and_lightning_ii",
+    "plunder_and_lightning_iii",
+    "plunder_and_lightning_iv",
+    "poison_arrows",
+    "pollen_palace",
+    "polyphemus_bane",
+    "poppy",
+    "portable_siege_engine",
+    "potato",
+    "potent_pollen",
+    "potent_poultice",
+    "potion_mixer",
+    "potion_of_botulinum",
+    "powdered_dragonbone",
+    "power_cluster",
+    "power_vacuum",
+    "powersurge_mask",
+    "prayer_bell",
+    "predator_scales",
+    "predator_teeth",
+    "premeditated_stinkbomb",
+    "prismatic_dragon_whelpling",
+    "proto_golem",
+    "pugio",
+    "pumpkin",
+    "pumpkin_patch",
+    "purrfect_mask",
+    "pyrefly",
+    "quarterstaff",
+    "quartz_sprite",
+    "queen_bee",
+    "quiver_of_speed",
+    "radiance_satchel",
+    "ranger_s_satchel",
+    "rat_burglar",
+    "rat_king_s_crown",
+    "rat_lich",
+    "rat_romancer",
+    "ratatoskr",
+    "ratbone",
+    "ratnaros",
+    "ratuman_the_white",
+    "ratymandias",
+    "razor_bolt",
+    "razorvine",
+    "real_fake_blood",
+    "reaper_s_judgement",
+    "rebirth_mask",
+    "recharge_rucksack",
+    "red_dragon_whelpling",
+    "red_widow",
+    "reef_knot",
+    "reefspike",
+    "refined_jade",
+    "reflective_facemask",
+    "regenerating_shield",
+    "regrowth_barrier",
+    "regular_old_lobster",
+    "reinforced_mining_bag",
+    "relative_safety_goggles",
+    "reptile_stalker",
+    "retiarius_net",
+    "ribbon_ripper",
+    "rich_flavour",
+    "rickety_mining_cart",
+    "rig_the_odds",
+    "river_rat",
+    "robo_rat_2_0",
+    "rod_of_memories",
+    "rolling_pin_nunchucks",
+    "rolling_thunder_tablet",
+    "rootflare_flute",
+    "royal_banana",
+    "royal_nectar",
+    "ruby",
+    "ruby_admiral",
+    "rudis",
+    "runed_scimitar",
+    "runesmith_goniometer",
+    "rustjaw_shredder",
+    "rusty_forge_hammer",
+    "rusty_sword",
+    "salty_mystery_egg",
+    "sand_golem",
+    "sand_sprite",
+    "sandbinder_shackles",
+    "sapphire",
+    "sapphire_morpho",
+    "sapwood",
+    "sapwood_javelin",
+    "sawfin_shark",
+    "scarecrow",
+    "scorpion_king",
+    "scorpionfly",
+    "scrap_metal",
+    "screwsmacker",
+    "scroll_of_air",
+    "scroll_of_awakening",
+    "scroll_of_binding",
+    "scroll_of_blood",
+    "scroll_of_earth",
+    "scroll_of_fire",
+    "scroll_of_potential",
+    "scroll_of_replenishment",
+    "scroll_of_sharp_edges",
+    "scroll_of_water",
+    "seafarer_s_telescope",
+    "seafoam_pipe",
+    "searing_shears",
+    "seeds",
+    "serpent_deathbolt",
+    "sewer_dwelling_sensei",
+    "shadow_armor",
+    "shadow_cloak",
+    "shadow_satchel",
+    "shadow_step",
+    "shellfish_attitude",
+    "shield_spikes",
+    "shifting_visage",
+    "shock_and_ore_i",
+    "shock_and_ore_ii",
+    "shock_and_ore_iii",
+    "shock_and_ore_iv",
+    "shock_gloves",
+    "shoddy_handline",
+    "short_shamshir",
+    "shovel",
+    "sigil_of_eternal_frost",
+    "silver_sand",
+    "silver_scarab",
+    "silverbark_bow",
+    "simple_blowgun",
+    "simple_quiver",
+    "simple_scythe",
+    "siphoning_chalice",
+    "six_spoke_ship_s_wheel",
+    "skull",
+    "skullsmasher",
+    "sledgehammer",
+    "slithering_lobster",
+    "small_present",
+    "smokeweaver",
+    "snake_oil",
+    "snapdragon",
+    "sniper_scope",
+    "snipers_monocle",
+    "snow_boulder",
+    "snow_pear",
+    "snowball",
+    "snowballer",
+    "some_like_it_hot",
+    "sorcerat",
+    "soul_cleaver",
+    "soulharvester",
+    "soulpiercer",
+    "soulstealer",
+    "soup_ladle",
+    "spanner",
+    "spark",
+    "spectral_sweet",
+    "speed_essence",
+    "spicy_sausage",
+    "spiderweb",
+    "spiked_sickle",
+    "spiked_whip",
+    "spinegrowth_signet",
+    "spirit_biscuit",
+    "sponsor_s_banner",
+    "spring",
+    "sprint_bot",
+    "squirming_bicorne",
+    "staff_of_wisdom",
+    "stalker_s_shiv",
+    "stamina_sack",
+    "starwing",
+    "stay_hydrated",
+    "stealing_the_show",
+    "steel_forge_hammer",
+    "steel_pickaxe",
+    "sticky_dart",
+    "sticky_fingers",
+    "sticky_stuff",
+    "stinger_collector",
+    "stingtrap",
+    "stinkbug",
+    "stolen_moment",
+    "stone_golem",
+    "stoneheart_brew",
+    "stonehide_mask",
+    "storm_lute",
+    "stormbound_tranquility",
+    "stormbreaker_armor",
+    "stormcloud_staff",
+    "stormstrike_gavel",
+    "strong_antivenom",
+    "strong_health_potion",
+    "struggling_marlin",
+    "sturdy_fly_gaff",
+    "sturdy_roots",
+    "sturdy_stick",
+    "sturdy_targe",
+    "subtle_distractor_shield",
+    "sun_scarab",
+    "sundancer",
+    "sunflower",
+    "superfoodie",
+    "superior_bolts",
+    "superior_gear",
+    "superior_spring",
+    "suspicious_sausage",
+    "sweetie",
+    "swift_sunrise_spear",
+    "tactical_blowgun",
+    "tactical_knapsack",
+    "tempered_ritual_staff",
+    "temporal_stone",
+    "tender_sausage",
+    "the_butterfly_deflect_i",
+    "the_butterfly_deflect_ii",
+    "the_butterfly_deflect_iii",
+    "the_butterfly_deflect_iv",
+    "the_calamari_caper_i",
+    "the_calamari_caper_ii",
+    "the_calamari_caper_iii",
+    "the_calamari_caper_iv",
+    "the_cookout_break_in_i",
+    "the_cookout_break_in_ii",
+    "the_cookout_break_in_iii",
+    "the_cookout_break_in_iv",
+    "the_cool_hand_fluke_i",
+    "the_cool_hand_fluke_ii",
+    "the_cool_hand_fluke_iii",
+    "the_cool_hand_fluke_iv",
+    "the_ding_dong_ditch_i",
+    "the_ding_dong_ditch_ii",
+    "the_ding_dong_ditch_iii",
+    "the_ding_dong_ditch_iv",
+    "the_moonlit_drill_bit_i",
+    "the_moonlit_drill_bit_ii",
+    "the_moonlit_drill_bit_iii",
+    "the_moonlit_drill_bit_iv",
+    "the_porphyry_forgery_i",
+    "the_porphyry_forgery_ii",
+    "the_porphyry_forgery_iii",
+    "the_porphyry_forgery_iv",
+    "the_price_of_love",
+    "the_rusty_surgeon_i",
+    "the_rusty_surgeon_ii",
+    "the_rusty_surgeon_iii",
+    "the_scrapyard_scam_i",
+    "the_scrapyard_scam_ii",
+    "the_scrapyard_scam_iii",
+    "the_scrapyard_scam_iv",
+    "the_spicy_duneshaper_caper_i",
+    "the_spicy_duneshaper_caper_ii",
+    "the_spicy_duneshaper_caper_iii",
+    "the_spicy_duneshaper_caper_iv",
+    "the_spirit_of_heistmas",
+    "the_tenderizer",
+    "the_vault_assault_i",
+    "the_vault_assault_ii",
+    "the_vault_assault_iii",
+    "the_vault_assault_iv",
+    "the_voidcaller",
+    "thick_hide",
+    "third_eye_blindfold",
+    "thorned_crown",
+    "thoughtful_thrifts",
+    "three_eyed_crab",
+    "throwing_hatchet",
+    "thunder_rat",
+    "thunder_sword",
+    "thunderbolt",
+    "thunderfork",
+    "thunderstorm_spear",
+    "thunderstrike_ring",
+    "tidal_clam",
+    "tidal_staff",
+    "tidepiercer",
+    "timeless_hourglass",
+    "tiny_kraken_tooth",
+    "tiny_present",
+    "titanwood_repeater",
+    "titlekeeper_s_trident",
+    "tomahawk",
+    "tonfas",
+    "toolbox",
+    "torch",
+    "toxic_bolt",
+    "trangoblizer_dart",
+    "transmutation",
+    "treasure_chest",
+    "trick_or_treat_bucket",
+    "triple_flourish_flail",
+    "truefire_bracers",
+    "trusty_trench_coat",
+    "tulip",
+    "twilight_mantle",
+    "twilight_scarab",
+    "two_is_better_than_one",
+    "unblinking_overwatch",
+    "unbreakable_wall",
+    "underground_ore_deals_i",
+    "underground_ore_deals_ii",
+    "underground_ore_deals_iii",
+    "underground_ore_deals_iv",
+    "unfortunate_axidents_i",
+    "unfortunate_axidents_ii",
+    "unfortunate_axidents_iii",
+    "unfortunate_tuna",
+    "unholy_sword",
+    "unleash_chaos",
+    "unsafe_safe_cracker",
+    "upcycling",
+    "vampire_bat",
+    "vampire_s_scepter",
+    "vampire_worm",
+    "vanilla_dream",
+    "velocity_ring",
+    "venus_pitfall",
+    "very_big_present",
+    "viperskin_strap",
+    "viridian_warbler",
+    "vitri_oil_vault_drill",
+    "voltaic_shiv",
+    "war_drum",
+    "warbringer",
+    "warhammer",
+    "warrior_backpack",
+    "wax_candle",
+    "web_slinger_cover",
+    "weightless_stone",
+    "weirdly_shaped_present",
+    "welding_torch",
+    "werewolf_paw",
+    "whirling_momentum",
+    "whirling_nunchucks",
+    "whispering_conch",
+    "wild_rose",
+    "wilderness_potion",
+    "wildflower_seeds",
+    "wildflower_symphony",
+    "willow_wand",
+    "willowfin",
+    "windchill_factor",
+    "winged_thorns",
+    "wizard_s_pouch",
+    "wolfstrike",
+    "wood_sprite",
+    "wooden_fife",
+    "wooden_spoon",
+    "woodsman_s_axe",
+    "worker_bee",
+    "world_s_end",
+    "worn_out_lifebuoy",
+    "wrangling_the_wyrm_i",
+    "wrangling_the_wyrm_ii",
+    "wrangling_the_wyrm_iii",
+    "wrangling_the_wyrm_iv",
+    "wrap_it_up",
+    "wrath_potion",
+    "writhing_tentacle",
+    "wyrmblood_vial",
+    "young_oakheart",
+    "zap_rat",
+    "zenpanzee",
+    "zephyr_s_edge"
+  ],
+  "catalog_only_ids": [],
+  "conflicts": [],
+  "resolved_overrides": [
+    {
+      "item_id": "arcane_scroll",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "arcane_scroll",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "belt_of_firethrowing",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Belt"
+      ]
+    },
+    {
+      "item_id": "belt_of_firethrowing",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "belt_of_firethrowing",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "chillbane",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "chillbane",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "cinderstaff",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "cinderstaff",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "conflagration_staff",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "conflagration_staff",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "conflagration_staff",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "cosmos_ward",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "cosmos_ward",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "cryoblaze_staff",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "cryoblaze_staff",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "elemental_barrier",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "elemental_barrier",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "flame_cloak",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "RobeOrCloak"
+      ]
+    },
+    {
+      "item_id": "flame_cloak",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "flame_cloak",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "frost_scroll",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "frost_scroll",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "frostbite_wand",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "frostbite_wand",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "hungry_wand",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "hungry_wand",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "mana_crystal",
+      "field": "types",
+      "curated": [
+        "Charm",
+        "Accessory"
+      ],
+      "runtime": [
+        "Charm",
+        "Accessory",
+        "Gem"
+      ]
+    },
+    {
+      "item_id": "mana_crystal",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "mana_shield",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "mana_shield",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "phoenix_scroll",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "phoenix_scroll",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "starlight_potion",
+      "field": "types",
+      "curated": [
+        "Potion"
+      ],
+      "runtime": [
+        "Potion",
+        "Starbloom"
+      ]
+    },
+    {
+      "item_id": "starlight_potion",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "wild_magic_scroll",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wild_magic_scroll",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "blazing_rod",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "blazing_rod",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "critical_focus",
+      "field": "types",
+      "curated": [
+        "Accessory"
+      ],
+      "runtime": [
+        "Accessory",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "critical_focus",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "critical_focus",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "fire_sprite",
+      "field": "types",
+      "curated": [
+        "Pet"
+      ],
+      "runtime": [
+        "Pet",
+        "Sprite"
+      ]
+    },
+    {
+      "item_id": "frost_tome",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "frost_tome",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "frozen_sprite",
+      "field": "types",
+      "curated": [
+        "Pet"
+      ],
+      "runtime": [
+        "Pet",
+        "Sprite"
+      ]
+    },
+    {
+      "item_id": "frozen_stick",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff",
+        "Stealable_Grabber"
+      ]
+    },
+    {
+      "item_id": "frozen_stick",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "icicle_shard",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "icicle_shard",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "frostflame_orb",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "marshmallow",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "marshmallow",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "phoenix_feather",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "searing_wand",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff",
+        "Stealable_Grabber"
+      ]
+    },
+    {
+      "item_id": "searing_wand",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "spell_scroll",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "spell_scroll",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "starbloom",
+      "field": "types",
+      "curated": [
+        "Plant"
+      ],
+      "runtime": [
+        "Plant",
+        "Stealable_Grabber",
+        "Starbloom"
+      ]
+    },
+    {
+      "item_id": "starbloom",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "starbloom",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "wicked_stick",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "wicked_stick",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "fire_vortex",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "fire_vortex",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "mana_stew",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "mana_stew",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          -2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          -2,
+          0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          -2,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "wand_of_backdraft",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "wand_of_backdraft",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wand_of_backdraft",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wildfire_essence",
+      "field": "types",
+      "curated": [
+        "Accessory"
+      ],
+      "runtime": [
+        "Accessory",
+        "Essence"
+      ]
+    },
+    {
+      "item_id": "wildfire_essence",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wizard_hat",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "HatOrCrown"
+      ]
+    },
+    {
+      "item_id": "wizard_hat",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wizard_hat",
+      "field": "star_positions",
+      "curated": [
+        [
+          1,
+          -3
+        ],
+        [
+          1,
+          -2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          4
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          -3,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          -2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "baby_core_creeper",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "baby_core_creeper",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          1
+        ],
+        [
+          -2,
+          0
+        ],
+        [
+          -1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "doombringer",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "doombringer",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          -3
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "ragnarok",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "ClubOrHammerOrBonkerOrMace",
+        "Axe"
+      ]
+    },
+    {
+      "item_id": "ragnarok",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "shaman_s_talisman",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "bolstered_helmet",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Helmet"
+      ]
+    },
+    {
+      "item_id": "bolstered_helmet",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "cactrio",
+      "field": "types",
+      "curated": [
+        "Plant"
+      ],
+      "runtime": [
+        "Plant",
+        "Absorbable"
+      ]
+    },
+    {
+      "item_id": "cactrio",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "champion_s_ripper",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "champion_s_ripper",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "errant_lance",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "PolearmOrLance"
+      ]
+    },
+    {
+      "item_id": "errant_lance",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "errant_lance",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "excalibur",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "excalibur",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          0,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "fanged_blade",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "fanged_blade",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "knight_s_razor",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "knight_s_razor",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "prickly_potion",
+      "field": "types",
+      "curated": [
+        "Potion"
+      ],
+      "runtime": [
+        "Potion",
+        "Absorbable"
+      ]
+    },
+    {
+      "item_id": "prickly_potion",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "rhongomiant",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "PolearmOrLance"
+      ]
+    },
+    {
+      "item_id": "rhongomiant",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ]
+      ]
+    },
+    {
+      "item_id": "rhongomiant",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          5
+        ],
+        [
+          -1,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "spinegrowth_breastplate",
+      "field": "types",
+      "curated": [
+        "Armor",
+        "Plant"
+      ],
+      "runtime": [
+        "Armor",
+        "Plant",
+        "Chestplate"
+      ]
+    },
+    {
+      "item_id": "spinegrowth_breastplate",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "spinegrowth_breastplate",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "thornwall",
+      "field": "types",
+      "curated": [
+        "Armor",
+        "Plant"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield",
+        "Plant"
+      ]
+    },
+    {
+      "item_id": "thornwall",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "twinmaw",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "twinmaw",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "vanguard_belt",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Belt"
+      ]
+    },
+    {
+      "item_id": "vanguard_belt",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "vanguard_belt",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "armor_kit",
+      "field": "types",
+      "curated": [
+        "Accessory",
+        "Armor"
+      ],
+      "runtime": [
+        "Accessory",
+        "Armor",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "armor_kit",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "cactus",
+      "field": "types",
+      "curated": [
+        "Plant"
+      ],
+      "runtime": [
+        "Plant",
+        "Stealable_Grabber",
+        "Absorbable"
+      ]
+    },
+    {
+      "item_id": "fanged_axe",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Axe",
+        "Stealable_Grabber"
+      ]
+    },
+    {
+      "item_id": "fanged_axe",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "hooked_blade",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "hooked_blade",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "jagged_blade",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "jagged_blade",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "knight_s_aegis",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "knight_s_aegis",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "knight_s_sigil",
+      "field": "types",
+      "curated": [
+        "Charm",
+        "Accessory"
+      ],
+      "runtime": [
+        "Charm",
+        "Accessory",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "knight_s_sigil",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "steadfast_boots",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Boots"
+      ]
+    },
+    {
+      "item_id": "steadfast_boots",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "steadfast_boots",
+      "field": "star_positions",
+      "curated": [
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          2,
+          0
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "tournament_lance",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "PolearmOrLance",
+        "Stealable_Magnetic"
+      ]
+    },
+    {
+      "item_id": "tournament_lance",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "training_blade",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword",
+        "Stealable_Grabber"
+      ]
+    },
+    {
+      "item_id": "training_blade",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "hungering_ward",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "hungering_ward",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "hungering_ward",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          -2
+        ],
+        [
+          1,
+          3
+        ]
+      ],
+      "runtime": [
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          -2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "ironwill_banner",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "ironwill_banner",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "knight_s_blessing",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "knight_s_blessing",
+      "field": "star_positions",
+      "curated": [
+        [
+          1,
+          -3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -3,
+          0
+        ],
+        [
+          -2,
+          -1
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          0,
+          -3
+        ],
+        [
+          1,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          3,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "piercing_lance",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "PolearmOrLance"
+      ]
+    },
+    {
+      "item_id": "piercing_lance",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "piercing_lance",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          1,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "weapons_rack",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "weapons_rack",
+      "field": "star_positions",
+      "curated": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          -2
+        ],
+        [
+          1,
+          -2
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "young_squire",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "young_squire",
+      "field": "star_positions",
+      "curated": [
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "adamantite_bar",
+      "field": "types",
+      "curated": [
+        "Part",
+        "Accessory"
+      ],
+      "runtime": [
+        "Part",
+        "Accessory",
+        "Absorbable"
+      ]
+    },
+    {
+      "item_id": "adamantite_bar",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "adamantite_bar",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "gold_bar",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "mystery_stew",
+      "field": "types",
+      "curated": [
+        "Food"
+      ],
+      "runtime": [
+        "Food",
+        "IngredientAbsorber"
+      ]
+    },
+    {
+      "item_id": "mystery_stew",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "mystery_stew",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "steel_bar",
+      "field": "types",
+      "curated": [
+        "Part",
+        "Accessory"
+      ],
+      "runtime": [
+        "Part",
+        "Accessory",
+        "Absorbable"
+      ]
+    },
+    {
+      "item_id": "steel_bar",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "steel_bar",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "tainted_soulstone",
+      "field": "types",
+      "curated": [
+        "Accessory"
+      ],
+      "runtime": [
+        "Accessory",
+        "Gem"
+      ]
+    },
+    {
+      "item_id": "tainted_soulstone",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "frost_barrier",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "frost_barrier",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "fur_boots",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Boots"
+      ]
+    },
+    {
+      "item_id": "fur_boots",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "fur_boots",
+      "field": "star_positions",
+      "curated": [
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          2,
+          0
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "hag_s_hat",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "HatOrCrown"
+      ]
+    },
+    {
+      "item_id": "hag_s_hat",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "heater_shield",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "heater_shield",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "magic_belt",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Belt"
+      ]
+    },
+    {
+      "item_id": "magic_belt",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "magic_belt",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "reinforced_shield",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "reinforced_shield",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "spiked_shield",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "spiked_shield",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "stunbreaker_shield",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "stunbreaker_shield",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "wizard_robe",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "RobeOrCloak"
+      ]
+    },
+    {
+      "item_id": "wizard_robe",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "blue_chilly_cheese",
+      "field": "types",
+      "curated": [
+        "Ingredient",
+        "Food"
+      ],
+      "runtime": [
+        "Ingredient",
+        "Food",
+        "Cheese"
+      ]
+    },
+    {
+      "item_id": "blue_chilly_cheese",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "blue_chilly_cheese",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "carrot",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "carrot",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "lucky_tuna",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "lucky_tuna",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          2
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "succulent_cheese",
+      "field": "types",
+      "curated": [
+        "Ingredient",
+        "Food"
+      ],
+      "runtime": [
+        "Ingredient",
+        "Food",
+        "Cheese"
+      ]
+    },
+    {
+      "item_id": "succulent_cheese",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "succulent_cheese",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "green_snapper",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "moldemort",
+      "field": "types",
+      "curated": [
+        "Pet",
+        "Food"
+      ],
+      "runtime": [
+        "Pet",
+        "Food",
+        "Cheese",
+        "Skull"
+      ]
+    },
+    {
+      "item_id": "moldemort",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "moldemort",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "muck_rat",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "muck_rat",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "ratomelon",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "ratomelon",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "antivenom",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "endurance_potion",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "health_potion",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "mana_potion",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "poison_potion",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "tenacity_potion",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "amethyst_blade",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "amethyst_blade",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "brainsquasher",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "ClubOrHammerOrBonkerOrMace"
+      ]
+    },
+    {
+      "item_id": "brainsquasher",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          -1,
+          2
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "fine_sword",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "frost_dagger",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Dagger"
+      ]
+    },
+    {
+      "item_id": "frost_dagger",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "iron_sword",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "iron_sword",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "magic_dagger",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Dagger"
+      ]
+    },
+    {
+      "item_id": "magic_dagger",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "mallet",
+      "field": "types",
+      "curated": [
+        "Tool",
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Tool",
+        "Melee Weapon",
+        "ClubOrHammerOrBonkerOrMace"
+      ]
+    },
+    {
+      "item_id": "mallet",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "poison_dagger",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Dagger"
+      ]
+    },
+    {
+      "item_id": "poison_dagger",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "royal_seax",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Dagger"
+      ]
+    },
+    {
+      "item_id": "royal_seax",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "cursed_idol",
+      "field": "star_positions",
+      "curated": [
+        [
+          -3,
+          -1
+        ],
+        [
+          -3,
+          1
+        ],
+        [
+          -2,
+          -2
+        ],
+        [
+          -2,
+          2
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          3
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          -2,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          -2,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          1,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "fortress_ring",
+      "field": "star_positions",
+      "curated": [
+        [
+          -2,
+          0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          -2,
+          -1
+        ],
+        [
+          0,
+          -2
+        ],
+        [
+          2,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "gambler_s_dice",
+      "field": "star_positions",
+      "curated": [
+        [
+          -4,
+          1
+        ],
+        [
+          -3,
+          0
+        ],
+        [
+          -2,
+          -1
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          0,
+          -3
+        ],
+        [
+          1,
+          -4
+        ]
+      ],
+      "runtime": [
+        [
+          -4,
+          -1
+        ],
+        [
+          -3,
+          0
+        ],
+        [
+          -2,
+          1
+        ],
+        [
+          -1,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "item_id": "power_stone",
+      "field": "types",
+      "curated": [
+        "Accessory"
+      ],
+      "runtime": [
+        "Accessory",
+        "Gem"
+      ]
+    },
+    {
+      "item_id": "power_stone",
+      "field": "star_positions",
+      "curated": [
+        [
+          -3,
+          0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -2
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          -2,
+          -1
+        ],
+        [
+          2,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "venomous_pincer",
+      "field": "star_positions",
+      "curated": [
+        [
+          -3,
+          -2
+        ],
+        [
+          -3,
+          2
+        ],
+        [
+          -2,
+          -2
+        ],
+        [
+          -2,
+          2
+        ],
+        [
+          -1,
+          -2
+        ],
+        [
+          -1,
+          2
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -2,
+          3
+        ],
+        [
+          -2,
+          2
+        ],
+        [
+          -2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "amethyst_pendant",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          0
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "bronze_bar",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "burning_water",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "cauldron",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "celestial_teapot",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "celestial_teapot",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          3
+        ]
+      ]
+    },
+    {
+      "item_id": "death_essence",
+      "field": "types",
+      "curated": [
+        "Accessory"
+      ],
+      "runtime": [
+        "Accessory",
+        "Essence"
+      ]
+    },
+    {
+      "item_id": "death_essence",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "ethereal_cloak",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "RobeOrCloak"
+      ]
+    },
+    {
+      "item_id": "ethereal_cloak",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "gloves_of_power",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Gloves"
+      ]
+    },
+    {
+      "item_id": "gloves_of_power",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "gloves_of_power",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          2,
+          0
+        ],
+        [
+          -1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "golden_tail",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "discordant_harp",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "discordant_harp",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          2,
+          -1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "iron_bar",
+      "field": "types",
+      "curated": [
+        "Part",
+        "Accessory"
+      ],
+      "runtime": [
+        "Part",
+        "Accessory",
+        "Absorbable"
+      ]
+    },
+    {
+      "item_id": "iron_bar",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "iron_bar",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "life_essence",
+      "field": "types",
+      "curated": [
+        "Accessory"
+      ],
+      "runtime": [
+        "Accessory",
+        "Essence"
+      ]
+    },
+    {
+      "item_id": "life_essence",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "magic_essence",
+      "field": "types",
+      "curated": [
+        "Accessory"
+      ],
+      "runtime": [
+        "Accessory",
+        "Essence"
+      ]
+    },
+    {
+      "item_id": "magic_essence",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "rune_of_r_lyeh",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "rune_of_r_lyeh",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          -2
+        ]
+      ]
+    },
+    {
+      "item_id": "tusk",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "whetstone",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "cleansing_crown",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "HatOrCrown"
+      ]
+    },
+    {
+      "item_id": "cleansing_crown",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "leather_armor",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Chestplate"
+      ]
+    },
+    {
+      "item_id": "leather_armor",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "leather_armor",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "leather_belt",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Belt"
+      ]
+    },
+    {
+      "item_id": "leather_belt",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "leather_belt",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "leather_boots",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Boots"
+      ]
+    },
+    {
+      "item_id": "leather_boots",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "leather_cloak",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "RobeOrCloak"
+      ]
+    },
+    {
+      "item_id": "leather_cloak",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "sash",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "scalemail",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Chestplate"
+      ]
+    },
+    {
+      "item_id": "scalemail",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "scalemail",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "skull_cap",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Helmet"
+      ]
+    },
+    {
+      "item_id": "skull_cap",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "traveler_s_hat",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "HatOrCrown"
+      ]
+    },
+    {
+      "item_id": "traveler_s_hat",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "traveler_s_hat",
+      "field": "star_positions",
+      "curated": [
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "wooden_buckler",
+      "field": "types",
+      "curated": [
+        "Armor"
+      ],
+      "runtime": [
+        "Armor",
+        "Shield"
+      ]
+    },
+    {
+      "item_id": "wooden_buckler",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "apple",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "banana",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "banana",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "coconut",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "coconut",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ]
+    },
+    {
+      "item_id": "carp",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "carp",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "fly_agaric",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "fly_agaric",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "pitahaya",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "pitahaya",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          -1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "spice",
+      "field": "star_positions",
+      "curated": [
+        [
+          -3,
+          0
+        ],
+        [
+          -2,
+          -1
+        ],
+        [
+          -2,
+          1
+        ],
+        [
+          -1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          -1,
+          2
+        ],
+        [
+          0,
+          3
+        ]
+      ]
+    },
+    {
+      "item_id": "watermelon",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "watermelon",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "bat",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "brown_rat",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "brown_rat",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          -1,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "ginseng_root",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "ginseng_root",
+      "field": "star_positions",
+      "curated": [
+        [
+          -1,
+          0
+        ],
+        [
+          -1,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          -1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          -1
+        ]
+      ]
+    },
+    {
+      "item_id": "longing_begonia",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "night_dahlia",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "nightshade",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "bloodletter",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Scythe"
+      ]
+    },
+    {
+      "item_id": "bloodletter",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          -1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "broom",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "dagger",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Dagger"
+      ]
+    },
+    {
+      "item_id": "dagger",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "frost_cleaver",
+      "field": "types",
+      "curated": [
+        "Melee Weapon",
+        "Tool"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Axe",
+        "Tool"
+      ]
+    },
+    {
+      "item_id": "frost_cleaver",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "rock",
+      "field": "types",
+      "curated": [
+        "Mineral",
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Mineral",
+        "Ranged Weapon",
+        "Thrown"
+      ]
+    },
+    {
+      "item_id": "serpent_s_tongue",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "serpent_s_tongue",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -1
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wing_clipper",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "item_id": "wooden_club",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "ClubOrHammerOrBonkerOrMace"
+      ]
+    },
+    {
+      "item_id": "wooden_club",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wooden_stick",
+      "field": "types",
+      "curated": [
+        "Ranged Weapon"
+      ],
+      "runtime": [
+        "Ranged Weapon",
+        "WandOrStaff"
+      ]
+    },
+    {
+      "item_id": "wooden_stick",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "item_id": "wooden_sword",
+      "field": "types",
+      "curated": [
+        "Melee Weapon"
+      ],
+      "runtime": [
+        "Melee Weapon",
+        "Sword"
+      ]
+    },
+    {
+      "item_id": "wooden_sword",
+      "field": "shape",
+      "curated": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "runtime": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ]
+    }
+  ],
+  "invalid_runtime_recipes": [
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    },
+    {
+      "recipe": {
+        "primary": null,
+        "secondaries": [],
+        "result": null,
+        "source_class": "Model.ItemCombinations.ItemCombinationData"
+      },
+      "reason": "empty recipe identifier"
+    }
+  ],
+  "unresolved": [
+    "star_status",
+    "level_effects.stat_target when ItemStatSelector is opaque"
+  ]
+}
