@@ -27,4 +27,3 @@ analysis/derived/*/normalized/recipes.json
 web/public/data/
 web/public/assets/
 web/public/scenarios/
-web/public/wasm/

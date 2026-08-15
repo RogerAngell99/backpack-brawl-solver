@@ -9,7 +9,9 @@ tmp-*.png
 # Generated or installed web artifacts are recreated by the build.
 web/node_modules/
 web/dist/
-web/public/
+web/public/data/
+web/public/assets/
+web/public/scenarios/
 
 # Local tooling and caches.
 *.log
