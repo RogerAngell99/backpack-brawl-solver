@@ -1,8 +1,11 @@
-import { useEffect, useMemo, useState, type DragEvent } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState, type CSSProperties, type DragEvent } from "react";
 import type {
   Catalog,
   CatalogItem,
   CoverageGroup,
+  CoordTuple,
+  HeroFilter,
+  ItemVisualMetadataMap,
   Placement,
   Recipe,
   RuntimeItemMetadata,
@@ -20,6 +23,7 @@ const ROWS = 6;
 const COLS = 9;
 
 type Grid = boolean[][];
+type HeroViewMode = "all" | "hero" | "shared";
 
 const defaultGrid = (): Grid => Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => true));
 const emptyGrid = (): Grid => Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => false));
@@ -56,6 +60,7 @@ interface WebScenarioInput {
   coverageGroups: CoverageGroup[];
   starSourceIDs: string[];
   disabledPrioritySet: Set<string>;
+  heroFilter: HeroFilter;
 }
 
 interface DebugPriorityState {
@@ -77,9 +82,15 @@ interface SelectedItemPlacementSummary {
 export default function App() {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [runtimeMetadata, setRuntimeMetadata] = useState<RuntimeMetadata | null>(null);
+  const [itemVisualMetadata, setItemVisualMetadata] = useState<ItemVisualMetadataMap>({});
   const [grid, setGrid] = useState<Grid>(defaultGrid);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const [heroViewMode, setHeroViewMode] = useState<HeroViewMode>("all");
+  const [selectedHeroID, setSelectedHeroID] = useState("");
+  const [excludedHeroID, setExcludedHeroID] = useState("");
+  const [heroExcludeMode, setHeroExcludeMode] = useState<"strict" | "exclusive_only">("strict");
   const [top, setTop] = useState(3);
   const [maxNodes, setMaxNodes] = useState(0);
   const [noSkips, setNoSkips] = useState(false);
@@ -108,6 +119,7 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [debugCopyStatus, setDebugCopyStatus] = useState<string | null>(null);
   const [debugFallbackText, setDebugFallbackText] = useState<string | null>(null);
+  const lastPartialSolutionsRef = useRef<{ value: Solution[] | null; signature: string | null }>({ value: null, signature: null });
 
   useEffect(() => {
     void loadInitialState();
@@ -123,16 +135,19 @@ export default function App() {
 
   async function loadInitialState() {
     try {
-      const [catalogResponse, scenarioResponse, metadataResponse] = await Promise.all([
+      const [catalogResponse, scenarioResponse, metadataResponse, visualMetadataResponse] = await Promise.all([
         fetch("/data/catalog.json"),
         fetch("/scenarios/spinegrowth-basic.json"),
         fetch("/data/item-metadata.json"),
+        fetch("/data/item-visual-metadata.json"),
       ]);
       const loadedCatalog = (await catalogResponse.json()) as Catalog;
       const loadedScenario = (await scenarioResponse.json()) as Scenario;
       const loadedMetadata = (await metadataResponse.json()) as RuntimeMetadata;
+      const loadedVisualMetadata = (await visualMetadataResponse.json()) as ItemVisualMetadataMap;
       setCatalog(loadedCatalog);
       setRuntimeMetadata(loadedMetadata);
+      setItemVisualMetadata(loadedVisualMetadata);
       if (loadedScenario.grid) {
         setGrid(gridFromRows(loadedScenario.grid));
       }
@@ -142,6 +157,15 @@ export default function App() {
       setNoSkips(loadedScenario.no_skips ?? false);
       setStopOnCoverageCeiling(loadedScenario.stop_on_coverage_ceiling ?? false);
       setRepairSearch(loadedScenario.repair_search ?? true);
+      const loadedHeroFilter = loadedScenario.hero_filter;
+      if (loadedHeroFilter?.mode === "shared") {
+        setHeroViewMode("shared");
+      } else if (loadedHeroFilter?.include_heroes?.[0]) {
+        setHeroViewMode("hero");
+        setSelectedHeroID(loadedHeroFilter.include_heroes[0]);
+      }
+      setExcludedHeroID(loadedHeroFilter?.exclude_heroes?.[0] || "");
+      setHeroExcludeMode(loadedHeroFilter?.exclude_mode || "strict");
       setPriorityOrder(loadedScenario.priorities || []);
       setCoverageGroups(loadedScenario.coverage_groups || []);
     } catch (loadError) {
@@ -149,17 +173,41 @@ export default function App() {
     }
   }
 
+  const heroFilter = useMemo<HeroFilter>(() => {
+    const filter: HeroFilter = { unknown_policy: "exclude" };
+    if (heroViewMode === "shared") {
+      filter.mode = "shared";
+    } else if (heroViewMode === "hero" && selectedHeroID) {
+      filter.include_heroes = [selectedHeroID];
+      filter.mode = "any";
+    }
+    if (excludedHeroID) {
+      filter.exclude_heroes = [excludedHeroID];
+      filter.exclude_mode = heroExcludeMode;
+    }
+    return filter;
+  }, [heroViewMode, selectedHeroID, excludedHeroID, heroExcludeMode]);
+
+  const availableItemIDs = useMemo(() => {
+    if (!catalog) return new Set<string>();
+    return new Set(catalog.items.filter((item) => heroScopeMatches(item.hero_scope, heroFilter)).map((item) => item.id));
+  }, [catalog, heroFilter]);
+  const playableHeroes = useMemo(() => (catalog?.heroes || []).filter((hero) => !hero.npc), [catalog]);
+
   const items = useMemo(() => {
     if (!catalog) {
       return [];
     }
-    const normalizedQuery = query.trim().toLowerCase();
+    const normalizedQuery = deferredQuery.trim().toLowerCase();
     return [...catalog.items]
       .filter((item) => {
         if (!normalizedQuery) {
-          return true;
+          return heroScopeMatches(item.hero_scope, heroFilter);
         }
-        return item.name.toLowerCase().includes(normalizedQuery) || item.id.includes(normalizedQuery);
+        return (
+          heroScopeMatches(item.hero_scope, heroFilter) &&
+          (item.name.toLowerCase().includes(normalizedQuery) || item.id.includes(normalizedQuery))
+        );
       })
       .sort((left, right) => {
         const leftSelected = (quantities[left.id] || 0) > 0;
@@ -169,7 +217,14 @@ export default function App() {
         }
         return left.name.localeCompare(right.name) || left.id.localeCompare(right.id);
       });
-  }, [catalog, query, quantities]);
+  }, [catalog, deferredQuery, quantities, heroFilter]);
+
+  useEffect(() => {
+    setQuantities((current) => {
+      const next = Object.fromEntries(Object.entries(current).filter(([itemID]) => availableItemIDs.has(itemID)));
+      return Object.keys(next).length === Object.keys(current).length ? current : next;
+    });
+  }, [availableItemIDs]);
 
   const selectedItemsCount = Object.values(quantities).reduce((sum, count) => sum + count, 0);
   const currentSolution = solutions[selectedSolution];
@@ -214,6 +269,7 @@ export default function App() {
         coverageGroups,
         starSourceIDs,
         disabledPrioritySet,
+        heroFilter,
       }),
     [
       grid,
@@ -228,15 +284,16 @@ export default function App() {
       coverageGroups,
       starSourceIDs,
       disabledPrioritySet,
+      heroFilter,
     ],
   );
   const recipesByResult = useMemo(() => {
     const map = new Map<string, Recipe[]>();
-    catalog?.recipes.forEach((recipe) => {
+    catalog?.recipes.filter((recipe) => heroScopeMatches(recipe.hero_scope, heroFilter)).forEach((recipe) => {
       map.set(recipe.result, [...(map.get(recipe.result) || []), recipe]);
     });
     return map;
-  }, [catalog]);
+  }, [catalog, heroFilter]);
   const activeItemID = pinnedItemID || hoveredItemID;
   const activeItem = useMemo(() => {
     if (!catalog || !activeItemID) {
@@ -310,21 +367,36 @@ export default function App() {
     setSelectedSolution(0);
     setDebugCopyStatus(null);
     setDebugFallbackText(null);
+    lastPartialSolutionsRef.current = { value: null, signature: null };
     let remoteProgressTimer: number | undefined;
     let sawPartialResult = false;
     const applyPartialSolutions = (partialSolutions: Solution[]) => {
       if (!Array.isArray(partialSolutions) || partialSolutions.length === 0) {
         return;
       }
+      const previous = lastPartialSolutionsRef.current;
+      if (partialSolutions === previous.value) {
+        return;
+      }
+      const signature = JSON.stringify(partialSolutions);
+      if (signature === previous.signature) {
+        previous.value = partialSolutions;
+        return;
+      }
+      lastPartialSolutionsRef.current = { value: partialSolutions, signature };
+      const hadPartialResult = sawPartialResult;
       sawPartialResult = true;
       setSolutions(partialSolutions);
       setSelectedSolution(0);
-      setPartialResultStatus("running");
+      if (!hadPartialResult) {
+        setPartialResultStatus("running");
+      }
     };
     const handleProgress = (progress: SolveProgress) => {
-      setSolveProgress(progress);
-      if (Array.isArray(progress.partial_solutions) && progress.partial_solutions.length > 0) {
-        applyPartialSolutions(progress.partial_solutions);
+      const { partial_solutions: partialSolutions, ...progressState } = progress;
+      setSolveProgress(progressState);
+      if (Array.isArray(partialSolutions) && partialSolutions.length > 0) {
+        applyPartialSolutions(partialSolutions);
       }
     };
     try {
@@ -538,7 +610,7 @@ export default function App() {
       <header className="topbar">
         <div>
           <h1>Backpack Brawl Solver</h1>
-          <p>{catalog ? `${catalog.items.length} items loaded` : "Loading catalog"}</p>
+            <p>{catalog ? `${items.length}/${catalog.items.length} items loaded` : "Loading catalog"}</p>
         </div>
         <div className="topbar-actions">
           <label className="backend-select">
@@ -601,6 +673,49 @@ export default function App() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search"
           />
+          <div className="hero-filter-controls">
+            <label>
+              Availability
+              <select value={heroViewMode} onChange={(event) => setHeroViewMode(event.target.value as HeroViewMode)}>
+                <option value="all">All items</option>
+                <option value="hero">Specific hero</option>
+                <option value="shared">Shared only</option>
+              </select>
+            </label>
+            {heroViewMode === "hero" && (
+              <label>
+                Hero
+                <select value={selectedHeroID} onChange={(event) => setSelectedHeroID(event.target.value)}>
+                  <option value="">Choose a hero</option>
+                  {playableHeroes.map((hero) => (
+                    <option key={hero.id} value={hero.id}>
+                      {hero.english_name || hero.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+            <label>
+              Exclude hero
+              <select value={excludedHeroID} onChange={(event) => setExcludedHeroID(event.target.value)}>
+                <option value="">None</option>
+                {playableHeroes.map((hero) => (
+                  <option key={hero.id} value={hero.id}>
+                    {hero.english_name || hero.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {excludedHeroID && (
+              <label>
+                Exclusion
+                <select value={heroExcludeMode} onChange={(event) => setHeroExcludeMode(event.target.value as "strict" | "exclusive_only")}>
+                  <option value="strict">Strict</option>
+                  <option value="exclusive_only">Exclusive items only</option>
+                </select>
+              </label>
+            )}
+          </div>
           <div className="item-list">
             {items.map((item) => (
               <ItemRow
@@ -777,6 +892,7 @@ export default function App() {
                 solution={currentSolution}
                 scenario={currentScenario}
                 grid={grid}
+                visualMetadata={itemVisualMetadata}
                 onInspectItem={showItemInfo}
                 onInspectEnd={hideItemInfo}
                 onTogglePinItem={togglePinnedItem}
@@ -815,6 +931,7 @@ function buildWebScenario({
   coverageGroups,
   starSourceIDs,
   disabledPrioritySet,
+  heroFilter,
 }: WebScenarioInput): Scenario {
   const selectedItemIDs = Object.keys(cleanQuantities(quantities));
   const { groups: cleanGroups, indexByOriginal } = cleanCoverageGroupsWithIndex(
@@ -835,6 +952,7 @@ function buildWebScenario({
     repair_search: maxNodes > 0 && repairSearch,
     priorities: buildScenarioPriorityOrder(priorityOrder, priorityOptionsByKey, indexByOriginal, cleanGroups, disabledPrioritySet),
     coverage_groups: cleanGroups,
+    hero_filter: heroFilter,
   };
 }
 
@@ -1036,6 +1154,31 @@ function buildDebugLog({
   return lines.join("\n");
 }
 
+function heroScopeMatches(scope: CatalogItem["hero_scope"], filter: HeroFilter): boolean {
+  const hasFilter = filter.mode === "shared" || (filter.include_heroes?.length || 0) > 0 || (filter.exclude_heroes?.length || 0) > 0;
+  if (!hasFilter) return true;
+  if (!scope || scope.status !== "confirmed" || scope.kind === "unknown") {
+    return filter.unknown_policy === "include";
+  }
+  const available = new Set(scope.available_to || []);
+  if (filter.mode === "shared" && scope.kind !== "shared") return false;
+  if (filter.include_heroes?.length) {
+    const matches = filter.mode === "all"
+      ? filter.include_heroes.every((heroID) => available.has(heroID))
+      : filter.include_heroes.some((heroID) => available.has(heroID));
+    if (!matches) return false;
+  }
+  if (filter.exclude_heroes?.length) {
+    if (filter.exclude_mode === "exclusive_only") {
+      const onlyExcluded = [...available].every((heroID) => filter.exclude_heroes?.includes(heroID));
+      if (onlyExcluded) return false;
+    } else if (filter.exclude_heroes.some((heroID) => available.has(heroID))) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function ItemRow({
   item,
   quantity,
@@ -1066,10 +1209,15 @@ function ItemRow({
       onClick={onTogglePin}
       aria-label={`Review ${item.name}`}
     >
-      {item.image_path ? <img src={assetPath(item.image_path)} alt={item.name} /> : <span className="item-row-placeholder" aria-hidden="true">?</span>}
+      {item.image_path ? (
+        <img src={assetPath(item.image_path)} alt={item.name} loading="lazy" decoding="async" />
+      ) : (
+        <span className="item-row-placeholder" aria-hidden="true">?</span>
+      )}
       <div className="item-row-main">
         <strong>{item.name}</strong>
         <span>{item.types.join(", ") || "No type"}</span>
+        {item.hero_scope && <small>{formatHeroScope(item.hero_scope.kind)}</small>}
       </div>
       <div className="quantity-control">
         <button
@@ -1093,6 +1241,13 @@ function ItemRow({
       </div>
     </div>
   );
+}
+
+function formatHeroScope(kind: NonNullable<CatalogItem["hero_scope"]>["kind"]): string {
+  if (kind === "shared") return "Shared";
+  if (kind === "hero_specific") return "Hero-specific";
+  if (kind === "multi_hero") return "Multi-hero";
+  return "Unknown scope";
 }
 
 function EditableGrid({ grid, onToggle }: { grid: Grid; onToggle: (row: number, col: number) => void }) {
@@ -1279,7 +1434,7 @@ function PriorityPanel({
                             aria-label={`${disabled ? "Enable" : "Disable"} ${option.title}`}
                           />
                         </label>
-                        {option.imagePath && <img src={assetPath(option.imagePath)} alt="" />}
+                        {option.imagePath && <img src={assetPath(option.imagePath)} alt="" loading="lazy" decoding="async" />}
                         <div className="priority-main">
                           <strong>{option.title}</strong>
                           <span>{option.subtitle}</span>
@@ -1315,7 +1470,7 @@ function PriorityPanel({
                               onChange={() => onToggleGroupTarget(groupIndex, item.id)}
                               aria-label={`${checked ? "Remove" : "Set"} ${item.name} as orbit target`}
                             />
-                            {item.image_path && <img src={assetPath(item.image_path)} alt="" />}
+                            {item.image_path && <img src={assetPath(item.image_path)} alt="" loading="lazy" decoding="async" />}
                             <span>{item.name}</span>
                           </label>
                         );
@@ -1360,7 +1515,7 @@ function PriorityPanel({
                       aria-label={`${disabled ? "Enable" : "Disable"} ${option.title}`}
                     />
                   </label>
-                  {option.imagePath && <img src={assetPath(option.imagePath)} alt="" />}
+                  {option.imagePath && <img src={assetPath(option.imagePath)} alt="" loading="lazy" decoding="async" />}
                   <div className="priority-main">
                     <strong>{option.title}</strong>
                     <span>{option.subtitle}</span>
@@ -1405,7 +1560,7 @@ function PriorityPanel({
                     aria-label={`${disabled ? "Enable" : "Disable"} ${option.title}`}
                   />
                 </label>
-                {option.imagePath && <img src={assetPath(option.imagePath)} alt="" />}
+                {option.imagePath && <img src={assetPath(option.imagePath)} alt="" loading="lazy" decoding="async" />}
                 <div className="priority-main">
                   <strong>{option.title}</strong>
                   <span>{option.subtitle}</span>
@@ -1477,6 +1632,7 @@ function SolutionView({
   solution,
   scenario,
   grid,
+  visualMetadata,
   onInspectItem,
   onInspectEnd,
   onTogglePinItem,
@@ -1486,6 +1642,7 @@ function SolutionView({
   solution: Solution;
   scenario: Scenario;
   grid: Grid;
+  visualMetadata: ItemVisualMetadataMap;
   onInspectItem: (itemID: string) => void;
   onInspectEnd: () => void;
   onTogglePinItem: (itemID: string) => void;
@@ -1503,6 +1660,7 @@ function SolutionView({
         ? [solution.coverage]
         : [];
   const looseStarPriorities = safeArray(solution.loose_star_priorities);
+  const itemColors = useMemo(() => buildItemColorMap(solution.placements), [solution.placements]);
   const selectedItemsNotPlaced = useMemo(
     () => selectedItemSummaries(itemsByID, scenario.items, solution.placements).filter((entry) => entry.not_placed > 0),
     [itemsByID, scenario.items, solution.placements],
@@ -1576,6 +1734,8 @@ function SolutionView({
             key={placement.instance_id}
             placement={placement}
             item={itemsByID.get(placement.item_id)}
+            itemColor={itemColors.get(placement.item_id) || DEFAULT_ITEM_BORDER_COLOR}
+            visualMetadata={visualMetadata}
             label={labelFor(index)}
             onInspect={() => {
               setHoveredPlacementID(placement.instance_id);
@@ -1698,6 +1858,8 @@ function CoverageTargetLine({
 function PlacedItem({
   placement,
   item,
+  itemColor,
+  visualMetadata,
   label,
   onInspect,
   onInspectEnd,
@@ -1706,6 +1868,8 @@ function PlacedItem({
 }: {
   placement: Placement;
   item?: CatalogItem;
+  itemColor: string;
+  visualMetadata: ItemVisualMetadataMap;
   label: string;
   onInspect: () => void;
   onInspectEnd: () => void;
@@ -1722,6 +1886,16 @@ function PlacedItem({
   const colSpan = maxCol - minCol + 1;
   const occupiedCells = placement.cells.map(([row, col]) => [row - minRow, col - minCol] as CoordTuple);
   const firstCell = occupiedCells.reduce((first, cell) => (cell[0] < first[0] || (cell[0] === first[0] && cell[1] < first[1]) ? cell : first), occupiedCells[0]);
+  const itemVisualMetadata = item ? visualMetadata[item.id] : undefined;
+  const visualRotation = item ? visualRotationFor(placement.rotation, itemVisualMetadata?.base_rotation) : normalizeRotation(placement.rotation);
+  const rotatedImage = visualRotation === 90 || visualRotation === 270;
+  const imageMaxWidth = rotatedImage ? `${(82 * rowSpan) / colSpan}%` : "82%";
+  const imageMaxHeight = rotatedImage ? `${(82 * colSpan) / rowSpan}%` : "82%";
+  const pivot = itemVisualMetadata?.pivot || [0.5, 0.5];
+  const offset = itemVisualMetadata?.offset || [0, 0];
+  const scale = itemVisualMetadata?.scale || 1;
+  const scaleX = (itemVisualMetadata?.mirror_x ? -1 : 1) * scale;
+  const scaleY = (itemVisualMetadata?.mirror_y ? -1 : 1) * scale;
 
   return (
     <>
@@ -1735,8 +1909,11 @@ function PlacedItem({
         }}
         title={placement.instance_id}
         aria-label={`Review ${placement.instance_id}`}
+        data-item-id={placement.item_id}
+        data-rotation={placement.rotation}
+        data-visual-rotation={visualRotation}
       >
-        {item && (
+        {item?.image_path && (
           <div
             className="placed-item-image"
             style={{
@@ -1744,7 +1921,18 @@ function PlacedItem({
               gridColumn: `1 / span ${colSpan}`,
             }}
           >
-            <img src={assetPath(item.image_path)} alt={item.name} style={{ transform: `rotate(${placement.rotation}deg)` }} />
+            <img
+              src={assetPath(item.image_path)}
+              alt={item.name}
+              loading="lazy"
+              decoding="async"
+              style={{
+                maxWidth: imageMaxWidth,
+                maxHeight: imageMaxHeight,
+                transform: `translate(${offset[1]}%, ${offset[0]}%) rotate(${visualRotation}deg) scale(${scaleX}, ${scaleY})`,
+                transformOrigin: `${pivot[1] * 100}% ${pivot[0] * 100}%`,
+              }}
+            />
           </div>
         )}
         <span
@@ -1767,7 +1955,8 @@ function PlacedItem({
           style={{
             gridRow: `${minRow + row + 1}`,
             gridColumn: `${minCol + col + 1}`,
-          }}
+            "--item-color": itemColor,
+          } as CSSProperties}
           data-placement-id={placement.instance_id}
           data-item-id={placement.item_id}
           title={placement.instance_id}
@@ -1813,9 +2002,13 @@ function ItemInfoCard({
   onClose: () => void;
 }) {
   return (
-    <aside className="item-info-card" aria-live="polite">
+    <aside className={pinned ? "item-info-card pinned" : "item-info-card hover-preview"} aria-live="polite">
       <div className="item-info-header">
-        {item.image_path ? <img src={assetPath(item.image_path)} alt={item.name} /> : <div className="muted">no image</div>}
+        {item.image_path ? (
+          <img src={assetPath(item.image_path)} alt={item.name} loading="lazy" decoding="async" />
+        ) : (
+          <div className="muted">no image</div>
+        )}
         <div>
           <h2>{item.name}</h2>
           <p>{item.id}</p>
@@ -2380,7 +2573,37 @@ function stringArraysEqual(left: string[], right: string[]): boolean {
 }
 
 function assetPath(path: string): string {
-  return `/${path.replaceAll("\\", "/")}`;
+  return `/${path.replace(/\\/g, "/")}`;
+}
+
+const ITEM_BORDER_COLORS = [
+  "#9f3d45",
+  "#176b87",
+  "#7a4c9c",
+  "#8a6116",
+  "#2c7a54",
+  "#b45f06",
+  "#3f5c9a",
+  "#8d4774",
+  "#4b5f2a",
+  "#9b4f2f",
+  "#246b67",
+  "#6b4b3e",
+];
+const DEFAULT_ITEM_BORDER_COLOR = ITEM_BORDER_COLORS[0];
+
+function buildItemColorMap(placements: Placement[]): Map<string, string> {
+  const itemIDs = [...new Set(placements.map((placement) => placement.item_id))].sort();
+  return new Map(itemIDs.map((itemID, index) => [itemID, ITEM_BORDER_COLORS[index % ITEM_BORDER_COLORS.length]]));
+}
+
+function normalizeRotation(rotation: number | undefined): number {
+  const normalized = ((Math.round(rotation || 0) % 360) + 360) % 360;
+  return normalized === 90 || normalized === 180 || normalized === 270 ? normalized : 0;
+}
+
+function visualRotationFor(placementRotation: number, baseRotation?: number): number {
+  return normalizeRotation(normalizeRotation(placementRotation) - normalizeRotation(baseRotation));
 }
 
 function toPositiveInt(value: string, fallback: number): number {

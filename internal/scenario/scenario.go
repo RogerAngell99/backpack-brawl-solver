@@ -7,21 +7,23 @@ import (
 	"sort"
 	"strings"
 
+	"backpack-brawl-solver/internal/geometry"
 	"backpack-brawl-solver/internal/model"
 )
 
 type Scenario struct {
-	Name                  string          `json:"name"`
-	Grid                  []string        `json:"grid"`
-	Items                 map[string]int  `json:"items"`
-	Top                   *int            `json:"top"`
-	Workers               *int            `json:"workers"`
-	MaxNodes              *int64          `json:"max_nodes"`
-	NoSkips               *bool           `json:"no_skips"`
-	StopOnCoverageCeiling *bool           `json:"stop_on_coverage_ceiling"`
-	RepairSearch          *bool           `json:"repair_search"`
-	Priorities            []string        `json:"priorities"`
-	CoverageGroups        []CoverageGroup `json:"coverage_groups"`
+	Name                  string           `json:"name"`
+	Grid                  []string         `json:"grid"`
+	Items                 map[string]int   `json:"items"`
+	Top                   *int             `json:"top"`
+	Workers               *int             `json:"workers"`
+	MaxNodes              *int64           `json:"max_nodes"`
+	NoSkips               *bool            `json:"no_skips"`
+	StopOnCoverageCeiling *bool            `json:"stop_on_coverage_ceiling"`
+	RepairSearch          *bool            `json:"repair_search"`
+	Priorities            []string         `json:"priorities"`
+	CoverageGroups        []CoverageGroup  `json:"coverage_groups"`
+	HeroFilter            model.HeroFilter `json:"hero_filter"`
 }
 
 type CoverageGroup struct {
@@ -47,6 +49,7 @@ func (s Scenario) Validate() error {
 	if len(s.Items) == 0 {
 		return fmt.Errorf("scenario items cannot be empty")
 	}
+	itemCount := 0
 	for itemID, count := range s.Items {
 		if strings.TrimSpace(itemID) == "" {
 			return fmt.Errorf("scenario item id cannot be empty")
@@ -54,6 +57,10 @@ func (s Scenario) Validate() error {
 		if count <= 0 {
 			return fmt.Errorf("scenario item %q count must be positive", itemID)
 		}
+		if count > geometry.GridCells-itemCount {
+			return fmt.Errorf("scenario has more than %d items, the maximum for the %dx%d grid", geometry.GridCells, geometry.GridRows, geometry.GridCols)
+		}
+		itemCount += count
 	}
 	for idx, priority := range s.Priorities {
 		if strings.TrimSpace(priority) == "" {

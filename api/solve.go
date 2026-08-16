@@ -52,6 +52,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		DefaultMaxNodes: defaultMaxNodes,
 		MaxNodesCap:     maxNodesCap,
 		Backend:         "vercel-go",
+		Context:         r.Context(),
 	})
 	if err != nil {
 		writeError(w, http.StatusBadRequest, err.Error())

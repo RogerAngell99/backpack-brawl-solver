@@ -7,14 +7,33 @@ declare global {
       run(instance: WebAssembly.Instance): Promise<void>;
     };
     solveScenario?: (input: string) => string;
+    installCatalog?: (input: string) => string;
+    solvePreparedScenario?: (input: string) => string;
   }
 }
 
 let loadPromise: Promise<void> | null = null;
 let solverWorker: Worker | null = null;
 let nextWorkerRequestId = 1;
+let activeWorkerRequestId: number | null = null;
+let installedWorkerCatalog: CatalogKey | null = null;
+let nextCatalogIdentity = 1;
+let nextCatalogRevision = 1;
+let installedDirectCatalog: CatalogKey | null = null;
+const catalogIdentities = new WeakMap<Catalog, number>();
+const catalogVersions = new WeakMap<Catalog, CatalogVersion>();
+
+interface CatalogKey {
+  catalogIdentity: number;
+  catalogRevision: number;
+}
+
+interface CatalogVersion extends CatalogKey {
+  catalogJSON: string;
+}
 
 type WorkerMessage =
+  | ({ type: "catalogInstalled"; requestId: number } & CatalogKey)
   | { type: "progress"; requestId: number; progress: SolveProgress }
   | { type: "result"; requestId: number; solutions: Solution[] }
   | { type: "error"; requestId: number; error: string };
@@ -127,7 +146,7 @@ export async function solveWithOci(
   if (!createJob.id) {
     throw new RemoteSolveError("OCI VM solver did not return a job id", false);
   }
-  onProgress?.(createJob.progress || { phase: "remote", elapsed_ms: 0 });
+  onProgress?.(createJob.progress || { phase: "remote", elapsed_ms: 0, nodes_explored: 0 });
   if (Array.isArray(createJob.partial_solutions) && createJob.partial_solutions.length > 0) {
     onPartial?.(createJob.partial_solutions);
   }
@@ -227,16 +246,38 @@ export function solveWithWorker(
   if (signal?.aborted) {
     return Promise.reject(createAbortError());
   }
+  if (activeWorkerRequestId !== null) {
+    return Promise.reject(new Error("A local solver request is already running."));
+  }
+  let catalogVersion: CatalogVersion;
+  try {
+    catalogVersion = versionCatalog(catalog);
+  } catch (error) {
+    return Promise.reject(error instanceof Error ? error : new Error("Catalog could not be serialized"));
+  }
   const worker = getSolverWorker();
   const requestId = nextWorkerRequestId++;
+  activeWorkerRequestId = requestId;
 
   return new Promise((resolve, reject) => {
     let settled = false;
+    const postSolve = () => {
+      worker.postMessage({
+        type: "solve",
+        requestId,
+        catalogIdentity: catalogVersion.catalogIdentity,
+        catalogRevision: catalogVersion.catalogRevision,
+        scenario,
+      });
+    };
     const cleanup = () => {
       worker.removeEventListener("message", handleMessage);
       worker.removeEventListener("error", handleError);
       worker.removeEventListener("messageerror", handleMessageError);
       signal?.removeEventListener("abort", handleAbort);
+      if (activeWorkerRequestId === requestId) {
+        activeWorkerRequestId = null;
+      }
     };
     const settle = (callback: () => void) => {
       if (settled) {
@@ -259,6 +300,15 @@ export function solveWithWorker(
       }
       if (message.type === "progress") {
         onProgress?.(message.progress);
+        return;
+      }
+      if (message.type === "catalogInstalled") {
+        if (!catalogMatches(message, catalogVersion)) {
+          fail(new Error("Solver worker installed an unexpected catalog revision"));
+          return;
+        }
+        installedWorkerCatalog = catalogVersion;
+        postSolve();
         return;
       }
       if (message.type === "result") {
@@ -285,30 +335,53 @@ export function solveWithWorker(
       handleAbort();
       return;
     }
-    worker.postMessage({ type: "solve", requestId, catalog, scenario });
+    if (catalogMatches(installedWorkerCatalog, catalogVersion)) {
+      postSolve();
+      return;
+    }
+    worker.postMessage({
+      type: "installCatalog",
+      requestId,
+      catalogIdentity: catalogVersion.catalogIdentity,
+      catalogRevision: catalogVersion.catalogRevision,
+      catalogJSON: catalogVersion.catalogJSON,
+    });
   });
 }
 
 export async function solveWithWasm(catalog: Catalog, scenario: Scenario): Promise<Solution[]> {
   await loadWasmSolver();
-  if (!window.solveScenario) {
+  if (!window.installCatalog || !window.solvePreparedScenario) {
     throw new Error("WASM solver did not initialize");
   }
 
-  const output = window.solveScenario(JSON.stringify({ catalog, scenario }));
-  if (typeof output !== "string") {
-    throw new Error("WASM solver aborted before returning a result. Try a lower Max nodes value or fewer enabled coverage sources.");
+  const catalogVersion = versionCatalog(catalog);
+  if (!catalogMatches(installedDirectCatalog, catalogVersion)) {
+    const installOutput = window.installCatalog(catalogVersion.catalogJSON);
+    const installResult = parseWasmResult<{ ok?: boolean; error?: string }>(installOutput);
+    if (!installResult.ok) {
+      throw new Error(installResult.error || "WASM catalog installer returned an unknown error");
+    }
+    installedDirectCatalog = catalogVersion;
   }
-  let parsed: Solution[] | { error?: string };
-  try {
-    parsed = JSON.parse(output) as Solution[] | { error?: string };
-  } catch (parseError) {
-    throw new Error(`Solver returned invalid JSON: ${parseError instanceof Error ? parseError.message : "unknown parse error"}`);
-  }
+
+  const output = window.solvePreparedScenario(JSON.stringify(scenario));
+  const parsed = parseWasmResult<Solution[] | { error?: string }>(output);
   if (!Array.isArray(parsed)) {
     throw new Error(parsed.error || "Solver returned an unknown error");
   }
   return parsed;
+}
+
+function parseWasmResult<T>(output: unknown): T {
+  if (typeof output !== "string") {
+    throw new Error("WASM solver aborted before returning a result. Try a lower Max nodes value or fewer enabled coverage sources.");
+  }
+  try {
+    return JSON.parse(output) as T;
+  } catch (parseError) {
+    throw new Error(`Solver returned invalid JSON: ${parseError instanceof Error ? parseError.message : "unknown parse error"}`);
+  }
 }
 
 function getSolverWorker(): Worker {
@@ -323,6 +396,32 @@ function resetSolverWorker(): void {
     solverWorker.terminate();
     solverWorker = null;
   }
+  installedWorkerCatalog = null;
+}
+
+function versionCatalog(catalog: Catalog): CatalogVersion {
+	const previous = catalogVersions.get(catalog);
+	if (previous) {
+		return previous;
+	}
+	// The application replaces catalogs instead of mutating them in place, so
+	// identity is a constant-time cache key for repeated local solves.
+	let catalogIdentity = catalogIdentities.get(catalog);
+  if (catalogIdentity === undefined) {
+    catalogIdentity = nextCatalogIdentity++;
+    catalogIdentities.set(catalog, catalogIdentity);
+  }
+  const version = {
+    catalogIdentity,
+    catalogRevision: nextCatalogRevision++,
+    catalogJSON: JSON.stringify(catalog),
+  };
+  catalogVersions.set(catalog, version);
+  return version;
+}
+
+function catalogMatches(left: CatalogKey | null, right: CatalogKey): boolean {
+  return left !== null && left.catalogIdentity === right.catalogIdentity && left.catalogRevision === right.catalogRevision;
 }
 
 function createAbortError(): Error {

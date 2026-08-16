@@ -1,0 +1,115 @@
+[
+  {
+    "name": "watermelon-different-food",
+    "condition": {
+      "class": "Model.CompoundStarCondition",
+      "any": false,
+      "conditions": [
+        {"class": "Model.OtherItemIsOfType", "item_type": "Food"},
+        {"class": "Model.DefinitionIsDifferent"}
+      ]
+    },
+    "context": {"source_id": "watermelon", "target_id": "apple", "target_types": ["Food"]},
+    "want": "true"
+  },
+  {
+    "name": "watermelon-same-food-definition",
+    "condition": {
+      "class": "Model.CompoundStarCondition",
+      "any": false,
+      "conditions": [
+        {"class": "Model.OtherItemIsOfType", "item_type": "Food"},
+        {"class": "Model.DefinitionIsDifferent"}
+      ]
+    },
+    "context": {"source_id": "watermelon", "target_id": "watermelon", "target_types": ["Food"]},
+    "want": "false"
+  },
+  {
+    "name": "magic-essence-gold-bar",
+    "condition": {"class": "Model.OtherItemHasItemActivatedSignal"},
+    "context": {"source_id": "magic_essence", "target_id": "gold_bar"},
+    "want": "true"
+  },
+  {
+    "name": "magic-essence-medium-bag",
+    "condition": {"class": "Model.OtherItemHasItemActivatedSignal"},
+    "context": {"source_id": "magic_essence", "target_id": "medium_bag", "target_activated": false},
+    "want": "true"
+  },
+  {
+    "name": "empty-bag-positive",
+    "condition": {"class": "Model.OtherIsEmptyBag"},
+    "context": {"source_id": "blood_moon_berry", "target_id": "medium_bag", "target_bag_empty": true},
+    "want": "true"
+  },
+  {
+    "name": "empty-bag-negative",
+    "condition": {"class": "Model.OtherIsEmptyBag"},
+    "context": {"source_id": "blood_moon_berry", "target_id": "medium_bag", "target_bag_empty": false},
+    "want": "false"
+  },
+  {
+    "name": "errant-lance-cactus",
+    "condition": {"class": "Model.OtherItemHasStatOfType", "stat_type": "Model.ItemStats.CactusCount, Assembly-CSharp"},
+    "context": {"source_id": "errant_lance", "target_id": "cactus", "target_stat_types": ["CactusCount"]},
+    "want": "true"
+  },
+  {
+    "name": "errant-lance-cactrio",
+    "condition": {"class": "Model.OtherItemHasStatOfType", "stat_type": "Model.ItemStats.CactusCount, Assembly-CSharp"},
+    "context": {"source_id": "errant_lance", "target_id": "cactrio", "target_stat_types": ["CactusCount"]},
+    "want": "true"
+  },
+  {
+    "name": "errant-lance-pitahaya",
+    "condition": {"class": "Model.OtherItemHasStatOfType", "stat_type": "Model.ItemStats.CactusCount, Assembly-CSharp"},
+    "context": {"source_id": "errant_lance", "target_id": "pitahaya", "target_stat_types": ["Cooldown"]},
+    "want": "false"
+  },
+  {
+    "name": "definition-is-same-hooded-cowl",
+    "condition": {"class": "Model.DefinitionIsSame"},
+    "context": {"source_id": "hooded_cowl", "target_id": "hooded_cowl"},
+    "want": "true"
+  },
+  {
+    "name": "definition-is-same-cactus-negative",
+    "condition": {"class": "Model.DefinitionIsSame"},
+    "context": {"source_id": "hooded_cowl", "target_id": "cactus"},
+    "want": "false"
+  },
+  {
+    "name": "steel-forge-hammer-exact-rock",
+    "condition": {
+      "class": "Model.OtherItemIsExactly",
+      "definition": {"id": "Rock", "name": "Rock"}
+    },
+    "context": {"source_id": "steel_forge_hammer", "target_id": "rock", "target_types": ["Mineral", "Ranged Weapon", "Thrown"]},
+    "want": "true"
+  },
+  {
+    "name": "steel-forge-hammer-rejects-lava-rock",
+    "condition": {
+      "class": "Model.OtherItemIsExactly",
+      "definition": {"id": "Rock", "name": "Rock"}
+    },
+    "context": {"source_id": "steel_forge_hammer", "target_id": "lava_rock", "target_types": ["Mineral", "Ranged Weapon", "Thrown", "Charm"]},
+    "want": "false"
+  },
+  {
+    "name": "steel-forge-hammer-exact-mining-pick-negative",
+    "condition": {
+      "class": "Model.OtherItemIsExactly",
+      "definition": {"id": "Rock", "name": "Rock"}
+    },
+    "context": {"source_id": "steel_forge_hammer", "target_id": "mining_pick", "target_types": ["Tool", "Melee Weapon", "Pick", "Stealable_Magnetic"]},
+    "want": "false"
+  },
+  {
+    "name": "exact-definition-without-reference",
+    "condition": {"class": "Model.OtherItemIsExactly"},
+    "context": {"source_id": "steel_forge_hammer", "target_id": "rock"},
+    "want": "unknown"
+  }
+]

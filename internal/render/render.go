@@ -32,6 +32,11 @@ type jsonScore struct {
 type jsonSearch struct {
 	NodesExplored               int64                `json:"nodes_explored"`
 	NodesPerSecond              float64              `json:"nodes_per_second,omitempty"`
+	SetupMS                     int64                `json:"setup_ms,omitempty"`
+	SeedMS                      int64                `json:"seed_ms,omitempty"`
+	RepairMS                    int64                `json:"repair_ms,omitempty"`
+	SearchMS                    int64                `json:"search_ms,omitempty"`
+	RefineMS                    int64                `json:"refine_ms,omitempty"`
 	Backend                     string               `json:"backend,omitempty"`
 	ServerElapsedMS             int64                `json:"server_elapsed_ms,omitempty"`
 	RemoteWorkers               int                  `json:"remote_workers,omitempty"`
@@ -418,6 +423,11 @@ func toJSONSolution(solution model.Solution) jsonSolution {
 		Search: jsonSearch{
 			NodesExplored:               solution.Search.NodesExplored,
 			NodesPerSecond:              solution.Search.NodesPerSecond,
+			SetupMS:                     solution.Search.SetupMS,
+			SeedMS:                      solution.Search.SeedMS,
+			RepairMS:                    solution.Search.RepairMS,
+			SearchMS:                    solution.Search.SearchMS,
+			RefineMS:                    solution.Search.RefineMS,
 			Backend:                     solution.Search.Backend,
 			ServerElapsedMS:             solution.Search.ServerElapsedMS,
 			RemoteWorkers:               solution.Search.RemoteWorkers,

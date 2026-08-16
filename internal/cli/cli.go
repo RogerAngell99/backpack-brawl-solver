@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"backpack-brawl-solver/internal/benchmark"
@@ -207,6 +208,11 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 	noSkips := flags.Bool("no-skips", false, "Require every inventory item to be placed")
 	stopOnCoverageCeiling := flags.Bool("stop-on-coverage-ceiling", false, "Stop early when the top coverage bucket reaches its theoretical ceiling")
 	repairSearch := flags.Bool("repair-search", true, "Run deterministic repair search for limited solves")
+	hero := flags.String("hero", "", "Include items available to this hero or comma-separated heroes")
+	excludeHero := flags.String("exclude-hero", "", "Exclude items available to this hero or comma-separated heroes")
+	heroMode := flags.String("hero-mode", "", "Hero filter mode: any, all, or shared")
+	excludeMode := flags.String("hero-exclude-mode", "", "Hero exclusion mode: strict or exclusive_only")
+	unknownHeroPolicy := flags.String("hero-unknown-policy", "", "Unknown hero scope policy: exclude, include, or error")
 	jsonOutput := flags.Bool("json", false, "Print machine-readable JSON")
 	workers := flags.Int("workers", runtime.NumCPU(), "Number of search workers")
 	if err := flags.Parse(args); err != nil {
@@ -249,6 +255,22 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 	if err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 1
+	}
+	heroFilter, err := effectiveHeroFilter(*scenarioPath, *hero, *excludeHero, *heroMode, *excludeMode, *unknownHeroPolicy, setFlags)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	loaded, err = catalog.FilterForHeroes(loaded, heroFilter)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	for _, itemID := range itemIDs {
+		if _, ok := loaded.Items[itemID]; !ok {
+			fmt.Fprintf(stderr, "ERROR: item %q is unavailable for the selected hero filter\n", itemID)
+			return 2
+		}
 	}
 	gridMask, err := gridMaskFromArgs(effectiveGridText, effectiveGridFile)
 	if err != nil {
@@ -393,6 +415,48 @@ func explicitlySetFlags(flags *flag.FlagSet) map[string]bool {
 	return set
 }
 
+func effectiveHeroFilter(scenarioPath, heroText, excludeText, mode, excludeMode, unknownPolicy string, setFlags map[string]bool) (model.HeroFilter, error) {
+	filter := model.HeroFilter{}
+	if scenarioPath != "" {
+		loadedScenario, err := scenario.Load(scenarioPath)
+		if err != nil {
+			return model.HeroFilter{}, err
+		}
+		filter = loadedScenario.HeroFilter
+	}
+	if setFlags["hero"] {
+		filter.IncludeHeroes = splitHeroIDs(heroText)
+	}
+	if setFlags["exclude-hero"] {
+		filter.ExcludeHeroes = splitHeroIDs(excludeText)
+	}
+	if setFlags["hero-mode"] {
+		filter.Mode = mode
+	}
+	if setFlags["hero-exclude-mode"] {
+		filter.ExcludeMode = excludeMode
+	}
+	if setFlags["hero-unknown-policy"] {
+		filter.UnknownPolicy = unknownPolicy
+	}
+	return filter, nil
+}
+
+func splitHeroIDs(value string) []string {
+	parts := strings.Split(value, ",")
+	result := make([]string, 0, len(parts))
+	seen := map[string]bool{}
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if part == "" || seen[part] {
+			continue
+		}
+		seen[part] = true
+		result = append(result, part)
+	}
+	return result
+}
+
 func runImportWiki(args []string, stdout io.Writer, stderr io.Writer) int {
 	flags := flag.NewFlagSet("import-wiki", flag.ContinueOnError)
 	flags.SetOutput(stderr)
@@ -468,6 +532,7 @@ func printUsage(writer io.Writer) {
 	fmt.Fprintln(writer, "  validate-catalog")
 	fmt.Fprintln(writer, "  review-catalog")
 	fmt.Fprintln(writer, "  solve")
+	fmt.Fprintln(writer, "    --hero <id[,id]> --exclude-hero <id[,id]>")
 	fmt.Fprintln(writer, "  import-wiki")
 	fmt.Fprintln(writer, "  import-html")
 	fmt.Fprintln(writer, "  benchmark-scenarios")

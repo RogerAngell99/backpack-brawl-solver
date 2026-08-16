@@ -875,7 +875,7 @@ button:disabled {
   min-height: 0;
   align-self: stretch;
   justify-self: stretch;
-  border: 2px solid rgba(39, 67, 55, 0.78);
+  border: 2px solid var(--item-color, rgba(39, 67, 55, 0.78));
   background: rgba(236, 245, 236, 0.68);
   pointer-events: auto;
 }
@@ -883,8 +883,8 @@ button:disabled {
 .placed-cell:hover,
 .placed-cell:focus-visible,
 .placed-cell.active {
-  border-color: #315f45;
-  box-shadow: inset 0 0 0 1px rgba(49, 95, 69, 0.2);
+  border-color: var(--item-color, #315f45);
+  box-shadow: inset 0 0 0 1px var(--item-color, #315f45), 0 0 0 1px var(--item-color, #315f45);
 }
 
 .placed-item-image {
@@ -1007,6 +1007,10 @@ button:disabled {
   border-radius: 8px;
   background: rgba(255, 253, 248, 0.98);
   box-shadow: 0 18px 42px rgba(30, 38, 32, 0.22);
+}
+
+.item-info-card.hover-preview {
+  pointer-events: none;
 }
 
 .item-info-header {

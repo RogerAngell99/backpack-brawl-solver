@@ -2,10 +2,14 @@ package websolve
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"backpack-brawl-solver/internal/catalog"
+	"backpack-brawl-solver/internal/scenario"
 )
 
 func TestSolveScenarioJSON(t *testing.T) {
@@ -61,6 +65,159 @@ func TestSolveScenarioJSON(t *testing.T) {
 	if !foundWithStars || !foundWithoutStars {
 		t.Fatalf("expected placements with and without star positions: %+v", solutions[0].Placements)
 	}
+}
+
+func TestSolvePreparedCatalog(t *testing.T) {
+	catalogContent := readProjectFile(t, "data", "catalog.json")
+	loadedCatalog, err := catalog.Parse(catalogContent)
+	if err != nil {
+		t.Fatalf("parse catalog: %v", err)
+	}
+	var loadedScenario scenario.Scenario
+	if err := json.Unmarshal([]byte(`{
+		"items": {"scalemail": 1},
+		"top": 1,
+		"workers": 3,
+		"max_nodes": 0
+	}`), &loadedScenario); err != nil {
+		t.Fatalf("parse scenario: %v", err)
+	}
+
+	result, err := SolvePreparedCatalog(loadedCatalog, loadedScenario, Options{
+		WorkerOverride: 1,
+		Backend:        "wasm",
+	})
+	if err != nil {
+		t.Fatalf("SolvePreparedCatalog returned error: %v", err)
+	}
+	if result.Metadata.Workers != 1 || result.Metadata.Backend != "wasm" {
+		t.Fatalf("unexpected metadata: %+v", result.Metadata)
+	}
+	var solutions []any
+	if err := json.Unmarshal(result.JSON, &solutions); err != nil {
+		t.Fatalf("invalid output JSON: %v\n%s", err, string(result.JSON))
+	}
+	if len(solutions) == 0 {
+		t.Fatal("expected at least one solution")
+	}
+}
+
+func TestSolveScenarioJSONSteelForgeHammerCoversRockAndMiningPick(t *testing.T) {
+	catalogContent := readProjectFile(t, "data", "catalog.json")
+	scenarioContent := json.RawMessage(`{
+		"grid": [
+			"011110000",
+			"011110000",
+			"111111100",
+			"111111100",
+			"001100000",
+			"001100000"
+		],
+		"items": {
+			"mining_pick": 1,
+			"rock": 1,
+			"steel_forge_hammer": 1
+		},
+		"top": 1,
+		"workers": 1,
+		"max_nodes": 0,
+		"no_skips": true,
+		"priorities": ["star_source:steel_forge_hammer"]
+	}`)
+
+	input, err := json.Marshal(map[string]json.RawMessage{
+		"catalog":  catalogContent,
+		"scenario": scenarioContent,
+	})
+	if err != nil {
+		t.Fatalf("marshal input: %v", err)
+	}
+
+	output, err := SolveScenarioJSON(input)
+	if err != nil {
+		t.Fatalf("SolveScenarioJSON returned error: %v", err)
+	}
+
+	var solutions []struct {
+		Score struct {
+			Stars          int   `json:"stars"`
+			Items          int   `json:"items"`
+			PriorityCounts []int `json:"priority_counts"`
+		} `json:"score"`
+		Stars []struct {
+			SourceInstance string `json:"source_instance"`
+			TargetInstance string `json:"target_instance"`
+			StarPosition   []int  `json:"star_position"`
+		} `json:"stars"`
+		Placements []struct {
+			InstanceID    string  `json:"instance_id"`
+			StarPositions [][]int `json:"star_positions"`
+		} `json:"placements"`
+		Coverage struct {
+			Buckets []struct {
+				CoveredSources int `json:"covered_sources"`
+				TargetCount    int `json:"target_count"`
+			} `json:"buckets"`
+		} `json:"coverage"`
+	}
+	if err := json.Unmarshal(output, &solutions); err != nil {
+		t.Fatalf("invalid output JSON: %v\n%s", err, string(output))
+	}
+	if len(solutions) == 0 {
+		t.Fatal("expected at least one solution")
+	}
+	best := solutions[0]
+	if best.Score.Stars != 2 || best.Score.Items != 3 {
+		t.Fatalf("unexpected score: %+v", best.Score)
+	}
+	if len(best.Score.PriorityCounts) != 1 || best.Score.PriorityCounts[0] != 2 {
+		t.Fatalf("priority_counts=%v want [2]", best.Score.PriorityCounts)
+	}
+	if len(best.Stars) != 2 {
+		t.Fatalf("stars=%+v want two activations", best.Stars)
+	}
+	targets := map[string]bool{}
+	positions := map[string]bool{}
+	for _, star := range best.Stars {
+		if star.SourceInstance != "steel_forge_hammer#2" {
+			t.Fatalf("unexpected star source: %+v", star)
+		}
+		targets[star.TargetInstance] = true
+		positions[fmt.Sprintf("%d,%d", star.StarPosition[0], star.StarPosition[1])] = true
+	}
+	if !targets["mining_pick#0"] || !targets["rock#1"] || len(targets) != 2 {
+		t.Fatalf("star targets=%v want mining_pick#0 and rock#1", targets)
+	}
+	if len(positions) != 2 {
+		t.Fatalf("star positions=%v want two distinct positions", positions)
+	}
+	var sourceStarPositions [][]int
+	for _, placement := range best.Placements {
+		if placement.InstanceID == "steel_forge_hammer#2" {
+			sourceStarPositions = placement.StarPositions
+			break
+		}
+	}
+	if len(sourceStarPositions) != 2 {
+		t.Fatalf("hammer star positions=%v want two positions", sourceStarPositions)
+	}
+	for _, star := range best.Stars {
+		if !containsCoord(sourceStarPositions, star.StarPosition) {
+			t.Fatalf("star position %v is not a hammer star: %v", star.StarPosition, sourceStarPositions)
+		}
+	}
+	if len(best.Coverage.Buckets) != 1 || best.Coverage.Buckets[0].CoveredSources != 1 || best.Coverage.Buckets[0].TargetCount != 2 {
+		t.Fatalf("coverage buckets=%+v want one source covering two targets", best.Coverage.Buckets)
+	}
+}
+
+func containsCoord(coords [][]int, wanted []int) bool {
+	for _, coord := range coords {
+		if len(coord) == len(wanted) && len(coord) == 2 && coord[0] == wanted[0] && coord[1] == wanted[1] {
+			return true
+		}
+	}
+	return false
 }
 
 func TestSolveScenarioJSONWithRemoteOptionsAppliesCapsAndMetadata(t *testing.T) {
@@ -451,6 +608,67 @@ func TestSolveScenarioJSONRejectsEmptyInventory(t *testing.T) {
 	}
 }
 
+func BenchmarkCatalogParseProduction(b *testing.B) {
+	catalogContent := readProjectFile(b, "data", "catalog.json")
+	b.ReportAllocs()
+	b.ResetTimer()
+	for range b.N {
+		if _, err := catalog.Parse(catalogContent); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkWebSolveEnvelope(b *testing.B) {
+	input := benchmarkSolveInput(b)
+	b.ReportAllocs()
+	b.ResetTimer()
+	for range b.N {
+		if _, err := SolveScenarioJSONWithOptions(input, Options{}); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkWebSolvePreparedCatalog(b *testing.B) {
+	catalogContent := readProjectFile(b, "data", "catalog.json")
+	loadedCatalog, err := catalog.Parse(catalogContent)
+	if err != nil {
+		b.Fatal(err)
+	}
+	var loadedScenario scenario.Scenario
+	if err := json.Unmarshal(benchmarkScenarioJSON, &loadedScenario); err != nil {
+		b.Fatal(err)
+	}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for range b.N {
+		if _, err := SolvePreparedCatalog(loadedCatalog, loadedScenario, Options{}); err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+var benchmarkScenarioJSON = []byte(`{
+	"items": {"scalemail": 1},
+	"top": 1,
+	"max_nodes": 1,
+	"repair_search": false
+}`)
+
+func benchmarkSolveInput(b testing.TB) []byte {
+	b.Helper()
+	catalogContent := readProjectFile(b, "data", "catalog.json")
+	input, err := json.Marshal(map[string]json.RawMessage{
+		"catalog":  catalogContent,
+		"scenario": benchmarkScenarioJSON,
+	})
+	if err != nil {
+		b.Fatal(err)
+	}
+	return input
+}
+
 func groupContainsTarget(targets []struct {
 	TargetItemID string `json:"target_item_id"`
 }, itemID string) bool {
@@ -462,7 +680,7 @@ func groupContainsTarget(targets []struct {
 	return false
 }
 
-func readProjectFile(t *testing.T, parts ...string) []byte {
+func readProjectFile(t testing.TB, parts ...string) []byte {
 	t.Helper()
 	pathParts := append([]string{"..", ".."}, parts...)
 	content, err := os.ReadFile(filepath.Join(pathParts...))

@@ -377,6 +377,39 @@ func TestSolveWorkersProduceSameBestJSON(t *testing.T) {
 	}
 }
 
+func TestSolveHeroFilterRejectsUnavailableItem(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"solve",
+		"--catalog", catalogPath(),
+		"--hero", "Marksman",
+		"--items", "excalibur",
+	}, &stdout, &stderr)
+	if code != 2 {
+		t.Fatalf("exit code=%d want 2, stderr=%s", code, stderr.String())
+	}
+	if !strings.Contains(stderr.String(), "unavailable for the selected hero filter") {
+		t.Fatalf("unexpected stderr=%s", stderr.String())
+	}
+}
+
+func TestSolveHeroFilterKeepsSharedItem(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"solve",
+		"--catalog", catalogPath(),
+		"--hero", "Warrior",
+		"--items", "watermelon",
+		"--max-nodes", "100",
+		"--top", "1",
+	}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit code=%d stderr=%s", code, stderr.String())
+	}
+}
+
 func TestBenchmarkScenariosCommandWritesReport(t *testing.T) {
 	dir := t.TempDir()
 	if err := os.WriteFile(filepath.Join(dir, "tiny.json"), []byte(`{

@@ -4,5 +4,7 @@ il2cpp/
 derived/*/items/assets/
 derived/*/runtime/runtime.json
 derived/*/runtime*/
+derived/*/star-state-*/
 derived/*/normalized/items.json
 derived/*/normalized/recipes.json
+derived/*/hero-scope-*

@@ -152,6 +152,7 @@ def merge_item(
 ) -> dict[str, Any]:
     item_id = slug(runtime.get("id") or runtime.get("asset_id") or runtime.get("name") or "")
     runtime_types = [str(value) for value in as_list(runtime.get("types"))]
+    runtime_stat_types = sorted({str(stat.get("type")) for stat in as_list(runtime.get("stats")) if stat.get("type")})
     shape = normalized_shape(runtime, static)
     positions = normalized_star_positions(runtime, static)
 
@@ -191,6 +192,9 @@ def merge_item(
             "types": types,
             "shape": shape,
             "stars": stars,
+            "stat_types": runtime_stat_types,
+            "star_condition_graph": copy.deepcopy(runtime.get("star_condition_graph")),
+            "hero_scope": copy.deepcopy(runtime.get("hero_scope")),
             "ability_text": ability_text,
             "source_url": source_url,
             "image_url": image_url,
@@ -221,7 +225,44 @@ def build_recipe(
         "anchor": primary,
         "ingredients": ingredients,
         "source_url": "",
+        "hero_scope": copy.deepcopy(raw.get("hero_scope")),
     }, None
+
+
+def recipe_key(recipe: dict[str, Any]) -> tuple[str, str, tuple[str, ...]]:
+    return (
+        str(recipe.get("result") or ""),
+        str(recipe.get("anchor") or ""),
+        tuple(recipe.get("ingredients", [])),
+    )
+
+
+def merge_recipe_scopes(
+    existing: dict[str, Any], incoming: dict[str, Any], hero_ids: set[str]
+) -> dict[str, Any]:
+    result = copy.deepcopy(existing)
+    existing_scope = existing.get("hero_scope") or {}
+    incoming_scope = incoming.get("hero_scope") or {}
+    if existing_scope.get("status") != "confirmed" and incoming_scope.get("status") == "confirmed":
+        result["hero_scope"] = copy.deepcopy(incoming_scope)
+        return result
+    if existing_scope.get("status") != "confirmed" or incoming_scope.get("status") != "confirmed":
+        return result
+    available = sorted(set(existing_scope.get("available_to", [])) | set(incoming_scope.get("available_to", [])))
+    available_set = set(available)
+    if available_set == hero_ids:
+        kind = "shared"
+    elif len(available_set) == 1:
+        kind = "hero_specific"
+    else:
+        kind = "multi_hero"
+    result["hero_scope"] = {
+        "available_to": available,
+        "kind": kind,
+        "status": "confirmed",
+        "source": "RecipeData.hero",
+    }
+    return result
 
 
 def main() -> None:
@@ -239,7 +280,9 @@ def main() -> None:
 
     current = load_json(args.current)
     assets = {item.get("name"): item for item in load_json(args.static / "items" / "assets.json").get("items", [])}
-    normalized = load_json(args.normalized / "items.json").get("items", [])
+    normalized_file = load_json(args.normalized / "items.json")
+    normalized = normalized_file.get("items", [])
+    normalized_heroes = normalized_file.get("heroes", [])
     runtime_recipes = load_json(args.normalized / "recipes.json").get("recipes", [])
     id_map_input = load_json(args.id_map_input) if args.id_map_input.is_file() else {}
     runtime_to_catalog = {
@@ -281,11 +324,8 @@ def main() -> None:
         metadata_items.append(metadata)
 
     catalog_item_ids = set(output_items)
-    recipes = {(
-        recipe.get("result"),
-        recipe.get("anchor"),
-        tuple(recipe.get("ingredients", [])),
-    ): copy.deepcopy(recipe) for recipe in current.get("recipes", [])}
+    recipe_hero_ids = {hero.get("id") for hero in normalized_heroes if not hero.get("npc") and hero.get("id")}
+    recipes = {recipe_key(recipe): copy.deepcopy(recipe) for recipe in current.get("recipes", [])}
     invalid_recipes: list[dict[str, Any]] = []
     valid_runtime_recipes = 0
     for raw_recipe in runtime_recipes:
@@ -295,10 +335,14 @@ def main() -> None:
             continue
         assert recipe is not None
         valid_runtime_recipes += 1
-        key = (recipe["result"], recipe["anchor"], tuple(recipe["ingredients"]))
-        recipes.setdefault(key, recipe)
+        key = recipe_key(recipe)
+        if key in recipes:
+            recipes[key] = merge_recipe_scopes(recipes[key], recipe, recipe_hero_ids)
+        else:
+            recipes[key] = recipe
 
     catalog = {
+        "heroes": normalized_heroes,
         "items": [output_items[item_id] for item_id in sorted(output_items)],
         "recipes": [recipes[key] for key in sorted(recipes)],
     }
@@ -306,6 +350,7 @@ def main() -> None:
         "schema_version": 1,
         "game_version": "6.1.1",
         "source": "client-runtime-capture",
+        "heroes": normalized_heroes,
         "items": sorted(metadata_items, key=lambda item: item.get("catalog_id", "")),
     }
     runtime_catalog_ids = {
@@ -313,12 +358,20 @@ def main() -> None:
         for item in normalized
     }
     catalog_only_ids = sorted(set(current_items) - runtime_catalog_ids)
+    level_effects = [
+        effect
+        for item in normalized
+        for effect in (item.get("levels", {}).get("effects", []) or [])
+    ]
     report = {
         "catalog_items": len(catalog["items"]),
         "catalog_recipes": len(catalog["recipes"]),
         "runtime_items": len(normalized),
         "runtime_recipes": len(runtime_recipes),
         "valid_runtime_recipes": valid_runtime_recipes,
+        "runtime_items_with_star_condition_graph": sum(bool(item.get("star_condition_graph")) for item in normalized),
+        "runtime_level_effects": len(level_effects),
+        "runtime_level_effects_with_stat_target": sum(bool(effect.get("stat_target")) for effect in level_effects),
         "matched_ids": len(set(matched_ids)),
         "new_ids": sorted(new_ids),
         "catalog_only_ids": catalog_only_ids,

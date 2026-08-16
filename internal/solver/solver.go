@@ -19,6 +19,7 @@ type Config struct {
 	TopN                  int
 	AllowSkips            bool
 	MaxNodes              int64
+	MaxRefineMoves        int64 // Zero derives a bounded limit from MaxNodes.
 	Workers               int
 	Priorities            []string
 	CoverageGroups        []model.CoverageGroup
@@ -204,9 +205,26 @@ func PlacementOptions(catalog model.Catalog, instance model.InventoryInstance, g
 	return options, nil
 }
 
+func placementOptionsForInstance(template []model.Placement, instance model.InventoryInstance) []model.Placement {
+	options := make([]model.Placement, len(template))
+	copy(options, template)
+	for idx := range options {
+		options[idx].InstanceID = instance.InstanceID
+		options[idx].ItemID = instance.ItemID
+		options[idx].OriginalIndex = instance.OriginalIndex
+	}
+	return options
+}
+
 func SolveLayout(catalog model.Catalog, itemIDs []string, gridMask uint64, config Config) ([]model.Solution, error) {
+	if len(itemIDs) > geometry.GridCells {
+		return nil, fmt.Errorf("inventory has %d items; maximum is %d for the %dx%d grid", len(itemIDs), geometry.GridCells, geometry.GridRows, geometry.GridCols)
+	}
 	if config.TopN <= 0 {
 		config.TopN = 3
+	}
+	if config.MaxRefineMoves <= 0 {
+		config.MaxRefineMoves = defaultRefineMoveLimit(config.MaxNodes)
 	}
 	if config.Workers <= 0 {
 		config.Workers = 1
@@ -226,6 +244,7 @@ func SolveLayout(catalog model.Catalog, itemIDs []string, gridMask uint64, confi
 		sort.Strings(missing)
 		return nil, fmt.Errorf("inventory references unknown item(s): %s", strings.Join(uniqueStrings(missing), ", "))
 	}
+	catalog = filterInventoryImpossibleRecipes(catalog, itemIDs)
 
 	optionsByInstance := map[string][]model.Placement{}
 	for _, instance := range instances {
@@ -427,7 +446,11 @@ func SolveLayout(catalog model.Catalog, itemIDs []string, gridMask uint64, confi
 		score := results[0].Evaluation.Score
 		beforeRefineBest = &score
 	}
-	results, searchStats = refineSolutions(catalog, instances, optionsByInstance, results, searchStats, config.Priorities, config.CoverageGroups)
+	var refineErr error
+	results, searchStats, refineErr = refineSolutions(catalog, instances, optionsByInstance, results, searchStats, config)
+	if refineErr != nil {
+		return nil, refineErr
+	}
 	sort.Slice(results, func(i, j int) bool {
 		return SolutionLess(results[i], results[j])
 	})
@@ -884,6 +907,41 @@ func recipeContainsItem(recipe model.Recipe, itemID string) bool {
 	return false
 }
 
+func filterInventoryImpossibleRecipes(catalog model.Catalog, itemIDs []string) model.Catalog {
+	inventoryCounts := make(map[string]int, len(itemIDs))
+	for _, itemID := range itemIDs {
+		inventoryCounts[itemID]++
+	}
+	filtered := make([]model.Recipe, 0, len(catalog.Recipes))
+	for _, recipe := range catalog.Recipes {
+		if recipePossibleWithInventory(recipe, inventoryCounts) {
+			filtered = append(filtered, recipe)
+		}
+	}
+	if len(filtered) == len(catalog.Recipes) {
+		return catalog
+	}
+	catalog.Recipes = filtered
+	return catalog
+}
+
+func recipePossibleWithInventory(recipe model.Recipe, inventoryCounts map[string]int) bool {
+	requirements := recipe.CompiledRequirements
+	if !requirements.Ready {
+		requirements = model.BuildRecipeRequirements(recipe.Anchor, recipe.Ingredients)
+	}
+	needed := map[string]int{recipe.Anchor: 1}
+	for idx := 0; idx < requirements.Len; idx++ {
+		needed[requirements.Items[idx]] += requirements.Counts[idx]
+	}
+	for itemID, count := range needed {
+		if inventoryCounts[itemID] < count {
+			return false
+		}
+	}
+	return true
+}
+
 func buildSolution(catalog model.Catalog, placements []model.Placement, original []model.InventoryInstance, priorities []string) model.Solution {
 	placed := append([]model.Placement(nil), placements...)
 	sortPlacementsByOriginal(placed)
@@ -900,24 +958,42 @@ func refineSolutions(
 	optionsByInstance map[string][]model.Placement,
 	solutions []model.Solution,
 	searchStats model.SearchStats,
-	priorities []string,
-	coverageGroups []model.CoverageGroup,
-) ([]model.Solution, model.SearchStats) {
+	config Config,
+) ([]model.Solution, model.SearchStats, error) {
+	if config.MaxRefineMoves <= 0 {
+		config.MaxRefineMoves = defaultRefineMoveLimit(config.MaxNodes)
+	}
 	refined := make([]model.Solution, 0, len(solutions))
-	for _, solution := range solutions {
-		next, changed, stats := refineSolution(catalog, original, optionsByInstance, solution, priorities, coverageGroups)
+	remainingMoves := config.MaxRefineMoves
+	for solutionIndex, solution := range solutions {
+		if remainingMoves <= 0 {
+			refined = append(refined, solutions[solutionIndex:]...)
+			break
+		}
+		refineConfig := config
+		refineConfig.MaxRefineMoves = remainingMoves
+		next, changed, stats, err := refineSolution(catalog, original, optionsByInstance, solution, refineConfig)
+		if err != nil {
+			return nil, searchStats, err
+		}
 		searchStats.RefineMovesChecked += stats.MovesChecked
 		searchStats.RefineImprovements += stats.Improvements
 		searchStats.Refined = searchStats.Refined || solution.Search.Refined || changed
 		next.Search = searchStats
 		refined = append(refined, next)
+		remainingMoves -= stats.MovesChecked
+		if stats.MoveLimitReached {
+			refined = append(refined, solutions[solutionIndex+1:]...)
+			break
+		}
 	}
-	return refined, searchStats
+	return refined, searchStats, nil
 }
 
 type refineStats struct {
-	MovesChecked int64
-	Improvements int
+	MovesChecked     int64
+	Improvements     int
+	MoveLimitReached bool
 }
 
 func refineSolution(
@@ -925,26 +1001,62 @@ func refineSolution(
 	original []model.InventoryInstance,
 	optionsByInstance map[string][]model.Placement,
 	solution model.Solution,
-	priorities []string,
-	coverageGroups []model.CoverageGroup,
-) (model.Solution, bool, refineStats) {
+	config Config,
+) (model.Solution, bool, refineStats, error) {
 	const maxRounds = 4
 	current := solution
 	changed := false
 	var stats refineStats
+	maxMoves := config.MaxRefineMoves
+	if maxMoves <= 0 {
+		maxMoves = defaultRefineMoveLimit(config.MaxNodes)
+	}
 	for round := 0; round < maxRounds; round++ {
+		if config.Context != nil {
+			if err := config.Context.Err(); err != nil {
+				return current, changed, stats, err
+			}
+		}
 		best := current
 		improved := false
 		for placementIndex, placement := range current.Placements {
+			if config.Context != nil {
+				if err := config.Context.Err(); err != nil {
+					return current, changed, stats, err
+				}
+			}
 			fixedMask := occupiedExcept(current.Placements, placementIndex)
 			candidatePlacements := append([]model.Placement(nil), current.Placements...)
 			for _, option := range optionsByInstance[placement.InstanceID] {
+				if config.Context != nil {
+					if err := config.Context.Err(); err != nil {
+						return current, changed, stats, err
+					}
+				}
+				if stats.MovesChecked >= maxMoves {
+					stats.MoveLimitReached = true
+					return current, changed, stats, nil
+				}
 				if option.Mask&fixedMask != 0 {
 					continue
 				}
 				stats.MovesChecked++
 				candidatePlacements[placementIndex] = option
-				evaluation := scoring.EvaluateLayoutWithCoverageGroups(catalog, candidatePlacements, priorities, coverageGroups)
+				score := scoring.EvaluateScoreOnlyWithCoverageGroups(catalog, candidatePlacements, config.Priorities, config.CoverageGroups)
+				if config.Context != nil {
+					if err := config.Context.Err(); err != nil {
+						return current, changed, stats, err
+					}
+				}
+				if !scoreOnlyImprovesSolution(candidatePlacements, original, score, best) {
+					continue
+				}
+				evaluation := scoring.EvaluateLayoutWithCoverageGroups(catalog, candidatePlacements, config.Priorities, config.CoverageGroups)
+				if config.Context != nil {
+					if err := config.Context.Err(); err != nil {
+						return current, changed, stats, err
+					}
+				}
 				candidate, ok := improvedCandidate(candidatePlacements, original, evaluation, best)
 				if ok {
 					candidate.Search = current.Search
@@ -960,7 +1072,7 @@ func refineSolution(
 		current = best
 		changed = true
 	}
-	return current, changed, stats
+	return current, changed, stats, nil
 }
 
 func occupiedExcept(placements []model.Placement, skippedIndex int) uint64 {
@@ -1041,7 +1153,7 @@ func insertCandidateWithScoreOnlyFilter(
 	if config.TopN <= 0 {
 		return results
 	}
-	if len(results) < config.TopN || !scoreOnlyFilterEnabled(config) {
+	if len(results) < config.TopN {
 		evaluation := scoring.EvaluateLayoutWithCoverageGroups(catalog, placements, config.Priorities, config.CoverageGroups)
 		return insertCandidate(results, placements, original, evaluation, config.TopN)
 	}
@@ -1051,10 +1163,6 @@ func insertCandidateWithScoreOnlyFilter(
 	}
 	evaluation := scoring.EvaluateLayoutWithCoverageGroups(catalog, placements, config.Priorities, config.CoverageGroups)
 	return insertCandidate(results, placements, original, evaluation, config.TopN)
-}
-
-func scoreOnlyFilterEnabled(config Config) bool {
-	return len(config.Priorities) > 0 || len(config.CoverageGroups) > 0
 }
 
 func scoreOnlyCandidateCanEnter(
@@ -1079,6 +1187,22 @@ func scoreOnlyCandidateCanEnter(
 		return true
 	}
 	return layoutKey(placements, original) < worst.LayoutKey
+}
+
+func scoreOnlyImprovesSolution(
+	placements []model.Placement,
+	original []model.InventoryInstance,
+	score model.Score,
+	best model.Solution,
+) bool {
+	scoreCompare := compareScores(score, best.Evaluation.Score)
+	if scoreCompare < 0 {
+		return false
+	}
+	if scoreCompare > 0 {
+		return true
+	}
+	return layoutKey(placements, original) < best.LayoutKey
 }
 
 func mergeSolutions(left []model.Solution, right []model.Solution, topN int) []model.Solution {
@@ -1157,6 +1281,24 @@ func candidateLimit(topN int) int {
 	limit := topN * 8
 	if limit < 16 {
 		return 16
+	}
+	return limit
+}
+
+func defaultRefineMoveLimit(maxNodes int64) int64 {
+	const (
+		minimumRefineMoves = int64(1000)
+		maximumRefineMoves = int64(25000)
+	)
+	if maxNodes <= 0 {
+		return maximumRefineMoves
+	}
+	limit := maxNodes / 4
+	if limit < minimumRefineMoves {
+		return minimumRefineMoves
+	}
+	if limit > maximumRefineMoves {
+		return maximumRefineMoves
 	}
 	return limit
 }

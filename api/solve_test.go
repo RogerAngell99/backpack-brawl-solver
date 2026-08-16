@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -73,6 +74,26 @@ func TestHandlerRejectsInvalidPayload(t *testing.T) {
 	}
 	if payload["error"] == "" {
 		t.Fatalf("expected error message, got %+v", payload)
+	}
+}
+
+func TestHandlerPropagatesCanceledRequestContext(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	request := httptest.NewRequest(http.MethodPost, "/api/solve", strings.NewReader(testPayload(t, `{
+		"items": {"scalemail": 1},
+		"top": 1,
+		"max_nodes": 1
+	}`))).WithContext(ctx)
+	response := httptest.NewRecorder()
+
+	Handler(response, request)
+
+	if response.Code != http.StatusBadRequest {
+		t.Fatalf("expected canceled request to fail, got %d: %s", response.Code, response.Body.String())
+	}
+	if !strings.Contains(response.Body.String(), context.Canceled.Error()) {
+		t.Fatalf("expected cancellation error, got %s", response.Body.String())
 	}
 }
 

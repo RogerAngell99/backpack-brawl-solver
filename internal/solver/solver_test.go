@@ -1,6 +1,7 @@
 package solver
 
 import (
+	"context"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -36,6 +37,238 @@ func TestInventoryCountSyntax(t *testing.T) {
 			t.Fatalf("got[%d]=%q want %q", idx, got[idx], want[idx])
 		}
 	}
+}
+
+func TestSolveLayoutAcceptsGridCapacityAndRejectsLargerInventory(t *testing.T) {
+	cat := model.Catalog{Items: map[string]model.Item{
+		"one": {
+			ID:        "one",
+			Shape:     []model.Coord{{Row: 0, Col: 0}},
+			Rotations: []int{0},
+		},
+	}}
+	items := make([]string, geometry.GridCells)
+	for idx := range items {
+		items[idx] = "one"
+	}
+	if _, err := SolveLayout(cat, items, 0, Config{AllowSkips: false, MaxNodes: 1}); err != nil {
+		t.Fatalf("SolveLayout at grid capacity returned error: %v", err)
+	}
+	items = append(items, "one")
+	if _, err := SolveLayout(cat, items, 0, Config{AllowSkips: false, MaxNodes: 1}); err == nil {
+		t.Fatal("SolveLayout accepted inventory larger than the grid capacity")
+	}
+}
+
+func TestRecipeFilteringAndScoreOnlyCandidatesMatchExhaustiveEvaluation(t *testing.T) {
+	cat := exhaustiveScoringCatalog()
+	itemIDs := []string{"source", "target", "anchor", "ingredient"}
+	instances := ExpandInventory(itemIDs)
+	gridMask := geometry.MaskFromCells([]model.Coord{
+		{Row: 0, Col: 0},
+		{Row: 0, Col: 1},
+		{Row: 0, Col: 2},
+		{Row: 0, Col: 3},
+	})
+	optionsByInstance := map[string][]model.Placement{}
+	for _, instance := range instances {
+		options, err := PlacementOptions(cat, instance, gridMask)
+		if err != nil {
+			t.Fatalf("PlacementOptions(%s) returned error: %v", instance.InstanceID, err)
+		}
+		optionsByInstance[instance.InstanceID] = options
+	}
+	filteredCatalog := filterInventoryImpossibleRecipes(cat, itemIDs)
+	if got := recipeResults(filteredCatalog.Recipes); !reflect.DeepEqual(got, []string{"crafted"}) {
+		t.Fatalf("filtered recipe results=%v want [crafted]", got)
+	}
+
+	config := Config{
+		TopN:       3,
+		Priorities: []string{"coverage_group:0", "craft:crafted", "star_source:source"},
+		CoverageGroups: []model.CoverageGroup{{
+			Name:    "Target coverage",
+			Sources: []string{"source"},
+			Targets: []string{"target"},
+		}},
+	}
+	var fullResults []model.Solution
+	var scoreOnlyResults []model.Solution
+	var layouts int
+	var visit func(int, uint64, []model.Placement)
+	visit = func(index int, occupied uint64, placements []model.Placement) {
+		if index == len(instances) {
+			layouts++
+			fullEvaluation := scoring.EvaluateLayoutWithCoverageGroups(cat, placements, config.Priorities, config.CoverageGroups)
+			filteredEvaluation := scoring.EvaluateLayoutWithCoverageGroups(filteredCatalog, placements, config.Priorities, config.CoverageGroups)
+			if !reflect.DeepEqual(filteredEvaluation, fullEvaluation) {
+				t.Fatalf("filtered evaluation differs for %s:\nfiltered=%+v\nfull=%+v", layoutKey(placements, instances), filteredEvaluation, fullEvaluation)
+			}
+			scoreOnly := scoring.EvaluateScoreOnlyWithCoverageGroups(cat, placements, config.Priorities, config.CoverageGroups)
+			if !reflect.DeepEqual(scoreOnly, fullEvaluation.Score) {
+				t.Fatalf("score-only differs for %s: got=%+v want=%+v", layoutKey(placements, instances), scoreOnly, fullEvaluation.Score)
+			}
+			fullResults = insertCandidate(fullResults, placements, instances, fullEvaluation, config.TopN)
+			scoreOnlyResults = insertCandidateWithScoreOnlyFilter(cat, scoreOnlyResults, placements, instances, config)
+			return
+		}
+		instance := instances[index]
+		for _, option := range optionsByInstance[instance.InstanceID] {
+			if option.Mask&occupied != 0 {
+				continue
+			}
+			next, _ := insertPlacementSorted(append([]model.Placement(nil), placements...), option)
+			visit(index+1, occupied|option.Mask, next)
+		}
+		visit(index+1, occupied, placements)
+	}
+	visit(0, 0, nil)
+	if layouts != 209 {
+		t.Fatalf("exhaustive layout count=%d want 209", layouts)
+	}
+	if !reflect.DeepEqual(scoreOnlyResults, fullResults) {
+		t.Fatalf("score-only candidates differ from full candidates:\nscore-only=%+v\nfull=%+v", scoreOnlyResults, fullResults)
+	}
+}
+
+func TestCoveragePlacementPrioritiesMatchPairwiseReference(t *testing.T) {
+	cat := coverageSeedGenericCatalog()
+	instances := ExpandInventory([]string{"source_a", "source_b", "weapon_a", "weapon_b"})
+	optionsByInstance := testOptionsByInstance(t, cat, instances)
+	coverage := newCoverageContext(cat, instances, optionsByInstance, []string{"star_source:source_a", "star_source:source_b"})
+	if coverage == nil {
+		t.Fatal("expected coverage context")
+	}
+	for _, instance := range instances {
+		for _, option := range optionsByInstance[instance.InstanceID] {
+			got := coverage.priorityForPlacement(option)
+			want := coverage.computePlacementPriority(cat, option, instances, optionsByInstance)
+			if got != want {
+				t.Fatalf("priority for %s at %s: got %d want %d", option.InstanceID, placementKey(option), got, want)
+			}
+		}
+	}
+}
+
+func TestRefinementRespectsMoveLimitAndContext(t *testing.T) {
+	cat := model.Catalog{Items: map[string]model.Item{
+		"one": {
+			ID:        "one",
+			Shape:     []model.Coord{{Row: 0, Col: 0}},
+			Rotations: []int{0},
+		},
+	}}
+	instances := ExpandInventory([]string{"one"})
+	options, err := PlacementOptions(cat, instances[0], geometry.FullGridMask())
+	if err != nil {
+		t.Fatalf("PlacementOptions returned error: %v", err)
+	}
+	optionsByInstance := map[string][]model.Placement{instances[0].InstanceID: options}
+	solution := buildSolution(cat, []model.Placement{options[0]}, instances, nil)
+
+	_, _, stats, err := refineSolution(cat, instances, optionsByInstance, solution, Config{MaxRefineMoves: 1})
+	if err != nil {
+		t.Fatalf("refineSolution with move limit returned error: %v", err)
+	}
+	if stats.MovesChecked != 1 || !stats.MoveLimitReached {
+		t.Fatalf("refine stats=%+v want one checked move and a reached limit", stats)
+	}
+	other := buildSolution(cat, []model.Placement{options[1]}, instances, nil)
+	refined, searchStats, err := refineSolutions(cat, instances, optionsByInstance, []model.Solution{solution, other}, model.SearchStats{}, Config{MaxRefineMoves: 1})
+	if err != nil {
+		t.Fatalf("refineSolutions with move limit returned error: %v", err)
+	}
+	if len(refined) != 2 || refined[1].LayoutKey != other.LayoutKey {
+		t.Fatalf("refineSolutions dropped unrefined candidates: %+v", refined)
+	}
+	if searchStats.RefineMovesChecked != 1 {
+		t.Fatalf("refine solutions checked %d moves want 1", searchStats.RefineMovesChecked)
+	}
+
+	canceledContext := &cancelAfterChecksContext{Context: context.Background(), cancelAt: 4}
+	_, _, stats, err = refineSolution(cat, instances, optionsByInstance, solution, Config{
+		Context:        canceledContext,
+		MaxRefineMoves: 10,
+	})
+	if err != context.Canceled {
+		t.Fatalf("refineSolution cancellation error=%v want %v", err, context.Canceled)
+	}
+	if stats.MovesChecked != 1 {
+		t.Fatalf("refine checked %d moves before cancellation, want 1", stats.MovesChecked)
+	}
+}
+
+func TestDefaultRefineMoveLimitUsesSearchBudget(t *testing.T) {
+	tests := []struct {
+		maxNodes int64
+		want     int64
+	}{
+		{maxNodes: 0, want: 25000},
+		{maxNodes: 4000, want: 1000},
+		{maxNodes: 20000, want: 5000},
+		{maxNodes: 200000, want: 25000},
+	}
+	for _, tt := range tests {
+		if got := defaultRefineMoveLimit(tt.maxNodes); got != tt.want {
+			t.Fatalf("defaultRefineMoveLimit(%d)=%d want %d", tt.maxNodes, got, tt.want)
+		}
+	}
+}
+
+type cancelAfterChecksContext struct {
+	context.Context
+	checks   int
+	cancelAt int
+}
+
+func (ctx *cancelAfterChecksContext) Err() error {
+	ctx.checks++
+	if ctx.checks >= ctx.cancelAt {
+		return context.Canceled
+	}
+	return nil
+}
+
+func exhaustiveScoringCatalog() model.Catalog {
+	return model.Catalog{
+		Items: map[string]model.Item{
+			"source": {
+				ID:        "source",
+				Shape:     []model.Coord{{Row: 0, Col: 0}},
+				Stars:     []model.Star{{Offset: model.Coord{Row: 0, Col: 1}, TargetTypes: []string{"target"}}},
+				Rotations: []int{0},
+			},
+			"target": {
+				ID:        "target",
+				Types:     []string{"target"},
+				Shape:     []model.Coord{{Row: 0, Col: 0}},
+				Rotations: []int{0},
+			},
+			"anchor": {
+				ID:        "anchor",
+				Shape:     []model.Coord{{Row: 0, Col: 0}},
+				Rotations: []int{0},
+			},
+			"ingredient": {
+				ID:        "ingredient",
+				Shape:     []model.Coord{{Row: 0, Col: 0}},
+				Rotations: []int{0},
+			},
+		},
+		Recipes: []model.Recipe{
+			{Result: "missing-first", Anchor: "source", Ingredients: []string{"source", "missing"}},
+			{Result: "crafted", Anchor: "anchor", Ingredients: []string{"anchor", "ingredient"}},
+			{Result: "too-many", Anchor: "ingredient", Ingredients: []string{"ingredient", "ingredient"}},
+		},
+	}
+}
+
+func recipeResults(recipes []model.Recipe) []string {
+	results := make([]string, 0, len(recipes))
+	for _, recipe := range recipes {
+		results = append(results, recipe.Result)
+	}
+	return results
 }
 
 func TestPlacementOptionsRespectUnavailableCells(t *testing.T) {
@@ -268,7 +501,10 @@ func TestRefinementDoesNotWorsenSolution(t *testing.T) {
 	if err != nil {
 		t.Fatalf("SolveLayout returned error: %v", err)
 	}
-	refined, _, _ := refineSolution(cat, instances, optionsByInstance, solutions[0], nil, nil)
+	refined, _, _, err := refineSolution(cat, instances, optionsByInstance, solutions[0], Config{})
+	if err != nil {
+		t.Fatalf("refineSolution returned error: %v", err)
+	}
 	if SolutionLess(solutions[0], refined) {
 		t.Fatalf("refinement worsened solution: before=%+v after=%+v", solutions[0].Evaluation.Score, refined.Evaluation.Score)
 	}
@@ -351,7 +587,13 @@ func TestRefinementMovesItemOntoFreeStarCell(t *testing.T) {
 		LayoutKey:  layoutKey(placements, instances),
 	}
 
-	refined, changed, stats := refineSolution(cat, instances, optionsByInstance, solution, priorities, coverageGroups)
+	refined, changed, stats, err := refineSolution(cat, instances, optionsByInstance, solution, Config{
+		Priorities:     priorities,
+		CoverageGroups: coverageGroups,
+	})
+	if err != nil {
+		t.Fatalf("refineSolution returned error: %v", err)
+	}
 	if !changed {
 		t.Fatal("expected refinement to improve the layout")
 	}

@@ -1016,12 +1016,12 @@ func looseSourceCanTarget(catalog model.Catalog, sourceItemID string, targetItem
 	if !ok {
 		return false
 	}
-	target, ok := catalog.Items[targetItemID]
+	_, ok = catalog.Items[targetItemID]
 	if !ok {
 		return false
 	}
 	for starIndex := range source.Stars {
-		if scoring.StarMatchesItem(sourceItemID, targetItemID, &target, &source.Stars[starIndex]) {
+		if scoring.StarMatchesCatalogItems(catalog, sourceItemID, targetItemID, &source.Stars[starIndex]) {
 			return true
 		}
 	}

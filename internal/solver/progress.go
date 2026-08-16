@@ -87,7 +87,9 @@ func (tracker *progressTracker) reportIncumbent(phase string, solutions []model.
 		tracker.mu.Unlock()
 		return
 	}
-	tracker.bestSolutions = cloneSolutions(solutions)
+	// Solutions are immutable after insertion; defer costly deep copies until a
+	// snapshot is actually emitted to a progress consumer.
+	tracker.bestSolutions = append([]model.Solution(nil), solutions...)
 	if !force && now.Sub(tracker.lastIncumbentEmit) < incumbentEmitInterval {
 		tracker.mu.Unlock()
 		return

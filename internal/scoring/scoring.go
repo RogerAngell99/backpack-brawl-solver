@@ -454,7 +454,7 @@ func coverageTargetRelevant(
 	target model.Placement,
 	starSources []string,
 ) bool {
-	targetItem, ok := catalog.Items[target.ItemID]
+	_, ok := catalog.Items[target.ItemID]
 	if !ok {
 		return false
 	}
@@ -464,7 +464,7 @@ func coverageTargetRelevant(
 			continue
 		}
 		for starIndex := range source.Stars {
-			if itemMatchesStarItem(sourceID, target.ItemID, &targetItem, &source.Stars[starIndex]) {
+			if StarMatchesCatalogItems(catalog, sourceID, target.ItemID, &source.Stars[starIndex]) {
 				return true
 			}
 		}
@@ -628,8 +628,7 @@ func targetMatchesItemFilter(targetID string, item *model.Item, targetItems []st
 }
 
 func itemMatchesStar(catalog model.Catalog, source model.Placement, target model.Placement, star *model.Star) bool {
-	item := catalog.Items[target.ItemID]
-	return StarMatchesItem(source.ItemID, target.ItemID, &item, star)
+	return EvaluateCatalogStarCondition(catalog, source.ItemID, target.ItemID, star) == ConditionTrue
 }
 
 type scoreOnlyCoverageGroup struct {

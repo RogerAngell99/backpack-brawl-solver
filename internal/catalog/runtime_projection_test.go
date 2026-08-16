@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"backpack-brawl-solver/internal/catalog"
+	"backpack-brawl-solver/internal/model"
 )
 
 func TestRuntimeProjectionWinsForUpdatedFields(t *testing.T) {
@@ -38,5 +39,23 @@ func TestRuntimeProjectionWinsForUpdatedFields(t *testing.T) {
 	}
 	if len(loaded.Items["leather_boots"].Shape) != 3 {
 		t.Fatalf("leather_boots runtime shape cells=%d want 3", len(loaded.Items["leather_boots"].Shape))
+	}
+}
+
+func TestRuntimeProjectionConvertsUnityYToUp(t *testing.T) {
+	loaded, err := catalog.Load(filepath.Join("..", "..", "data", "catalog.json"))
+	if err != nil {
+		t.Fatalf("load runtime projection: %v", err)
+	}
+
+	item := loaded.Items["celestial_teapot"]
+	want := []model.Coord{{Row: -1, Col: 2}, {Row: -3, Col: 2}, {Row: -2, Col: 3}, {Row: -3, Col: 4}}
+	if len(item.Stars) != len(want) {
+		t.Fatalf("celestial_teapot stars=%d want %d", len(item.Stars), len(want))
+	}
+	for index, offset := range want {
+		if item.Stars[index].Offset != offset {
+			t.Fatalf("celestial_teapot stars[%d]=%v want %v", index, item.Stars[index].Offset, offset)
+		}
 	}
 }

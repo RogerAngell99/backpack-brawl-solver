@@ -13,6 +13,7 @@ mkdirSync(join(publicRoot, "wasm"), { recursive: true });
 
 copyFileSync(join(projectRoot, "data", "catalog.json"), join(publicRoot, "data", "catalog.json"));
 copyFileSync(join(projectRoot, "data", "item-metadata.json"), join(publicRoot, "data", "item-metadata.json"));
+copyFileSync(join(projectRoot, "data", "item-visual-metadata.json"), join(publicRoot, "data", "item-visual-metadata.json"));
 copyFileSync(
   join(projectRoot, "scenarios", "spinegrowth-basic.json"),
   join(publicRoot, "scenarios", "spinegrowth-basic.json"),

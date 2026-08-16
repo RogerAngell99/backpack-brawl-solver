@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"backpack-brawl-solver/internal/model"
-	"backpack-brawl-solver/internal/scoring"
 )
 
 const coverageSeedBeamWidth = 256
@@ -160,8 +159,7 @@ func coverageSeedSearch(
 			continue
 		}
 		candidateCount++
-		evaluation := scoring.EvaluateLayoutWithCoverageGroups(catalog, state.placed, config.Priorities, config.CoverageGroups)
-		results = insertCandidate(results, state.placed, instances, evaluation, config.TopN)
+		results = insertCandidateWithScoreOnlyFilter(catalog, results, state.placed, instances, config)
 		if config.StopOnCoverageCeiling && len(results) > 0 && coverage.ceilingReached(results[0].Evaluation.Score) {
 			flushProgress()
 			return coverageSeedResult{

@@ -218,7 +218,11 @@ func RunScenarios(config RunConfig) (Report, error) {
 		if err != nil {
 			return Report{}, err
 		}
-		if err := validateScenarioItems(loadedCatalog, loadedScenario, path); err != nil {
+		scenarioCatalog, err := catalog.FilterForHeroes(loadedCatalog, loadedScenario.HeroFilter)
+		if err != nil {
+			return Report{}, fmt.Errorf("%s: %w", path, err)
+		}
+		if err := validateScenarioItems(scenarioCatalog, loadedScenario, path); err != nil {
 			return Report{}, err
 		}
 		name := loadedScenario.Name
@@ -227,7 +231,7 @@ func RunScenarios(config RunConfig) (Report, error) {
 		}
 		for _, budget := range config.Budgets {
 			for repeatIndex := 0; repeatIndex < config.Repeat; repeatIndex++ {
-				report.Runs = append(report.Runs, runScenario(loadedCatalog, loadedScenario, name, path, budget, repeatIndex+1, config))
+				report.Runs = append(report.Runs, runScenario(scenarioCatalog, loadedScenario, name, path, budget, repeatIndex+1, config))
 			}
 		}
 	}

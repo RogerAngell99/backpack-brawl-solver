@@ -24,6 +24,44 @@ class BuildCatalogTests(unittest.TestCase):
         self.assertEqual(item["stars"][0]["rule_status"], "unknown")
         self.assertTrue(item["needs_review"])
 
+    def test_runtime_star_condition_graph_is_preserved(self):
+        graph = {"class": "Model.OtherItemIsOfType", "item_type": "Food"}
+        item = merge_item(
+            {
+                "id": "fruit",
+                "name": "Fruit",
+                "types": ["Food"],
+                "shape": [[0, 0]],
+                "star_positions": [[0, 1]],
+                "star_condition_graph": graph,
+                "stats": [{"type": "CactusCount", "value": 1}],
+            },
+            {},
+            None,
+            [],
+            [],
+        )
+        self.assertEqual(item["star_condition_graph"], graph)
+        self.assertEqual(item["stat_types"], ["CactusCount"])
+
+    def test_runtime_hero_scope_is_preserved(self):
+        scope = {"available_to": ["Warrior"], "kind": "hero_specific", "status": "confirmed"}
+        item = merge_item(
+            {
+                "id": "excalibur",
+                "name": "Excalibur",
+                "types": ["Weapon"],
+                "shape": [[0, 0]],
+                "star_positions": [],
+                "hero_scope": scope,
+            },
+            {},
+            None,
+            [],
+            [],
+        )
+        self.assertEqual(item["hero_scope"], scope)
+
     def test_existing_star_rules_are_preserved(self):
         existing = {
             "id": "known_item",
@@ -78,6 +116,15 @@ class BuildCatalogTests(unittest.TestCase):
         )
         self.assertIsNone(error)
         self.assertEqual(recipe["ingredients"], ["iron_bar", "iron_bar"])
+
+    def test_recipe_preserves_hero_scope(self):
+        scope = {"available_to": ["Warrior"], "kind": "hero_specific", "status": "confirmed"}
+        recipe, error = build_recipe(
+            {"primary": "Iron Bar", "secondaries": [], "result": "Steel Bar", "hero_scope": scope},
+            {"iron_bar", "steel_bar"},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(recipe["hero_scope"], scope)
 
     def test_geometry_conflict_ignores_rotation(self):
         self.assertTrue(

@@ -26,19 +26,62 @@ type Star struct {
 	CompiledTargetItemsComplete bool   `json:"-"`
 }
 
+type StarCondition struct {
+	Class        string          `json:"class"`
+	Any          bool            `json:"any,omitempty"`
+	Conditions   []StarCondition `json:"conditions,omitempty"`
+	ItemType     string          `json:"item_type,omitempty"`
+	StatType     string          `json:"stat_type,omitempty"`
+	DefinitionID string          `json:"definition_id,omitempty"`
+	Definition   *ItemDefinition `json:"definition,omitempty"`
+	PlayerStat   any             `json:"player_stat,omitempty"`
+	Mode         any             `json:"mode,omitempty"`
+}
+
+type ItemDefinition struct {
+	Class string `json:"class,omitempty"`
+	ID    string `json:"id,omitempty"`
+	Name  string `json:"name,omitempty"`
+}
+
+type Hero struct {
+	ID          string `json:"id"`
+	Name        string `json:"name,omitempty"`
+	EnglishName string `json:"english_name,omitempty"`
+	NPC         bool   `json:"npc,omitempty"`
+}
+
+type HeroScope struct {
+	AvailableTo []string `json:"available_to,omitempty"`
+	Kind        string   `json:"kind"`
+	Status      string   `json:"status"`
+	Source      string   `json:"source,omitempty"`
+}
+
+type HeroFilter struct {
+	IncludeHeroes []string `json:"include_heroes,omitempty"`
+	ExcludeHeroes []string `json:"exclude_heroes,omitempty"`
+	Mode          string   `json:"mode,omitempty"`
+	ExcludeMode   string   `json:"exclude_mode,omitempty"`
+	UnknownPolicy string   `json:"unknown_policy,omitempty"`
+}
+
 type Item struct {
-	ID          string
-	Name        string
-	Types       []string
-	Shape       []Coord
-	Stars       []Star
-	CountsAs    []ItemAlias
-	AbilityText string
-	SourceURL   string
-	ImageURL    string
-	ImagePath   string
-	NeedsReview bool
-	Rotations   []int
+	ID            string
+	Name          string
+	Types         []string
+	Shape         []Coord
+	Stars         []Star
+	StatTypes     []string
+	StarCondition *StarCondition `json:"star_condition_graph,omitempty"`
+	HeroScope     *HeroScope     `json:"hero_scope,omitempty"`
+	CountsAs      []ItemAlias
+	AbilityText   string
+	SourceURL     string
+	ImageURL      string
+	ImagePath     string
+	NeedsReview   bool
+	Rotations     []int
 
 	CompiledTypeMask         uint32 `json:"-"`
 	CompiledItemID           uint16 `json:"-"`
@@ -59,6 +102,7 @@ type Recipe struct {
 	Anchor               string
 	Ingredients          []string
 	SourceURL            string
+	HeroScope            *HeroScope
 	CompiledRequirements RecipeRequirements `json:"-"`
 }
 
@@ -124,6 +168,7 @@ type CoverageGroup struct {
 }
 
 type Catalog struct {
+	Heroes  []Hero
 	Items   map[string]Item
 	Recipes []Recipe
 }
@@ -214,6 +259,11 @@ type Evaluation struct {
 type SearchStats struct {
 	NodesExplored               int64
 	NodesPerSecond              float64
+	SetupMS                     int64
+	SeedMS                      int64
+	RepairMS                    int64
+	SearchMS                    int64
+	RefineMS                    int64
 	Backend                     string
 	ServerElapsedMS             int64
 	RemoteWorkers               int

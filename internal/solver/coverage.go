@@ -309,7 +309,7 @@ func (ctx *coverageContext) sourceMaskForItem(itemID string) uint64 {
 }
 
 func (ctx *coverageContext) possibleSourceMaskForTarget(catalog model.Catalog, itemID string) uint64 {
-	targetItem, ok := catalog.Items[itemID]
+	_, ok := catalog.Items[itemID]
 	if !ok {
 		return 0
 	}
@@ -320,7 +320,7 @@ func (ctx *coverageContext) possibleSourceMaskForTarget(catalog model.Catalog, i
 			continue
 		}
 		for starIndex := range source.Stars {
-			if scoring.StarMatchesItem(sourceID, itemID, &targetItem, &source.Stars[starIndex]) {
+			if scoring.StarMatchesCatalogItems(catalog, sourceID, itemID, &source.Stars[starIndex]) {
 				mask |= uint64(1) << uint(sourceIndex)
 				break
 			}
@@ -335,12 +335,34 @@ func (ctx *coverageContext) precomputePlacementPriorities(catalog model.Catalog,
 	}
 	for _, instance := range instances {
 		for _, option := range optionsByInstance[instance.InstanceID] {
-			ctx.placementPriority[coveragePlacementKey(option)] = ctx.computePlacementPriority(catalog, option, instances, optionsByInstance)
+			ctx.placementPriority[coveragePlacementKey(option)] = ctx.basePlacementPriority(option)
+		}
+	}
+
+	// A successful source-to-target pairing improves both placement priorities.
+	// Calculate it once rather than rediscovering it while scoring each endpoint.
+	for _, sourceInstance := range instances {
+		if ctx.sourceMaskByOriginal[sourceInstance.OriginalIndex] == 0 {
+			continue
+		}
+		for _, targetInstance := range instances {
+			if sourceInstance.InstanceID == targetInstance.InstanceID || ctx.targetIndexByOriginal[targetInstance.OriginalIndex] < 0 {
+				continue
+			}
+			for _, sourceOption := range optionsByInstance[sourceInstance.InstanceID] {
+				for _, targetOption := range optionsByInstance[targetInstance.InstanceID] {
+					if sourceOption.Mask&targetOption.Mask != 0 || !sourceHitsTargetWithCatalog(catalog, sourceOption, targetOption) {
+						continue
+					}
+					ctx.placementPriority[coveragePlacementKey(sourceOption)]++
+					ctx.placementPriority[coveragePlacementKey(targetOption)]++
+				}
+			}
 		}
 	}
 }
 
-func (ctx *coverageContext) computePlacementPriority(catalog model.Catalog, option model.Placement, instances []model.InventoryInstance, optionsByInstance map[string][]model.Placement) int {
+func (ctx *coverageContext) basePlacementPriority(option model.Placement) int {
 	priority := 0
 	sourceMask := ctx.sourceMaskByOriginal[option.OriginalIndex]
 	targetIndex := ctx.targetIndexByOriginal[option.OriginalIndex]
@@ -353,7 +375,16 @@ func (ctx *coverageContext) computePlacementPriority(catalog model.Catalog, opti
 	if sourceMask == 0 && targetIndex < 0 {
 		return priority
 	}
+	return priority
+}
 
+func (ctx *coverageContext) computePlacementPriority(catalog model.Catalog, option model.Placement, instances []model.InventoryInstance, optionsByInstance map[string][]model.Placement) int {
+	priority := ctx.basePlacementPriority(option)
+	sourceMask := ctx.sourceMaskByOriginal[option.OriginalIndex]
+	targetIndex := ctx.targetIndexByOriginal[option.OriginalIndex]
+	if sourceMask == 0 && targetIndex < 0 {
+		return priority
+	}
 	hits := 0
 	for _, otherInstance := range instances {
 		if otherInstance.InstanceID == option.InstanceID {
@@ -491,7 +522,6 @@ func sourceHitsTargetWithCatalog(catalog model.Catalog, source model.Placement, 
 	if source.InstanceID == target.InstanceID {
 		return false
 	}
-	targetItem := catalog.Items[target.ItemID]
 	for starPositionIndex := range source.StarPositions {
 		starPosition := &source.StarPositions[starPositionIndex]
 		if !geometry.InBounds(starPosition.Position) {
@@ -501,7 +531,7 @@ func sourceHitsTargetWithCatalog(catalog model.Catalog, source model.Placement, 
 		if target.Mask&cellBit == 0 {
 			continue
 		}
-		if scoring.StarMatchesItem(source.ItemID, target.ItemID, &targetItem, &starPosition.Star) {
+		if scoring.StarMatchesCatalogItems(catalog, source.ItemID, target.ItemID, &starPosition.Star) {
 			return true
 		}
 	}

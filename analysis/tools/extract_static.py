@@ -12,6 +12,11 @@ from typing import Any
 
 import UnityPy
 
+try:
+    from analysis.tools.coordinates import unity_local_to_grid
+except ModuleNotFoundError:
+    from coordinates import unity_local_to_grid
+
 
 def pointer(value: Any) -> int | None:
     if value is None:
@@ -173,7 +178,7 @@ def prefab_geometry(env: Any, item_names: set[str]) -> dict[str, dict[str, Any]]
                 continue
             child_classes = component_classes(child_tree, objects, scripts, obj.assets_file.name)
             position = transform.get("m_LocalPosition", {})
-            coordinate = [round(float(position.get("x", 0))), round(float(position.get("y", 0)))]
+            coordinate = unity_local_to_grid(float(position.get("x", 0)), float(position.get("y", 0)))
             if "ItemPrefabSlot" in child_classes:
                 cells.append(coordinate)
             if "ItemStarSlot" in child_classes:

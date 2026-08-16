@@ -12,23 +12,27 @@ import (
 const DefaultPath = "data/catalog.json"
 
 type rawCatalog struct {
-	Items   []rawItem   `json:"items"`
-	Recipes []rawRecipe `json:"recipes"`
+	Heroes  []model.Hero `json:"heroes"`
+	Items   []rawItem    `json:"items"`
+	Recipes []rawRecipe  `json:"recipes"`
 }
 
 type rawItem struct {
-	ID          string     `json:"id"`
-	Name        string     `json:"name"`
-	Types       []string   `json:"types"`
-	Shape       [][]int    `json:"shape"`
-	Stars       []rawStar  `json:"stars"`
-	CountsAs    []rawAlias `json:"counts_as"`
-	AbilityText string     `json:"ability_text"`
-	SourceURL   string     `json:"source_url"`
-	ImageURL    string     `json:"image_url"`
-	ImagePath   string     `json:"image_path"`
-	NeedsReview bool       `json:"needs_review"`
-	Rotations   []int      `json:"rotations"`
+	ID            string               `json:"id"`
+	Name          string               `json:"name"`
+	Types         []string             `json:"types"`
+	Shape         [][]int              `json:"shape"`
+	Stars         []rawStar            `json:"stars"`
+	StatTypes     []string             `json:"stat_types"`
+	StarCondition *model.StarCondition `json:"star_condition_graph"`
+	HeroScope     *model.HeroScope     `json:"hero_scope"`
+	CountsAs      []rawAlias           `json:"counts_as"`
+	AbilityText   string               `json:"ability_text"`
+	SourceURL     string               `json:"source_url"`
+	ImageURL      string               `json:"image_url"`
+	ImagePath     string               `json:"image_path"`
+	NeedsReview   bool                 `json:"needs_review"`
+	Rotations     []int                `json:"rotations"`
 }
 
 type rawStar struct {
@@ -41,10 +45,11 @@ type rawStar struct {
 }
 
 type rawRecipe struct {
-	Result      string   `json:"result"`
-	Anchor      string   `json:"anchor"`
-	Ingredients []string `json:"ingredients"`
-	SourceURL   string   `json:"source_url"`
+	Result      string           `json:"result"`
+	Anchor      string           `json:"anchor"`
+	Ingredients []string         `json:"ingredients"`
+	SourceURL   string           `json:"source_url"`
+	HeroScope   *model.HeroScope `json:"hero_scope"`
 }
 
 type rawAlias struct {
@@ -86,11 +91,12 @@ func Parse(content []byte) (model.Catalog, error) {
 			Anchor:               recipe.Anchor,
 			Ingredients:          recipe.Ingredients,
 			SourceURL:            recipe.SourceURL,
+			HeroScope:            recipe.HeroScope,
 			CompiledRequirements: model.BuildRecipeRequirements(recipe.Anchor, recipe.Ingredients),
 		})
 	}
 
-	return model.Catalog{Items: items, Recipes: recipes}, nil
+	return model.Catalog{Heroes: raw.Heroes, Items: items, Recipes: recipes}, nil
 }
 
 func compileStarMetadata(items map[string]model.Item) {
@@ -238,18 +244,21 @@ func loadItem(raw rawItem) (model.Item, error) {
 	}
 
 	return model.Item{
-		ID:          raw.ID,
-		Name:        raw.Name,
-		Types:       raw.Types,
-		Shape:       shape,
-		Stars:       stars,
-		CountsAs:    countsAs,
-		AbilityText: raw.AbilityText,
-		SourceURL:   raw.SourceURL,
-		ImageURL:    raw.ImageURL,
-		ImagePath:   raw.ImagePath,
-		NeedsReview: raw.NeedsReview,
-		Rotations:   raw.Rotations,
+		ID:            raw.ID,
+		Name:          raw.Name,
+		Types:         raw.Types,
+		Shape:         shape,
+		Stars:         stars,
+		StatTypes:     raw.StatTypes,
+		StarCondition: raw.StarCondition,
+		HeroScope:     raw.HeroScope,
+		CountsAs:      countsAs,
+		AbilityText:   raw.AbilityText,
+		SourceURL:     raw.SourceURL,
+		ImageURL:      raw.ImageURL,
+		ImagePath:     raw.ImagePath,
+		NeedsReview:   raw.NeedsReview,
+		Rotations:     raw.Rotations,
 	}, nil
 }
 

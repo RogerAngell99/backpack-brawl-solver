@@ -14,6 +14,28 @@ export interface ItemAlias {
   count: number;
 }
 
+export interface Hero {
+  id: string;
+  name: string;
+  english_name: string;
+  npc?: boolean;
+}
+
+export interface HeroScope {
+  available_to?: string[];
+  kind: "shared" | "hero_specific" | "multi_hero" | "unknown";
+  status: "confirmed" | "unknown";
+  source?: string;
+}
+
+export interface HeroFilter {
+  include_heroes?: string[];
+  exclude_heroes?: string[];
+  mode?: "any" | "all" | "shared";
+  exclude_mode?: "strict" | "exclusive_only";
+  unknown_policy?: "exclude" | "include" | "error";
+}
+
 export interface CatalogItem {
   id: string;
   name: string;
@@ -26,16 +48,30 @@ export interface CatalogItem {
   image_url: string;
   image_path: string;
   needs_review: boolean;
+  hero_scope?: HeroScope;
 }
+
+export interface ItemVisualMetadata {
+  base_rotation?: number;
+  mirror_x?: boolean;
+  mirror_y?: boolean;
+  pivot?: CoordTuple;
+  offset?: CoordTuple;
+  scale?: number;
+}
+
+export type ItemVisualMetadataMap = Record<string, ItemVisualMetadata>;
 
 export interface Recipe {
   result: string;
   anchor: string;
   ingredients: string[];
   source_url: string;
+  hero_scope?: HeroScope;
 }
 
 export interface Catalog {
+  heroes?: Hero[];
   items: CatalogItem[];
   recipes: Recipe[];
 }
@@ -92,6 +128,7 @@ export interface Scenario {
   repair_search?: boolean;
   priorities?: string[];
   coverage_groups?: CoverageGroup[];
+  hero_filter?: HeroFilter;
 }
 
 export interface CoverageGroup {
@@ -136,6 +173,11 @@ export interface LooseStarPriority {
 export interface SearchStats {
   nodes_explored: number;
   nodes_per_second?: number;
+  setup_ms?: number;
+  seed_ms?: number;
+  repair_ms?: number;
+  search_ms?: number;
+  refine_ms?: number;
   backend?: string;
   server_elapsed_ms?: number;
   remote_workers?: number;

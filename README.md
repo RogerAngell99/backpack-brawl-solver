@@ -125,6 +125,18 @@ Run the test suite:
 go test ./...
 ```
 
+Run the browser E2E tests:
+
+```powershell
+cd web
+npm install
+npx playwright install chromium
+npm run test:e2e
+```
+
+The E2E suite starts Vite and mocks remote solver responses so visual interaction
+tests remain deterministic and do not require the WASM solver.
+
 Run benchmarks:
 
 ```powershell
@@ -152,8 +164,12 @@ The benchmark suite measures best-found quality at fixed node budgets first, the
 The catalog is generated from the curated catalog plus the Backpack Brawl 6.1.1
 runtime capture. Runtime `types`, shapes, and star positions are authoritative for
 every item. It currently contains 1,196 items and 477 valid recipes. New runtime
-items are marked with `needs_review: true`, and unresolved star rules use
-`rule_status: "unknown"`; the solver does not score those stars as arbitrary targets.
+items are marked with `needs_review: true`, and the 528 captured runtime star graphs
+are used before curated star rules. The catalog also contains 27 captured heroes and
+confirmed shared/hero-specific item scopes. Unsupported or context-dependent conditions
+return `unknown`; the solver does not score those stars as arbitrary targets.
 
 Regenerate it with the procedure documented in `analysis/README.md`. Runtime stats,
 levels, rarity, and confidence metadata are available in `data/item-metadata.json`.
+Use `hero_filter` in scenario JSON or `--hero`, `--exclude-hero`, and
+`--hero-mode shared` in the CLI to restrict item availability by hero.

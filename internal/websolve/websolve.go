@@ -8,6 +8,7 @@ import (
 
 	"backpack-brawl-solver/internal/catalog"
 	"backpack-brawl-solver/internal/geometry"
+	"backpack-brawl-solver/internal/model"
 	"backpack-brawl-solver/internal/render"
 	"backpack-brawl-solver/internal/scenario"
 	"backpack-brawl-solver/internal/solver"
@@ -53,9 +54,6 @@ func SolveScenarioJSONWithProgress(input []byte, progressReporter solver.Progres
 }
 
 func SolveScenarioJSONWithOptions(input []byte, options Options) (Result, error) {
-	if options.Context == nil {
-		options.Context = context.Background()
-	}
 	var request Request
 	if err := json.Unmarshal(input, &request); err != nil {
 		return Result{}, err
@@ -71,22 +69,47 @@ func SolveScenarioJSONWithOptions(input []byte, options Options) (Result, error)
 	if err != nil {
 		return Result{}, err
 	}
+	return solvePreparedCatalog(loadedCatalog, request.Scenario, options)
+}
+
+// SolvePreparedCatalog solves a validated scenario against an already parsed catalog.
+// It retains scenario-specific filtering so one prepared catalog can serve many scenarios.
+func SolvePreparedCatalog(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, options Options) (Result, error) {
+	if err := loadedScenario.Validate(); err != nil {
+		return Result{}, err
+	}
+	return solvePreparedCatalog(loadedCatalog, loadedScenario, options)
+}
+
+func solvePreparedCatalog(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, options Options) (Result, error) {
+	if options.Context == nil {
+		options.Context = context.Background()
+	}
+	filteredCatalog, err := catalog.FilterForHeroes(loadedCatalog, loadedScenario.HeroFilter)
+	if err != nil {
+		return Result{}, err
+	}
+	for _, itemID := range loadedScenario.ItemIDs() {
+		if _, ok := filteredCatalog.Items[itemID]; !ok {
+			return Result{}, fmt.Errorf("item %q is unavailable for the selected hero filter", itemID)
+		}
+	}
 
 	gridMask := geometry.FullGridMask()
-	if len(request.Scenario.Grid) > 0 {
-		gridMask, err = geometry.ParseGridText(request.Scenario.GridText())
+	if len(loadedScenario.Grid) > 0 {
+		gridMask, err = geometry.ParseGridText(loadedScenario.GridText())
 		if err != nil {
 			return Result{}, err
 		}
 	}
 
 	top := 3
-	if request.Scenario.Top != nil {
-		top = *request.Scenario.Top
+	if loadedScenario.Top != nil {
+		top = *loadedScenario.Top
 	}
 	maxNodes := int64(200000)
-	if request.Scenario.MaxNodes != nil {
-		maxNodes = *request.Scenario.MaxNodes
+	if loadedScenario.MaxNodes != nil {
+		maxNodes = *loadedScenario.MaxNodes
 	}
 	maxNodesCapped := false
 	if maxNodes == 0 && options.DefaultMaxNodes > 0 {
@@ -98,36 +121,36 @@ func SolveScenarioJSONWithOptions(input []byte, options Options) (Result, error)
 		maxNodesCapped = true
 	}
 	workers := 1
-	if request.Scenario.Workers != nil {
-		workers = *request.Scenario.Workers
+	if loadedScenario.Workers != nil {
+		workers = *loadedScenario.Workers
 	}
 	if options.WorkerOverride > 0 {
 		workers = options.WorkerOverride
 	}
 	noSkips := false
-	if request.Scenario.NoSkips != nil {
-		noSkips = *request.Scenario.NoSkips
+	if loadedScenario.NoSkips != nil {
+		noSkips = *loadedScenario.NoSkips
 	}
 	stopOnCoverageCeiling := false
-	if request.Scenario.StopOnCoverageCeiling != nil {
-		stopOnCoverageCeiling = *request.Scenario.StopOnCoverageCeiling
+	if loadedScenario.StopOnCoverageCeiling != nil {
+		stopOnCoverageCeiling = *loadedScenario.StopOnCoverageCeiling
 	}
 	repairSearch := maxNodes > 0
-	if request.Scenario.RepairSearch != nil {
-		repairSearch = *request.Scenario.RepairSearch
+	if loadedScenario.RepairSearch != nil {
+		repairSearch = *loadedScenario.RepairSearch
 	}
 	if maxNodes == 0 {
 		repairSearch = false
 	}
 
 	startedAt := time.Now()
-	solutions, err := solver.SolveLayout(loadedCatalog, request.Scenario.ItemIDs(), gridMask, solver.Config{
+	solutions, err := solver.SolveLayout(filteredCatalog, loadedScenario.ItemIDs(), gridMask, solver.Config{
 		TopN:                  top,
 		AllowSkips:            !noSkips,
 		MaxNodes:              maxNodes,
 		Workers:               workers,
-		Priorities:            request.Scenario.Priorities,
-		CoverageGroups:        request.Scenario.ModelCoverageGroups(),
+		Priorities:            loadedScenario.Priorities,
+		CoverageGroups:        loadedScenario.ModelCoverageGroups(),
 		StopOnCoverageCeiling: stopOnCoverageCeiling,
 		RepairSearch:          repairSearch,
 		ProgressReporter:      options.ProgressReporter,

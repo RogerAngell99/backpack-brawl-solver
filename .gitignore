@@ -12,6 +12,7 @@ web/dist/
 *.exe
 *.test
 coverage.out
+*.log
 tmp-*.png
 
 .vercel
@@ -22,8 +23,13 @@ analysis/*.apk
 analysis/derived/*/runtime*/
 analysis/derived/*/normalized/items.json
 analysis/derived/*/normalized/recipes.json
+analysis/derived/*/normalized-*/
 
 # Web assets are generated from the canonical root data during the build.
 web/public/data/
 web/public/assets/
 web/public/scenarios/
+
+# Playwright artifacts.
+web/playwright-report/
+web/test-results/

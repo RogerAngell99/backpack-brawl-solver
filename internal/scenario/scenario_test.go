@@ -4,6 +4,8 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"backpack-brawl-solver/internal/geometry"
 )
 
 func TestLoadScenarioExpandsItemsDeterministically(t *testing.T) {
@@ -26,6 +28,7 @@ func TestLoadScenarioExpandsItemsDeterministically(t *testing.T) {
   "max_nodes": 0,
   "no_skips": true,
   "stop_on_coverage_ceiling": true,
+  "hero_filter": {"include_heroes": ["Warrior"], "exclude_mode": "exclusive_only"},
   "priorities": ["craft:spinegrowth_breastplate", "star_source:scalemail"],
   "coverage_groups": [
     {"name": "Armor", "sources": ["scalemail", "spinegrowth_breastplate"], "targets": ["thornwall"]}
@@ -62,6 +65,12 @@ func TestLoadScenarioExpandsItemsDeterministically(t *testing.T) {
 	if loaded.StopOnCoverageCeiling == nil || *loaded.StopOnCoverageCeiling != true {
 		t.Fatalf("stop_on_coverage_ceiling=%v want true", loaded.StopOnCoverageCeiling)
 	}
+	if len(loaded.HeroFilter.IncludeHeroes) != 1 || loaded.HeroFilter.IncludeHeroes[0] != "Warrior" {
+		t.Fatalf("hero filter=%+v", loaded.HeroFilter)
+	}
+	if loaded.HeroFilter.ExcludeMode != "exclusive_only" {
+		t.Fatalf("hero exclude mode=%q", loaded.HeroFilter.ExcludeMode)
+	}
 	wantPriorities := []string{"craft:spinegrowth_breastplate", "star_source:scalemail"}
 	if len(loaded.Priorities) != len(wantPriorities) {
 		t.Fatalf("len(priorities)=%d want %d", len(loaded.Priorities), len(wantPriorities))
@@ -93,6 +102,19 @@ func TestLoadScenarioRejectsEmptyInventory(t *testing.T) {
 
 	if err == nil {
 		t.Fatal("Load returned nil error")
+	}
+}
+
+func TestScenarioValidateEnforcesGridInventoryCapacity(t *testing.T) {
+	if err := (Scenario{Items: map[string]int{"one": geometry.GridCells}}).Validate(); err != nil {
+		t.Fatalf("Validate at grid capacity returned error: %v", err)
+	}
+	if err := (Scenario{Items: map[string]int{"one": geometry.GridCells + 1}}).Validate(); err == nil {
+		t.Fatal("Validate accepted inventory larger than the grid capacity")
+	}
+	maxInt := int(^uint(0) >> 1)
+	if err := (Scenario{Items: map[string]int{"one": maxInt}}).Validate(); err == nil {
+		t.Fatal("Validate accepted an overflowing inventory count")
 	}
 }
 

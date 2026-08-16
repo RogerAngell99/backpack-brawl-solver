@@ -1,0 +1,23 @@
+{
+  "barkweave_basket": {
+    "base_rotation": 90
+  },
+  "broken_oar": {
+    "base_rotation": 90
+  },
+  "hand_file": {
+    "base_rotation": 90
+  },
+  "makeshift_oar": {
+    "base_rotation": 90
+  },
+  "pumpkin_patch": {
+    "base_rotation": 90
+  },
+  "sturdy_fly_gaff": {
+    "base_rotation": 90
+  },
+  "writhing_tentacle": {
+    "base_rotation": 90
+  }
+}

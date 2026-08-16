@@ -122,9 +122,8 @@ func (ctx *exactBoundContext) preparePossibleStarTargets(catalog model.Catalog, 
 			if source.OriginalIndex == target.OriginalIndex {
 				continue
 			}
-			targetItem := catalog.Items[target.ItemID]
 			for starIndex := range sourceItem.Stars {
-				if scoring.StarMatchesItem(source.ItemID, target.ItemID, &targetItem, &sourceItem.Stars[starIndex]) {
+				if scoring.StarMatchesCatalogItems(catalog, source.ItemID, target.ItemID, &sourceItem.Stars[starIndex]) {
 					targetMask |= uint64(1) << uint(target.OriginalIndex)
 					break
 				}
