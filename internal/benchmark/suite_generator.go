@@ -1,7 +1,10 @@
 package benchmark
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"backpack-brawl-solver/internal/model"
@@ -141,5 +144,19 @@ func validateGeneratedSearchSuiteCaseV2(entry GeneratedSearchSuiteCase) error {
 	if err := entry.StructuralDescriptor.Validate(); err != nil {
 		return fmt.Errorf("v2 generated case %q structural_descriptor: %w", entry.ID, err)
 	}
+	if entry.Role == SuiteRolePrivateHoldout {
+		if err := validateSHA256("v2 private holdout "+entry.ID+" private_seed_commitment", entry.PrivateSeedCommitment); err != nil {
+			return err
+		}
+	}
 	return nil
+}
+
+// SearchSuiteV2PrivateSeedCommitment binds a private seed identifier to its
+// secret seed without disclosing the seed. CI recomputes this from the
+// protected seed map before it materializes private holdouts.
+func SearchSuiteV2PrivateSeedCommitment(privateSeedID string, seed int64) string {
+	payload := SearchSuiteGeneratorV2 + "\x00private-seed\x00" + privateSeedID + "\x00" + strconv.FormatInt(seed, 10)
+	digest := sha256.Sum256([]byte(payload))
+	return hex.EncodeToString(digest[:])
 }

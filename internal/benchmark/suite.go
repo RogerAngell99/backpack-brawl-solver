@@ -45,11 +45,12 @@ type SearchSuiteScenario struct {
 }
 
 type GeneratedSearchSuiteCase struct {
-	ID            string `json:"id"`
-	Family        string `json:"family"`
-	Role          string `json:"role"`
-	Seed          *int64 `json:"seed,omitempty"`
-	PrivateSeedID string `json:"private_seed_id,omitempty"`
+	ID                    string `json:"id"`
+	Family                string `json:"family"`
+	Role                  string `json:"role"`
+	Seed                  *int64 `json:"seed,omitempty"`
+	PrivateSeedID         string `json:"private_seed_id,omitempty"`
+	PrivateSeedCommitment string `json:"private_seed_commitment,omitempty"`
 
 	StructuralDescriptor *GeneratedSearchSuiteStructuralDescriptor `json:"structural_descriptor,omitempty"`
 }

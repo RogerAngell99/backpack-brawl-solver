@@ -27,6 +27,21 @@ func AnalyzeGeneratedSearchSuiteStructureV2(catalog model.Catalog, generated sce
 	if err := generated.Validate(); err != nil {
 		return GeneratedSearchSuiteRealizedDescriptor{}, err
 	}
+	if generated.Top == nil || *generated.Top != 1 {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario requires top=1")
+	}
+	if generated.Workers == nil || *generated.Workers != 1 {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario requires workers=1")
+	}
+	if generated.NoSkips == nil || !*generated.NoSkips {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario requires no_skips=true")
+	}
+	if generated.RepairSearch == nil || !*generated.RepairSearch {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario requires repair_search=true")
+	}
+	if generated.MaxNodes != nil || generated.StopOnCoverageCeiling != nil || generated.StopOnPriorityCeiling != nil {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario must not set search-budget or early-stop fields")
+	}
 	if len(generated.Priorities) != 2 || generated.PrioritySemantics != model.PrioritySemanticsOutgoingPerInstanceV3 {
 		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario requires exactly two outgoing-per-instance-v3 priorities")
 	}
@@ -50,11 +65,12 @@ func AnalyzeGeneratedSearchSuiteStructureV2(catalog model.Catalog, generated sce
 	}
 	metrics := analyzeTopologyV2(gridMask)
 	realized := GeneratedSearchSuiteRealizedDescriptor{
-		UsableCells:          bits.OnesCount64(gridMask),
-		ConnectedComponents:  metrics.components,
-		ArticulationCells:    metrics.articulations,
-		InteriorBlockedCells: metrics.interiorBlocked,
-		CorridorCells:        metrics.corridorCells,
+		UsableCells:             bits.OnesCount64(gridMask),
+		DistinctItemDefinitions: len(generated.Items),
+		ConnectedComponents:     metrics.components,
+		ArticulationCells:       metrics.articulations,
+		InteriorBlockedCells:    metrics.interiorBlocked,
+		CorridorCells:           metrics.corridorCells,
 	}
 
 	starDefinitions := 0
@@ -66,6 +82,10 @@ func AnalyzeGeneratedSearchSuiteStructureV2(catalog model.Catalog, generated sce
 		if count <= 0 {
 			return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario item %q has non-positive count", itemID)
 		}
+		if len(item.Shape) == 0 || len(item.Shape) > 4 {
+			return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario item %q must have a 1..4-cell shape", itemID)
+		}
+		realized.TotalItemInstances += count
 		realized.InventoryArea += len(item.Shape) * count
 		if len(item.Stars) > 0 {
 			starDefinitions++
@@ -82,11 +102,35 @@ func AnalyzeGeneratedSearchSuiteStructureV2(catalog model.Catalog, generated sce
 	if !exists || len(sourceBItem.Stars) == 0 {
 		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 source B %q is not a star-bearing item", sourceB)
 	}
+	if sourceTargetsItemV2(sourceA, sourceAItem, sourceA, sourceAItem) {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 source A %q must not target itself", sourceA)
+	}
+	if sourceTargetsItemV2(sourceA, sourceAItem, sourceB, sourceBItem) {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 source A %q must not target source B %q", sourceA, sourceB)
+	}
+	if sourceTargetsItemV2(sourceB, sourceBItem, sourceA, sourceAItem) {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 source B %q must not target source A %q", sourceB, sourceA)
+	}
+	if sourceTargetsItemV2(sourceB, sourceBItem, sourceB, sourceBItem) {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 source B %q must not target itself", sourceB)
+	}
 	realized.SourceACopies = generated.Items[sourceA]
 	realized.SourceBCopies = generated.Items[sourceB]
 	if realized.SourceACopies == 0 || realized.SourceBCopies == 0 {
 		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 scenario must include both priority source definitions")
 	}
+	realized.SourceAArea = len(sourceAItem.Shape)
+	realized.SourceBArea = len(sourceBItem.Shape)
+	variantsA, err := geometry.VariantsForItem(sourceAItem)
+	if err != nil {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 source A %q variants: %w", sourceA, err)
+	}
+	variantsB, err := geometry.VariantsForItem(sourceBItem)
+	if err != nil {
+		return GeneratedSearchSuiteRealizedDescriptor{}, fmt.Errorf("v2 source B %q variants: %w", sourceB, err)
+	}
+	realized.SourceARotationVariants = len(variantsA)
+	realized.SourceBRotationVariants = len(variantsB)
 
 	for _, itemID := range sortedScenarioItemIDsV2(generated.Items) {
 		if itemID == sourceA || itemID == sourceB {
@@ -102,12 +146,24 @@ func AnalyzeGeneratedSearchSuiteStructureV2(catalog model.Catalog, generated sce
 		switch {
 		case matchesA && matchesB:
 			realized.SharedTargets += count
+			if err := addV2AreaCount(&realized.TargetArea1, &realized.TargetArea2, &realized.TargetArea3, &realized.TargetArea4, len(item.Shape), count); err != nil {
+				return GeneratedSearchSuiteRealizedDescriptor{}, err
+			}
 		case matchesA:
 			realized.AOnlyTargets += count
+			if err := addV2AreaCount(&realized.TargetArea1, &realized.TargetArea2, &realized.TargetArea3, &realized.TargetArea4, len(item.Shape), count); err != nil {
+				return GeneratedSearchSuiteRealizedDescriptor{}, err
+			}
 		case matchesB:
 			realized.BOnlyTargets += count
+			if err := addV2AreaCount(&realized.TargetArea1, &realized.TargetArea2, &realized.TargetArea3, &realized.TargetArea4, len(item.Shape), count); err != nil {
+				return GeneratedSearchSuiteRealizedDescriptor{}, err
+			}
 		default:
 			realized.NeutralFillerInstances += count
+			if err := addV2AreaCount(&realized.FillerArea1, &realized.FillerArea2, &realized.FillerArea3, &realized.FillerArea4, len(item.Shape), count); err != nil {
+				return GeneratedSearchSuiteRealizedDescriptor{}, err
+			}
 			if count >= 2 {
 				realized.DuplicateFillerInstances += count
 				realized.DuplicateFillerGroups++
@@ -131,6 +187,22 @@ func AnalyzeGeneratedSearchSuiteStructureV2(catalog model.Catalog, generated sce
 	}
 	realized.DensityBPS = realized.InventoryArea * 10000 / realized.UsableCells
 	return realized, nil
+}
+
+func addV2AreaCount(area1 *int, area2 *int, area3 *int, area4 *int, area int, count int) error {
+	switch area {
+	case 1:
+		*area1 += count
+	case 2:
+		*area2 += count
+	case 3:
+		*area3 += count
+	case 4:
+		*area4 += count
+	default:
+		return fmt.Errorf("v2 target or filler must have area 1..4, got %d", area)
+	}
+	return nil
 }
 
 func ValidateGeneratedSearchSuiteRealizedAgainstRequestedV2(requested GeneratedSearchSuiteStructuralDescriptor, realized GeneratedSearchSuiteRealizedDescriptor) error {

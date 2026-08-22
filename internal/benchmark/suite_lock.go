@@ -52,9 +52,10 @@ type SearchSuiteLockedGeneratedCase struct {
 }
 
 type SearchSuiteLockedPrivateCase struct {
-	ID                   string                                 `json:"id"`
-	PrivateSeedID        string                                 `json:"private_seed_id"`
-	StructuralDescriptor *SearchSuiteLockedStructuralDescriptor `json:"structural_descriptor,omitempty"`
+	ID                    string                                 `json:"id"`
+	PrivateSeedID         string                                 `json:"private_seed_id"`
+	PrivateSeedCommitment string                                 `json:"private_seed_commitment,omitempty"`
+	StructuralDescriptor  *SearchSuiteLockedStructuralDescriptor `json:"structural_descriptor,omitempty"`
 }
 
 func LoadSearchSuiteLock(path string) (SearchSuiteLock, error) {
@@ -144,6 +145,9 @@ func validateStructuralLockDescriptors(lock SearchSuiteLock) error {
 		for _, entry := range lock.PrivateCases {
 			if entry.StructuralDescriptor == nil {
 				return fmt.Errorf("locked v2 private case %q requires structural_descriptor", entry.ID)
+			}
+			if err := validateSHA256("locked v2 private case "+entry.ID+" private_seed_commitment", entry.PrivateSeedCommitment); err != nil {
+				return err
 			}
 		}
 	}
@@ -306,9 +310,10 @@ func ObserveSearchSuite(manifestPath string, catalogPath string, generatorVersio
 				descriptor = &SearchSuiteLockedStructuralDescriptor{Requested: *entry.StructuralDescriptor}
 			}
 			lock.PrivateCases = append(lock.PrivateCases, SearchSuiteLockedPrivateCase{
-				ID:                   entry.ID,
-				PrivateSeedID:        entry.PrivateSeedID,
-				StructuralDescriptor: descriptor,
+				ID:                    entry.ID,
+				PrivateSeedID:         entry.PrivateSeedID,
+				PrivateSeedCommitment: entry.PrivateSeedCommitment,
+				StructuralDescriptor:  descriptor,
 			})
 			continue
 		}
@@ -479,6 +484,9 @@ func verifyPrivateCaseStructure(expected []SearchSuiteLockedPrivateCase, observe
 		actual := actualByID[entry.ID]
 		if entry.PrivateSeedID != actual.PrivateSeedID {
 			return fmt.Errorf("private case %q private seed ID mismatch:\n  expected: %s\n  actual:   %s", entry.ID, entry.PrivateSeedID, actual.PrivateSeedID)
+		}
+		if entry.PrivateSeedCommitment != actual.PrivateSeedCommitment {
+			return fmt.Errorf("private case %q private seed commitment mismatch", entry.ID)
 		}
 		if !reflect.DeepEqual(entry.StructuralDescriptor, actual.StructuralDescriptor) {
 			return fmt.Errorf("private case %q structural_descriptor mismatch", entry.ID)

@@ -50,6 +50,8 @@ func Run(args []string, stdout io.Writer, stderr io.Writer) int {
 		return runFreezeSearchSuite(args[1:], stdout, stderr)
 	case "verify-search-suite":
 		return runVerifySearchSuite(args[1:], stdout, stderr)
+	case "verify-private-search-suite":
+		return runVerifyPrivateSearchSuite(args[1:], stdout, stderr)
 	case "-h", "--help", "help":
 		printUsage(stdout)
 		return 0
@@ -473,6 +475,77 @@ func runVerifySearchSuite(args []string, stdout io.Writer, stderr io.Writer) int
 	return 0
 }
 
+func runVerifyPrivateSearchSuite(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("verify-private-search-suite", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	manifestPath := flags.String("manifest", filepath.Join("benchmarks", "suites", "general-search-v2.json"), "Path to v2 suite manifest")
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	lockPath := flags.String("lock", filepath.Join("benchmarks", "suites", "general-search-v2.lock"), "Path to immutable v2 suite lock")
+	seedsPath := flags.String("seeds", "", "Path to protected JSON object mapping private seed IDs to int64 seeds")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if *seedsPath == "" {
+		fmt.Fprintln(stderr, "ERROR: verify-private-search-suite requires --seeds")
+		return 2
+	}
+	if err := benchmark.VerifySearchSuiteLock(*manifestPath, *catalogPath, *lockPath); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	lock, err := benchmark.LoadSearchSuiteLock(*lockPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	if lock.GeneratorVersion != benchmark.SearchSuiteGeneratorV2 {
+		fmt.Fprintf(stderr, "ERROR: verify-private-search-suite requires generator %s\n", benchmark.SearchSuiteGeneratorV2)
+		return 2
+	}
+	privateSeeds, err := loadPrivateSearchSuiteSeeds(*seedsPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	manifest, err := benchmark.LoadSearchSuiteManifest(*manifestPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	loadedCatalog, err := catalog.Load(*catalogPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	if err := benchmark.VerifySearchSuiteV2PrivateHoldouts(loadedCatalog, manifest, privateSeeds); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "Private v2 holdouts verified: %d\n", len(privateSeeds))
+	return 0
+}
+
+func loadPrivateSearchSuiteSeeds(path string) (map[string]int64, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	decoder := json.NewDecoder(strings.NewReader(string(content)))
+	decoder.DisallowUnknownFields()
+	seeds := map[string]int64{}
+	if err := decoder.Decode(&seeds); err != nil {
+		return nil, fmt.Errorf("decode private seeds: %w", err)
+	}
+	var trailing any
+	if err := decoder.Decode(&trailing); err != io.EOF {
+		if err == nil {
+			return nil, fmt.Errorf("private seeds contains unexpected trailing JSON value")
+		}
+		return nil, fmt.Errorf("decode private seed trailing data: %w", err)
+	}
+	return seeds, nil
+}
+
 func runReviewCatalog(args []string, stdout io.Writer, stderr io.Writer) int {
 	flags := flag.NewFlagSet("review-catalog", flag.ContinueOnError)
 	flags.SetOutput(stderr)
@@ -874,6 +947,7 @@ func printUsage(writer io.Writer) {
 	fmt.Fprintln(writer, "  compare-constellation-benchmarks")
 	fmt.Fprintln(writer, "  freeze-search-suite")
 	fmt.Fprintln(writer, "  verify-search-suite")
+	fmt.Fprintln(writer, "  verify-private-search-suite")
 	fmt.Fprintln(writer, "  materialize-search-suite")
 }
 
