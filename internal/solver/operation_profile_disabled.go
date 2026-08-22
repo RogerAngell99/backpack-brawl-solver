@@ -41,4 +41,3 @@ func (*rootPackingOperationCounters) dedupHit()                {}
 func (*rootPackingOperationCounters) dedupReplacement()        {}
 func (*rootPackingOperationCounters) depthFinish(int)          {}
 func (*rootPackingOperationCounters) statesSorted(int)         {}
-func (*rootPackingOperationCounters) comparatorCall()          {}

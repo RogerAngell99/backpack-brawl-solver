@@ -80,6 +80,15 @@ func TestSummarizeOperationProfileCommand(t *testing.T) {
 	}
 }
 
+func TestSolveCommandDoesNotExposeOperationProfile(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{"solve", "--operation-profile"}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "flag provided but not defined") {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+}
+
 func TestFreezeSearchSuiteCommandRefusesExistingLock(t *testing.T) {
 	lockPath := filepath.Join(t.TempDir(), "fixture.lock")
 	firstOut := bytes.Buffer{}

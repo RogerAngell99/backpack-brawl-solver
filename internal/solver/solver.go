@@ -422,6 +422,9 @@ func SolveLayout(catalog model.Catalog, itemIDs []string, gridMask uint64, confi
 	if config.Diagnostics && config.Workers != 1 {
 		return nil, fmt.Errorf("diagnostics require exactly one worker")
 	}
+	if config.OperationProfiling && config.Workers != 1 {
+		return nil, fmt.Errorf("operation profiling requires exactly one worker")
+	}
 	if config.OperationProfiling && !OperationProfilingAvailable() {
 		return nil, fmt.Errorf("operation profiling requires a binary built with -tags searchprofile")
 	}
@@ -836,6 +839,9 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 	}
 	if config.Diagnostics && config.Workers != 1 {
 		return nil, fmt.Errorf("diagnostics require exactly one worker")
+	}
+	if config.OperationProfiling && config.Workers != 1 {
+		return nil, fmt.Errorf("operation profiling requires exactly one worker")
 	}
 	if config.OperationProfiling && !OperationProfilingAvailable() {
 		return nil, fmt.Errorf("operation profiling requires a binary built with -tags searchprofile")

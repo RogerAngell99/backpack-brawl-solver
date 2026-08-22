@@ -169,8 +169,3 @@ func (c *rootPackingOperationCounters) statesSorted(count int) {
 		c.profile.StatesSorted += int64(count)
 	}
 }
-func (c *rootPackingOperationCounters) comparatorCall() {
-	if c != nil {
-		c.profile.ComparatorCalls++
-	}
-}

@@ -574,7 +574,6 @@ type ConstellationRootPackingOperationProfile struct {
 	DepthFinishCalls               int64  `json:"depth_finish_calls"`
 	PrecutStates                   int64  `json:"precut_states"`
 	StatesSorted                   int64  `json:"states_sorted"`
-	ComparatorCalls                int64  `json:"comparator_calls"`
 }
 
 // ConstellationRootPackingSchedulerPolicy records the fully resolved root-only
