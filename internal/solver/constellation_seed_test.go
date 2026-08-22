@@ -1,6 +1,7 @@
 package solver
 
 import (
+	"encoding/json"
 	"path/filepath"
 	"reflect"
 	"sort"
@@ -529,12 +530,8 @@ func TestConstellationRootPackingSessionMatchesFullRunAtDepthBoundary(t *testing
 		return true
 	})
 	boundary := partitionedSession.Run(3)
-	if partitionedSession.depthActive || len(boundary.mrvDepths) != 1 || boundary.mrvDepths[0].Depth != 1 {
+	if partitionedSession.depthActive || boundary.terminationReason != "paused_allocation" || len(boundary.mrvDepths) != 1 || boundary.mrvDepths[0].Depth != 1 {
 		t.Fatalf("first allocation did not end at depth boundary: session=%+v result=%+v", partitionedSession, boundary)
-	}
-	legacyBoundary := constellationRootPackingMRVLegacy(catalog, instances, options, root, config, gridMask, 3, func(bool) bool { return true })
-	if !reflect.DeepEqual(boundary, legacyBoundary) {
-		t.Fatalf("session boundary=%+v legacy boundary=%+v", boundary, legacyBoundary)
 	}
 	partitioned := partitionedSession.Run(17)
 	if !partitionedSession.Done() {
@@ -542,6 +539,329 @@ func TestConstellationRootPackingSessionMatchesFullRunAtDepthBoundary(t *testing
 	}
 	if fullCharged != full.nodes || partitionedCharged != partitioned.nodes || !reflect.DeepEqual(full, partitioned) {
 		t.Fatalf("full=%+v charged=%d partitioned=%+v charged=%d", full, fullCharged, partitioned, partitionedCharged)
+	}
+}
+
+type constellationRootPackingSessionStateCheckpoint struct {
+	Key           string
+	Placements    string
+	Occupied      uint64
+	Restricted    int
+	Flexibility   int
+	Fragmentation int
+	Score         model.Score
+	RemainingMask uint64
+	RemainingArea int
+}
+
+type constellationRootPackingSessionNextCheckpoint struct {
+	Class string
+	State constellationRootPackingSessionStateCheckpoint
+}
+
+type constellationRootPackingSessionCountersCheckpoint struct {
+	Nodes              int64
+	Candidates         int
+	Deduplicated       int64
+	HardPruned         int64
+	SymmetryPruned     int64
+	BeamEvictions      int64
+	FirstCompleteNodes int64
+	DistinctNextItems  int
+	SelectedItemIDs    []string
+}
+
+// constellationRootPackingSessionCheckpoint is test-only state used to prove
+// that splitting an allocation leaves an identical resumable search.
+type constellationRootPackingSessionCheckpoint struct {
+	Initialized   bool
+	Done          bool
+	Depth         int
+	DepthActive   bool
+	StateIndex    int
+	StatePrepared bool
+	OptionIndex   int
+	Selected      model.InventoryInstance
+	Options       []string
+	NextMask      uint64
+	NextArea      int
+	Remaining     []model.InventoryInstance
+	States        []constellationRootPackingSessionStateCheckpoint
+	NextByClass   []constellationRootPackingSessionNextCheckpoint
+	Counters      constellationRootPackingSessionCountersCheckpoint
+	LayerWidths   []model.PackingSeedLayerWidth
+	MRVDepths     []string
+	DepthInfo     string
+	ShadowDepth   string
+	ShadowTrace   string
+}
+
+func checkpointConstellationRootPackingState(state constellationRootMRVState) constellationRootPackingSessionStateCheckpoint {
+	return constellationRootPackingSessionStateCheckpoint{
+		Key:           state.key,
+		Placements:    constellationExactKey(state.placed),
+		Occupied:      state.occupied,
+		Restricted:    state.restricted,
+		Flexibility:   state.flexibility,
+		Fragmentation: state.fragmentation,
+		Score:         cloneScore(state.score),
+		RemainingMask: state.remainingMask,
+		RemainingArea: state.remainingArea,
+	}
+}
+
+func canonicalSessionCheckpointJSON(value any) string {
+	encoded, err := json.Marshal(value)
+	if err != nil {
+		panic(err)
+	}
+	return string(encoded)
+}
+
+func constellationRootPackingSessionCheckpointForTest(session *constellationRootPackingSession) constellationRootPackingSessionCheckpoint {
+	checkpoint := constellationRootPackingSessionCheckpoint{
+		Initialized:   session.initialized,
+		Done:          session.done,
+		Depth:         session.depth,
+		DepthActive:   session.depthActive,
+		StateIndex:    session.stateIndex,
+		StatePrepared: session.statePrepared,
+		OptionIndex:   session.optionIndex,
+		Selected:      session.selected,
+		NextMask:      session.nextMask,
+		NextArea:      session.nextArea,
+		Remaining:     append([]model.InventoryInstance(nil), session.remaining...),
+		States:        make([]constellationRootPackingSessionStateCheckpoint, 0, len(session.states)),
+		NextByClass:   make([]constellationRootPackingSessionNextCheckpoint, 0, len(session.nextByClass)),
+		Counters: constellationRootPackingSessionCountersCheckpoint{
+			Nodes:              session.result.nodes,
+			Candidates:         session.result.candidates,
+			Deduplicated:       session.result.deduplicated,
+			HardPruned:         session.result.hardPruned,
+			SymmetryPruned:     session.result.symmetryPruned,
+			BeamEvictions:      session.result.beamEvictions,
+			FirstCompleteNodes: session.result.firstCompleteNodes,
+			DistinctNextItems:  session.result.distinctNextItems,
+		},
+		LayerWidths: append([]model.PackingSeedLayerWidth(nil), session.result.layerWidths...),
+		MRVDepths:   make([]string, 0, len(session.result.mrvDepths)),
+		DepthInfo:   canonicalSessionCheckpointJSON(session.depthInfo),
+		ShadowDepth: canonicalSessionCheckpointJSON(session.shadowDepth),
+	}
+	for _, option := range session.options {
+		checkpoint.Options = append(checkpoint.Options, option.InstanceID+"|"+placementKey(option))
+	}
+	for _, state := range session.states {
+		checkpoint.States = append(checkpoint.States, checkpointConstellationRootPackingState(state))
+	}
+	for class, state := range session.nextByClass {
+		checkpoint.NextByClass = append(checkpoint.NextByClass, constellationRootPackingSessionNextCheckpoint{
+			Class: class,
+			State: checkpointConstellationRootPackingState(state),
+		})
+	}
+	sort.Slice(checkpoint.NextByClass, func(i, j int) bool {
+		return checkpoint.NextByClass[i].Class < checkpoint.NextByClass[j].Class
+	})
+	for itemID := range session.selectedItemIDs {
+		checkpoint.Counters.SelectedItemIDs = append(checkpoint.Counters.SelectedItemIDs, itemID)
+	}
+	sort.Strings(checkpoint.Counters.SelectedItemIDs)
+	for _, depth := range session.result.mrvDepths {
+		checkpoint.MRVDepths = append(checkpoint.MRVDepths, canonicalSessionCheckpointJSON(depth))
+	}
+	if session.shadow != nil {
+		checkpoint.ShadowTrace = canonicalSessionCheckpointJSON(session.shadow.trace)
+	}
+	return checkpoint
+}
+
+func completeConstellationRootPackingSessionForTest(t *testing.T, session *constellationRootPackingSession) constellationRootPackingResult {
+	t.Helper()
+	var result constellationRootPackingResult
+	for rounds := 0; !session.Done() && rounds < 20; rounds++ {
+		result = session.Run(20)
+	}
+	if !session.Done() {
+		t.Fatalf("session did not complete: %+v", session)
+	}
+	return result
+}
+
+func findConstellationRootPackingPauseForTest(
+	t *testing.T,
+	catalog model.Catalog,
+	instances []model.InventoryInstance,
+	options map[string][]model.Placement,
+	root constellationSkeleton,
+	config Config,
+	gridMask uint64,
+	matches func(*constellationRootPackingSession) bool,
+) int64 {
+	t.Helper()
+	for allocation := int64(1); allocation <= 20; allocation++ {
+		session := newConstellationRootPackingSession(catalog, instances, options, root, config, gridMask, func(bool) bool { return true })
+		result := session.Run(allocation)
+		if !session.Done() && result.terminationReason == "paused_allocation" && matches(session) {
+			return allocation
+		}
+	}
+	t.Fatal("did not reach requested resumable checkpoint")
+	return 0
+}
+
+func TestConstellationRootPackingSessionCheckpointMatchesPartitionedPauses(t *testing.T) {
+	catalog, instances, options, root, config, gridMask := constellationRootPackingSessionFixture()
+	allCompleteChildren := func(session *constellationRootPackingSession) bool {
+		if len(session.nextByClass) == 0 {
+			return false
+		}
+		for _, state := range session.nextByClass {
+			if state.remainingMask != 0 {
+				return false
+			}
+		}
+		return true
+	}
+	scenarios := []struct {
+		name    string
+		matches func(*constellationRootPackingSession) bool
+	}{
+		{
+			name: "depth_boundary",
+			matches: func(session *constellationRootPackingSession) bool {
+				return !session.depthActive && session.depth > 1
+			},
+		},
+		{
+			name: "mid_state",
+			matches: func(session *constellationRootPackingSession) bool {
+				return session.depthActive && !session.statePrepared && session.stateIndex > 0 && session.stateIndex < len(session.states)
+			},
+		},
+		{
+			name: "mid_option",
+			matches: func(session *constellationRootPackingSession) bool {
+				return session.depthActive && session.statePrepared && session.optionIndex > 0 && session.optionIndex < len(session.options)
+			},
+		},
+		{
+			name: "mid_last_depth_with_unexpanded_parents",
+			matches: func(session *constellationRootPackingSession) bool {
+				return session.depthActive && session.depth == len(session.remaining) && session.stateIndex < len(session.states)-1 && allCompleteChildren(session)
+			},
+		},
+	}
+	for _, scenario := range scenarios {
+		t.Run(scenario.name, func(t *testing.T) {
+			allocation := findConstellationRootPackingPauseForTest(t, catalog, instances, options, root, config, gridMask, scenario.matches)
+			monolithic := newConstellationRootPackingSession(catalog, instances, options, root, config, gridMask, func(bool) bool { return true })
+			monolithicPause := monolithic.Run(allocation)
+			partitioned := newConstellationRootPackingSession(catalog, instances, options, root, config, gridMask, func(bool) bool { return true })
+			partitioned.Run(allocation - 1)
+			partitionedPause := partitioned.Run(1)
+			if monolithicPause.terminationReason != "paused_allocation" || partitionedPause.terminationReason != "paused_allocation" || monolithic.Done() || partitioned.Done() {
+				t.Fatalf("pause became terminal: monolithic=%+v partitioned=%+v", monolithicPause, partitionedPause)
+			}
+			if scenario.name == "mid_last_depth_with_unexpanded_parents" && (len(monolithicPause.solutions) != 0 || monolithicPause.candidates != 0 || len(monolithicPause.mrvDepths) != monolithic.depth-1) {
+				t.Fatalf("pause previewed an unfinished last depth: session=%+v result=%+v", monolithic, monolithicPause)
+			}
+			if !reflect.DeepEqual(constellationRootPackingSessionCheckpointForTest(monolithic), constellationRootPackingSessionCheckpointForTest(partitioned)) {
+				t.Fatalf("resume checkpoint differs after allocation %d: monolithic=%+v partitioned=%+v", allocation, constellationRootPackingSessionCheckpointForTest(monolithic), constellationRootPackingSessionCheckpointForTest(partitioned))
+			}
+			monolithicFinal := completeConstellationRootPackingSessionForTest(t, monolithic)
+			partitionedFinal := completeConstellationRootPackingSessionForTest(t, partitioned)
+			if !reflect.DeepEqual(monolithicFinal, partitionedFinal) {
+				t.Fatalf("resume final differs after allocation %d: monolithic=%+v partitioned=%+v", allocation, monolithicFinal, partitionedFinal)
+			}
+		})
+	}
+}
+
+func TestConstellationRootPackingSessionPartitionProperty(t *testing.T) {
+	catalog, instances, options, root, config, gridMask := constellationRootPackingSessionFixture()
+	reference := newConstellationRootPackingSession(catalog, instances, options, root, config, gridMask, func(bool) bool { return true })
+	referenceResult := completeConstellationRootPackingSessionForTest(t, reference)
+	if len(referenceResult.solutions) == 0 {
+		t.Fatalf("reference result=%+v", referenceResult)
+	}
+	forcedConfig := config
+	forcedConfig.forcedRootPackingReplay = true
+	forcedConfig.ConstellationForcedCandidateRootedPackingBeamWidth = 2
+	forcedConfig.ConstellationForcedCandidateRootedPackingRanking = constellationRootPackingRankingPriorityScoreFirst
+	forcedPolicy := *config.policy
+	forcedPolicy.ConstellationForcedCandidateRootedPackingBeamWidth = 2
+	forcedPolicy.ConstellationForcedCandidateRootedPackingRanking = constellationRootPackingRankingPriorityScoreFirst
+	forcedConfig.policy = &forcedPolicy
+	configurations := []struct {
+		name      string
+		newConfig func() Config
+	}{
+		{name: "normal", newConfig: func() Config { return config }},
+		{name: "shadow", newConfig: func() Config {
+			withShadow := config
+			withShadow.constellationRootPackingCollector = &constellationRootPackingCollector{shadow: newConstellationShadowReference(root, referenceResult.solutions[0], "partition-property")}
+			return withShadow
+		}},
+		{name: "forced_replay", newConfig: func() Config { return forcedConfig }},
+	}
+	partitions := [][]int64{
+		{20}, {1, 19}, {2, 18}, {3, 17}, {4, 16}, {5, 15}, {6, 14}, {7, 13},
+		{8, 12}, {9, 11}, {10, 10}, {1, 1, 18}, {1, 2, 17}, {1, 3, 16},
+		{2, 2, 16}, {2, 3, 15}, {3, 3, 14}, {1, 1, 1, 17}, {1, 1, 2, 16},
+		{1, 2, 2, 15}, {2, 2, 2, 14}, {1, 2, 3, 14}, {2, 3, 4, 11}, {1, 1, 1, 1, 16},
+	}
+	for _, configuration := range configurations {
+		t.Run(configuration.name, func(t *testing.T) {
+			baselineConfig := configuration.newConfig()
+			baseline := newConstellationRootPackingSession(catalog, instances, options, root, baselineConfig, gridMask, func(bool) bool { return true })
+			baselineResult := baseline.Run(20)
+			if !baseline.Done() {
+				t.Fatalf("baseline did not complete: %+v", baseline)
+			}
+			baselineCheckpoint := constellationRootPackingSessionCheckpointForTest(baseline)
+			for index, partition := range partitions {
+				partitionConfig := configuration.newConfig()
+				session := newConstellationRootPackingSession(catalog, instances, options, root, partitionConfig, gridMask, func(bool) bool { return true })
+				var result constellationRootPackingResult
+				for _, allocation := range partition {
+					result = session.Run(allocation)
+				}
+				if !session.Done() || !reflect.DeepEqual(result, baselineResult) || !reflect.DeepEqual(constellationRootPackingSessionCheckpointForTest(session), baselineCheckpoint) {
+					t.Fatalf("partition %d %v diverged: result=%+v checkpoint=%+v", index, partition, result, constellationRootPackingSessionCheckpointForTest(session))
+				}
+			}
+		})
+	}
+}
+
+func TestConstellationRootPackingMRVFinalizesOneShotBudget(t *testing.T) {
+	catalog, instances, options, root, config, gridMask := constellationRootPackingSessionFixture()
+	session := newConstellationRootPackingSession(catalog, instances, options, root, config, gridMask, func(bool) bool { return true })
+	paused := session.Run(1)
+	if paused.terminationReason != "paused_allocation" || session.Done() {
+		t.Fatalf("session pause=%+v", paused)
+	}
+	final := session.FinalizeBudgetExhausted()
+	if !session.Done() || final.terminationReason != "budget_exhausted" || !reflect.DeepEqual(final, session.Run(1)) {
+		t.Fatalf("finalized session=%+v", final)
+	}
+	wrapper := constellationRootPackingMRV(catalog, instances, options, root, config, gridMask, 1, func(bool) bool { return true })
+	if !reflect.DeepEqual(wrapper, final) || wrapper.terminationReason != "budget_exhausted" {
+		t.Fatalf("wrapper=%+v final=%+v", wrapper, final)
+	}
+	zeroBudget := constellationRootPackingMRV(catalog, instances, options, root, config, gridMask, 0, func(bool) bool { return true })
+	if zeroBudget.terminationReason != "budget_exhausted" || zeroBudget.nodes != 0 {
+		t.Fatalf("zero-budget wrapper=%+v", zeroBudget)
+	}
+	reported := 0
+	rejected := newConstellationRootPackingSession(catalog, instances, options, root, config, gridMask, func(bool) bool {
+		reported++
+		return reported == 1
+	})
+	rejectedResult := rejected.Run(2)
+	if !rejected.Done() || rejectedResult.terminationReason != "budget_exhausted" || len(rejectedResult.mrvDepths) != 0 || rejectedResult.candidates != 0 {
+		t.Fatalf("reporter exhaustion previewed a partial depth: result=%+v", rejectedResult)
 	}
 }
 

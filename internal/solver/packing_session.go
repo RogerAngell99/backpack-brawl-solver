@@ -87,11 +87,6 @@ func (session *constellationRootPackingSession) Run(nodeAllocation int64) conste
 		return session.final
 	}
 	if nodeAllocation <= 0 {
-		if !session.initialized {
-			result := session.result
-			result.terminationReason = "no_budget"
-			return result
-		}
 		return session.pauseResult()
 	}
 	if !session.initialized {
@@ -120,9 +115,7 @@ func (session *constellationRootPackingSession) Run(nodeAllocation int64) conste
 				return session.pauseResult()
 			}
 			if !session.reportNode(false) {
-				session.commitDepth()
-				session.finish(true)
-				return session.final
+				return session.FinalizeBudgetExhausted()
 			}
 			consumed++
 			session.result.nodes++
@@ -148,6 +141,17 @@ func (session *constellationRootPackingSession) Run(nodeAllocation int64) conste
 
 func (session *constellationRootPackingSession) Done() bool {
 	return session.done
+}
+
+// FinalizeBudgetExhausted terminates an unfinished session after its caller has
+// established that no further allocation can be made. It deliberately retains
+// only committed depth state; an active depth remains incomplete.
+func (session *constellationRootPackingSession) FinalizeBudgetExhausted() constellationRootPackingResult {
+	if session.done {
+		return session.final
+	}
+	session.finish(true)
+	return session.final
 }
 
 func (session *constellationRootPackingSession) initialize() {
@@ -342,31 +346,9 @@ func (session *constellationRootPackingSession) commitDepth() {
 }
 
 func (session *constellationRootPackingSession) pauseResult() constellationRootPackingResult {
-	if !session.depthActive {
-		trace := (*model.ConstellationForcedCandidateShadowTrace)(nil)
-		if session.shadow != nil {
-			trace = &session.shadow.trace
-		}
-		return session.resultForFrontier(session.result, session.states, true, trace)
-	}
 	result := session.result
-	result.mrvDepths = append([]model.ConstellationRootPackingDepthDiagnostic(nil), result.mrvDepths...)
-	result.layerWidths = append([]model.PackingSeedLayerWidth(nil), result.layerWidths...)
-	depthInfo := session.depthInfo
-	var shadowDepth *model.ConstellationForcedCandidateShadowDepth
-	var trace *model.ConstellationForcedCandidateShadowTrace
-	if session.shadowDepth != nil {
-		copy := *session.shadowDepth
-		shadowDepth = &copy
-		traceCopy := session.shadow.trace
-		traceCopy.Depths = append([]model.ConstellationForcedCandidateShadowDepth(nil), traceCopy.Depths...)
-		trace = &traceCopy
-	}
-	states := constellationRootPackingFinishMRVDepth(session.nextByClass, &depthInfo, shadowDepth, session.shadow, trace, session.beamWidth, session.config)
-	result.beamEvictions += depthInfo.BeamEvictions
-	result.mrvDepths = append(result.mrvDepths, depthInfo)
-	result.layerWidths = append(result.layerWidths, model.PackingSeedLayerWidth{Depth: session.depth, States: len(states)})
-	return session.resultForFrontier(result, states, true, trace)
+	result.terminationReason = "paused_allocation"
+	return result
 }
 
 func (session *constellationRootPackingSession) finish(exhausted bool) {
@@ -520,5 +502,10 @@ func constellationRootPackingMRV(
 	nodeBudget int64,
 	reportNode func(bool) bool,
 ) constellationRootPackingResult {
-	return newConstellationRootPackingSession(catalog, instances, optionsByInstance, root, config, gridMask, reportNode).Run(nodeBudget)
+	session := newConstellationRootPackingSession(catalog, instances, optionsByInstance, root, config, gridMask, reportNode)
+	result := session.Run(nodeBudget)
+	if session.Done() {
+		return result
+	}
+	return session.FinalizeBudgetExhausted()
 }
