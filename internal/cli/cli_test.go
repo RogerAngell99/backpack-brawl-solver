@@ -17,6 +17,100 @@ func scenarioPath() string {
 	return filepath.Join("..", "..", "scenarios", "spinegrowth-basic.json")
 }
 
+func suiteManifestPath() string {
+	return filepath.Join("..", "..", "benchmarks", "suites", "general-search-v1.json")
+}
+
+func suiteLockPath() string {
+	return filepath.Join("..", "..", "benchmarks", "suites", "general-search-v1.lock")
+}
+
+func TestVerifySearchSuiteCommand(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"verify-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--lock", suiteLockPath(),
+	}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("exit code=%d stderr=%s", code, stderr.String())
+	}
+	for _, expected := range []string{
+		"Suite verified: general-search-v1",
+		"10 static cases",
+		"4 public generated cases",
+		"2 private holdout declarations",
+		"generator search-suite-generator-v1",
+	} {
+		if !strings.Contains(stdout.String(), expected) {
+			t.Fatalf("output missing %q: %s", expected, stdout.String())
+		}
+	}
+}
+
+func TestFreezeSearchSuiteCommandRefusesExistingLock(t *testing.T) {
+	lockPath := filepath.Join(t.TempDir(), "fixture.lock")
+	firstOut := bytes.Buffer{}
+	firstErr := bytes.Buffer{}
+	firstCode := Run([]string{
+		"freeze-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--out", lockPath,
+	}, &firstOut, &firstErr)
+	if firstCode != 0 || !strings.Contains(firstOut.String(), "Suite frozen: general-search-v1") {
+		t.Fatalf("first code=%d stdout=%s stderr=%s", firstCode, firstOut.String(), firstErr.String())
+	}
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"freeze-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--out", lockPath,
+	}, &stdout, &stderr)
+	if code != 1 || !strings.Contains(stderr.String(), "refusing to overwrite") {
+		t.Fatalf("second code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+}
+
+func TestMaterializeSearchSuiteRejectsPrivateHoldoutRole(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"materialize-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--lock", suiteLockPath(),
+		"--out", filepath.Join(t.TempDir(), "out"),
+		"--roles", "private_holdout",
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), `private holdout "private-holdout-01" cannot be materialized`) {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+}
+
+func TestMaterializeSearchSuiteVerifiesLockBeforeWriting(t *testing.T) {
+	outDir := filepath.Join(t.TempDir(), "out")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"materialize-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--lock", filepath.Join(t.TempDir(), "missing.lock"),
+		"--out", outDir,
+	}, &stdout, &stderr)
+	if code != 1 || !strings.Contains(stderr.String(), "load search suite lock") {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+	if _, err := os.Stat(outDir); !os.IsNotExist(err) {
+		t.Fatalf("materializer created output before verification: %v", err)
+	}
+}
+
 func TestValidateCatalogCommand(t *testing.T) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer

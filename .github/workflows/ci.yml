@@ -32,6 +32,9 @@ jobs:
       - name: Test Go
         run: go test ./...
 
+      - name: Verify pinned search suites
+        run: go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v1.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v1.lock
+
       - name: Install web dependencies
         run: npm ci
         working-directory: web

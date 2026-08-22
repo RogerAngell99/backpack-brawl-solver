@@ -57,3 +57,14 @@ func TestMaterializeSearchSuiteCasesNeverIncludesPrivateHoldouts(t *testing.T) {
 		t.Fatalf("generated=%+v err=%v", generated, err)
 	}
 }
+
+func TestMaterializeSearchSuiteCasesRejectsExplicitPrivateHoldoutRole(t *testing.T) {
+	manifest := SearchSuiteManifest{Generated: []GeneratedSearchSuiteCase{
+		{ID: "private-b", Family: GeneratedFamilyPrivate, Role: SuiteRolePrivateHoldout, PrivateSeedID: "private-b"},
+		{ID: "private-a", Family: GeneratedFamilyPrivate, Role: SuiteRolePrivateHoldout, PrivateSeedID: "private-a"},
+	}}
+	_, err := MaterializeSearchSuiteCases(model.Catalog{}, manifest, SuiteRolePrivateHoldout)
+	if err == nil || err.Error() != `private holdout "private-a" cannot be materialized by the public suite materializer` {
+		t.Fatalf("err=%v", err)
+	}
+}

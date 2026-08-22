@@ -46,6 +46,10 @@ func Run(args []string, stdout io.Writer, stderr io.Writer) int {
 		return runCompareConstellationBenchmarks(args[1:], stdout, stderr)
 	case "materialize-search-suite":
 		return runMaterializeSearchSuite(args[1:], stdout, stderr)
+	case "freeze-search-suite":
+		return runFreezeSearchSuite(args[1:], stdout, stderr)
+	case "verify-search-suite":
+		return runVerifySearchSuite(args[1:], stdout, stderr)
 	case "-h", "--help", "help":
 		printUsage(stdout)
 		return 0
@@ -355,6 +359,7 @@ func runMaterializeSearchSuite(args []string, stdout io.Writer, stderr io.Writer
 	flags := flag.NewFlagSet("materialize-search-suite", flag.ContinueOnError)
 	flags.SetOutput(stderr)
 	manifestPath := flags.String("manifest", filepath.Join("benchmarks", "suites", "general-search-v1.json"), "Path to suite manifest")
+	lockPath := flags.String("lock", filepath.Join("benchmarks", "suites", "general-search-v1.lock"), "Path to immutable suite lock")
 	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
 	outDir := flags.String("out", "", "Output directory for public generated scenarios")
 	rolesText := flags.String("roles", "development,validation", "Comma-separated suite roles")
@@ -365,12 +370,11 @@ func runMaterializeSearchSuite(args []string, stdout io.Writer, stderr io.Writer
 		fmt.Fprintln(stderr, "ERROR: materialize-search-suite requires --out")
 		return 2
 	}
-	manifest, err := benchmark.LoadSearchSuiteManifest(*manifestPath)
-	if err != nil {
+	if err := benchmark.VerifySearchSuiteLock(*manifestPath, *catalogPath, *lockPath); err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
-		return 2
+		return 1
 	}
-	resolved, err := benchmark.ResolveSearchSuiteManifest(*manifestPath)
+	manifest, err := benchmark.LoadSearchSuiteManifest(*manifestPath)
 	if err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 2
@@ -390,27 +394,72 @@ func runMaterializeSearchSuite(args []string, stdout io.Writer, stderr io.Writer
 		return 1
 	}
 	for _, generatedScenario := range generated {
-		content, err := json.MarshalIndent(generatedScenario, "", "  ")
+		content, err := benchmark.MarshalSearchSuiteScenario(generatedScenario)
 		if err != nil {
 			fmt.Fprintf(stderr, "ERROR: %v\n", err)
 			return 1
 		}
 		path := filepath.Join(*outDir, generatedScenario.Name+".json")
-		if err := os.WriteFile(path, append(content, '\n'), 0o600); err != nil {
+		if err := os.WriteFile(path, content, 0o600); err != nil {
 			fmt.Fprintf(stderr, "ERROR: %v\n", err)
 			return 1
 		}
 	}
-	lockContent, err := json.MarshalIndent(resolved, "", "  ")
+	fmt.Fprintf(stdout, "Materialized %d public suite scenarios to %s\n", len(generated), *outDir)
+	return 0
+}
+
+func runFreezeSearchSuite(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("freeze-search-suite", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	manifestPath := flags.String("manifest", filepath.Join("benchmarks", "suites", "general-search-v1.json"), "Path to suite manifest")
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	outPath := flags.String("out", "", "Path for new immutable suite lock")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if *outPath == "" {
+		fmt.Fprintln(stderr, "ERROR: freeze-search-suite requires --out")
+		return 2
+	}
+	lock, err := benchmark.ObserveSearchSuite(*manifestPath, *catalogPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	if err := benchmark.WriteSearchSuiteLock(*outPath, lock); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "Suite frozen: %s\n", lock.SuiteName)
+	fmt.Fprintf(stdout, "Wrote immutable lock to %s\n", *outPath)
+	return 0
+}
+
+func runVerifySearchSuite(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("verify-search-suite", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	manifestPath := flags.String("manifest", filepath.Join("benchmarks", "suites", "general-search-v1.json"), "Path to suite manifest")
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	lockPath := flags.String("lock", filepath.Join("benchmarks", "suites", "general-search-v1.lock"), "Path to immutable suite lock")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if err := benchmark.VerifySearchSuiteLock(*manifestPath, *catalogPath, *lockPath); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	lock, err := benchmark.LoadSearchSuiteLock(*lockPath)
 	if err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 1
 	}
-	if err := os.WriteFile(filepath.Join(*outDir, "suite-lock.lock"), append(lockContent, '\n'), 0o600); err != nil {
-		fmt.Fprintf(stderr, "ERROR: %v\n", err)
-		return 1
-	}
-	fmt.Fprintf(stdout, "Materialized %d public suite scenarios to %s\n", len(generated), *outDir)
+	fmt.Fprintf(stdout, "Suite verified: %s\n", lock.SuiteName)
+	fmt.Fprintf(stdout, "%d static cases\n", len(lock.StaticCases))
+	fmt.Fprintf(stdout, "%d public generated cases\n", len(lock.GeneratedCases))
+	fmt.Fprintf(stdout, "%d private holdout declarations\n", len(lock.PrivateCases))
+	fmt.Fprintf(stdout, "catalog %s\n", lock.CatalogSHA256)
+	fmt.Fprintf(stdout, "generator %s\n", lock.GeneratorVersion)
 	return 0
 }
 
@@ -813,6 +862,8 @@ func printUsage(writer io.Writer) {
 	fmt.Fprintln(writer, "  benchmark-scenarios")
 	fmt.Fprintln(writer, "  compare-benchmarks")
 	fmt.Fprintln(writer, "  compare-constellation-benchmarks")
+	fmt.Fprintln(writer, "  freeze-search-suite")
+	fmt.Fprintln(writer, "  verify-search-suite")
 	fmt.Fprintln(writer, "  materialize-search-suite")
 }
 
