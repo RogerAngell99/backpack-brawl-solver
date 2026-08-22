@@ -125,7 +125,9 @@ export interface Scenario {
   max_nodes?: number;
   no_skips?: boolean;
   stop_on_coverage_ceiling?: boolean;
+  stop_on_priority_ceiling?: boolean;
   repair_search?: boolean;
+  priority_semantics?: "legacy-incoming-v1" | "outgoing-v2" | "outgoing-per-instance-v3";
   priorities?: string[];
   coverage_groups?: CoverageGroup[];
   hero_filter?: HeroFilter;
@@ -142,6 +144,9 @@ export interface SolutionScore {
   stars: number;
   items: number;
   priority_counts?: number[];
+  star_target_breadth?: number;
+  star_reciprocal_pairs?: number;
+  star_source_definition_diversity?: number;
 }
 
 export interface CoverageBucket {
@@ -168,6 +173,8 @@ export interface CoverageBreakdown {
 export interface LooseStarPriority {
   source_item_id: string;
   target_count: number;
+  link_count?: number;
+  instance_target_counts?: Array<{ source_instance: string; target_count: number }>;
 }
 
 export interface SearchStats {
@@ -189,6 +196,8 @@ export interface SearchStats {
   coverage_target_count?: number;
   coverage_ceiling?: CoverageBucket[];
   coverage_ceiling_reached?: boolean;
+  priority_ceiling?: number[];
+  priority_ceiling_reached?: boolean;
   coverage_bound_checks?: number;
   coverage_pruned_nodes?: number;
   exact_bound_checks?: number;
@@ -196,11 +205,20 @@ export interface SearchStats {
   coverage_seed_nodes?: number;
   coverage_seed_candidates?: number;
   coverage_seed_best?: string;
+  star_seed_nodes?: number;
+  star_seed_candidates?: number;
+  initial_best_priority_counts?: number[];
+  seed_best_priority_counts?: number[];
+  search_best_priority_counts?: number[];
+  post_repair_best_priority_counts?: number[];
+  refine_best_priority_counts?: number[];
   parallel_tasks?: number;
   parallel_workers_used?: number;
   refine_moves_checked?: number;
   refine_improvements?: number;
   refine_best_delta?: string;
+  completion_moves_checked?: number;
+  completion_improvements?: number;
   repair_nodes?: number;
   repair_iterations?: number;
   repair_improvements?: number;
@@ -209,6 +227,7 @@ export interface SearchStats {
   repair_parallel_tasks?: number;
   repair_parallel_workers_used?: number;
   stopped_after_coverage_ceiling?: boolean;
+  stopped_after_priority_ceiling?: boolean;
 }
 
 export type SolveProgressPhase = "loading" | "remote" | "seed" | "repair" | "search" | "refine" | "done";
@@ -231,6 +250,18 @@ export interface Placement {
   origin: CoordTuple;
   cells: CoordTuple[];
   star_positions: CoordTuple[];
+}
+
+export interface ManualLayoutPlacement {
+  instance_id?: string;
+  item_id: string;
+  rotation: number;
+  origin: CoordTuple;
+}
+
+export interface ManualLayoutRequest {
+  scenario: Scenario;
+  placements: ManualLayoutPlacement[];
 }
 
 export interface CraftActivation {
