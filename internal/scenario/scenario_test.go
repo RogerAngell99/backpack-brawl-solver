@@ -118,6 +118,35 @@ func TestScenarioValidateEnforcesGridInventoryCapacity(t *testing.T) {
 	}
 }
 
+func TestScenarioValidatesPrioritySemanticsAndCoverageReferences(t *testing.T) {
+	valid := writeScenario(t, `{
+  "items": {"apple": 1},
+  "priority_semantics": "outgoing-v2",
+  "priorities": ["coverage_group:0"],
+  "coverage_groups": [{"name": "Explicit", "sources": ["apple"]}]
+}`)
+	loaded, err := Load(valid)
+	if err != nil {
+		t.Fatalf("Load valid outgoing-v2 scenario: %v", err)
+	}
+	if loaded.PrioritySemantics != "outgoing-v2" {
+		t.Fatalf("priority semantics=%q want outgoing-v2", loaded.PrioritySemantics)
+	}
+	perInstance := writeScenario(t, `{"items": {"apple": 1}, "priority_semantics": "outgoing-per-instance-v3"}`)
+	loaded, err = Load(perInstance)
+	if err != nil || loaded.PrioritySemantics != "outgoing-per-instance-v3" {
+		t.Fatalf("Load valid outgoing-per-instance-v3: scenario=%+v err=%v", loaded, err)
+	}
+	invalidSemantics := writeScenario(t, `{"items": {"apple": 1}, "priority_semantics": "unknown"}`)
+	if _, err := Load(invalidSemantics); err == nil {
+		t.Fatal("Load accepted unsupported priority semantics")
+	}
+	invalidGroup := writeScenario(t, `{"items": {"apple": 1}, "priorities": ["coverage_group:0"]}`)
+	if _, err := Load(invalidGroup); err == nil {
+		t.Fatal("Load accepted missing coverage group reference")
+	}
+}
+
 func writeScenario(t *testing.T, content string) string {
 	t.Helper()
 	path := filepath.Join(t.TempDir(), "scenario.json")

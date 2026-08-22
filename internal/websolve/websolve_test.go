@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
 	"backpack-brawl-solver/internal/catalog"
+	"backpack-brawl-solver/internal/model"
 	"backpack-brawl-solver/internal/scenario"
 )
 
@@ -99,6 +101,60 @@ func TestSolvePreparedCatalog(t *testing.T) {
 	}
 	if len(solutions) == 0 {
 		t.Fatal("expected at least one solution")
+	}
+}
+
+func TestEvaluatePreparedLayoutJSONAssignsInstancesAndReturnsStars(t *testing.T) {
+	loadedCatalog := model.Catalog{Items: map[string]model.Item{
+		"source": {
+			ID:        "source",
+			Shape:     []model.Coord{{Row: 0, Col: 0}},
+			Rotations: []int{0},
+			Stars:     []model.Star{{Offset: model.Coord{Row: 0, Col: 1}, TargetTypes: []string{"target"}}},
+		},
+		"target": {
+			ID:        "target",
+			Types:     []string{"target"},
+			Shape:     []model.Coord{{Row: 0, Col: 0}},
+			Rotations: []int{0},
+		},
+	}}
+	input, err := json.Marshal(LayoutEvaluationRequest{
+		Scenario: scenario.Scenario{
+			Items:             map[string]int{"source": 1, "target": 1},
+			PrioritySemantics: model.PrioritySemanticsOutgoingPerInstanceV3,
+			Priorities:        []string{"star_source:source"},
+		},
+		Placements: []LayoutPlacementRequest{
+			{ItemID: "source", Rotation: 0, Origin: []int{0, 0}},
+			{ItemID: "target", Rotation: 0, Origin: []int{0, 1}},
+		},
+	})
+	if err != nil {
+		t.Fatalf("marshal request: %v", err)
+	}
+	output, err := EvaluatePreparedLayoutJSON(loadedCatalog, input)
+	if err != nil {
+		t.Fatalf("EvaluatePreparedLayoutJSON returned error: %v", err)
+	}
+	var solutions []struct {
+		Score struct {
+			Stars          int   `json:"stars"`
+			PriorityCounts []int `json:"priority_counts"`
+		} `json:"score"`
+		Stars []struct {
+			SourceInstance string `json:"source_instance"`
+			TargetInstance string `json:"target_instance"`
+		} `json:"stars"`
+	}
+	if err := json.Unmarshal(output, &solutions); err != nil {
+		t.Fatalf("invalid output JSON: %v\n%s", err, string(output))
+	}
+	if len(solutions) != 1 || solutions[0].Score.Stars != 1 || !reflect.DeepEqual(solutions[0].Score.PriorityCounts, []int{1}) {
+		t.Fatalf("solutions=%+v", solutions)
+	}
+	if len(solutions[0].Stars) != 1 || solutions[0].Stars[0].SourceInstance != "source#0" || solutions[0].Stars[0].TargetInstance != "target#1" {
+		t.Fatalf("stars=%+v", solutions[0].Stars)
 	}
 }
 
@@ -218,6 +274,105 @@ func containsCoord(coords [][]int, wanted []int) bool {
 		}
 	}
 	return false
+}
+
+func TestSolveScenarioJSONOutgoingV2UsesSourceTargetsWithoutCoverage(t *testing.T) {
+	catalogContent := readProjectFile(t, "data", "catalog.json")
+	scenarioContent := json.RawMessage(`{
+    "items": {"mining_pick": 1, "rock": 1, "steel_forge_hammer": 1},
+    "top": 1,
+    "workers": 1,
+    "max_nodes": 1000,
+    "no_skips": true,
+    "priority_semantics": "outgoing-v2",
+    "priorities": ["star_source:steel_forge_hammer"]
+  }`)
+	input, err := json.Marshal(map[string]json.RawMessage{"catalog": catalogContent, "scenario": scenarioContent})
+	if err != nil {
+		t.Fatalf("marshal input: %v", err)
+	}
+	output, err := SolveScenarioJSON(input)
+	if err != nil {
+		t.Fatalf("SolveScenarioJSON returned error: %v", err)
+	}
+	var solutions []struct {
+		Score struct {
+			Stars               int   `json:"stars"`
+			PriorityCounts      []int `json:"priority_counts"`
+			StarTargetBreadth   int   `json:"star_target_breadth"`
+			StarSourceDiversity int   `json:"star_source_definition_diversity"`
+		} `json:"score"`
+		Coverage any `json:"coverage"`
+		Loose    []struct {
+			SourceItemID string `json:"source_item_id"`
+			TargetCount  int    `json:"target_count"`
+		} `json:"loose_star_priorities"`
+	}
+	if err := json.Unmarshal(output, &solutions); err != nil {
+		t.Fatalf("invalid output JSON: %v\n%s", err, string(output))
+	}
+	if len(solutions) != 1 {
+		t.Fatalf("solutions=%d want 1", len(solutions))
+	}
+	best := solutions[0]
+	if best.Score.Stars != 2 || !reflect.DeepEqual(best.Score.PriorityCounts, []int{2}) {
+		t.Fatalf("score=%+v want two outgoing targets", best.Score)
+	}
+	if best.Score.StarTargetBreadth != 2 || best.Score.StarSourceDiversity != 2 {
+		t.Fatalf("structural score=%+v", best.Score)
+	}
+	if best.Coverage != nil {
+		t.Fatalf("outgoing-v2 coverage=%+v want omitted", best.Coverage)
+	}
+	if len(best.Loose) != 1 || best.Loose[0].SourceItemID != "steel_forge_hammer" || best.Loose[0].TargetCount != 2 {
+		t.Fatalf("loose priorities=%+v", best.Loose)
+	}
+}
+
+func TestSolveScenarioJSONOutgoingPerInstanceV3IncludesLinkBreakdown(t *testing.T) {
+	catalogContent := readProjectFile(t, "data", "catalog.json")
+	scenarioContent := json.RawMessage(`{
+    "items": {"mining_pick": 1, "rock": 1, "steel_forge_hammer": 1},
+    "top": 1,
+    "workers": 1,
+    "max_nodes": 1000,
+    "no_skips": true,
+    "priority_semantics": "outgoing-per-instance-v3",
+    "priorities": ["star_source:steel_forge_hammer"]
+  }`)
+	input, err := json.Marshal(map[string]json.RawMessage{"catalog": catalogContent, "scenario": scenarioContent})
+	if err != nil {
+		t.Fatalf("marshal input: %v", err)
+	}
+	output, err := SolveScenarioJSON(input)
+	if err != nil {
+		t.Fatalf("SolveScenarioJSON returned error: %v", err)
+	}
+	var solutions []struct {
+		Score struct {
+			PriorityCounts []int `json:"priority_counts"`
+		} `json:"score"`
+		Loose []struct {
+			SourceItemID string `json:"source_item_id"`
+			TargetCount  int    `json:"target_count"`
+			LinkCount    int    `json:"link_count"`
+			Instances    []struct {
+				SourceInstance string `json:"source_instance"`
+				TargetCount    int    `json:"target_count"`
+			} `json:"instance_target_counts"`
+		} `json:"loose_star_priorities"`
+	}
+	if err := json.Unmarshal(output, &solutions); err != nil {
+		t.Fatalf("invalid output JSON: %v\n%s", err, string(output))
+	}
+	if len(solutions) != 1 || !reflect.DeepEqual(solutions[0].Score.PriorityCounts, []int{2}) {
+		t.Fatalf("solutions=%+v want priority [2]", solutions)
+	}
+	if len(solutions[0].Loose) != 1 || solutions[0].Loose[0].SourceItemID != "steel_forge_hammer" ||
+		solutions[0].Loose[0].TargetCount != 2 || solutions[0].Loose[0].LinkCount != 2 ||
+		len(solutions[0].Loose[0].Instances) != 1 || solutions[0].Loose[0].Instances[0].TargetCount != 2 {
+		t.Fatalf("loose priorities=%+v", solutions[0].Loose)
+	}
 }
 
 func TestSolveScenarioJSONWithRemoteOptionsAppliesCapsAndMetadata(t *testing.T) {

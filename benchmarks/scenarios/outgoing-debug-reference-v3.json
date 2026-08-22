@@ -1,0 +1,58 @@
+{
+  "name": "outgoing-debug-reference-v3",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "banana": 1,
+    "cactrio": 1,
+    "champion_s_ripper": 1,
+    "cleansing_crown": 1,
+    "death_essence": 1,
+    "discordant_harp": 1,
+    "donut": 1,
+    "ginseng_root": 2,
+    "green_snapper": 1,
+    "hooded_cowl": 1,
+    "longing_begonia": 1,
+    "pitahaya": 2,
+    "spice": 3,
+    "spicy_sausage": 1,
+    "spiked_sickle": 1,
+    "spirit_biscuit": 1,
+    "steadfast_boots": 1,
+    "tender_sausage": 1,
+    "thornwall": 1,
+    "twinmaw": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 1000000,
+  "no_skips": false,
+  "repair_search": true,
+  "stop_on_priority_ceiling": false,
+  "priority_semantics": "outgoing-per-instance-v3",
+  "priorities": [
+    "star_source:discordant_harp",
+    "star_source:hooded_cowl",
+    "star_source:steadfast_boots",
+    "star_source:death_essence",
+    "star_source:pitahaya",
+    "star_source:ginseng_root",
+    "star_source:spicy_sausage",
+    "star_source:spice",
+    "star_source:spirit_biscuit",
+    "star_source:banana",
+    "star_source:tender_sausage",
+    "star_source:donut"
+  ],
+  "coverage_groups": [],
+  "hero_filter": {
+    "unknown_policy": "exclude"
+  }
+}
