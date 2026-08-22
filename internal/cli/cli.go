@@ -384,7 +384,12 @@ func runMaterializeSearchSuite(args []string, stdout io.Writer, stderr io.Writer
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 2
 	}
-	generated, err := benchmark.MaterializeSearchSuiteCases(loadedCatalog, manifest, splitCSV(*rolesText)...)
+	lock, err := benchmark.LoadSearchSuiteLock(*lockPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	generated, err := benchmark.MaterializeSearchSuiteCases(lock.GeneratorVersion, loadedCatalog, manifest, splitCSV(*rolesText)...)
 	if err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 2
@@ -414,6 +419,7 @@ func runFreezeSearchSuite(args []string, stdout io.Writer, stderr io.Writer) int
 	flags.SetOutput(stderr)
 	manifestPath := flags.String("manifest", filepath.Join("benchmarks", "suites", "general-search-v1.json"), "Path to suite manifest")
 	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	generatorVersion := flags.String("generator-version", "", "Explicit historical search suite generator version")
 	outPath := flags.String("out", "", "Path for new immutable suite lock")
 	if err := flags.Parse(args); err != nil {
 		return 2
@@ -422,7 +428,11 @@ func runFreezeSearchSuite(args []string, stdout io.Writer, stderr io.Writer) int
 		fmt.Fprintln(stderr, "ERROR: freeze-search-suite requires --out")
 		return 2
 	}
-	lock, err := benchmark.ObserveSearchSuite(*manifestPath, *catalogPath)
+	if *generatorVersion == "" {
+		fmt.Fprintln(stderr, "ERROR: freeze-search-suite requires --generator-version")
+		return 2
+	}
+	lock, err := benchmark.ObserveSearchSuite(*manifestPath, *catalogPath, *generatorVersion)
 	if err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 2

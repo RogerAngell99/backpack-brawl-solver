@@ -16,10 +16,7 @@ import (
 	"backpack-brawl-solver/internal/scenario"
 )
 
-const (
-	SearchSuiteLockVersion      = 1
-	SearchSuiteGeneratorVersion = "search-suite-generator-v1"
-)
+const SearchSuiteLockVersion = 1
 
 // SearchSuiteLock identifies one exact, public search-suite population.
 // Manifest describes the intended population; the lock identifies the exact
@@ -198,7 +195,10 @@ func validateSortedUniqueLockIDs(kind string, ids []string) error {
 // ObserveSearchSuite materializes the public suite population without writing
 // a lock. All *_sha256 fields are SHA-256 hashes of canonical JSON: decode
 // with UseNumber, require one complete JSON value, marshal it, then hash it.
-func ObserveSearchSuite(manifestPath string, catalogPath string) (SearchSuiteLock, error) {
+func ObserveSearchSuite(manifestPath string, catalogPath string, generatorVersion string) (SearchSuiteLock, error) {
+	if err := ValidateSearchSuiteGeneratorVersion(generatorVersion); err != nil {
+		return SearchSuiteLock{}, err
+	}
 	manifestContent, err := os.ReadFile(manifestPath)
 	if err != nil {
 		return SearchSuiteLock{}, err
@@ -230,7 +230,7 @@ func ObserveSearchSuite(manifestPath string, catalogPath string) (SearchSuiteLoc
 		SuiteName:        manifest.Name,
 		ManifestSHA256:   manifestSHA256,
 		CatalogSHA256:    catalogSHA256,
-		GeneratorVersion: SearchSuiteGeneratorVersion,
+		GeneratorVersion: generatorVersion,
 		StaticCases:      make([]SearchSuiteLockedStaticCase, 0, len(manifest.Scenarios)),
 		GeneratedCases:   make([]SearchSuiteLockedGeneratedCase, 0, len(manifest.Generated)),
 		PrivateCases:     make([]SearchSuiteLockedPrivateCase, 0),
@@ -259,7 +259,7 @@ func ObserveSearchSuite(manifestPath string, catalogPath string) (SearchSuiteLoc
 			})
 			continue
 		}
-		generated, err := MaterializeGeneratedSearchSuiteCase(loadedCatalog, entry)
+		generated, err := MaterializeGeneratedSearchSuiteCase(generatorVersion, loadedCatalog, entry)
 		if err != nil {
 			return SearchSuiteLock{}, fmt.Errorf("generated case %q: %w", entry.ID, err)
 		}
@@ -328,7 +328,7 @@ func VerifySearchSuiteLock(manifestPath string, catalogPath string, lockPath str
 	if err != nil {
 		return fmt.Errorf("load search suite lock: %w", err)
 	}
-	observed, err := ObserveSearchSuite(manifestPath, catalogPath)
+	observed, err := ObserveSearchSuite(manifestPath, catalogPath, expected.GeneratorVersion)
 	if err != nil {
 		return fmt.Errorf("observe search suite: %w", err)
 	}
@@ -356,9 +356,6 @@ func verifySearchSuiteLockStructure(expected SearchSuiteLock, observed SearchSui
 	}
 	if expected.SuiteName != observed.SuiteName {
 		return fmt.Errorf("suite name mismatch:\n  expected: %s\n  actual:   %s", expected.SuiteName, observed.SuiteName)
-	}
-	if expected.GeneratorVersion != observed.GeneratorVersion {
-		return fmt.Errorf("generator version mismatch:\n  expected: %s\n  actual:   %s", expected.GeneratorVersion, observed.GeneratorVersion)
 	}
 	if err := verifyStaticCaseStructure(expected.StaticCases, observed.StaticCases); err != nil {
 		return err

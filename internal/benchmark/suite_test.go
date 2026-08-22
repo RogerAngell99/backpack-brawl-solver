@@ -29,11 +29,11 @@ func TestMaterializeGeneratedSearchSuiteCaseIsDeterministic(t *testing.T) {
 		"food-c":   {ID: "food-c", Shape: []model.Coord{{}}, Types: []string{"Food"}},
 	}}
 	entry := GeneratedSearchSuiteCase{ID: "case", Family: GeneratedFamilySparse, Role: SuiteRoleDevelopment, Seed: &seed}
-	first, err := MaterializeGeneratedSearchSuiteCase(catalog, entry)
+	first, err := MaterializeGeneratedSearchSuiteCase(SearchSuiteGeneratorV1, catalog, entry)
 	if err != nil {
 		t.Fatalf("materialize first: %v", err)
 	}
-	second, err := MaterializeGeneratedSearchSuiteCase(catalog, entry)
+	second, err := MaterializeGeneratedSearchSuiteCase(SearchSuiteGeneratorV1, catalog, entry)
 	if err != nil || !reflect.DeepEqual(first, second) || first.NoSkips == nil || !*first.NoSkips || len(first.Priorities) != 2 {
 		t.Fatalf("first=%+v second=%+v err=%v", first, second, err)
 	}
@@ -52,7 +52,7 @@ func TestMaterializeSearchSuiteCasesNeverIncludesPrivateHoldouts(t *testing.T) {
 		{ID: "dev", Family: GeneratedFamilySparse, Role: SuiteRoleDevelopment, Seed: &seed},
 		{ID: "private", Family: GeneratedFamilyPrivate, Role: SuiteRolePrivateHoldout, PrivateSeedID: "private"},
 	}}
-	generated, err := MaterializeSearchSuiteCases(catalog, manifest)
+	generated, err := MaterializeSearchSuiteCases(SearchSuiteGeneratorV1, catalog, manifest)
 	if err != nil || len(generated) != 1 || generated[0].Name != "dev" {
 		t.Fatalf("generated=%+v err=%v", generated, err)
 	}
@@ -63,7 +63,7 @@ func TestMaterializeSearchSuiteCasesRejectsExplicitPrivateHoldoutRole(t *testing
 		{ID: "private-b", Family: GeneratedFamilyPrivate, Role: SuiteRolePrivateHoldout, PrivateSeedID: "private-b"},
 		{ID: "private-a", Family: GeneratedFamilyPrivate, Role: SuiteRolePrivateHoldout, PrivateSeedID: "private-a"},
 	}}
-	_, err := MaterializeSearchSuiteCases(model.Catalog{}, manifest, SuiteRolePrivateHoldout)
+	_, err := MaterializeSearchSuiteCases(SearchSuiteGeneratorV1, model.Catalog{}, manifest, SuiteRolePrivateHoldout)
 	if err == nil || err.Error() != `private holdout "private-a" cannot be materialized by the public suite materializer` {
 		t.Fatalf("err=%v", err)
 	}
