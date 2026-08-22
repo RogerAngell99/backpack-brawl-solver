@@ -9,11 +9,17 @@ const wasmDir = join(webRoot, "..", "public", "wasm");
 
 mkdirSync(wasmDir, { recursive: true });
 
+const committedWasm = join(wasmDir, "solver.wasm");
+const committedExec = join(wasmDir, "wasm_exec.js");
 const goEnv = spawnSync("go", ["env", "GOROOT"], {
   cwd: projectRoot,
   encoding: "utf8",
 });
 if (goEnv.error) {
+  if (goEnv.error.code === "ENOENT" && existsSync(committedWasm) && existsSync(committedExec)) {
+    console.warn("Go is unavailable; using checked-in WASM assets");
+    process.exit(0);
+  }
   throw goEnv.error;
 }
 if (goEnv.status !== 0) {
