@@ -65,6 +65,7 @@ type constellationRootPackingResult struct {
 	firstCompleteNodes    int64
 	distinctNextItems     int
 	mrvDepths             []model.ConstellationRootPackingDepthDiagnostic
+	operationProfile      *model.ConstellationRootPackingOperationProfile
 	shadowTrace           *model.ConstellationForcedCandidateShadowTrace
 	parentGuardedFrontier *model.ConstellationParentFrontierHedgeAttempt
 }
@@ -504,7 +505,7 @@ func constellationSeedSearch(
 				rootWinnerID = root.rootID
 			}
 		}
-		if config.Diagnostics {
+		if config.Diagnostics || config.OperationProfiling {
 			orbitKey := ""
 			if constellationSeedUsesOrbitDiversity(policy.ConstellationSeedVariant) {
 				orbitKey = root.sourceGeometryOrbitKey
@@ -543,6 +544,7 @@ func constellationSeedSearch(
 				FirstCompleteNodes:        rootResult.firstCompleteNodes,
 				DistinctNextItemsSelected: rootResult.distinctNextItems,
 				MRVDepths:                 append([]model.ConstellationRootPackingDepthDiagnostic(nil), rootResult.mrvDepths...),
+				OperationProfile:          rootResult.operationProfile,
 			}
 			if familyID != "" {
 				rootDiagnostic.FamilyID = familyID
@@ -639,6 +641,7 @@ func constellationSeedSearch(
 			packingNodesLeft -= rootResult.nodes + recordRoot(index, root, quota, rootResult, probeAvailable, "", nil, 0)
 		}
 	}
+	diagnostics.RootPackingOperationProfile = aggregateRootPackingOperationProfiles(diagnostics.Roots)
 	if rootWinnerID != "" {
 		score := cloneScore(rootWinner.Evaluation.Score)
 		diagnostics.ConstellationRootWinnerID = rootWinnerID
@@ -2473,15 +2476,30 @@ func constellationRootMRVSelection(
 	occupied uint64,
 	placements []model.Placement,
 ) (int, []model.Placement, bool) {
+	return constellationRootMRVSelectionWithOperations(remaining, remainingMask, optionsByInstance, occupied, placements, nil)
+}
+
+func constellationRootMRVSelectionWithOperations(
+	remaining []model.InventoryInstance,
+	remainingMask uint64,
+	optionsByInstance map[string][]model.Placement,
+	occupied uint64,
+	placements []model.Placement,
+	operations *rootPackingOperationCounters,
+) (int, []model.Placement, bool) {
+	operations.mrvSelection()
 	selectedIndex := -1
 	var selectedOptions []model.Placement
 	for index, instance := range remaining {
 		if remainingMask&(uint64(1)<<uint(instance.OriginalIndex)) == 0 {
 			continue
 		}
+		operations.mrvInstance()
 		legal := make([]model.Placement, 0, len(optionsByInstance[instance.InstanceID]))
 		for _, option := range optionsByInstance[instance.InstanceID] {
+			operations.mrvOption()
 			if option.Mask&occupied == 0 && placementRespectsCanonicalCopyOrder(option, placements) {
+				operations.mrvLegalPlacement()
 				legal = append(legal, option)
 			}
 		}
@@ -2503,6 +2521,18 @@ func constellationRootMRVFeasibility(
 	occupied uint64,
 	placements []model.Placement,
 ) (restricted int, flexibility int, feasible bool) {
+	return constellationRootMRVFeasibilityWithOperations(remaining, remainingMask, optionsByInstance, occupied, placements, nil)
+}
+
+func constellationRootMRVFeasibilityWithOperations(
+	remaining []model.InventoryInstance,
+	remainingMask uint64,
+	optionsByInstance map[string][]model.Placement,
+	occupied uint64,
+	placements []model.Placement,
+	operations *rootPackingOperationCounters,
+) (restricted int, flexibility int, feasible bool) {
+	operations.feasibilityCall()
 	if remainingMask == 0 {
 		return 0, 0, true
 	}
@@ -2511,8 +2541,10 @@ func constellationRootMRVFeasibility(
 		if remainingMask&(uint64(1)<<uint(instance.OriginalIndex)) == 0 {
 			continue
 		}
+		operations.feasibilityInstance()
 		legal := 0
 		for _, option := range optionsByInstance[instance.InstanceID] {
+			operations.feasibilityOption()
 			if option.Mask&occupied == 0 && placementRespectsCanonicalCopyOrder(option, placements) {
 				legal++
 			}

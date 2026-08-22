@@ -80,9 +80,13 @@ type Config struct {
 	DisableOutgoingBounds                      bool
 	// Diagnostics records an unthrottled incumbent trace without affecting
 	// search ordering, progress reporting, or pruning.
-	Diagnostics      bool
-	ProgressReporter ProgressReporter
-	Context          context.Context
+	Diagnostics bool
+	// OperationProfiling enables benchmark-only deterministic rooted-packing
+	// operation counters. It never participates in search ordering, pruning,
+	// ranking, or budgets, and requires a binary built with -tags searchprofile.
+	OperationProfiling bool
+	ProgressReporter   ProgressReporter
+	Context            context.Context
 
 	trace                                    *diagnosticTrace
 	tracePhase                               string
@@ -417,6 +421,9 @@ func SolveLayout(catalog model.Catalog, itemIDs []string, gridMask uint64, confi
 	}
 	if config.Diagnostics && config.Workers != 1 {
 		return nil, fmt.Errorf("diagnostics require exactly one worker")
+	}
+	if config.OperationProfiling && !OperationProfilingAvailable() {
+		return nil, fmt.Errorf("operation profiling requires a binary built with -tags searchprofile")
 	}
 	if config.ConstellationFeasibilityProbe && !config.Diagnostics {
 		return nil, fmt.Errorf("constellation feasibility probe requires diagnostics")
@@ -829,6 +836,9 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 	}
 	if config.Diagnostics && config.Workers != 1 {
 		return nil, fmt.Errorf("diagnostics require exactly one worker")
+	}
+	if config.OperationProfiling && !OperationProfilingAvailable() {
+		return nil, fmt.Errorf("operation profiling requires a binary built with -tags searchprofile")
 	}
 	if config.Context == nil {
 		config.Context = context.Background()
@@ -1640,6 +1650,7 @@ func mergeConstellationSeedDiagnostics(left model.ConstellationSeedDiagnostics, 
 	left.ParentFrontierHedge = mergeConstellationParentFrontierHedge(left.ParentFrontierHedge, right.ParentFrontierHedge)
 	left.Skeletons = append(left.Skeletons, right.Skeletons...)
 	left.Roots = append(left.Roots, right.Roots...)
+	left.RootPackingOperationProfile = aggregateRootPackingOperationProfiles(left.Roots)
 	return left
 }
 
