@@ -24,6 +24,11 @@ func TestGeneratedSearchSuiteValidationIsVersioned(t *testing.T) {
 	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV1, v1); err != nil {
 		t.Fatalf("valid v1: %v", err)
 	}
+	v1.Generated[0].PrivateSeedCommitment = strings.Repeat("a", 64)
+	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV1, v1); err == nil || !strings.Contains(err.Error(), "must not have a private_seed_commitment") {
+		t.Fatalf("v1 commitment err=%v", err)
+	}
+	v1.Generated[0].PrivateSeedCommitment = ""
 	v1.Generated[0].StructuralDescriptor = ptrStructuralDescriptorForTest(validStructuralDescriptorForTest())
 	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV1, v1); err == nil || !strings.Contains(err.Error(), "must not have") {
 		t.Fatalf("v1 descriptor err=%v", err)
@@ -39,8 +44,33 @@ func TestGeneratedSearchSuiteValidationIsVersioned(t *testing.T) {
 	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV2, v2); err != nil {
 		t.Fatalf("valid v2: %v", err)
 	}
+	v2.Generated[0].PrivateSeedCommitment = strings.Repeat("a", 64)
+	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV2, v2); err == nil || !strings.Contains(err.Error(), "v2 public generated case") {
+		t.Fatalf("v2 public commitment err=%v", err)
+	}
+	v2.Generated[0].PrivateSeedCommitment = ""
+	v2.Generated[0].Role = SuiteRolePrivateHoldout
+	v2.Generated[0].Seed = nil
+	v2.Generated[0].PrivateSeedID = "private-v2"
+	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV2, v2); err == nil || !strings.Contains(err.Error(), "private_seed_commitment") {
+		t.Fatalf("v2 missing private commitment err=%v", err)
+	}
+	v2.Generated[0].PrivateSeedCommitment = strings.Repeat("a", 64)
+	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV2, v2); err != nil {
+		t.Fatalf("valid v2 private commitment: %v", err)
+	}
 	if err := ValidateSearchSuiteManifestForGenerator(SearchSuiteGeneratorV1, v2); err == nil || !strings.Contains(err.Error(), "must not have") {
 		t.Fatalf("v2 through v1 err=%v", err)
+	}
+}
+
+func TestSearchSuiteManifestRequiresUniquePrivateSeedIDs(t *testing.T) {
+	manifest := SearchSuiteManifest{Version: 1, Name: "private-ids", Budgets: []int64{1}, Workers: 1, BaselinePolicy: "v4", Generated: []GeneratedSearchSuiteCase{
+		{ID: "private-a", Family: GeneratedFamilyPrivate, Role: SuiteRolePrivateHoldout, PrivateSeedID: "shared-private-seed"},
+		{ID: "private-b", Family: GeneratedFamilyPrivate, Role: SuiteRolePrivateHoldout, PrivateSeedID: "shared-private-seed"},
+	}}
+	if err := manifest.Validate(); err == nil || !strings.Contains(err.Error(), "share private seed ID") {
+		t.Fatalf("duplicate private seed ID err=%v", err)
 	}
 }
 

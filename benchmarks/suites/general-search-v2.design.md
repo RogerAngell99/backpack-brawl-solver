@@ -22,7 +22,9 @@ seed ID to a positive `int64`. CI recomputes
 `SHA-256("search-suite-generator-v2" + NUL + "private-seed" + NUL + privateSeedID + NUL + seed)`
 and fails before materialization if any commitment, membership, or protected
 case generation differs. The secret is written to a mode-0600 temporary file
-only for that check and is then removed.
+only for that check and is then removed. This check runs only for the trusted
+`main` ref; no `pull_request` workflow receives or executes with private seed
+material.
 
 For every generated case, source pairs are eligible only when neither source
 targets itself or the other source under the canonical star-matching rule.
@@ -44,6 +46,10 @@ public corpus is checked to complete without witness exhaustion.
 The ten inherited static cases, including their craft interactions, remain in
 the suite intentionally. They exercise the broader real-solver surface; the
 36 v2 generated rows are the separately defined structural star-source corpus.
+Generated v2 cases do not control incidental catalog recipe interactions; if
+they occur, they are residual catalog variation rather than a selected feature
+of the generated corpus. Likewise, `rotation_entropy` specifies neutral
+fillers, not the source rotation domain.
 
 The rows were selected through structural coverage and catalog feasibility
 only. No solver benchmark, score, search-node count, completion time, or

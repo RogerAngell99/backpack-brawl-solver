@@ -124,6 +124,7 @@ func (manifest SearchSuiteManifest) Validate() error {
 		}
 	}
 	seen := map[string]struct{}{}
+	privateSeedIDs := map[string]string{}
 	for _, entry := range manifest.Scenarios {
 		if err := validateSearchSuiteCase(entry.ID, entry.Role, seen); err != nil {
 			return err
@@ -143,6 +144,10 @@ func (manifest SearchSuiteManifest) Validate() error {
 			if entry.PrivateSeedID == "" || entry.Seed != nil {
 				return fmt.Errorf("private holdout %q requires only a private seed ID", entry.ID)
 			}
+			if previousID, exists := privateSeedIDs[entry.PrivateSeedID]; exists {
+				return fmt.Errorf("private holdouts %q and %q share private seed ID %q", previousID, entry.ID, entry.PrivateSeedID)
+			}
+			privateSeedIDs[entry.PrivateSeedID] = entry.ID
 			continue
 		}
 		if entry.Seed == nil || entry.PrivateSeedID != "" {

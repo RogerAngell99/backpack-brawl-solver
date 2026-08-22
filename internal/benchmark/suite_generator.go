@@ -122,6 +122,9 @@ func validateGeneratedSearchSuiteCaseV1(entry GeneratedSearchSuiteCase) error {
 	if entry.StructuralDescriptor != nil {
 		return fmt.Errorf("v1 generated case %q must not have a structural_descriptor", entry.ID)
 	}
+	if entry.PrivateSeedCommitment != "" {
+		return fmt.Errorf("v1 generated case %q must not have a private_seed_commitment", entry.ID)
+	}
 	if entry.Role == SuiteRolePrivateHoldout {
 		if entry.Family != GeneratedFamilyPrivate {
 			return fmt.Errorf("v1 private holdout %q must use family %q", entry.ID, GeneratedFamilyPrivate)
@@ -148,6 +151,8 @@ func validateGeneratedSearchSuiteCaseV2(entry GeneratedSearchSuiteCase) error {
 		if err := validateSHA256("v2 private holdout "+entry.ID+" private_seed_commitment", entry.PrivateSeedCommitment); err != nil {
 			return err
 		}
+	} else if entry.PrivateSeedCommitment != "" {
+		return fmt.Errorf("v2 public generated case %q must not have a private_seed_commitment", entry.ID)
 	}
 	return nil
 }
