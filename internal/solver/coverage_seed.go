@@ -11,7 +11,6 @@ import (
 
 const coverageSeedBeamWidth = 256
 const coverageSeedMaxNodes = int64(250000)
-const coverageSeedStateBuffer = coverageSeedBeamWidth * 4
 
 type coverageSeedState struct {
 	occupied        uint64
@@ -51,6 +50,8 @@ func coverageSeedSearch(
 		return coverageSeedResult{}
 	}
 
+	policy := policyForConfig(config)
+	beamWidth := policy.CoverageSeedBeamWidth
 	ordered := coverageSeedOrder(catalog, instances, optionsByInstance, coverage)
 	remainingCells := remainingCellCounts(catalog, ordered)
 	initialCoverage := coverageSearchState{}
@@ -60,23 +61,29 @@ func coverageSeedSearch(
 		potentialCounts: coverageSeedPotentialCounts(coverage, initialCoverage),
 	}}
 	var nodes int64
+	var symmetryPruned int64
 	var progressBatch int64
 	exhausted := false
 	canceled := false
-	reportNode := func() {
+	reportNode := func() bool {
+		if !chargeNode(config, config.tracePhase) {
+			exhausted = true
+			return false
+		}
 		nodes++
 		if config.Context != nil && nodes%progressNodeInterval == 0 && config.Context.Err() != nil {
 			canceled = true
 			exhausted = true
 		}
 		if progress == nil {
-			return
+			return true
 		}
 		progressBatch++
 		if progressBatch >= progressNodeInterval {
 			progress.addNodes(ProgressPhaseSeed, progressBatch, false)
 			progressBatch = 0
 		}
+		return true
 	}
 	flushProgress := func() {
 		if progress != nil && progressBatch > 0 {
@@ -89,7 +96,7 @@ func coverageSeedSearch(
 		if canceled || exhausted || len(states) == 0 {
 			break
 		}
-		nextStates := make([]coverageSeedState, 0, coverageSeedBeamWidth*2)
+		nextStates := make([]coverageSeedState, 0, beamWidth*2)
 		for _, state := range states {
 			if canceled || (nodeBudget > 0 && nodes >= nodeBudget) {
 				exhausted = true
@@ -103,7 +110,13 @@ func coverageSeedSearch(
 				if option.Mask&state.occupied != 0 {
 					continue
 				}
-				reportNode()
+				if !placementRespectsCanonicalCopyOrder(option, state.placed) {
+					symmetryPruned++
+					continue
+				}
+				if !reportNode() {
+					break
+				}
 				if canceled {
 					break
 				}
@@ -117,7 +130,7 @@ func coverageSeedSearch(
 					potentialCounts: coverageSeedPotentialCounts(coverage, nextCoverage),
 					potential:       state.potential + coverage.priorityForPlacement(option),
 					key:             coverageSeedAppendKey(state.key, option),
-				})
+				}, beamWidth)
 				if nodeBudget > 0 && nodes >= nodeBudget {
 					exhausted = true
 					break
@@ -127,7 +140,9 @@ func coverageSeedSearch(
 				break
 			}
 			if config.AllowSkips {
-				reportNode()
+				if !reportNode() {
+					break
+				}
 				if canceled {
 					break
 				}
@@ -141,13 +156,13 @@ func coverageSeedSearch(
 					potentialCounts: coverageSeedPotentialCounts(coverage, nextCoverage),
 					potential:       state.potential,
 					key:             coverageSeedSkipKey(state.key, instance),
-				})
+				}, beamWidth)
 			}
 		}
 		sortCoverageSeedStates(nextStates)
-		if len(nextStates) > coverageSeedBeamWidth {
-			clear(nextStates[coverageSeedBeamWidth:])
-			nextStates = nextStates[:coverageSeedBeamWidth]
+		if len(nextStates) > beamWidth {
+			clear(nextStates[beamWidth:])
+			nextStates = nextStates[:beamWidth]
 		}
 		states = nextStates
 	}
@@ -168,16 +183,18 @@ func coverageSeedSearch(
 				CandidateCount:              candidateCount,
 				BestSummary:                 seedBestSummary(results),
 				StoppedAfterCoverageCeiling: true,
+				SymmetryPrunedBranches:      symmetryPruned,
 			}
 		}
 	}
 
 	flushProgress()
 	return coverageSeedResult{
-		Solutions:      results,
-		NodesExplored:  nodes,
-		CandidateCount: candidateCount,
-		BestSummary:    seedBestSummary(results),
+		Solutions:              results,
+		NodesExplored:          nodes,
+		CandidateCount:         candidateCount,
+		BestSummary:            seedBestSummary(results),
+		SymmetryPrunedBranches: symmetryPruned,
 	}
 }
 
@@ -249,14 +266,17 @@ func sortCoverageSeedStates(states []coverageSeedState) {
 	})
 }
 
-func appendCoverageSeedState(states []coverageSeedState, state coverageSeedState) []coverageSeedState {
+func appendCoverageSeedState(states []coverageSeedState, state coverageSeedState, beamWidth int) []coverageSeedState {
+	if beamWidth <= 0 {
+		beamWidth = coverageSeedBeamWidth
+	}
 	states = append(states, state)
-	if len(states) <= coverageSeedStateBuffer {
+	if len(states) <= beamWidth*4 {
 		return states
 	}
 	sortCoverageSeedStates(states)
-	clear(states[coverageSeedBeamWidth:])
-	return states[:coverageSeedBeamWidth]
+	clear(states[beamWidth:])
+	return states[:beamWidth]
 }
 
 func coverageSeedCounts(coverage *coverageContext, state coverageSearchState) []int {

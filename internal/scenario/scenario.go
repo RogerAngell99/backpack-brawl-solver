@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 
 	"backpack-brawl-solver/internal/geometry"
@@ -12,18 +13,20 @@ import (
 )
 
 type Scenario struct {
-	Name                  string           `json:"name"`
-	Grid                  []string         `json:"grid"`
-	Items                 map[string]int   `json:"items"`
-	Top                   *int             `json:"top"`
-	Workers               *int             `json:"workers"`
-	MaxNodes              *int64           `json:"max_nodes"`
-	NoSkips               *bool            `json:"no_skips"`
-	StopOnCoverageCeiling *bool            `json:"stop_on_coverage_ceiling"`
-	RepairSearch          *bool            `json:"repair_search"`
-	Priorities            []string         `json:"priorities"`
-	CoverageGroups        []CoverageGroup  `json:"coverage_groups"`
-	HeroFilter            model.HeroFilter `json:"hero_filter"`
+	Name                  string                  `json:"name"`
+	Grid                  []string                `json:"grid"`
+	Items                 map[string]int          `json:"items"`
+	Top                   *int                    `json:"top"`
+	Workers               *int                    `json:"workers"`
+	MaxNodes              *int64                  `json:"max_nodes"`
+	NoSkips               *bool                   `json:"no_skips"`
+	StopOnCoverageCeiling *bool                   `json:"stop_on_coverage_ceiling"`
+	StopOnPriorityCeiling *bool                   `json:"stop_on_priority_ceiling"`
+	RepairSearch          *bool                   `json:"repair_search"`
+	PrioritySemantics     model.PrioritySemantics `json:"priority_semantics"`
+	Priorities            []string                `json:"priorities"`
+	CoverageGroups        []CoverageGroup         `json:"coverage_groups"`
+	HeroFilter            model.HeroFilter        `json:"hero_filter"`
 }
 
 type CoverageGroup struct {
@@ -65,6 +68,22 @@ func (s Scenario) Validate() error {
 	for idx, priority := range s.Priorities {
 		if strings.TrimSpace(priority) == "" {
 			return fmt.Errorf("scenario priorities[%d] cannot be empty", idx)
+		}
+	}
+	if s.PrioritySemantics != "" &&
+		s.PrioritySemantics != model.PrioritySemanticsLegacyIncomingV1 &&
+		s.PrioritySemantics != model.PrioritySemanticsOutgoingV2 &&
+		s.PrioritySemantics != model.PrioritySemanticsOutgoingPerInstanceV3 {
+		return fmt.Errorf("unsupported priority_semantics %q", s.PrioritySemantics)
+	}
+	for idx, priority := range s.Priorities {
+		kind, value, ok := strings.Cut(strings.TrimSpace(priority), ":")
+		if !ok || strings.TrimSpace(kind) != "coverage_group" {
+			continue
+		}
+		groupIndex, err := strconv.Atoi(strings.TrimSpace(value))
+		if err != nil || groupIndex < 0 || groupIndex >= len(s.CoverageGroups) {
+			return fmt.Errorf("priorities[%d] references invalid coverage group %q", idx, value)
 		}
 	}
 	for groupIndex, group := range s.CoverageGroups {

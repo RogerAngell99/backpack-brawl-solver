@@ -24,15 +24,32 @@ func EvaluateLayoutWithCoverageGroups(
 	priorities []string,
 	coverageGroups []model.CoverageGroup,
 ) model.Evaluation {
+	return EvaluateLayoutWithCoverageGroupsAndSemantics(catalog, placements, priorities, coverageGroups, model.PrioritySemanticsLegacyIncomingV1)
+}
+
+// EvaluateLayoutWithCoverageGroupsAndSemantics evaluates a layout using either the
+// legacy implicit incoming-coverage priority block or explicit outgoing priorities.
+func EvaluateLayoutWithCoverageGroupsAndSemantics(
+	catalog model.Catalog,
+	placements []model.Placement,
+	priorities []string,
+	coverageGroups []model.CoverageGroup,
+	semantics model.PrioritySemantics,
+) model.Evaluation {
+	coverageGroups = activeCoverageGroups(coverageGroups, priorities, semantics)
 	crafts := EvaluateCrafts(catalog, placements)
 	stars := EvaluateStars(catalog, placements)
-	priorityCounts, starCoverage, starCoverageGroups, looseStarPriorities := EvaluatePriorityScoreWithCoverageGroups(catalog, placements, crafts, stars, priorities, coverageGroups)
+	priorityCounts, starCoverage, starCoverageGroups, looseStarPriorities := EvaluatePriorityScoreWithCoverageGroupsAndSemantics(catalog, placements, crafts, stars, priorities, coverageGroups, semantics)
+	targetBreadth, reciprocalPairs, sourceDefinitionDiversity := starStructureMetrics(placements, stars)
 	return model.Evaluation{
 		Score: model.Score{
-			CraftCount:     len(crafts),
-			StarCount:      len(stars),
-			ItemCount:      len(placements),
-			PriorityCounts: priorityCounts,
+			CraftCount:                    len(crafts),
+			StarCount:                     len(stars),
+			ItemCount:                     len(placements),
+			StarTargetBreadth:             targetBreadth,
+			StarReciprocalPairs:           reciprocalPairs,
+			StarSourceDefinitionDiversity: sourceDefinitionDiversity,
+			PriorityCounts:                priorityCounts,
 		},
 		Crafts:              crafts,
 		Stars:               stars,
@@ -48,9 +65,20 @@ func EvaluateScoreOnlyWithCoverageGroups(
 	priorities []string,
 	coverageGroups []model.CoverageGroup,
 ) model.Score {
+	return EvaluateScoreOnlyWithCoverageGroupsAndSemantics(catalog, placements, priorities, coverageGroups, model.PrioritySemanticsLegacyIncomingV1)
+}
+
+func EvaluateScoreOnlyWithCoverageGroupsAndSemantics(
+	catalog model.Catalog,
+	placements []model.Placement,
+	priorities []string,
+	coverageGroups []model.CoverageGroup,
+	semantics model.PrioritySemantics,
+) model.Score {
+	coverageGroups = activeCoverageGroups(coverageGroups, priorities, semantics)
 	craftPriorities := craftPriorityResults(priorities)
 	craftCount, craftPriorityCounts := evaluateCraftScoreOnly(catalog, placements, craftPriorities)
-	starScore := evaluateStarScoreOnly(catalog, placements, priorities, coverageGroups)
+	starScore := evaluateStarScoreOnly(catalog, placements, priorities, coverageGroups, semantics)
 	priorityCounts := make([]int, 0, len(starScore.legacyCounts)+len(craftPriorityCounts))
 
 	if len(coverageGroups) > 0 {
@@ -92,6 +120,22 @@ func EvaluateScoreOnlyWithCoverageGroups(
 			}
 			priorityCounts = append(priorityCounts, craftPriorityCounts...)
 		}
+	} else if len(priorities) > 0 && semantics.IsOutgoing() {
+		for _, priority := range priorities {
+			kind, value, ok := parsePriority(priority)
+			if !ok {
+				priorityCounts = append(priorityCounts, 0)
+				continue
+			}
+			switch kind {
+			case "star_source":
+				priorityCounts = append(priorityCounts, starScore.looseCountsBySource[value])
+			case "craft":
+				priorityCounts = append(priorityCounts, craftPriorityCountsByResult(craftPriorities, craftPriorityCounts)[value])
+			default:
+				priorityCounts = append(priorityCounts, 0)
+			}
+		}
 	} else if len(priorities) > 0 {
 		insertedCoverage := false
 		craftIndex := 0
@@ -122,10 +166,13 @@ func EvaluateScoreOnlyWithCoverageGroups(
 	}
 
 	return model.Score{
-		CraftCount:     craftCount,
-		StarCount:      starScore.starCount,
-		ItemCount:      len(placements),
-		PriorityCounts: priorityCounts,
+		CraftCount:                    craftCount,
+		StarCount:                     starScore.starCount,
+		ItemCount:                     len(placements),
+		StarTargetBreadth:             starScore.targetBreadth,
+		StarReciprocalPairs:           starScore.reciprocalPairs,
+		StarSourceDefinitionDiversity: starScore.sourceDefinitionDiversity,
+		PriorityCounts:                priorityCounts,
 	}
 }
 
@@ -148,6 +195,26 @@ func EvaluatePriorityScoreWithCoverageGroups(
 	priorities []string,
 	coverageGroups []model.CoverageGroup,
 ) ([]int, *model.StarCoverageBreakdown, []model.StarCoverageBreakdown, []model.LooseStarPriority) {
+	return EvaluatePriorityScoreWithCoverageGroupsAndSemantics(catalog, placements, crafts, stars, priorities, coverageGroups, model.PrioritySemanticsLegacyIncomingV1)
+}
+
+func activeCoverageGroups(groups []model.CoverageGroup, priorities []string, semantics model.PrioritySemantics) []model.CoverageGroup {
+	if !semantics.IsOutgoing() || globalPriorityOrderEnabled(priorities) {
+		return groups
+	}
+	return nil
+}
+
+func EvaluatePriorityScoreWithCoverageGroupsAndSemantics(
+	catalog model.Catalog,
+	placements []model.Placement,
+	crafts []model.CraftActivation,
+	stars []model.StarActivation,
+	priorities []string,
+	coverageGroups []model.CoverageGroup,
+	semantics model.PrioritySemantics,
+) ([]int, *model.StarCoverageBreakdown, []model.StarCoverageBreakdown, []model.LooseStarPriority) {
+	coverageGroups = activeCoverageGroups(coverageGroups, priorities, semantics)
 	if len(coverageGroups) > 0 {
 		coverageGroups = normalizeCoverageGroups(coverageGroups)
 		breakdowns := make([]model.StarCoverageBreakdown, 0, len(coverageGroups))
@@ -177,12 +244,9 @@ func EvaluatePriorityScoreWithCoverageGroups(
 				continue
 			}
 			seenLooseSources[value] = struct{}{}
-			count := countLooseStarPriority(placements, stars, value)
-			looseCountsBySource[value] = count
-			looseStarPriorities = append(looseStarPriorities, model.LooseStarPriority{
-				SourceItemID: value,
-				TargetCount:  count,
-			})
+			priority := evaluateLooseStarPriority(placements, stars, value, semantics)
+			looseCountsBySource[value] = looseStarPriorityCount(priority, semantics)
+			looseStarPriorities = append(looseStarPriorities, priority)
 		}
 		counts := make([]int, 0, len(coverageGroups)+len(looseStarPriorities)+len(priorities))
 		if globalPriorityOrderEnabled(priorities) {
@@ -236,6 +300,32 @@ func EvaluatePriorityScoreWithCoverageGroups(
 
 	if len(priorities) == 0 {
 		return nil, nil, nil, nil
+	}
+	if semantics.IsOutgoing() {
+		counts := make([]int, 0, len(priorities))
+		loose := make([]model.LooseStarPriority, 0)
+		seen := map[string]struct{}{}
+		for _, priority := range priorities {
+			kind, value, ok := parsePriority(priority)
+			if !ok {
+				counts = append(counts, 0)
+				continue
+			}
+			switch kind {
+			case "star_source":
+				priority := evaluateLooseStarPriority(placements, stars, value, semantics)
+				counts = append(counts, looseStarPriorityCount(priority, semantics))
+				if _, exists := seen[value]; !exists {
+					seen[value] = struct{}{}
+					loose = append(loose, priority)
+				}
+			case "craft":
+				counts = append(counts, countCraftPriority(crafts, value))
+			default:
+				counts = append(counts, 0)
+			}
+		}
+		return counts, nil, nil, loose
 	}
 
 	starSources := priorityStarSources(priorities)
@@ -433,20 +523,63 @@ func stringSet(values []string) map[string]struct{} {
 	return out
 }
 
-func countLooseStarPriority(placements []model.Placement, stars []model.StarActivation, sourceItemID string) int {
+func evaluateLooseStarPriority(
+	placements []model.Placement,
+	stars []model.StarActivation,
+	sourceItemID string,
+	semantics model.PrioritySemantics,
+) model.LooseStarPriority {
+	sourceItemByInstance := make(map[string]string, len(placements))
+	sourceTargets := map[string]map[string]struct{}{}
+	for _, placement := range placements {
+		sourceItemByInstance[placement.InstanceID] = placement.ItemID
+		if placement.ItemID == sourceItemID && semantics == model.PrioritySemanticsOutgoingPerInstanceV3 {
+			sourceTargets[placement.InstanceID] = map[string]struct{}{}
+		}
+	}
+
 	targets := map[string]struct{}{}
 	for _, star := range stars {
-		sourceIndex := placementIndexByInstance(placements, star.SourceInstance)
-		if sourceIndex < 0 || placements[sourceIndex].ItemID != sourceItemID {
+		if sourceItemByInstance[star.SourceInstance] != sourceItemID {
 			continue
 		}
-		targetIndex := placementIndexByInstance(placements, star.TargetInstance)
-		if targetIndex < 0 {
+		if _, targetExists := sourceItemByInstance[star.TargetInstance]; !targetExists {
 			continue
 		}
-		targets[placements[targetIndex].InstanceID] = struct{}{}
+		targets[star.TargetInstance] = struct{}{}
+		if targetsBySource, ok := sourceTargets[star.SourceInstance]; ok {
+			targetsBySource[star.TargetInstance] = struct{}{}
+		}
 	}
-	return len(targets)
+
+	result := model.LooseStarPriority{
+		SourceItemID: sourceItemID,
+		TargetCount:  len(targets),
+	}
+	if semantics != model.PrioritySemanticsOutgoingPerInstanceV3 {
+		return result
+	}
+	result.InstanceTargetCounts = make([]model.StarInstanceTargetCount, 0, len(sourceTargets))
+	for _, placement := range placements {
+		targetsBySource, ok := sourceTargets[placement.InstanceID]
+		if !ok {
+			continue
+		}
+		count := len(targetsBySource)
+		result.LinkCount += count
+		result.InstanceTargetCounts = append(result.InstanceTargetCounts, model.StarInstanceTargetCount{
+			SourceInstance: placement.InstanceID,
+			TargetCount:    count,
+		})
+	}
+	return result
+}
+
+func looseStarPriorityCount(priority model.LooseStarPriority, semantics model.PrioritySemantics) int {
+	if semantics == model.PrioritySemanticsOutgoingPerInstanceV3 {
+		return priority.LinkCount
+	}
+	return priority.TargetCount
 }
 
 func coverageTargetRelevant(
@@ -638,11 +771,14 @@ type scoreOnlyCoverageGroup struct {
 }
 
 type starScoreOnlyResult struct {
-	starCount           int
-	legacyCounts        []int
-	groupCounts         [][]int
-	looseSources        []string
-	looseCountsBySource map[string]int
+	starCount                 int
+	targetBreadth             int
+	reciprocalPairs           int
+	sourceDefinitionDiversity int
+	legacyCounts              []int
+	groupCounts               [][]int
+	looseSources              []string
+	looseCountsBySource       map[string]int
 }
 
 func evaluateStarScoreOnly(
@@ -650,6 +786,7 @@ func evaluateStarScoreOnly(
 	placements []model.Placement,
 	priorities []string,
 	coverageGroups []model.CoverageGroup,
+	semantics model.PrioritySemantics,
 ) starScoreOnlyResult {
 	var groups []scoreOnlyCoverageGroup
 	var looseSources []string
@@ -679,10 +816,13 @@ func evaluateStarScoreOnly(
 			seenLoose[value] = struct{}{}
 			looseSources = append(looseSources, value)
 		}
+	} else if semantics.IsOutgoing() {
+		looseSources = priorityStarSources(priorities)
 	} else if len(priorities) > 0 {
 		oldPrioritySources = priorityStarSources(priorities)
 	}
 	looseTargetMasks := make([]uint64, len(looseSources))
+	looseLinkCounts := make([]int, len(looseSources))
 	var oldCoveredByTarget [64]uint64
 
 	var cellOwner [geometry.GridCells]int
@@ -696,6 +836,10 @@ func evaluateStarScoreOnly(
 	}
 
 	var countedPairs [64]uint64
+	var targetMask uint64
+	var edgesBySource [64]uint64
+	var sourceDefinitionMasks [64]uint64
+	sourceDefinitionBits := map[string]uint{}
 	starCount := 0
 	for sourceIndex, source := range placements {
 		for starPositionIndex := range source.StarPositions {
@@ -717,6 +861,16 @@ func evaluateStarScoreOnly(
 			}
 			countedPairs[sourceIndex] |= targetBit
 			starCount++
+			targetMask |= targetBit
+			edgesBySource[sourceIndex] |= targetBit
+			definitionBit, exists := sourceDefinitionBits[source.ItemID]
+			if !exists {
+				definitionBit = uint(len(sourceDefinitionBits))
+				sourceDefinitionBits[source.ItemID] = definitionBit
+			}
+			if definitionBit < 64 {
+				sourceDefinitionMasks[targetIndex] |= uint64(1) << definitionBit
+			}
 
 			for groupIndex := range groups {
 				sourcePriorityIndex := stringIndex(groups[groupIndex].sources, source.ItemID)
@@ -727,6 +881,9 @@ func evaluateStarScoreOnly(
 			for looseIndex, looseSource := range looseSources {
 				if looseSource == source.ItemID {
 					looseTargetMasks[looseIndex] |= targetBit
+					if semantics == model.PrioritySemanticsOutgoingPerInstanceV3 {
+						looseLinkCounts[looseIndex]++
+					}
 				}
 			}
 			oldSourceIndex := stringIndex(oldPrioritySources, source.ItemID)
@@ -741,12 +898,27 @@ func evaluateStarScoreOnly(
 		looseSources:        looseSources,
 		looseCountsBySource: map[string]int{},
 	}
+	result.targetBreadth = bits.OnesCount64(targetMask)
+	for sourceIndex := range edgesBySource {
+		for targetIndex := sourceIndex + 1; targetIndex < len(edgesBySource); targetIndex++ {
+			if edgesBySource[sourceIndex]&(uint64(1)<<uint(targetIndex)) != 0 && edgesBySource[targetIndex]&(uint64(1)<<uint(sourceIndex)) != 0 {
+				result.reciprocalPairs++
+			}
+		}
+	}
+	for _, sourceMask := range sourceDefinitionMasks {
+		result.sourceDefinitionDiversity += bits.OnesCount64(sourceMask)
+	}
 	if len(groups) > 0 {
 		result.groupCounts = make([][]int, 0, len(groups))
 		for _, group := range groups {
 			result.groupCounts = append(result.groupCounts, scoreOnlyCoverageBucketCounts(catalog, placements, group.sources, group.targetItemIDs, group.coveredByTarget))
 		}
 		for looseIndex, targetMask := range looseTargetMasks {
+			if semantics == model.PrioritySemanticsOutgoingPerInstanceV3 {
+				result.looseCountsBySource[looseSources[looseIndex]] = looseLinkCounts[looseIndex]
+				continue
+			}
 			result.looseCountsBySource[looseSources[looseIndex]] = bits.OnesCount64(targetMask)
 		}
 		return result
@@ -754,6 +926,13 @@ func evaluateStarScoreOnly(
 	if len(oldPrioritySources) > 0 {
 		result.legacyCounts = scoreOnlyCoverageBucketCounts(catalog, placements, oldPrioritySources, nil, oldCoveredByTarget)
 		return result
+	}
+	for looseIndex, targetMask := range looseTargetMasks {
+		if semantics == model.PrioritySemanticsOutgoingPerInstanceV3 {
+			result.looseCountsBySource[looseSources[looseIndex]] = looseLinkCounts[looseIndex]
+			continue
+		}
+		result.looseCountsBySource[looseSources[looseIndex]] = bits.OnesCount64(targetMask)
 	}
 	return result
 }
@@ -844,6 +1023,50 @@ func EvaluateStars(catalog model.Catalog, placements []model.Placement) []model.
 		return []model.StarActivation{}
 	}
 	return activations
+}
+
+// starStructureMetrics describes the realized canonical activation graph. These
+// values are late tie-breakers, never a replacement for explicitly requested goals.
+func starStructureMetrics(placements []model.Placement, stars []model.StarActivation) (int, int, int) {
+	instanceIndex := make(map[string]int, len(placements))
+	for index, placement := range placements {
+		instanceIndex[placement.InstanceID] = index
+	}
+	var targetMask uint64
+	var edgesBySource [64]uint64
+	var sourceDefinitionMasks [64]uint64
+	sourceDefinitionBits := map[string]uint{}
+	for _, star := range stars {
+		sourceIndex, sourceOK := instanceIndex[star.SourceInstance]
+		targetIndex, targetOK := instanceIndex[star.TargetInstance]
+		if !sourceOK || !targetOK || sourceIndex >= 64 || targetIndex >= 64 {
+			continue
+		}
+		targetBit := uint64(1) << uint(targetIndex)
+		targetMask |= targetBit
+		edgesBySource[sourceIndex] |= targetBit
+		definitionBit, exists := sourceDefinitionBits[placements[sourceIndex].ItemID]
+		if !exists {
+			definitionBit = uint(len(sourceDefinitionBits))
+			sourceDefinitionBits[placements[sourceIndex].ItemID] = definitionBit
+		}
+		if definitionBit < 64 {
+			sourceDefinitionMasks[targetIndex] |= uint64(1) << definitionBit
+		}
+	}
+	reciprocalPairs := 0
+	for sourceIndex := range edgesBySource {
+		for targetIndex := sourceIndex + 1; targetIndex < len(edgesBySource); targetIndex++ {
+			if edgesBySource[sourceIndex]&(uint64(1)<<uint(targetIndex)) != 0 && edgesBySource[targetIndex]&(uint64(1)<<uint(sourceIndex)) != 0 {
+				reciprocalPairs++
+			}
+		}
+	}
+	definitionDiversity := 0
+	for _, sourceMask := range sourceDefinitionMasks {
+		definitionDiversity += bits.OnesCount64(sourceMask)
+	}
+	return bits.OnesCount64(targetMask), reciprocalPairs, definitionDiversity
 }
 
 func EvaluateCrafts(catalog model.Catalog, placements []model.Placement) []model.CraftActivation {

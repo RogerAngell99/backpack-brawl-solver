@@ -63,7 +63,7 @@ func newExactBoundContext(
 	// Exact bounds are used only for exhaustive solves. Limited solves already use
 	// seed/repair heuristics, and benchmark coverage showed per-node bounds reduce
 	// nodes/sec there without improving score.
-	if config.DisableExactBounds || config.TopN <= 0 || config.MaxNodes > 0 || len(instances) > 64 {
+	if config.DisableExactBounds || config.PrioritySemantics.IsOutgoing() || config.TopN <= 0 || config.MaxNodes > 0 || len(instances) > 64 {
 		return nil
 	}
 	if len(config.Priorities) == 0 && len(config.CoverageGroups) == 0 {
@@ -356,11 +356,21 @@ func (ctx *exactBoundContext) boundScoreFromActiveMask(state exactBoundState, in
 	if !ok {
 		return model.Score{}, false
 	}
+	activeItems := bits.OnesCount64(activeMask)
+	activeDefinitions := 0
+	for _, count := range activeCounts {
+		if count > 0 {
+			activeDefinitions++
+		}
+	}
 	return model.Score{
-		CraftCount:     ctx.boundCraftCount(activeCounts, ""),
-		StarCount:      ctx.boundStarCount(activeMask),
-		ItemCount:      bits.OnesCount64(activeMask),
-		PriorityCounts: priorityCounts,
+		CraftCount:                    ctx.boundCraftCount(activeCounts, ""),
+		StarCount:                     ctx.boundStarCount(activeMask),
+		ItemCount:                     activeItems,
+		StarTargetBreadth:             activeItems,
+		StarReciprocalPairs:           activeItems * (activeItems - 1) / 2,
+		StarSourceDefinitionDiversity: activeDefinitions * activeItems,
+		PriorityCounts:                priorityCounts,
 	}, true
 }
 

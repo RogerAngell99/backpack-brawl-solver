@@ -3,6 +3,7 @@ package scoring_test
 import (
 	"path/filepath"
 	"reflect"
+	"strconv"
 	"testing"
 
 	"backpack-brawl-solver/internal/catalog"
@@ -211,6 +212,119 @@ func TestEvaluateScoreOnlyMatchesFullEvaluation(t *testing.T) {
 				t.Fatalf("score-only=%+v full=%+v", scoreOnly, full)
 			}
 		})
+	}
+}
+
+func TestOutgoingV2ScoresSourceTargetsWithoutImplicitCoverage(t *testing.T) {
+	cat := loadTestCatalog(t)
+	placements := []model.Placement{
+		place(t, cat, "mana_crystal", 0, model.Coord{Row: 4, Col: 2}, 0),
+		place(t, cat, "starlight_potion", 1, model.Coord{Row: 1, Col: 2}, 0),
+	}
+	priorities := []string{"star_source:mana_crystal"}
+	full := scoring.EvaluateLayoutWithCoverageGroupsAndSemantics(
+		cat,
+		placements,
+		priorities,
+		nil,
+		model.PrioritySemanticsOutgoingV2,
+	)
+	scoreOnly := scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics(
+		cat,
+		placements,
+		priorities,
+		nil,
+		model.PrioritySemanticsOutgoingV2,
+	)
+	if !reflect.DeepEqual(scoreOnly, full.Score) {
+		t.Fatalf("score-only=%+v full=%+v", scoreOnly, full.Score)
+	}
+	if full.StarCoverage != nil {
+		t.Fatalf("outgoing-v2 synthesized coverage=%+v", full.StarCoverage)
+	}
+	if !reflect.DeepEqual(full.Score.PriorityCounts, []int{1}) {
+		t.Fatalf("priority counts=%v want [1]", full.Score.PriorityCounts)
+	}
+	if !reflect.DeepEqual(full.LooseStarPriorities, []model.LooseStarPriority{{SourceItemID: "mana_crystal", TargetCount: 1}}) {
+		t.Fatalf("loose priorities=%+v", full.LooseStarPriorities)
+	}
+}
+
+func TestOutgoingPerInstanceV3CountsSharedTargetsForEachCopy(t *testing.T) {
+	placements := []model.Placement{
+		minimalPlacement("spice#0", "spice", 0),
+		minimalPlacement("spice#1", "spice", 1),
+		minimalPlacement("spice#2", "spice", 2),
+		minimalPlacement("banana#3", "banana", 3),
+		minimalPlacement("pitahaya#4", "pitahaya", 4),
+		minimalPlacement("spicy_sausage#5", "spicy_sausage", 5),
+		minimalPlacement("tender_sausage#6", "tender_sausage", 6),
+	}
+	targets := []string{"banana#3", "pitahaya#4", "spicy_sausage#5", "tender_sausage#6"}
+	stars := make([]model.StarActivation, 0, 12)
+	for source := 0; source < 3; source++ {
+		for _, target := range targets {
+			stars = append(stars, model.StarActivation{SourceInstance: "spice#" + strconv.Itoa(source), TargetInstance: target})
+		}
+	}
+	// An accidental duplicate star position must not create another static link.
+	stars = append(stars, model.StarActivation{SourceInstance: "spice#0", TargetInstance: "banana#3"})
+
+	v2Counts, _, _, v2Loose := scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics(
+		model.Catalog{}, placements, nil, stars, []string{"star_source:spice"}, nil, model.PrioritySemanticsOutgoingV2,
+	)
+	if !reflect.DeepEqual(v2Counts, []int{4}) || len(v2Loose) != 1 || v2Loose[0].TargetCount != 4 || v2Loose[0].LinkCount != 0 {
+		t.Fatalf("outgoing-v2 counts=%v loose=%+v want four shared targets", v2Counts, v2Loose)
+	}
+
+	v3Counts, _, _, v3Loose := scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics(
+		model.Catalog{}, placements, nil, stars, []string{"star_source:spice"}, nil, model.PrioritySemanticsOutgoingPerInstanceV3,
+	)
+	if !reflect.DeepEqual(v3Counts, []int{12}) {
+		t.Fatalf("outgoing-per-instance-v3 counts=%v want [12]", v3Counts)
+	}
+	if len(v3Loose) != 1 || v3Loose[0].TargetCount != 4 || v3Loose[0].LinkCount != 12 {
+		t.Fatalf("outgoing-per-instance-v3 loose=%+v want four targets and twelve links", v3Loose)
+	}
+	wantPerCopy := []model.StarInstanceTargetCount{
+		{SourceInstance: "spice#0", TargetCount: 4},
+		{SourceInstance: "spice#1", TargetCount: 4},
+		{SourceInstance: "spice#2", TargetCount: 4},
+	}
+	if !reflect.DeepEqual(v3Loose[0].InstanceTargetCounts, wantPerCopy) {
+		t.Fatalf("per-copy counts=%+v want %+v", v3Loose[0].InstanceTargetCounts, wantPerCopy)
+	}
+}
+
+func TestOutgoingPerInstanceV3ScoreOnlyMatchesFullEvaluation(t *testing.T) {
+	cat := model.Catalog{Items: map[string]model.Item{
+		"source": {
+			ID:        "source",
+			Shape:     []model.Coord{{Row: 0, Col: 0}},
+			Rotations: []int{0},
+			Stars:     []model.Star{{Offset: model.Coord{Row: 0, Col: 1}, TargetTypes: []string{"Food"}}},
+		},
+		"food": {
+			ID:        "food",
+			Types:     []string{"Food"},
+			Shape:     []model.Coord{{Row: 0, Col: 0}},
+			Rotations: []int{0},
+		},
+	}}
+	placements := []model.Placement{
+		{InstanceID: "source#0", ItemID: "source", Cells: []model.Coord{{Row: 0, Col: 0}}, StarPositions: []model.StarPosition{{Star: cat.Items["source"].Stars[0], Position: model.Coord{Row: 0, Col: 1}}}},
+		{InstanceID: "food#1", ItemID: "food", Cells: []model.Coord{{Row: 0, Col: 1}}},
+		{InstanceID: "source#2", ItemID: "source", Cells: []model.Coord{{Row: 1, Col: 0}}, StarPositions: []model.StarPosition{{Star: cat.Items["source"].Stars[0], Position: model.Coord{Row: 1, Col: 1}}}},
+		{InstanceID: "food#3", ItemID: "food", Cells: []model.Coord{{Row: 1, Col: 1}}},
+	}
+	priorities := []string{"star_source:source"}
+	full := scoring.EvaluateLayoutWithCoverageGroupsAndSemantics(cat, placements, priorities, nil, model.PrioritySemanticsOutgoingPerInstanceV3)
+	fast := scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics(cat, placements, priorities, nil, model.PrioritySemanticsOutgoingPerInstanceV3)
+	if !reflect.DeepEqual(fast, full.Score) {
+		t.Fatalf("score-only=%+v full=%+v", fast, full.Score)
+	}
+	if !reflect.DeepEqual(full.Score.PriorityCounts, []int{2}) || len(full.LooseStarPriorities) != 1 || full.LooseStarPriorities[0].LinkCount != 2 {
+		t.Fatalf("full evaluation=%+v", full)
 	}
 }
 

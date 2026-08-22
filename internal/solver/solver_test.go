@@ -2,6 +2,7 @@ package solver
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -37,6 +38,149 @@ func TestInventoryCountSyntax(t *testing.T) {
 			t.Fatalf("got[%d]=%q want %q", idx, got[idx], want[idx])
 		}
 	}
+}
+
+func TestInitialPlacementsAreValidatedAndRetained(t *testing.T) {
+	cat := model.Catalog{Items: map[string]model.Item{
+		"one": {ID: "one", Shape: []model.Coord{{Row: 0, Col: 0}}, Rotations: []int{0}},
+	}}
+	instances := ExpandInventory([]string{"one", "one"})
+	optionsByInstance := testOptionsByInstance(t, cat, instances)
+	known := []model.Placement{
+		testPlacement(t, optionsByInstance["one#0"], model.Coord{Row: 0, Col: 0}, 0),
+		testPlacement(t, optionsByInstance["one#1"], model.Coord{Row: 0, Col: 1}, 0),
+	}
+	solutions, err := initialSolutionsForConfig(cat, instances, optionsByInstance, Config{
+		AllowSkips:        false,
+		InitialPlacements: known,
+	})
+	if err != nil {
+		t.Fatalf("initialSolutionsForConfig returned error: %v", err)
+	}
+	if len(solutions) != 1 || len(solutions[0].Placements) != 2 {
+		t.Fatalf("initial solutions=%+v", solutions)
+	}
+	_, err = initialSolutionsForConfig(cat, instances, optionsByInstance, Config{
+		AllowSkips: false,
+		InitialPlacements: []model.Placement{
+			known[0],
+			{InstanceID: "one#1", ItemID: "one", Rotation: 0, Origin: model.Coord{Row: 0, Col: 0}},
+		},
+	})
+	if err == nil {
+		t.Fatal("initialSolutionsForConfig accepted overlapping placements")
+	}
+}
+
+func TestInitialPlacementsAcceptEquivalentSymmetricRotation(t *testing.T) {
+	cat := model.Catalog{Items: map[string]model.Item{
+		"square": {ID: "square", Shape: []model.Coord{{Row: 0, Col: 0}, {Row: 0, Col: 1}, {Row: 1, Col: 0}, {Row: 1, Col: 1}}},
+	}}
+	instances := ExpandInventory([]string{"square"})
+	optionsByInstance := testOptionsByInstance(t, cat, instances)
+	solutions, err := initialSolutionsForConfig(cat, instances, optionsByInstance, Config{
+		AllowSkips: false,
+		InitialPlacements: []model.Placement{{
+			InstanceID: "square#0",
+			ItemID:     "square",
+			Rotation:   90,
+			Origin:     model.Coord{Row: 4, Col: 7},
+		}},
+	})
+	if err != nil {
+		t.Fatalf("initialSolutionsForConfig returned error: %v", err)
+	}
+	if len(solutions) != 1 || solutions[0].Placements[0].Rotation != 90 {
+		t.Fatalf("symmetric rotation was not retained: %+v", solutions)
+	}
+}
+
+func TestSolveLayoutRejectsInitialPlacementIncumbent(t *testing.T) {
+	cat := coverageCeilingTestCatalog()
+	items := []string{"left_source", "weapon", "right_source"}
+	instances := ExpandInventory(items)
+	optionsByInstance := testOptionsByInstance(t, cat, instances)
+	known := []model.Placement{
+		testPlacement(t, optionsByInstance["left_source#0"], model.Coord{Row: 0, Col: 0}, 0),
+		testPlacement(t, optionsByInstance["weapon#1"], model.Coord{Row: 0, Col: 1}, 0),
+		testPlacement(t, optionsByInstance["right_source#2"], model.Coord{Row: 0, Col: 2}, 0),
+	}
+	_, err := SolveLayout(cat, items, geometry.FullGridMask(), Config{
+		TopN:              1,
+		AllowSkips:        false,
+		MaxNodes:          1,
+		PrioritySemantics: model.PrioritySemanticsOutgoingPerInstanceV3,
+		Priorities:        []string{"star_source:left_source", "star_source:right_source"},
+		InitialPlacements: known,
+	})
+	if err == nil {
+		t.Fatal("SolveLayout accepted a manual initial incumbent")
+	}
+}
+
+func TestCanonicalCopyOrderRejectsOnlyLabelPermutations(t *testing.T) {
+	canonicalEarlier := model.Placement{InstanceID: "spice#1", ItemID: "spice", OriginalIndex: 1, Origin: model.Coord{Row: 0, Col: 0}}
+	canonicalLater := model.Placement{InstanceID: "spice#2", ItemID: "spice", OriginalIndex: 2, Origin: model.Coord{Row: 0, Col: 1}}
+	if !placementRespectsCanonicalCopyOrder(canonicalLater, []model.Placement{canonicalEarlier}) {
+		t.Fatal("canonical copy order rejected increasing placements")
+	}
+	earlierAtHighKey := model.Placement{InstanceID: "spice#1", ItemID: "spice", OriginalIndex: 1, Origin: model.Coord{Row: 0, Col: 1}}
+	laterAtLowKey := model.Placement{InstanceID: "spice#2", ItemID: "spice", OriginalIndex: 2, Origin: model.Coord{Row: 0, Col: 0}}
+	if placementRespectsCanonicalCopyOrder(laterAtLowKey, []model.Placement{earlierAtHighKey}) {
+		t.Fatal("canonical copy order accepted a duplicate label permutation")
+	}
+	other := model.Placement{InstanceID: "banana#0", ItemID: "banana", OriginalIndex: 0, Origin: model.Coord{Row: 0, Col: 0}}
+	if !placementRespectsCanonicalCopyOrder(other, []model.Placement{canonicalLater}) {
+		t.Fatal("canonical copy order compared different item definitions")
+	}
+}
+
+func TestPerInstanceRepairNeighborhoodKeepsAllSourcesAndTargets(t *testing.T) {
+	cat := model.Catalog{Items: map[string]model.Item{
+		"source": {
+			ID:    "source",
+			Shape: []model.Coord{{Row: 0, Col: 0}},
+			Stars: []model.Star{
+				{TargetTypes: []string{"Food"}}, {TargetTypes: []string{"Food"}},
+				{TargetTypes: []string{"Food"}}, {TargetTypes: []string{"Food"}},
+			},
+		},
+		"target": {ID: "target", Types: []string{"Food"}, Shape: []model.Coord{{Row: 0, Col: 0}}},
+	}}
+	instances := ExpandInventory([]string{"source", "source", "source", "target", "target", "target", "target"})
+	placements := make([]model.Placement, 0, len(instances))
+	for _, instance := range instances {
+		placements = append(placements, model.Placement{InstanceID: instance.InstanceID, ItemID: instance.ItemID, OriginalIndex: instance.OriginalIndex})
+	}
+	targets := []string{"target#3", "target#4", "target#5", "target#6"}
+	stars := make([]model.StarActivation, 0, 10)
+	for sourceIndex, count := range []int{3, 3, 4} {
+		for targetIndex := 0; targetIndex < count; targetIndex++ {
+			stars = append(stars, model.StarActivation{SourceInstance: fmt.Sprintf("source#%d", sourceIndex), TargetInstance: targets[targetIndex]})
+		}
+	}
+	solution := model.Solution{
+		Placements: placements,
+		Evaluation: model.Evaluation{
+			Stars: stars,
+			Score: model.Score{PriorityCounts: []int{10}},
+		},
+	}
+	neighborhoods := buildRepairNeighborhoods(
+		cat,
+		instances,
+		nil,
+		[]model.Solution{solution},
+		Config{PrioritySemantics: model.PrioritySemanticsOutgoingPerInstanceV3, Priorities: []string{"star_source:source"}},
+		nil,
+		map[string]bool{},
+	)
+	for _, neighborhood := range neighborhoods {
+		if neighborhood.Operator == "loose-per-instance-gap" && len(neighborhood.InstanceIDs) == 7 {
+			return
+		}
+	}
+	t.Fatalf("expected a seven-item V3 repair neighborhood, got %+v", neighborhoods)
 }
 
 func TestSolveLayoutAcceptsGridCapacityAndRejectsLargerInventory(t *testing.T) {
@@ -601,10 +745,12 @@ func TestRefinementMovesItemOntoFreeStarCell(t *testing.T) {
 		t.Fatalf("refine stats=%+v want checked moves and improvements", stats)
 	}
 	wantScore := model.Score{
-		CraftCount:     1,
-		StarCount:      9,
-		ItemCount:      14,
-		PriorityCounts: []int{1, 2, 2, 1, 4},
+		CraftCount:                    1,
+		StarCount:                     9,
+		ItemCount:                     14,
+		StarTargetBreadth:             6,
+		StarSourceDefinitionDiversity: 9,
+		PriorityCounts:                []int{1, 2, 2, 1, 4},
 	}
 	if !reflect.DeepEqual(refined.Evaluation.Score, wantScore) {
 		t.Fatalf("refined score=%+v want %+v", refined.Evaluation.Score, wantScore)
@@ -886,6 +1032,145 @@ func TestCoverageOrderingPrioritizesSourcesAndTargets(t *testing.T) {
 	}
 	if targetPriority <= neutralPriority {
 		t.Fatalf("target priority=%d want greater than neutral=%d", targetPriority, neutralPriority)
+	}
+}
+
+func TestOutgoingV2DoesNotCreateImplicitCoverageContext(t *testing.T) {
+	cat := loadTestCatalog(t)
+	instances := ExpandInventory([]string{"rune_of_r_lyeh", "royal_seax", "cactus"})
+	optionsByInstance := map[string][]model.Placement{}
+	for _, instance := range instances {
+		options, err := PlacementOptions(cat, instance, geometry.FullGridMask())
+		if err != nil {
+			t.Fatalf("PlacementOptions returned error: %v", err)
+		}
+		optionsByInstance[instance.InstanceID] = options
+	}
+	config := Config{
+		PrioritySemantics: model.PrioritySemanticsOutgoingV2,
+		Priorities:        []string{"star_source:rune_of_r_lyeh", "star_source:venomous_pincer"},
+	}
+	if coverage := newCoverageContextForConfig(cat, instances, optionsByInstance, config); coverage != nil {
+		t.Fatalf("outgoing-v2 created implicit coverage context=%+v", coverage)
+	}
+	potential := newStarPotentialContext(cat, instances, optionsByInstance, config.Priorities, config.PrioritySemantics)
+	if potential == nil || potential.priorityForInstance(instances[0]) == 0 {
+		t.Fatalf("runtime activation potential=%+v want usable source potential", potential)
+	}
+}
+
+func TestOutgoingV2LimitedSolveUsesCanonicalStarSeed(t *testing.T) {
+	solutions, err := SolveLayout(coverageCeilingTestCatalog(), []string{"left_source", "weapon", "right_source"}, geometry.FullGridMask(), Config{
+		TopN:              1,
+		AllowSkips:        true,
+		MaxNodes:          1000,
+		Workers:           1,
+		PrioritySemantics: model.PrioritySemanticsOutgoingV2,
+		Priorities:        []string{"star_source:left_source", "star_source:right_source"},
+		RepairSearch:      false,
+	})
+	if err != nil {
+		t.Fatalf("SolveLayout returned error: %v", err)
+	}
+	if len(solutions) != 1 {
+		t.Fatalf("solutions=%d want 1", len(solutions))
+	}
+	if !reflect.DeepEqual(solutions[0].Evaluation.Score.PriorityCounts, []int{1, 1}) {
+		t.Fatalf("priority counts=%v want [1 1]", solutions[0].Evaluation.Score.PriorityCounts)
+	}
+	if solutions[0].Evaluation.Score.StarCount != 2 {
+		t.Fatalf("star count=%d want 2", solutions[0].Evaluation.Score.StarCount)
+	}
+	if solutions[0].Search.StarSeedNodes == 0 || solutions[0].Search.CoverageSeedNodes != 0 {
+		t.Fatalf("seed stats=%+v want generic star seed only", solutions[0].Search)
+	}
+}
+
+func TestOutgoingPerInstanceV3NoSkipLimitedSolveUsesStarSeed(t *testing.T) {
+	solutions, err := SolveLayout(coverageCeilingTestCatalog(), []string{"left_source", "weapon", "right_source"}, geometry.FullGridMask(), Config{
+		TopN:              1,
+		AllowSkips:        false,
+		MaxNodes:          1000,
+		Workers:           1,
+		PrioritySemantics: model.PrioritySemanticsOutgoingPerInstanceV3,
+		Priorities:        []string{"star_source:left_source", "star_source:right_source"},
+		RepairSearch:      false,
+	})
+	if err != nil {
+		t.Fatalf("SolveLayout returned error: %v", err)
+	}
+	if len(solutions) != 1 {
+		t.Fatalf("solutions=%d want 1", len(solutions))
+	}
+	if len(solutions[0].Placements) != 3 || !reflect.DeepEqual(solutions[0].Evaluation.Score.PriorityCounts, []int{1, 1}) {
+		t.Fatalf("solution=%+v want a complete [1 1] layout", solutions[0].Evaluation.Score)
+	}
+	if solutions[0].Search.StarSeedNodes == 0 || solutions[0].Search.CoverageSeedNodes != 0 {
+		t.Fatalf("seed stats=%+v want generic star seed only", solutions[0].Search)
+	}
+}
+
+func TestOutgoingPerInstanceV3PriorityCeilingStopsFastMode(t *testing.T) {
+	cat := coverageCeilingTestCatalog()
+	instances := ExpandInventory([]string{"left_source", "weapon", "right_source"})
+	bounds := newPriorityBoundContext(
+		cat,
+		instances,
+		[]string{"star_source:left_source", "star_source:right_source"},
+		model.PrioritySemanticsOutgoingPerInstanceV3,
+	)
+	if bounds == nil || !reflect.DeepEqual(bounds.ceiling, []int{1, 1}) {
+		t.Fatalf("priority ceiling=%+v want [1 1]", bounds)
+	}
+	solutions, err := SolveLayout(cat, []string{"left_source", "weapon", "right_source"}, geometry.FullGridMask(), Config{
+		TopN:                  1,
+		AllowSkips:            false,
+		MaxNodes:              1000,
+		Workers:               1,
+		PrioritySemantics:     model.PrioritySemanticsOutgoingPerInstanceV3,
+		Priorities:            []string{"star_source:left_source", "star_source:right_source"},
+		StopOnPriorityCeiling: true,
+	})
+	if err != nil {
+		t.Fatalf("SolveLayout returned error: %v", err)
+	}
+	if len(solutions) != 1 || !reflect.DeepEqual(solutions[0].Evaluation.Score.PriorityCounts, []int{1, 1}) {
+		t.Fatalf("solutions=%+v want a ceiling score", solutions)
+	}
+	if !solutions[0].Search.PriorityCeilingReached || !solutions[0].Search.StoppedAfterPriorityCeiling {
+		t.Fatalf("search stats=%+v want priority ceiling stop", solutions[0].Search)
+	}
+}
+
+func TestPerInstanceSeedBudgetAndBeamScaleWithLimitedSearch(t *testing.T) {
+	if got := perInstanceSeedNodeBudget(250_000); got != 62_500 {
+		t.Fatalf("small per-instance seed budget=%d want 62500", got)
+	}
+	if got := perInstanceSeedNodeBudget(100_000_000); got != 2_000_000 {
+		t.Fatalf("per-instance seed budget=%d want 2000000", got)
+	}
+	if got := starSeedBeamWidth(2_000_000); got != 1_000 {
+		t.Fatalf("star seed beam width=%d want 1000", got)
+	}
+	if got := starSeedBeamWidth(250_000); got != coverageSeedBeamWidth {
+		t.Fatalf("small seed beam width=%d want %d", got, coverageSeedBeamWidth)
+	}
+}
+
+func TestOutgoingPerInstanceTaskBudgetsFavorPromisingPrefixes(t *testing.T) {
+	high := model.Placement{ItemID: "spice", Origin: model.Coord{Row: 0, Col: 0}}
+	low := model.Placement{ItemID: "spice", Origin: model.Coord{Row: 0, Col: 1}}
+	tasks := []searchTask{{Placements: []model.Placement{high}}, {Placements: []model.Placement{low}}}
+	potential := &starPotentialContext{priorityPlacementPotential: map[string]int{
+		coveragePlacementKey(high): 9,
+		coveragePlacementKey(low):  0,
+	}}
+	assignBudgets(tasks, 1_000, potential, model.PrioritySemanticsOutgoingPerInstanceV3)
+	if tasks[0].NodeBudget+tasks[1].NodeBudget != 1_000 {
+		t.Fatalf("task budget=%d want 1000", tasks[0].NodeBudget+tasks[1].NodeBudget)
+	}
+	if tasks[0].NodeBudget <= tasks[1].NodeBudget || tasks[1].NodeBudget < 128 {
+		t.Fatalf("weighted budgets=%d/%d", tasks[0].NodeBudget, tasks[1].NodeBudget)
 	}
 }
 
@@ -1187,7 +1472,7 @@ func TestRepairSearchImprovesCoverageIncumbent(t *testing.T) {
 		Workers:      1,
 		Priorities:   priorities,
 		RepairSearch: true,
-	}, coverage, geometry.FullGridMask(), 50000, []model.Solution{initial}, nil)
+	}, coverage, nil, geometry.FullGridMask(), 50000, []model.Solution{initial}, nil)
 
 	if result.NodesExplored == 0 || result.Iterations == 0 || result.CandidateCount == 0 {
 		t.Fatalf("repair did not run: %+v", result)
@@ -1229,7 +1514,7 @@ func TestParallelRepairSearchDoesNotWorsenIncumbent(t *testing.T) {
 		Workers:      1,
 		Priorities:   priorities,
 		RepairSearch: true,
-	}, coverage, geometry.FullGridMask(), 50000, []model.Solution{initial}, nil)
+	}, coverage, nil, geometry.FullGridMask(), 50000, []model.Solution{initial}, nil)
 	parallel := repairSearch(cat, instances, optionsByInstance, Config{
 		TopN:         1,
 		AllowSkips:   false,
@@ -1237,7 +1522,7 @@ func TestParallelRepairSearchDoesNotWorsenIncumbent(t *testing.T) {
 		Workers:      4,
 		Priorities:   priorities,
 		RepairSearch: true,
-	}, coverage, geometry.FullGridMask(), 2_000_000, []model.Solution{initial}, nil)
+	}, coverage, nil, geometry.FullGridMask(), 2_000_000, []model.Solution{initial}, nil)
 
 	if len(parallel.Solutions) == 0 {
 		t.Fatal("parallel repair returned no solutions")

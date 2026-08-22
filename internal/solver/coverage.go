@@ -55,7 +55,13 @@ func newCoverageContextForConfig(
 			}
 			return newCoverageContextFromSources(catalog, instances, optionsByInstance, config.CoverageGroups[groupIndex].Sources, config.CoverageGroups[groupIndex].Targets, 0)
 		}
+		if config.PrioritySemantics.IsOutgoing() {
+			return nil
+		}
 		return newCoverageContextFromSources(catalog, instances, optionsByInstance, config.CoverageGroups[0].Sources, config.CoverageGroups[0].Targets, 0)
+	}
+	if config.PrioritySemantics.IsOutgoing() {
+		return nil
 	}
 	return newCoverageContext(catalog, instances, optionsByInstance, config.Priorities)
 }

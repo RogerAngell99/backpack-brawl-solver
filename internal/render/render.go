@@ -3,6 +3,7 @@ package render
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -12,6 +13,7 @@ import (
 
 type jsonSolution struct {
 	LayoutKey           string                  `json:"layout_key,omitempty"`
+	CanonicalLayoutHash string                  `json:"canonical_layout_hash,omitempty"`
 	Score               jsonScore               `json:"score"`
 	Search              jsonSearch              `json:"search"`
 	Coverage            *jsonCoverage           `json:"coverage,omitempty"`
@@ -23,51 +25,98 @@ type jsonSolution struct {
 }
 
 type jsonScore struct {
-	Crafts         int   `json:"crafts"`
-	Stars          int   `json:"stars"`
-	Items          int   `json:"items"`
-	PriorityCounts []int `json:"priority_counts,omitempty"`
+	Crafts                        int   `json:"crafts"`
+	Stars                         int   `json:"stars"`
+	Items                         int   `json:"items"`
+	StarTargetBreadth             int   `json:"star_target_breadth,omitempty"`
+	StarReciprocalPairs           int   `json:"star_reciprocal_pairs,omitempty"`
+	StarSourceDefinitionDiversity int   `json:"star_source_definition_diversity,omitempty"`
+	PriorityCounts                []int `json:"priority_counts,omitempty"`
 }
 
 type jsonSearch struct {
-	NodesExplored               int64                `json:"nodes_explored"`
-	NodesPerSecond              float64              `json:"nodes_per_second,omitempty"`
-	SetupMS                     int64                `json:"setup_ms,omitempty"`
-	SeedMS                      int64                `json:"seed_ms,omitempty"`
-	RepairMS                    int64                `json:"repair_ms,omitempty"`
-	SearchMS                    int64                `json:"search_ms,omitempty"`
-	RefineMS                    int64                `json:"refine_ms,omitempty"`
-	Backend                     string               `json:"backend,omitempty"`
-	ServerElapsedMS             int64                `json:"server_elapsed_ms,omitempty"`
-	RemoteWorkers               int                  `json:"remote_workers,omitempty"`
-	MaxNodesApplied             int64                `json:"max_nodes_applied,omitempty"`
-	MaxNodesCapped              bool                 `json:"max_nodes_capped,omitempty"`
-	Limited                     bool                 `json:"limited"`
-	Refined                     bool                 `json:"refined"`
-	CoverageSources             []string             `json:"coverage_sources,omitempty"`
-	CoverageTargetCount         int                  `json:"coverage_target_count,omitempty"`
-	CoverageCeiling             []jsonCoverageBucket `json:"coverage_ceiling,omitempty"`
-	CoverageCeilingReached      bool                 `json:"coverage_ceiling_reached,omitempty"`
-	CoverageBoundChecks         int64                `json:"coverage_bound_checks,omitempty"`
-	CoveragePrunedNodes         int64                `json:"coverage_pruned_nodes,omitempty"`
-	ExactBoundChecks            int64                `json:"exact_bound_checks,omitempty"`
-	ExactBoundPrunedNodes       int64                `json:"exact_bound_pruned_nodes,omitempty"`
-	CoverageSeedNodes           int64                `json:"coverage_seed_nodes,omitempty"`
-	CoverageSeedCandidates      int                  `json:"coverage_seed_candidates,omitempty"`
-	CoverageSeedBest            string               `json:"coverage_seed_best,omitempty"`
-	ParallelTasks               int                  `json:"parallel_tasks,omitempty"`
-	ParallelWorkersUsed         int                  `json:"parallel_workers_used,omitempty"`
-	RefineMovesChecked          int64                `json:"refine_moves_checked,omitempty"`
-	RefineImprovements          int                  `json:"refine_improvements,omitempty"`
-	RefineBestDelta             string               `json:"refine_best_delta,omitempty"`
-	RepairNodes                 int64                `json:"repair_nodes,omitempty"`
-	RepairIterations            int                  `json:"repair_iterations,omitempty"`
-	RepairImprovements          int                  `json:"repair_improvements,omitempty"`
-	RepairCandidates            int                  `json:"repair_candidates,omitempty"`
-	RepairBest                  string               `json:"repair_best,omitempty"`
-	RepairParallelTasks         int                  `json:"repair_parallel_tasks,omitempty"`
-	RepairParallelWorkersUsed   int                  `json:"repair_parallel_workers_used,omitempty"`
-	StoppedAfterCoverageCeiling bool                 `json:"stopped_after_coverage_ceiling,omitempty"`
+	NodesExplored                int64                               `json:"nodes_explored"`
+	NodesPerSecond               float64                             `json:"nodes_per_second,omitempty"`
+	SetupMS                      int64                               `json:"setup_ms,omitempty"`
+	SeedMS                       int64                               `json:"seed_ms,omitempty"`
+	RepairMS                     int64                               `json:"repair_ms,omitempty"`
+	SearchMS                     int64                               `json:"search_ms,omitempty"`
+	RefineMS                     int64                               `json:"refine_ms,omitempty"`
+	Backend                      string                              `json:"backend,omitempty"`
+	ServerElapsedMS              int64                               `json:"server_elapsed_ms,omitempty"`
+	RemoteWorkers                int                                 `json:"remote_workers,omitempty"`
+	MaxNodesApplied              int64                               `json:"max_nodes_applied,omitempty"`
+	MaxNodesCapped               bool                                `json:"max_nodes_capped,omitempty"`
+	Limited                      bool                                `json:"limited"`
+	Refined                      bool                                `json:"refined"`
+	CoverageSources              []string                            `json:"coverage_sources,omitempty"`
+	CoverageTargetCount          int                                 `json:"coverage_target_count,omitempty"`
+	CoverageCeiling              []jsonCoverageBucket                `json:"coverage_ceiling,omitempty"`
+	CoverageCeilingReached       bool                                `json:"coverage_ceiling_reached,omitempty"`
+	PriorityCeiling              []int                               `json:"priority_ceiling,omitempty"`
+	PriorityCeilingReached       bool                                `json:"priority_ceiling_reached,omitempty"`
+	CoverageBoundChecks          int64                               `json:"coverage_bound_checks,omitempty"`
+	CoveragePrunedNodes          int64                               `json:"coverage_pruned_nodes,omitempty"`
+	ExactBoundChecks             int64                               `json:"exact_bound_checks,omitempty"`
+	ExactBoundPrunedNodes        int64                               `json:"exact_bound_pruned_nodes,omitempty"`
+	CoverageSeedNodes            int64                               `json:"coverage_seed_nodes,omitempty"`
+	CoverageSeedCandidates       int                                 `json:"coverage_seed_candidates,omitempty"`
+	CoverageSeedBest             string                              `json:"coverage_seed_best,omitempty"`
+	StarSeedNodes                int64                               `json:"star_seed_nodes,omitempty"`
+	StarSeedCandidates           int                                 `json:"star_seed_candidates,omitempty"`
+	InitialBestPriorityCounts    []int                               `json:"initial_best_priority_counts,omitempty"`
+	SeedBestPriorityCounts       []int                               `json:"seed_best_priority_counts,omitempty"`
+	SearchBestPriorityCounts     []int                               `json:"search_best_priority_counts,omitempty"`
+	PostRepairBestPriorityCounts []int                               `json:"post_repair_best_priority_counts,omitempty"`
+	RefineBestPriorityCounts     []int                               `json:"refine_best_priority_counts,omitempty"`
+	ParallelTasks                int                                 `json:"parallel_tasks,omitempty"`
+	ParallelWorkersUsed          int                                 `json:"parallel_workers_used,omitempty"`
+	RefineMovesChecked           int64                               `json:"refine_moves_checked,omitempty"`
+	RefineImprovements           int                                 `json:"refine_improvements,omitempty"`
+	RefineBestDelta              string                              `json:"refine_best_delta,omitempty"`
+	CompletionMovesChecked       int64                               `json:"completion_moves_checked,omitempty"`
+	CompletionImprovements       int                                 `json:"completion_improvements,omitempty"`
+	RepairNodes                  int64                               `json:"repair_nodes,omitempty"`
+	RepairIterations             int                                 `json:"repair_iterations,omitempty"`
+	RepairImprovements           int                                 `json:"repair_improvements,omitempty"`
+	RepairCandidates             int                                 `json:"repair_candidates,omitempty"`
+	RepairBest                   string                              `json:"repair_best,omitempty"`
+	RepairParallelTasks          int                                 `json:"repair_parallel_tasks,omitempty"`
+	RepairParallelWorkersUsed    int                                 `json:"repair_parallel_workers_used,omitempty"`
+	StoppedAfterCoverageCeiling  bool                                `json:"stopped_after_coverage_ceiling,omitempty"`
+	StoppedAfterPriorityCeiling  bool                                `json:"stopped_after_priority_ceiling,omitempty"`
+	DiagnosticsEnabled           bool                                `json:"diagnostics_enabled,omitempty"`
+	GlobalBudgetConsumed         int64                               `json:"global_budget_consumed,omitempty"`
+	UnusedGlobalNodes            int64                               `json:"unused_global_nodes,omitempty"`
+	NormalBudgetConfigured       int64                               `json:"normal_budget_configured,omitempty"`
+	NormalBudgetConsumed         int64                               `json:"normal_budget_consumed,omitempty"`
+	DiagnosticBudgetConfigured   int64                               `json:"diagnostic_budget_configured,omitempty"`
+	DiagnosticBudgetConsumed     int64                               `json:"diagnostic_budget_consumed,omitempty"`
+	ExecutionBudgetConfigured    int64                               `json:"execution_budget_configured,omitempty"`
+	ExecutionBudgetConsumed      int64                               `json:"execution_budget_consumed,omitempty"`
+	UnchargedWork                int64                               `json:"uncharged_work,omitempty"`
+	PhaseWork                    []model.SearchPhaseWork             `json:"phase_work,omitempty"`
+	IncumbentTrace               []model.IncumbentEvent              `json:"incumbent_trace,omitempty"`
+	PriorityCeilingStats         *model.PriorityCeilingStats         `json:"priority_ceiling_stats,omitempty"`
+	Plateau                      model.PlateauStats                  `json:"plateau"`
+	StarUpperBounds              model.StarUpperBounds               `json:"star_upper_bounds"`
+	FirstFullyPackedPhase        string                              `json:"first_fully_packed_phase,omitempty"`
+	FirstFullyPackedNodes        int64                               `json:"first_fully_packed_nodes,omitempty"`
+	FirstFullyPackedMS           int64                               `json:"first_fully_packed_ms,omitempty"`
+	PackingSeedDiagnostics       model.PackingSeedDiagnostics        `json:"packing_seed_diagnostics,omitempty"`
+	ConstellationSeedNodes       int64                               `json:"constellation_seed_nodes,omitempty"`
+	ConstellationSeedCandidates  int                                 `json:"constellation_seed_candidates,omitempty"`
+	ConstellationSeedDiagnostics *model.ConstellationSeedDiagnostics `json:"constellation_seed_diagnostics,omitempty"`
+	ConfigFingerprint            string                              `json:"config_fingerprint,omitempty"`
+	ExecutionFingerprint         string                              `json:"execution_fingerprint,omitempty"`
+	Stages                       []model.SearchStageStats            `json:"stages,omitempty"`
+	TaskAllocation               *model.TaskAllocationStats          `json:"task_allocation,omitempty"`
+	PlateauArchive               *model.PlateauArchiveStats          `json:"plateau_archive,omitempty"`
+	PlateauLNSNodes              int64                               `json:"plateau_lns_nodes,omitempty"`
+	PlateauRefineNodes           int64                               `json:"plateau_refine_nodes,omitempty"`
+	PlateauRefineWalkLength      int                                 `json:"plateau_refine_walk_length,omitempty"`
+	PlateauRefineMaxValley       int                                 `json:"plateau_refine_max_valley,omitempty"`
+	PlateauRefineImproved        bool                                `json:"plateau_refine_improved,omitempty"`
 }
 
 type jsonPlacement struct {
@@ -114,8 +163,15 @@ type jsonCoverageTarget struct {
 }
 
 type jsonLooseStarPriority struct {
-	SourceItemID string `json:"source_item_id"`
-	TargetCount  int    `json:"target_count"`
+	SourceItemID         string                        `json:"source_item_id"`
+	TargetCount          int                           `json:"target_count"`
+	LinkCount            int                           `json:"link_count,omitempty"`
+	InstanceTargetCounts []jsonStarInstanceTargetCount `json:"instance_target_counts,omitempty"`
+}
+
+type jsonStarInstanceTargetCount struct {
+	SourceInstance string `json:"source_instance"`
+	TargetCount    int    `json:"target_count"`
 }
 
 func SolutionText(solution model.Solution, gridMask uint64) string {
@@ -129,7 +185,7 @@ func SolutionText(solution model.Solution, gridMask uint64) string {
 
 	var builder strings.Builder
 	score := solution.Evaluation.Score
-	fmt.Fprintf(&builder, "Score: crafts=%d, stars=%d, items=%d\n", score.CraftCount, score.StarCount, score.ItemCount)
+	fmt.Fprintf(&builder, "Score: crafts=%d, stars=%d, items=%d, targets=%d, reciprocal=%d, source-diversity=%d\n", score.CraftCount, score.StarCount, score.ItemCount, score.StarTargetBreadth, score.StarReciprocalPairs, score.StarSourceDefinitionDiversity)
 	if len(score.PriorityCounts) > 0 {
 		fmt.Fprintf(&builder, "Priority score: %s\n", formatInts(score.PriorityCounts))
 	}
@@ -151,10 +207,14 @@ func SolutionText(solution model.Solution, gridMask uint64) string {
 		}
 	}
 	if len(solution.Evaluation.LooseStarPriorities) > 0 {
-		builder.WriteString("Loose stars: ")
+		builder.WriteString("Outgoing star priorities: ")
 		parts := make([]string, 0, len(solution.Evaluation.LooseStarPriorities))
 		for _, priority := range solution.Evaluation.LooseStarPriorities {
-			parts = append(parts, fmt.Sprintf("%s=%d", priority.SourceItemID, priority.TargetCount))
+			if priority.LinkCount > 0 {
+				parts = append(parts, fmt.Sprintf("%s=%d links", priority.SourceItemID, priority.LinkCount))
+			} else {
+				parts = append(parts, fmt.Sprintf("%s=%d targets", priority.SourceItemID, priority.TargetCount))
+			}
 		}
 		builder.WriteString(strings.Join(parts, ", "))
 		builder.WriteByte('\n')
@@ -182,6 +242,9 @@ func SolutionText(solution model.Solution, gridMask uint64) string {
 			formatRefineDelta(solution.Search.RefineBestDelta),
 		)
 	}
+	if solution.Search.CompletionMovesChecked > 0 {
+		fmt.Fprintf(&builder, "Completion: moves=%d, improvements=%d\n", solution.Search.CompletionMovesChecked, solution.Search.CompletionImprovements)
+	}
 	if len(solution.Search.CoverageCeiling) > 0 {
 		fmt.Fprintf(&builder, "Coverage ceiling: %s\n", coverageBucketSummary(solution.Search.CoverageCeiling, len(solution.Search.CoverageSources)))
 		fmt.Fprintf(&builder, "Coverage targets considered: %d\n", solution.Search.CoverageTargetCount)
@@ -206,6 +269,9 @@ func SolutionText(solution model.Solution, gridMask uint64) string {
 				formatSeedBest(solution.Search.CoverageSeedBest),
 			)
 		}
+	}
+	if solution.Search.StarSeedNodes > 0 {
+		fmt.Fprintf(&builder, "Star seed: nodes=%d, candidates=%d\n", solution.Search.StarSeedNodes, solution.Search.StarSeedCandidates)
 	}
 	if solution.Search.RepairNodes > 0 {
 		fmt.Fprintf(
@@ -413,52 +479,100 @@ func toJSONSolution(solution model.Solution) jsonSolution {
 	}
 
 	return jsonSolution{
-		LayoutKey: solution.LayoutKey,
+		LayoutKey:           solution.LayoutKey,
+		CanonicalLayoutHash: solution.CanonicalLayoutHash,
 		Score: jsonScore{
-			Crafts:         solution.Evaluation.Score.CraftCount,
-			Stars:          solution.Evaluation.Score.StarCount,
-			Items:          solution.Evaluation.Score.ItemCount,
-			PriorityCounts: cloneInts(solution.Evaluation.Score.PriorityCounts),
+			Crafts:                        solution.Evaluation.Score.CraftCount,
+			Stars:                         solution.Evaluation.Score.StarCount,
+			Items:                         solution.Evaluation.Score.ItemCount,
+			StarTargetBreadth:             solution.Evaluation.Score.StarTargetBreadth,
+			StarReciprocalPairs:           solution.Evaluation.Score.StarReciprocalPairs,
+			StarSourceDefinitionDiversity: solution.Evaluation.Score.StarSourceDefinitionDiversity,
+			PriorityCounts:                cloneInts(solution.Evaluation.Score.PriorityCounts),
 		},
 		Search: jsonSearch{
-			NodesExplored:               solution.Search.NodesExplored,
-			NodesPerSecond:              solution.Search.NodesPerSecond,
-			SetupMS:                     solution.Search.SetupMS,
-			SeedMS:                      solution.Search.SeedMS,
-			RepairMS:                    solution.Search.RepairMS,
-			SearchMS:                    solution.Search.SearchMS,
-			RefineMS:                    solution.Search.RefineMS,
-			Backend:                     solution.Search.Backend,
-			ServerElapsedMS:             solution.Search.ServerElapsedMS,
-			RemoteWorkers:               solution.Search.RemoteWorkers,
-			MaxNodesApplied:             solution.Search.MaxNodesApplied,
-			MaxNodesCapped:              solution.Search.MaxNodesCapped,
-			Limited:                     solution.Search.Limited,
-			Refined:                     solution.Search.Refined,
-			CoverageSources:             cloneStrings(solution.Search.CoverageSources),
-			CoverageTargetCount:         solution.Search.CoverageTargetCount,
-			CoverageCeiling:             toJSONCoverageBuckets(solution.Search.CoverageCeiling),
-			CoverageCeilingReached:      solution.Search.CoverageCeilingReached,
-			CoverageBoundChecks:         solution.Search.CoverageBoundChecks,
-			CoveragePrunedNodes:         solution.Search.CoveragePrunedNodes,
-			ExactBoundChecks:            solution.Search.ExactBoundChecks,
-			ExactBoundPrunedNodes:       solution.Search.ExactBoundPrunedNodes,
-			CoverageSeedNodes:           solution.Search.CoverageSeedNodes,
-			CoverageSeedCandidates:      solution.Search.CoverageSeedCandidates,
-			CoverageSeedBest:            solution.Search.CoverageSeedBest,
-			ParallelTasks:               solution.Search.ParallelTasks,
-			ParallelWorkersUsed:         solution.Search.ParallelWorkersUsed,
-			RefineMovesChecked:          solution.Search.RefineMovesChecked,
-			RefineImprovements:          solution.Search.RefineImprovements,
-			RefineBestDelta:             solution.Search.RefineBestDelta,
-			RepairNodes:                 solution.Search.RepairNodes,
-			RepairIterations:            solution.Search.RepairIterations,
-			RepairImprovements:          solution.Search.RepairImprovements,
-			RepairCandidates:            solution.Search.RepairCandidates,
-			RepairBest:                  solution.Search.RepairBest,
-			RepairParallelTasks:         solution.Search.RepairParallelTasks,
-			RepairParallelWorkersUsed:   solution.Search.RepairParallelWorkersUsed,
-			StoppedAfterCoverageCeiling: solution.Search.StoppedAfterCoverageCeiling,
+			NodesExplored:                solution.Search.NodesExplored,
+			NodesPerSecond:               solution.Search.NodesPerSecond,
+			SetupMS:                      solution.Search.SetupMS,
+			SeedMS:                       solution.Search.SeedMS,
+			RepairMS:                     solution.Search.RepairMS,
+			SearchMS:                     solution.Search.SearchMS,
+			RefineMS:                     solution.Search.RefineMS,
+			Backend:                      solution.Search.Backend,
+			ServerElapsedMS:              solution.Search.ServerElapsedMS,
+			RemoteWorkers:                solution.Search.RemoteWorkers,
+			MaxNodesApplied:              solution.Search.MaxNodesApplied,
+			MaxNodesCapped:               solution.Search.MaxNodesCapped,
+			Limited:                      solution.Search.Limited,
+			Refined:                      solution.Search.Refined,
+			CoverageSources:              cloneStrings(solution.Search.CoverageSources),
+			CoverageTargetCount:          solution.Search.CoverageTargetCount,
+			CoverageCeiling:              toJSONCoverageBuckets(solution.Search.CoverageCeiling),
+			CoverageCeilingReached:       solution.Search.CoverageCeilingReached,
+			PriorityCeiling:              cloneInts(solution.Search.PriorityCeiling),
+			PriorityCeilingReached:       solution.Search.PriorityCeilingReached,
+			CoverageBoundChecks:          solution.Search.CoverageBoundChecks,
+			CoveragePrunedNodes:          solution.Search.CoveragePrunedNodes,
+			ExactBoundChecks:             solution.Search.ExactBoundChecks,
+			ExactBoundPrunedNodes:        solution.Search.ExactBoundPrunedNodes,
+			CoverageSeedNodes:            solution.Search.CoverageSeedNodes,
+			CoverageSeedCandidates:       solution.Search.CoverageSeedCandidates,
+			CoverageSeedBest:             solution.Search.CoverageSeedBest,
+			StarSeedNodes:                solution.Search.StarSeedNodes,
+			StarSeedCandidates:           solution.Search.StarSeedCandidates,
+			InitialBestPriorityCounts:    cloneInts(solution.Search.InitialBestPriorityCounts),
+			SeedBestPriorityCounts:       cloneInts(solution.Search.SeedBestPriorityCounts),
+			SearchBestPriorityCounts:     cloneInts(solution.Search.SearchBestPriorityCounts),
+			PostRepairBestPriorityCounts: cloneInts(solution.Search.PostRepairBestPriorityCounts),
+			RefineBestPriorityCounts:     cloneInts(solution.Search.RefineBestPriorityCounts),
+			ParallelTasks:                solution.Search.ParallelTasks,
+			ParallelWorkersUsed:          solution.Search.ParallelWorkersUsed,
+			RefineMovesChecked:           solution.Search.RefineMovesChecked,
+			RefineImprovements:           solution.Search.RefineImprovements,
+			RefineBestDelta:              solution.Search.RefineBestDelta,
+			CompletionMovesChecked:       solution.Search.CompletionMovesChecked,
+			CompletionImprovements:       solution.Search.CompletionImprovements,
+			RepairNodes:                  solution.Search.RepairNodes,
+			RepairIterations:             solution.Search.RepairIterations,
+			RepairImprovements:           solution.Search.RepairImprovements,
+			RepairCandidates:             solution.Search.RepairCandidates,
+			RepairBest:                   solution.Search.RepairBest,
+			RepairParallelTasks:          solution.Search.RepairParallelTasks,
+			RepairParallelWorkersUsed:    solution.Search.RepairParallelWorkersUsed,
+			StoppedAfterCoverageCeiling:  solution.Search.StoppedAfterCoverageCeiling,
+			StoppedAfterPriorityCeiling:  solution.Search.StoppedAfterPriorityCeiling,
+			DiagnosticsEnabled:           solution.Search.DiagnosticsEnabled,
+			GlobalBudgetConsumed:         solution.Search.GlobalBudgetConsumed,
+			UnusedGlobalNodes:            solution.Search.UnusedGlobalNodes,
+			NormalBudgetConfigured:       solution.Search.NormalBudgetConfigured,
+			NormalBudgetConsumed:         solution.Search.NormalBudgetConsumed,
+			DiagnosticBudgetConfigured:   solution.Search.DiagnosticBudgetConfigured,
+			DiagnosticBudgetConsumed:     solution.Search.DiagnosticBudgetConsumed,
+			ExecutionBudgetConfigured:    solution.Search.ExecutionBudgetConfigured,
+			ExecutionBudgetConsumed:      solution.Search.ExecutionBudgetConsumed,
+			UnchargedWork:                solution.Search.UnchargedWork,
+			PhaseWork:                    diagnosticPhaseWork(solution.Search),
+			IncumbentTrace:               append([]model.IncumbentEvent(nil), solution.Search.IncumbentTrace...),
+			PriorityCeilingStats:         solution.Search.PriorityCeilingStats,
+			Plateau:                      solution.Search.Plateau,
+			StarUpperBounds:              solution.Search.StarUpperBounds,
+			FirstFullyPackedPhase:        solution.Search.FirstFullyPackedPhase,
+			FirstFullyPackedNodes:        solution.Search.FirstFullyPackedNodes,
+			FirstFullyPackedMS:           solution.Search.FirstFullyPackedMS,
+			PackingSeedDiagnostics:       solution.Search.PackingSeedDiagnostics,
+			ConstellationSeedNodes:       solution.Search.ConstellationSeedNodes,
+			ConstellationSeedCandidates:  solution.Search.ConstellationSeedCandidates,
+			ConstellationSeedDiagnostics: constellationSeedDiagnostics(solution.Search),
+			ConfigFingerprint:            diagnosticConfigFingerprint(solution.Search),
+			ExecutionFingerprint:         solution.Search.ExecutionFingerprint,
+			Stages:                       diagnosticStages(solution.Search),
+			TaskAllocation:               diagnosticTaskAllocation(solution.Search),
+			PlateauArchive:               diagnosticPlateauArchive(solution.Search),
+			PlateauLNSNodes:              solution.Search.PlateauLNSNodes,
+			PlateauRefineNodes:           solution.Search.PlateauRefineNodes,
+			PlateauRefineWalkLength:      solution.Search.PlateauRefineWalkLength,
+			PlateauRefineMaxValley:       solution.Search.PlateauRefineMaxValley,
+			PlateauRefineImproved:        solution.Search.PlateauRefineImproved,
 		},
 		Coverage:            toJSONCoverage(solution.Evaluation.StarCoverage),
 		CoverageGroups:      toJSONCoverageGroups(solution.Evaluation.StarCoverageGroups),
@@ -469,15 +583,69 @@ func toJSONSolution(solution model.Solution) jsonSolution {
 	}
 }
 
+func constellationSeedDiagnostics(search model.SearchStats) *model.ConstellationSeedDiagnostics {
+	diagnostics := search.ConstellationSeedDiagnostics
+	if search.ConstellationSeedNodes == 0 && search.ConstellationSeedCandidates == 0 && reflect.ValueOf(diagnostics).IsZero() {
+		return nil
+	}
+	return &diagnostics
+}
+
+func diagnosticConfigFingerprint(search model.SearchStats) string {
+	if !search.DiagnosticsEnabled {
+		return ""
+	}
+	return search.ConfigFingerprint
+}
+
+func diagnosticPhaseWork(search model.SearchStats) []model.SearchPhaseWork {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	return append([]model.SearchPhaseWork(nil), search.PhaseWork...)
+}
+
+func diagnosticStages(search model.SearchStats) []model.SearchStageStats {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	return append([]model.SearchStageStats(nil), search.Stages...)
+}
+
+func diagnosticTaskAllocation(search model.SearchStats) *model.TaskAllocationStats {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	taskAllocation := search.TaskAllocation
+	return &taskAllocation
+}
+
+func diagnosticPlateauArchive(search model.SearchStats) *model.PlateauArchiveStats {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	archive := search.PlateauArchive
+	return &archive
+}
+
 func toJSONLooseStarPriorities(priorities []model.LooseStarPriority) []jsonLooseStarPriority {
 	if len(priorities) == 0 {
 		return nil
 	}
 	out := make([]jsonLooseStarPriority, 0, len(priorities))
 	for _, priority := range priorities {
+		instanceCounts := make([]jsonStarInstanceTargetCount, 0, len(priority.InstanceTargetCounts))
+		for _, instance := range priority.InstanceTargetCounts {
+			instanceCounts = append(instanceCounts, jsonStarInstanceTargetCount{
+				SourceInstance: instance.SourceInstance,
+				TargetCount:    instance.TargetCount,
+			})
+		}
 		out = append(out, jsonLooseStarPriority{
-			SourceItemID: priority.SourceItemID,
-			TargetCount:  priority.TargetCount,
+			SourceItemID:         priority.SourceItemID,
+			TargetCount:          priority.TargetCount,
+			LinkCount:            priority.LinkCount,
+			InstanceTargetCounts: instanceCounts,
 		})
 	}
 	return out

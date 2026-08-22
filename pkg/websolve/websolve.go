@@ -14,6 +14,8 @@ type Request = internalwebsolve.Request
 type ProgressReporter = solver.ProgressReporter
 type Catalog = model.Catalog
 type Scenario = scenario.Scenario
+type LayoutEvaluationRequest = internalwebsolve.LayoutEvaluationRequest
+type LayoutPlacementRequest = internalwebsolve.LayoutPlacementRequest
 
 func SolveScenarioJSON(input []byte) ([]byte, error) {
 	return internalwebsolve.SolveScenarioJSON(input)
@@ -29,4 +31,8 @@ func SolveScenarioJSONWithOptions(input []byte, options Options) (Result, error)
 
 func SolvePreparedCatalog(catalog Catalog, scenario Scenario, options Options) (Result, error) {
 	return internalwebsolve.SolvePreparedCatalog(catalog, scenario, options)
+}
+
+func EvaluatePreparedLayoutJSON(catalog Catalog, input []byte) ([]byte, error) {
+	return internalwebsolve.EvaluatePreparedLayoutJSON(catalog, input)
 }
