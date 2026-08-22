@@ -9,10 +9,12 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"sort"
 	"strings"
 
 	"backpack-brawl-solver/internal/catalog"
+	"backpack-brawl-solver/internal/model"
 	"backpack-brawl-solver/internal/scenario"
 )
 
@@ -41,16 +43,18 @@ type SearchSuiteLockedStaticCase struct {
 }
 
 type SearchSuiteLockedGeneratedCase struct {
-	ID             string `json:"id"`
-	Family         string `json:"family"`
-	Role           string `json:"role"`
-	Seed           int64  `json:"seed"`
-	ScenarioSHA256 string `json:"scenario_sha256"`
+	ID                   string                                 `json:"id"`
+	Family               string                                 `json:"family"`
+	Role                 string                                 `json:"role"`
+	Seed                 int64                                  `json:"seed"`
+	ScenarioSHA256       string                                 `json:"scenario_sha256"`
+	StructuralDescriptor *SearchSuiteLockedStructuralDescriptor `json:"structural_descriptor,omitempty"`
 }
 
 type SearchSuiteLockedPrivateCase struct {
-	ID            string `json:"id"`
-	PrivateSeedID string `json:"private_seed_id"`
+	ID                   string                                 `json:"id"`
+	PrivateSeedID        string                                 `json:"private_seed_id"`
+	StructuralDescriptor *SearchSuiteLockedStructuralDescriptor `json:"structural_descriptor,omitempty"`
 }
 
 func LoadSearchSuiteLock(path string) (SearchSuiteLock, error) {
@@ -102,7 +106,48 @@ func (lock SearchSuiteLock) Validate() error {
 	if err := validatePrivateLockCases(lock.PrivateCases); err != nil {
 		return err
 	}
+	if err := validateStructuralLockDescriptors(lock); err != nil {
+		return err
+	}
 	return validateDistinctLockCaseIDs(lock)
+}
+
+func validateStructuralLockDescriptors(lock SearchSuiteLock) error {
+	for _, entry := range lock.GeneratedCases {
+		if entry.StructuralDescriptor == nil {
+			continue
+		}
+		if err := entry.StructuralDescriptor.Requested.Validate(); err != nil {
+			return fmt.Errorf("locked generated case %q structural_descriptor: %w", entry.ID, err)
+		}
+		if entry.StructuralDescriptor.Realized == nil {
+			return fmt.Errorf("locked generated case %q structural_descriptor requires realized metrics", entry.ID)
+		}
+	}
+	for _, entry := range lock.PrivateCases {
+		if entry.StructuralDescriptor == nil {
+			continue
+		}
+		if err := entry.StructuralDescriptor.Requested.Validate(); err != nil {
+			return fmt.Errorf("locked private case %q structural_descriptor: %w", entry.ID, err)
+		}
+		if entry.StructuralDescriptor.Realized != nil {
+			return fmt.Errorf("locked private case %q must not disclose realized structural metrics", entry.ID)
+		}
+	}
+	if lock.GeneratorVersion == SearchSuiteGeneratorV2 {
+		for _, entry := range lock.GeneratedCases {
+			if entry.StructuralDescriptor == nil {
+				return fmt.Errorf("locked v2 generated case %q requires structural_descriptor", entry.ID)
+			}
+		}
+		for _, entry := range lock.PrivateCases {
+			if entry.StructuralDescriptor == nil {
+				return fmt.Errorf("locked v2 private case %q requires structural_descriptor", entry.ID)
+			}
+		}
+	}
+	return nil
 }
 
 func validateDistinctLockCaseIDs(lock SearchSuiteLock) error {
@@ -207,6 +252,9 @@ func ObserveSearchSuite(manifestPath string, catalogPath string, generatorVersio
 	if err != nil {
 		return SearchSuiteLock{}, err
 	}
+	if err := ValidateSearchSuiteManifestForGenerator(generatorVersion, manifest); err != nil {
+		return SearchSuiteLock{}, err
+	}
 	manifestSHA256, err := canonicalJSONSHA256(manifestContent)
 	if err != nil {
 		return SearchSuiteLock{}, fmt.Errorf("canonicalize manifest: %w", err)
@@ -253,9 +301,14 @@ func ObserveSearchSuite(manifestPath string, catalogPath string, generatorVersio
 	}
 	for _, entry := range manifest.Generated {
 		if entry.Role == SuiteRolePrivateHoldout {
+			var descriptor *SearchSuiteLockedStructuralDescriptor
+			if entry.StructuralDescriptor != nil {
+				descriptor = &SearchSuiteLockedStructuralDescriptor{Requested: *entry.StructuralDescriptor}
+			}
 			lock.PrivateCases = append(lock.PrivateCases, SearchSuiteLockedPrivateCase{
-				ID:            entry.ID,
-				PrivateSeedID: entry.PrivateSeedID,
+				ID:                   entry.ID,
+				PrivateSeedID:        entry.PrivateSeedID,
+				StructuralDescriptor: descriptor,
 			})
 			continue
 		}
@@ -271,12 +324,17 @@ func ObserveSearchSuite(manifestPath string, catalogPath string, generatorVersio
 		if err != nil {
 			return SearchSuiteLock{}, fmt.Errorf("generated case %q: canonicalize scenario: %w", entry.ID, err)
 		}
+		descriptor, err := lockedStructuralDescriptorForPublicCase(generatorVersion, loadedCatalog, generated, entry)
+		if err != nil {
+			return SearchSuiteLock{}, fmt.Errorf("generated case %q: analyze structural descriptor: %w", entry.ID, err)
+		}
 		lock.GeneratedCases = append(lock.GeneratedCases, SearchSuiteLockedGeneratedCase{
-			ID:             entry.ID,
-			Family:         entry.Family,
-			Role:           entry.Role,
-			Seed:           *entry.Seed,
-			ScenarioSHA256: scenarioSHA256,
+			ID:                   entry.ID,
+			Family:               entry.Family,
+			Role:                 entry.Role,
+			Seed:                 *entry.Seed,
+			ScenarioSHA256:       scenarioSHA256,
+			StructuralDescriptor: descriptor,
 		})
 	}
 	sort.Slice(lock.StaticCases, func(left, right int) bool { return lock.StaticCases[left].ID < lock.StaticCases[right].ID })
@@ -402,6 +460,9 @@ func verifyGeneratedCaseStructure(expected []SearchSuiteLockedGeneratedCase, obs
 		if entry.Seed != actual.Seed {
 			return fmt.Errorf("generated case %q seed mismatch:\n  expected: %d\n  actual:   %d", entry.ID, entry.Seed, actual.Seed)
 		}
+		if !reflect.DeepEqual(entry.StructuralDescriptor, actual.StructuralDescriptor) {
+			return fmt.Errorf("generated case %q structural_descriptor mismatch", entry.ID)
+		}
 	}
 	return nil
 }
@@ -419,8 +480,28 @@ func verifyPrivateCaseStructure(expected []SearchSuiteLockedPrivateCase, observe
 		if entry.PrivateSeedID != actual.PrivateSeedID {
 			return fmt.Errorf("private case %q private seed ID mismatch:\n  expected: %s\n  actual:   %s", entry.ID, entry.PrivateSeedID, actual.PrivateSeedID)
 		}
+		if !reflect.DeepEqual(entry.StructuralDescriptor, actual.StructuralDescriptor) {
+			return fmt.Errorf("private case %q structural_descriptor mismatch", entry.ID)
+		}
 	}
 	return nil
+}
+
+func lockedStructuralDescriptorForPublicCase(generatorVersion string, catalog model.Catalog, generated scenario.Scenario, entry GeneratedSearchSuiteCase) (*SearchSuiteLockedStructuralDescriptor, error) {
+	if entry.StructuralDescriptor == nil {
+		return nil, nil
+	}
+	if generatorVersion != SearchSuiteGeneratorV2 {
+		return nil, fmt.Errorf("generator %q does not support structural descriptors", generatorVersion)
+	}
+	realized, err := ValidateGeneratedSearchSuiteScenarioAgainstRequestedV2(catalog, generated, *entry.StructuralDescriptor)
+	if err != nil {
+		return nil, err
+	}
+	return &SearchSuiteLockedStructuralDescriptor{
+		Requested: *entry.StructuralDescriptor,
+		Realized:  &realized,
+	}, nil
 }
 
 func verifyCaseIDs(kind string, expected []string, observed []string) error {

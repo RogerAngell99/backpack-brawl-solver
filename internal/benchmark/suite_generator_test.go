@@ -11,12 +11,15 @@ import (
 	"backpack-brawl-solver/internal/scenario"
 )
 
-func TestSearchSuiteGeneratorV1IsSupported(t *testing.T) {
+func TestSearchSuiteGeneratorsAreSupported(t *testing.T) {
 	if err := ValidateSearchSuiteGeneratorVersion(SearchSuiteGeneratorV1); err != nil {
 		t.Fatalf("validate v1: %v", err)
 	}
+	if err := ValidateSearchSuiteGeneratorVersion(SearchSuiteGeneratorV2); err != nil {
+		t.Fatalf("validate v2: %v", err)
+	}
 	versions := SupportedSearchSuiteGeneratorVersions()
-	if len(versions) != 1 || versions[0] != SearchSuiteGeneratorV1 {
+	if !reflect.DeepEqual(versions, []string{SearchSuiteGeneratorV1, SearchSuiteGeneratorV2}) {
 		t.Fatalf("supported versions=%v", versions)
 	}
 }
@@ -34,13 +37,13 @@ func TestEverySupportedSearchSuiteGeneratorHasMaterializer(t *testing.T) {
 }
 
 func TestSearchSuiteGeneratorRejectsUnsupportedVersion(t *testing.T) {
-	for _, version := range []string{"", "search-suite-generator-v2"} {
+	for _, version := range []string{"", "search-suite-generator-v3"} {
 		err := ValidateSearchSuiteGeneratorVersion(version)
 		if err == nil {
 			t.Fatalf("version %q unexpectedly supported", version)
 		}
 	}
-	if err := ValidateSearchSuiteGeneratorVersion("search-suite-generator-v2"); !strings.Contains(err.Error(), `unsupported search suite generator version "search-suite-generator-v2"`) {
+	if err := ValidateSearchSuiteGeneratorVersion("search-suite-generator-v3"); !strings.Contains(err.Error(), `unsupported search suite generator version "search-suite-generator-v3"`) {
 		t.Fatalf("err=%v", err)
 	}
 }
@@ -79,8 +82,8 @@ func TestMaterializeGeneratedSearchSuiteCaseDispatchesV1(t *testing.T) {
 }
 
 func TestMaterializeSearchSuiteCasesRejectsUnsupportedVersion(t *testing.T) {
-	_, err := MaterializeSearchSuiteCases("search-suite-generator-v2", model.Catalog{}, SearchSuiteManifest{})
-	if err == nil || !strings.Contains(err.Error(), `unsupported search suite generator version "search-suite-generator-v2"`) {
+	_, err := MaterializeSearchSuiteCases("search-suite-generator-v3", model.Catalog{}, SearchSuiteManifest{})
+	if err == nil || !strings.Contains(err.Error(), `unsupported search suite generator version "search-suite-generator-v3"`) {
 		t.Fatalf("err=%v", err)
 	}
 }

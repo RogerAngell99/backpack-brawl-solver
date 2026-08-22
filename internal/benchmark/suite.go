@@ -50,6 +50,8 @@ type GeneratedSearchSuiteCase struct {
 	Role          string `json:"role"`
 	Seed          *int64 `json:"seed,omitempty"`
 	PrivateSeedID string `json:"private_seed_id,omitempty"`
+
+	StructuralDescriptor *GeneratedSearchSuiteStructuralDescriptor `json:"structural_descriptor,omitempty"`
 }
 
 type ResolvedSearchSuiteManifest struct {
@@ -144,9 +146,6 @@ func (manifest SearchSuiteManifest) Validate() error {
 		}
 		if entry.Seed == nil || entry.PrivateSeedID != "" {
 			return fmt.Errorf("generated case %q requires a public seed", entry.ID)
-		}
-		if entry.Family != GeneratedFamilySparse && entry.Family != GeneratedFamilyDuplicated && entry.Family != GeneratedFamilyLoose {
-			return fmt.Errorf("generated case %q has unsupported family %q", entry.ID, entry.Family)
 		}
 	}
 	return nil

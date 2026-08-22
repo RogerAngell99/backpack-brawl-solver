@@ -1,0 +1,1257 @@
+{
+  "lock_version": 1,
+  "suite_name": "general-search-v2",
+  "manifest_sha256": "a822703d703029a55e0af8c5c89f5b5a1ca1bbbde5955a02b6bdf32f5041a102",
+  "catalog_sha256": "0ab356afc52fa8479b627d4a917bc7f31d4cad1b6e021fd618ec17ef773c57c6",
+  "generator_version": "search-suite-generator-v2",
+  "static_cases": [
+    {
+      "id": "armor-craft-coverage",
+      "path": "benchmarks/scenarios/armor-craft-coverage.json",
+      "scenario_sha256": "9a44561fb5f437ef749e91383d5414b7b69de1b1948fbdd7d0eeb0153a2f050a"
+    },
+    {
+      "id": "global-priority-mixed",
+      "path": "benchmarks/scenarios/global-priority-mixed.json",
+      "scenario_sha256": "f84b63663f988788105a270f8a734244593f556f148878b6480a9c9be8eb9b20"
+    },
+    {
+      "id": "groups-weapons-food-armor",
+      "path": "benchmarks/scenarios/groups-weapons-food-armor.json",
+      "scenario_sha256": "193800fa3ae7f7f0186dbf4a4a40b487d455ddd0383801d7b95c00d10be0cffd"
+    },
+    {
+      "id": "loose-any-stars",
+      "path": "benchmarks/scenarios/loose-any-stars.json",
+      "scenario_sha256": "1aef7b745b60f9d202687982e0b5a386ad5f36d55440c76bef9c509cc215f1e6"
+    },
+    {
+      "id": "magic-ranged-crafts",
+      "path": "benchmarks/scenarios/magic-ranged-crafts.json",
+      "scenario_sha256": "bb6dc761005a879c2a94a48cbdb29a1283654e4b69938e42a44cd6317ec58ca4"
+    },
+    {
+      "id": "micro-coverage-belt",
+      "path": "benchmarks/exhaustive-scenarios/small-coverage-belt.json",
+      "scenario_sha256": "ddf110bd514f36a7342e3f3f543dae5a45228f47cf28e03bf545afff8d9a70ef"
+    },
+    {
+      "id": "micro-craft-chain",
+      "path": "benchmarks/exhaustive-scenarios/small-craft-chain.json",
+      "scenario_sha256": "db71ea0ee29dae00233ed9af3ac5c40ba9643c4252a1ae2e3093a9660c07bd91"
+    },
+    {
+      "id": "outgoing-debug-v3",
+      "path": "benchmarks/scenarios/outgoing-debug-reference-v3.json",
+      "scenario_sha256": "c78e78c94cb5e188185516972139a464a515e750bc7507ad243c31c272aea8ba"
+    },
+    {
+      "id": "outgoing-food-experiment",
+      "path": "benchmarks/scenarios/outgoing-per-instance-food.json",
+      "scenario_sha256": "1228b423abfb1b7a4391751d3993330a5367484c94d6013afac2e5a786b90a53"
+    },
+    {
+      "id": "star-relocation-refine",
+      "path": "benchmarks/scenarios/star-relocation-refine.json",
+      "scenario_sha256": "88513ebe48ec6e62ede9c8e51950394ccfdf5fe71d8b6e6ff1053522df8d34f7"
+    }
+  ],
+  "generated_cases": [
+    {
+      "id": "gsv2-001",
+      "family": "star-source-structural-v2",
+      "role": "public_holdout",
+      "seed": 3386146909825128162,
+      "scenario_sha256": "65434178ca1221e3e5171880e9740769df93a6e1613b334594b1008bc524f4a1",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "full",
+          "density_band": "d60",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 54,
+          "inventory_area": 32,
+          "density_bps": 5925,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 0,
+          "corridor_cells": 4,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 24,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 24,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-002",
+      "family": "star-source-structural-v2",
+      "role": "public_holdout",
+      "seed": 6355483126776817854,
+      "scenario_sha256": "a732ba18240b1ebdcdf33813a2cd007afa6c9904facc84203fde3a3ef1f6e890",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d75",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 37,
+          "density_bps": 7551,
+          "connected_components": 1,
+          "articulation_cells": 3,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 9,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 9,
+          "duplicate_filler_instances": 9,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 9,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-003",
+      "family": "star-source-structural-v2",
+      "role": "public_holdout",
+      "seed": 3819912117520280588,
+      "scenario_sha256": "e353b524387275f5e2b38fa9fdacec638e528ca95cf54d7115e9249f850eee3b",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "holes",
+          "density_band": "d90",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "low",
+          "rotation_entropy": "high"
+        },
+        "realized": {
+          "usable_cells": 50,
+          "inventory_area": 45,
+          "density_bps": 9000,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 2,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 9,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 9
+        }
+      }
+    },
+    {
+      "id": "gsv2-004",
+      "family": "star-source-structural-v2",
+      "role": "public_holdout",
+      "seed": 6591600957919681621,
+      "scenario_sha256": "b83ff01c6d9cf8bf7ea44a412a16c8462b459466327886c7430e8640a98d5ae1",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d60",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 48,
+          "inventory_area": 29,
+          "density_bps": 6041,
+          "connected_components": 2,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 6,
+          "duplicate_filler_instances": 5,
+          "duplicate_filler_groups": 2,
+          "rotation_variants_1": 6,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-005",
+      "family": "star-source-structural-v2",
+      "role": "public_holdout",
+      "seed": 8254783673764737505,
+      "scenario_sha256": "963f7806e67d545f9f337050cf0ec9c172d7b29f1fb973351ebb59ebe89da808",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "narrow-corridors",
+          "density_band": "d97",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 48,
+          "density_bps": 9795,
+          "connected_components": 1,
+          "articulation_cells": 6,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 10,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 37,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 37,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-006",
+      "family": "star-source-structural-v2",
+      "role": "public_holdout",
+      "seed": 5708918193991915628,
+      "scenario_sha256": "9ef73be30ebf25939e293ef7068cbf1f72af50157229130b9e81e045836591db",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "full",
+          "density_band": "d75",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 54,
+          "inventory_area": 41,
+          "density_bps": 7592,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 0,
+          "corridor_cells": 4,
+          "source_a_copies": 2,
+          "source_b_copies": 2,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 9,
+          "duplicate_filler_instances": 8,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 9,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-013",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 512213965289473607,
+      "scenario_sha256": "a314130f2e0975903df661281a878cafe6753ee7865926c0cf1bf3a5cd70359b",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "holes",
+          "density_band": "d97",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 50,
+          "inventory_area": 48,
+          "density_bps": 9600,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 2,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 14,
+          "duplicate_filler_instances": 12,
+          "duplicate_filler_groups": 4,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 14,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-014",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 580559976448741282,
+      "scenario_sha256": "307a664b7b4c32adf51b663bd1a4b8f143f71f60a7f3ef52f14009d906142aa5",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "full",
+          "density_band": "d97",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "high"
+        },
+        "realized": {
+          "usable_cells": 54,
+          "inventory_area": 52,
+          "density_bps": 9629,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 0,
+          "corridor_cells": 4,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 12,
+          "duplicate_filler_instances": 12,
+          "duplicate_filler_groups": 4,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 12
+        }
+      }
+    },
+    {
+      "id": "gsv2-015",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 5779176329894290698,
+      "scenario_sha256": "2b327e37445b1558735435d10315ee89d6179e4d34fd2581d7521af947b83e46",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d60",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "low",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 48,
+          "inventory_area": 29,
+          "density_bps": 6041,
+          "connected_components": 2,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 7,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 7,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-016",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 6461699255947036583,
+      "scenario_sha256": "00b8e40ac47fa4f063f9dbd793507ee4c0cffb5eba151d2c523f770815579a43",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "narrow-corridors",
+          "density_band": "d75",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "low",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 37,
+          "density_bps": 7551,
+          "connected_components": 1,
+          "articulation_cells": 6,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 10,
+          "source_a_copies": 2,
+          "source_b_copies": 2,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 11,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 11,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-017",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 1525391791506158835,
+      "scenario_sha256": "f4a26f2de49744cac6d2a0741819017a5721b4a6de5b2f542e06782d093e53e6",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d90",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "high"
+        },
+        "realized": {
+          "usable_cells": 48,
+          "inventory_area": 42,
+          "density_bps": 8750,
+          "connected_components": 2,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 9,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 9
+        }
+      }
+    },
+    {
+      "id": "gsv2-018",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 2856439648446131429,
+      "scenario_sha256": "a2a2db84a40d142f90db24c8270eebeee2fd882c331fd39f0d9034825f20ac81",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d90",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "low",
+          "rotation_entropy": "high"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 45,
+          "density_bps": 9183,
+          "connected_components": 1,
+          "articulation_cells": 3,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 9,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 11,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 11
+        }
+      }
+    },
+    {
+      "id": "gsv2-019",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 3024468904204247375,
+      "scenario_sha256": "fbbc03da9fa25855a87229372ee5694d59ca19c62045e5bff726f3cbd6b2a140",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "holes",
+          "density_band": "d75",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 51,
+          "inventory_area": 38,
+          "density_bps": 7450,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 7,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 27,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 27,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-020",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 1544323038260314556,
+      "scenario_sha256": "8e6c75c4e82b7252e009f07fafe46aad8a86b9ed7ed4e828bf055f63f671ff59",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "holes",
+          "density_band": "d97",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 51,
+          "inventory_area": 49,
+          "density_bps": 9607,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 7,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 11,
+          "duplicate_filler_instances": 9,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 11,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-021",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 2437092739929188576,
+      "scenario_sha256": "d38d21f46569a5718c5694ca9131c89ff41dffed6a72ea66ac0260ec8a72ca0e",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "full",
+          "density_band": "d90",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "high",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 54,
+          "inventory_area": 49,
+          "density_bps": 9074,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 0,
+          "corridor_cells": 4,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 17,
+          "duplicate_filler_instances": 17,
+          "duplicate_filler_groups": 6,
+          "rotation_variants_1": 17,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-022",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 4717729840378500003,
+      "scenario_sha256": "9ada2a41f32013394e636f9c0fc33cbd9a6625222168f9ef785967f352e2e922",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d90",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "low",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 48,
+          "inventory_area": 43,
+          "density_bps": 8958,
+          "connected_components": 2,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 2,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 14,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 14,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-023",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 1826059988773733314,
+      "scenario_sha256": "5445a148361a3ad2906baf5b77527381948957da890ab4af3055b3640314502d",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d60",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "high"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 29,
+          "density_bps": 5918,
+          "connected_components": 1,
+          "articulation_cells": 3,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 9,
+          "source_a_copies": 2,
+          "source_b_copies": 2,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 5,
+          "duplicate_filler_instances": 4,
+          "duplicate_filler_groups": 2,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 5
+        }
+      }
+    },
+    {
+      "id": "gsv2-024",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 4791590586845604329,
+      "scenario_sha256": "99772bbed685cca5c64bbeaf3746c173b7fb683b7e68660a5367ef50f2c8958b",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d97",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 48,
+          "inventory_area": 47,
+          "density_bps": 9791,
+          "connected_components": 2,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 39,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 39,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-025",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 4133339275842485230,
+      "scenario_sha256": "1850ed2aba2b93923ccca501fb5d94707b565ff2057eee01f78b3ca0e700fd69",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "narrow-corridors",
+          "density_band": "d90",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 44,
+          "density_bps": 8979,
+          "connected_components": 1,
+          "articulation_cells": 6,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 10,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 33,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 33,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-026",
+      "family": "star-source-structural-v2",
+      "role": "development",
+      "seed": 2715971192351703875,
+      "scenario_sha256": "a7593a157a82359d56d984c2634b0e2703dc38c05cb6dd4a93ddd96fdbbf4d3f",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "full",
+          "density_band": "d75",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 54,
+          "inventory_area": 41,
+          "density_bps": 7592,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 0,
+          "corridor_cells": 4,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 9,
+          "duplicate_filler_instances": 9,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 9,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-027",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 5689008278608953951,
+      "scenario_sha256": "ed986849100e7c571450c238ec865aaf792f535d82b75b6b6c43e784096edd42",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "narrow-corridors",
+          "density_band": "d60",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 29,
+          "density_bps": 5918,
+          "connected_components": 1,
+          "articulation_cells": 6,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 10,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 7,
+          "duplicate_filler_instances": 6,
+          "duplicate_filler_groups": 2,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 7,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-028",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 677253718519116986,
+      "scenario_sha256": "556b90c5aeb1ae9c8f62731dae1827f0445302a063c15b57ca05afe2028edf99",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "narrow-corridors",
+          "density_band": "d60",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 29,
+          "density_bps": 5918,
+          "connected_components": 1,
+          "articulation_cells": 6,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 10,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 8,
+          "duplicate_filler_instances": 8,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 8,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-029",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 8561667929375525631,
+      "scenario_sha256": "b20250fd5ff37a5eb03806928e076142f9aaf0f127335d6c914dfc7ca611c52d",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d60",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "high",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 48,
+          "inventory_area": 29,
+          "density_bps": 6041,
+          "connected_components": 2,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 11,
+          "duplicate_filler_instances": 11,
+          "duplicate_filler_groups": 4,
+          "rotation_variants_1": 11,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-030",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 5828618936907795685,
+      "scenario_sha256": "9213de5e6e35e4ebc6b1788f393f8e6d330c458d7d178424d0ad1f7065334226",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d75",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "high",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 37,
+          "density_bps": 7551,
+          "connected_components": 1,
+          "articulation_cells": 3,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 9,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 11,
+          "duplicate_filler_instances": 11,
+          "duplicate_filler_groups": 4,
+          "rotation_variants_1": 11,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-031",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 8630002238229223673,
+      "scenario_sha256": "308142bc905cbc8ddab5869dce961c25380c8214bd37d58ca7d9aa5f6f0d7694",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "holes",
+          "density_band": "d60",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "high",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 50,
+          "inventory_area": 30,
+          "density_bps": 6000,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 2,
+          "source_b_copies": 2,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 6,
+          "duplicate_filler_instances": 6,
+          "duplicate_filler_groups": 2,
+          "rotation_variants_1": 6,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-032",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 4699373596433954638,
+      "scenario_sha256": "69ab990f9f17e7f0034b1d791806d7e20e1059451024fd8b3e1beeaa8d8b02b7",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d75",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "high",
+          "rotation_entropy": "high"
+        },
+        "realized": {
+          "usable_cells": 48,
+          "inventory_area": 36,
+          "density_bps": 7500,
+          "connected_components": 2,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 4,
+          "corridor_cells": 8,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 7,
+          "duplicate_filler_instances": 7,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 7
+        }
+      }
+    },
+    {
+      "id": "gsv2-033",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 8503803950824609956,
+      "scenario_sha256": "853b228db2773e84a1b3cfce1d719452b5e03278a2ff92542c2984621739c314",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d75",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 37,
+          "density_bps": 7551,
+          "connected_components": 1,
+          "articulation_cells": 3,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 9,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 10,
+          "duplicate_filler_instances": 8,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 10,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-034",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 8251322883810393402,
+      "scenario_sha256": "880d632a47edbfdb064034a041e7a3691b803dcc0a46ac660d20e201c2999df9",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "full",
+          "density_band": "d97",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 54,
+          "inventory_area": 52,
+          "density_bps": 9629,
+          "connected_components": 1,
+          "articulation_cells": 0,
+          "interior_blocked_cells": 0,
+          "corridor_cells": 4,
+          "source_a_copies": 2,
+          "source_b_copies": 1,
+          "a_only_targets": 3,
+          "b_only_targets": 3,
+          "shared_targets": 0,
+          "neutral_filler_instances": 21,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 21,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-035",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 7678735996743624783,
+      "scenario_sha256": "077fa6603a29370fb970be3cdfb20fab6f22f3a87a246ee360e3b88633dbe13f",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "narrow-corridors",
+          "density_band": "d60",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "low"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 29,
+          "density_bps": 5918,
+          "connected_components": 1,
+          "articulation_cells": 6,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 10,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 2,
+          "b_only_targets": 2,
+          "shared_targets": 2,
+          "neutral_filler_instances": 7,
+          "duplicate_filler_instances": 7,
+          "duplicate_filler_groups": 3,
+          "rotation_variants_1": 7,
+          "rotation_variants_2": 0,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    },
+    {
+      "id": "gsv2-036",
+      "family": "star-source-structural-v2",
+      "role": "validation",
+      "seed": 2271803021247478662,
+      "scenario_sha256": "dba9bb4e2578dc66c9c49815fd2004f6dc48017c1f5729be559e68cd8cc5ce7c",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d60",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "low",
+          "rotation_entropy": "medium"
+        },
+        "realized": {
+          "usable_cells": 49,
+          "inventory_area": 29,
+          "density_bps": 5918,
+          "connected_components": 1,
+          "articulation_cells": 3,
+          "interior_blocked_cells": 3,
+          "corridor_cells": 9,
+          "source_a_copies": 1,
+          "source_b_copies": 1,
+          "a_only_targets": 1,
+          "b_only_targets": 1,
+          "shared_targets": 4,
+          "neutral_filler_instances": 6,
+          "duplicate_filler_instances": 0,
+          "duplicate_filler_groups": 0,
+          "rotation_variants_1": 0,
+          "rotation_variants_2": 6,
+          "rotation_variants_3_plus": 0
+        }
+      }
+    }
+  ],
+  "private_cases": [
+    {
+      "id": "gsv2-007",
+      "private_seed_id": "general-search-v2-private-001",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "full",
+          "density_band": "d90",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "high",
+          "rotation_entropy": "medium"
+        }
+      }
+    },
+    {
+      "id": "gsv2-008",
+      "private_seed_id": "general-search-v2-private-002",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d97",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "low",
+          "rotation_entropy": "medium"
+        }
+      }
+    },
+    {
+      "id": "gsv2-009",
+      "private_seed_id": "general-search-v2-private-003",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "holes",
+          "density_band": "d60",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mixed",
+          "copy_symmetry": "low",
+          "rotation_entropy": "low"
+        }
+      }
+    },
+    {
+      "id": "gsv2-010",
+      "private_seed_id": "general-search-v2-private-004",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "two-lobes",
+          "density_band": "d75",
+          "source_multiplicity": "1/1",
+          "target_overlap": "mostly-exclusive",
+          "copy_symmetry": "high",
+          "rotation_entropy": "high"
+        }
+      }
+    },
+    {
+      "id": "gsv2-011",
+      "private_seed_id": "general-search-v2-private-005",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "narrow-corridors",
+          "density_band": "d60",
+          "source_multiplicity": "2/1",
+          "target_overlap": "mixed",
+          "copy_symmetry": "high",
+          "rotation_entropy": "high"
+        }
+      }
+    },
+    {
+      "id": "gsv2-012",
+      "private_seed_id": "general-search-v2-private-006",
+      "structural_descriptor": {
+        "requested": {
+          "grid_topology": "bottleneck",
+          "density_band": "d90",
+          "source_multiplicity": "2/2",
+          "target_overlap": "mostly-shared",
+          "copy_symmetry": "low",
+          "rotation_entropy": "low"
+        }
+      }
+    }
+  ]
+}
