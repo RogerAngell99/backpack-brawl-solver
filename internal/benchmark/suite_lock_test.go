@@ -230,10 +230,10 @@ func TestVerifySearchSuiteLockDetectsDrift(t *testing.T) {
 			mutate: func(t *testing.T, paths searchSuiteFixturePaths) {
 				t.Helper()
 				lock := readFixtureLock(t, paths.lock)
-				lock.GeneratorVersion = "search-suite-generator-v2"
+				lock.GeneratorVersion = "search-suite-generator-v3"
 				writeFixtureLock(t, paths.lock, lock)
 			},
-			message: `unsupported search suite generator version "search-suite-generator-v2"`,
+			message: `unsupported search suite generator version "search-suite-generator-v3"`,
 		},
 		{
 			name: "generated scenario hash",
