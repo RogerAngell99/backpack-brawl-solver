@@ -851,7 +851,7 @@ func TestConstellationRootPackingMRVFinalizesOneShotBudget(t *testing.T) {
 		t.Fatalf("wrapper=%+v final=%+v", wrapper, final)
 	}
 	zeroBudget := constellationRootPackingMRV(catalog, instances, options, root, config, gridMask, 0, func(bool) bool { return true })
-	if zeroBudget.terminationReason != "budget_exhausted" || zeroBudget.nodes != 0 {
+	if zeroBudget.terminationReason != "no_budget" || zeroBudget.nodes != 0 {
 		t.Fatalf("zero-budget wrapper=%+v", zeroBudget)
 	}
 	reported := 0
@@ -860,8 +860,30 @@ func TestConstellationRootPackingMRVFinalizesOneShotBudget(t *testing.T) {
 		return reported == 1
 	})
 	rejectedResult := rejected.Run(2)
-	if !rejected.Done() || rejectedResult.terminationReason != "budget_exhausted" || len(rejectedResult.mrvDepths) != 0 || rejectedResult.candidates != 0 {
-		t.Fatalf("reporter exhaustion previewed a partial depth: result=%+v", rejectedResult)
+	legacyReported := 0
+	legacyRejected := constellationRootPackingMRVLegacy(catalog, instances, options, root, config, gridMask, 2, func(bool) bool {
+		legacyReported++
+		return legacyReported == 1
+	})
+	if !rejected.Done() || !reflect.DeepEqual(rejectedResult, legacyRejected) {
+		t.Fatalf("reporter exhaustion result=%+v legacy=%+v", rejectedResult, legacyRejected)
+	}
+}
+
+func TestConstellationRootPackingSessionTerminalProjectionMatchesLegacyCutoffs(t *testing.T) {
+	catalog, instances, options, root, config, gridMask := constellationRootPackingSessionFixture()
+	for allocation := int64(0); allocation <= 12; allocation++ {
+		t.Run("allocation_"+strconv.FormatInt(allocation, 10), func(t *testing.T) {
+			session := newConstellationRootPackingSession(catalog, instances, options, root, config, gridMask, func(bool) bool { return true })
+			result := session.Run(allocation)
+			if !session.Done() {
+				result = session.FinalizeBudgetExhausted()
+			}
+			legacy := constellationRootPackingMRVLegacy(catalog, instances, options, root, config, gridMask, allocation, func(bool) bool { return true })
+			if !reflect.DeepEqual(result, legacy) {
+				t.Fatalf("allocation=%d terminal=%+v legacy=%+v", allocation, result, legacy)
+			}
+		})
 	}
 }
 
