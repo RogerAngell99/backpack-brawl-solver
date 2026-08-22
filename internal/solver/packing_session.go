@@ -17,6 +17,7 @@ type constellationRootPackingSession struct {
 	config            Config
 	gridMask          uint64
 	reportNode        func(bool) bool
+	operations        *rootPackingOperationCounters
 
 	result    constellationRootPackingResult
 	shadow    *constellationShadowReference
@@ -73,7 +74,9 @@ func newConstellationRootPackingSession(
 			packingStrategy:     constellationPackingStrategyStateMRV,
 		},
 		selectedItemIDs: make(map[string]struct{}),
+		operations:      newRootPackingOperationCounters(config),
 	}
+	session.operations.sessionStarted()
 	if config.constellationRootPackingCollector != nil {
 		session.shadow = config.constellationRootPackingCollector.shadow
 	}
@@ -83,6 +86,7 @@ func newConstellationRootPackingSession(
 // Run consumes at most nodeAllocation additional candidate expansions. It may
 // be called again after an allocation ends; completed sessions are immutable.
 func (session *constellationRootPackingSession) Run(nodeAllocation int64) constellationRootPackingResult {
+	session.operations.runCall()
 	if session.done {
 		return session.final
 	}
@@ -114,7 +118,9 @@ func (session *constellationRootPackingSession) Run(nodeAllocation int64) conste
 			if consumed >= nodeAllocation {
 				return session.pauseResult()
 			}
+			session.operations.ledgerChargeAttempt()
 			if !session.reportNode(false) {
+				session.operations.ledgerChargeDenied()
 				return session.FinalizeBudgetExhausted()
 			}
 			consumed++
@@ -154,6 +160,7 @@ func (session *constellationRootPackingSession) FinalizeBudgetExhausted() conste
 	if !session.initialized {
 		result := session.result
 		result.terminationReason = "no_budget"
+		result.operationProfile = session.operations.snapshot()
 		session.final = result
 		session.done = true
 		return session.final
@@ -184,6 +191,7 @@ func (session *constellationRootPackingSession) initialize() {
 		}}
 		session.result.candidates = 1
 		session.result.terminationReason = "completed"
+		session.result.operationProfile = session.operations.snapshot()
 		session.done = true
 		session.final = session.result
 		return
@@ -199,11 +207,13 @@ func (session *constellationRootPackingSession) initialize() {
 	initialRestricted, initialFlexibility, feasible := packingFeasibility(session.remaining, session.optionsByInstance, session.root.occupied, session.root.placed)
 	session.result.initialRestricted = initialRestricted
 	session.result.initialFlexibility = initialFlexibility
+	session.operations.fragmentationEvaluation()
 	session.result.initialFragmentation = freeSpaceFragmentation(session.gridMask, session.root.occupied)
 	session.result.packingInputKey = constellationRootPackingInputKey(session.root.sourceGeometryKey, session.result.initialOccupiedMask, session.result.initialFreeMask, session.result.anchoredInstanceIDs, remainingOrder)
 	if !feasible {
 		session.result.hardPruned = 1
 		session.result.terminationReason = "hard_dead"
+		session.result.operationProfile = session.operations.snapshot()
 		session.done = true
 		session.final = session.result
 		return
@@ -232,6 +242,7 @@ func (session *constellationRootPackingSession) initialize() {
 }
 
 func (session *constellationRootPackingSession) beginDepth() {
+	session.operations.depthStarted()
 	session.depthActive = true
 	session.nextByClass = make(map[string]constellationRootMRVState, session.beamWidth*4)
 	session.depthInfo = model.ConstellationRootPackingDepthDiagnostic{
@@ -260,13 +271,15 @@ func (session *constellationRootPackingSession) beginDepth() {
 }
 
 func (session *constellationRootPackingSession) prepareState() {
+	session.operations.statePrepared()
 	state := session.states[session.stateIndex]
 	if state.remainingArea > bits.OnesCount64(session.gridMask&^state.occupied) {
+		session.operations.areaPrune()
 		session.result.hardPruned++
 		session.stateIndex++
 		return
 	}
-	selectedIndex, options, selected := constellationRootMRVSelection(session.remaining, state.remainingMask, session.optionsByInstance, state.occupied, state.placed)
+	selectedIndex, options, selected := constellationRootMRVSelectionWithOperations(session.remaining, state.remainingMask, session.optionsByInstance, state.occupied, state.placed, session.operations)
 	if !selected {
 		session.result.hardPruned++
 		session.depthInfo.ZeroDomainPrunes++
@@ -294,11 +307,16 @@ func (session *constellationRootPackingSession) prepareState() {
 }
 
 func (session *constellationRootPackingSession) expandOption(option model.Placement) {
+	session.operations.candidateExpansion()
+	if session.nextMask == 0 {
+		session.operations.completeCandidate()
+	}
 	state := session.states[session.stateIndex]
+	session.operations.placementCopy(len(state.placed))
 	nextPlaced, _ := insertPlacementSorted(append([]model.Placement(nil), state.placed...), option)
 	shadowCompatible := session.shadow != nil && session.shadow.compatible(nextPlaced)
 	nextOccupied := state.occupied | option.Mask
-	restricted, flexibility, feasible := constellationRootMRVFeasibility(session.remaining, session.nextMask, session.optionsByInstance, nextOccupied, nextPlaced)
+	restricted, flexibility, feasible := constellationRootMRVFeasibilityWithOperations(session.remaining, session.nextMask, session.optionsByInstance, nextOccupied, nextPlaced, session.operations)
 	if !feasible {
 		session.result.hardPruned++
 		session.depthInfo.ZeroDomainPrunes++
@@ -316,8 +334,8 @@ func (session *constellationRootPackingSession) expandOption(option model.Placem
 			placed:        nextPlaced,
 			restricted:    restricted,
 			flexibility:   flexibility,
-			fragmentation: freeSpaceFragmentation(session.gridMask, nextOccupied),
-			score:         evaluateScoreForConfig(session.catalog, nextPlaced, session.config),
+			fragmentation: session.fragmentation(nextOccupied),
+			score:         session.partialScore(nextPlaced),
 			key:           session.root.signature + "|" + coverageSeedAppendKey(state.key, option),
 		},
 		remainingMask: session.nextMask,
@@ -330,11 +348,15 @@ func (session *constellationRootPackingSession) expandOption(option model.Placem
 		}
 	}
 	classKey := constellationRootMRVStateKey(candidate)
+	session.operations.stateKey(len(classKey))
+	session.operations.dedupLookup()
 	if previous, exists := session.nextByClass[classKey]; exists {
+		session.operations.dedupHit()
 		session.result.deduplicated++
 		if !constellationRootPackingStateLess(session.config, candidate.packingSeedState, previous.packingSeedState) {
 			return
 		}
+		session.operations.dedupReplacement()
 	}
 	session.nextByClass[classKey] = candidate
 }
@@ -344,7 +366,7 @@ func (session *constellationRootPackingSession) commitDepth() {
 	if session.shadow != nil {
 		trace = &session.shadow.trace
 	}
-	session.states = constellationRootPackingFinishMRVDepth(session.nextByClass, &session.depthInfo, session.shadowDepth, session.shadow, trace, session.beamWidth, session.config)
+	session.states = constellationRootPackingFinishMRVDepthWithOperations(session.nextByClass, &session.depthInfo, session.shadowDepth, session.shadow, trace, session.beamWidth, session.config, session.operations)
 	session.result.beamEvictions += session.depthInfo.BeamEvictions
 	session.result.mrvDepths = append(session.result.mrvDepths, session.depthInfo)
 	session.result.layerWidths = append(session.result.layerWidths, model.PackingSeedLayerWidth{Depth: session.depth, States: len(session.states)})
@@ -355,7 +377,9 @@ func (session *constellationRootPackingSession) commitDepth() {
 }
 
 func (session *constellationRootPackingSession) pauseResult() constellationRootPackingResult {
+	session.operations.pauseReturn()
 	result := session.result
+	result.operationProfile = session.operations.snapshot()
 	result.terminationReason = "paused_allocation"
 	return result
 }
@@ -369,7 +393,10 @@ func (session *constellationRootPackingSession) terminalProjection() constellati
 		trace = &session.shadow.trace
 	}
 	if !session.depthActive {
-		return session.resultForFrontier(session.result, session.states, true, trace)
+		projectionOperations := session.operations.clone()
+		projected := session.resultForFrontier(session.result, session.states, true, trace)
+		projected.operationProfile = projectionOperations.snapshot()
+		return projected
 	}
 	result := session.result
 	result.mrvDepths = append([]model.ConstellationRootPackingDepthDiagnostic(nil), result.mrvDepths...)
@@ -383,11 +410,14 @@ func (session *constellationRootPackingSession) terminalProjection() constellati
 		traceCopy.Depths = append([]model.ConstellationForcedCandidateShadowDepth(nil), traceCopy.Depths...)
 		trace = &traceCopy
 	}
-	states := constellationRootPackingFinishMRVDepth(session.nextByClass, &depthInfo, shadowDepth, session.shadow, trace, session.beamWidth, session.config)
+	projectionOperations := session.operations.clone()
+	states := constellationRootPackingFinishMRVDepthWithOperations(session.nextByClass, &depthInfo, shadowDepth, session.shadow, trace, session.beamWidth, session.config, projectionOperations)
 	result.beamEvictions += depthInfo.BeamEvictions
 	result.mrvDepths = append(result.mrvDepths, depthInfo)
 	result.layerWidths = append(result.layerWidths, model.PackingSeedLayerWidth{Depth: session.depth, States: len(states)})
-	return session.resultForFrontier(result, states, true, trace)
+	projected := session.resultForFrontier(result, states, true, trace)
+	projected.operationProfile = projectionOperations.snapshot()
+	return projected
 }
 
 func (session *constellationRootPackingSession) finish(exhausted bool) {
@@ -396,7 +426,18 @@ func (session *constellationRootPackingSession) finish(exhausted bool) {
 		trace = &session.shadow.trace
 	}
 	session.final = session.resultForFrontier(session.result, session.states, exhausted, trace)
+	session.final.operationProfile = session.operations.snapshot()
 	session.done = true
+}
+
+func (session *constellationRootPackingSession) fragmentation(occupied uint64) int {
+	session.operations.fragmentationEvaluation()
+	return freeSpaceFragmentation(session.gridMask, occupied)
+}
+
+func (session *constellationRootPackingSession) partialScore(placements []model.Placement) model.Score {
+	session.operations.partialScoreEvaluation()
+	return evaluateScoreForConfig(session.catalog, placements, session.config)
 }
 
 func (session *constellationRootPackingSession) resultForFrontier(result constellationRootPackingResult, states []constellationRootMRVState, exhausted bool, trace *model.ConstellationForcedCandidateShadowTrace) constellationRootPackingResult {
@@ -442,6 +483,20 @@ func constellationRootPackingFinishMRVDepth(
 	beamWidth int,
 	config Config,
 ) []constellationRootMRVState {
+	return constellationRootPackingFinishMRVDepthWithOperations(nextByClass, depthInfo, shadowDepth, shadow, trace, beamWidth, config, nil)
+}
+
+func constellationRootPackingFinishMRVDepthWithOperations(
+	nextByClass map[string]constellationRootMRVState,
+	depthInfo *model.ConstellationRootPackingDepthDiagnostic,
+	shadowDepth *model.ConstellationForcedCandidateShadowDepth,
+	shadow *constellationShadowReference,
+	trace *model.ConstellationForcedCandidateShadowTrace,
+	beamWidth int,
+	config Config,
+	operations *rootPackingOperationCounters,
+) []constellationRootMRVState {
+	operations.depthFinish(len(nextByClass))
 	depthInfo.StatesAfterDedup = len(nextByClass)
 	if shadowDepth != nil {
 		shadowDepth.Deduplicated = len(nextByClass)
@@ -452,10 +507,27 @@ func constellationRootPackingFinishMRVDepth(
 		}
 	}
 	next := make([]constellationRootMRVState, 0, len(nextByClass))
-	for _, state := range nextByClass {
-		next = append(next, state)
+	if operations != nil {
+		// Go deliberately randomizes map iteration. The ranked state order is
+		// still determined by the existing total comparator, but canonicalizing
+		// the input order makes the *number* of comparator calls reproducible
+		// for operation-count runs without affecting normal builds.
+		classKeys := make([]string, 0, len(nextByClass))
+		for classKey := range nextByClass {
+			classKeys = append(classKeys, classKey)
+		}
+		sort.Strings(classKeys)
+		for _, classKey := range classKeys {
+			next = append(next, nextByClass[classKey])
+		}
+	} else {
+		for _, state := range nextByClass {
+			next = append(next, state)
+		}
 	}
+	operations.statesSorted(len(next))
 	sort.Slice(next, func(i, j int) bool {
+		operations.comparatorCall()
 		return constellationRootPackingStateLess(config, next[i].packingSeedState, next[j].packingSeedState)
 	})
 	if shadowDepth != nil {

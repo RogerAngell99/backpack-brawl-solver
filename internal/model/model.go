@@ -539,6 +539,44 @@ type PackingSeedDiagnostics struct {
 	BeamEvictions      int64                   `json:"beam_evictions,omitempty"`
 }
 
+// ConstellationRootPackingOperationProfile is a deterministic count of work
+// performed by one rooted dynamic-MRV packing session. It is measurement-only:
+// none of these fields participate in ranking, pruning, allocation, or search
+// policy decisions.
+type ConstellationRootPackingOperationProfile struct {
+	Version                        string `json:"version"`
+	SessionsStarted                int64  `json:"sessions_started"`
+	RunCalls                       int64  `json:"run_calls"`
+	PauseReturns                   int64  `json:"pause_returns"`
+	DepthsStarted                  int64  `json:"depths_started"`
+	StatesPrepared                 int64  `json:"states_prepared"`
+	AreaPrunes                     int64  `json:"area_prunes"`
+	MRVSelectionCalls              int64  `json:"mrv_selection_calls"`
+	MRVInstancesConsidered         int64  `json:"mrv_instances_considered"`
+	MRVOptionChecks                int64  `json:"mrv_option_checks"`
+	MRVLegalPlacements             int64  `json:"mrv_legal_placements"`
+	LedgerChargeAttempts           int64  `json:"ledger_charge_attempts"`
+	LedgerChargeDenied             int64  `json:"ledger_charge_denied"`
+	CandidateExpansions            int64  `json:"candidate_expansions"`
+	CompleteCandidates             int64  `json:"complete_candidates"`
+	PlacementCopyCalls             int64  `json:"placement_copy_calls"`
+	PlacementElementsCopied        int64  `json:"placement_elements_copied"`
+	FeasibilityCalls               int64  `json:"feasibility_calls"`
+	FeasibilityInstancesConsidered int64  `json:"feasibility_instances_considered"`
+	FeasibilityOptionChecks        int64  `json:"feasibility_option_checks"`
+	FragmentationEvaluations       int64  `json:"fragmentation_evaluations"`
+	PartialScoreEvaluations        int64  `json:"partial_score_evaluations"`
+	StateKeyConstructions          int64  `json:"state_key_constructions"`
+	StateKeyBytes                  int64  `json:"state_key_bytes"`
+	DedupLookups                   int64  `json:"dedup_lookups"`
+	DedupHits                      int64  `json:"dedup_hits"`
+	DedupReplacements              int64  `json:"dedup_replacements"`
+	DepthFinishCalls               int64  `json:"depth_finish_calls"`
+	PrecutStates                   int64  `json:"precut_states"`
+	StatesSorted                   int64  `json:"states_sorted"`
+	ComparatorCalls                int64  `json:"comparator_calls"`
+}
+
 // ConstellationRootPackingSchedulerPolicy records the fully resolved root-only
 // allocation policy after the construction budget and selected root count are known.
 type ConstellationRootPackingSchedulerPolicy struct {
@@ -601,6 +639,7 @@ type ConstellationSeedDiagnostics struct {
 	ConstellationSeedFinalScore               *Score                                        `json:"constellation_seed_final_score,omitempty"`
 	ConstellationSeedFinalHash                string                                        `json:"constellation_seed_final_hash,omitempty"`
 	RootPackingScheduler                      *ConstellationRootPackingSchedulerPolicy      `json:"root_packing_scheduler,omitempty"`
+	RootPackingOperationProfile               *ConstellationRootPackingOperationProfile     `json:"root_packing_operation_profile,omitempty"`
 	CandidatePoolFeasibilitySweep             *ConstellationCandidatePoolFeasibilitySweep   `json:"candidate_pool_feasibility_sweep,omitempty"`
 	CandidateCompletionOptimization           *ConstellationCandidateCompletionOptimization `json:"candidate_completion_optimization,omitempty"`
 	ForcedCandidateRootedPacking              *ConstellationForcedCandidateRootedPacking    `json:"forced_candidate_rooted_packing,omitempty"`
@@ -1027,6 +1066,7 @@ type ConstellationRootDiagnostic struct {
 	FirstCompleteNodes                             int64                                     `json:"first_complete_nodes,omitempty"`
 	DistinctNextItemsSelected                      int                                       `json:"distinct_next_items_selected,omitempty"`
 	MRVDepths                                      []ConstellationRootPackingDepthDiagnostic `json:"mrv_depths,omitempty"`
+	OperationProfile                               *ConstellationRootPackingOperationProfile `json:"operation_profile,omitempty"`
 	ProbeNodesAvailable                            *int64                                    `json:"probe_nodes_available,omitempty"`
 	ProbeNodesConsumed                             *int64                                    `json:"probe_nodes_consumed,omitempty"`
 	ProbeNodesReturned                             *int64                                    `json:"probe_nodes_returned,omitempty"`
