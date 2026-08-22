@@ -32,6 +32,57 @@ func TestCanonicalJSONSHA256RejectsTrailingJSON(t *testing.T) {
 	}
 }
 
+func TestSearchSuiteLockRejectsUnknownFields(t *testing.T) {
+	tests := []struct {
+		name    string
+		mutate  func(string) string
+		message string
+	}{
+		{
+			name: "top-level field",
+			mutate: func(content string) string {
+				return strings.Replace(content, "{", "{\n  \"unexpected\": true,", 1)
+			},
+			message: `json: unknown field "unexpected"`,
+		},
+		{
+			name: "private seed",
+			mutate: func(content string) string {
+				return strings.Replace(content, `"private_seed_id": "fixture-private-01"`, `"private_seed_id": "fixture-private-01",
+      "seed": 42`, 1)
+			},
+			message: `json: unknown field "seed"`,
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			paths := writeSearchSuiteFixture(t)
+			content, err := os.ReadFile(paths.lock)
+			if err != nil {
+				t.Fatalf("read lock: %v", err)
+			}
+			writeFile(t, paths.lock, test.mutate(string(content)))
+			_, err = LoadSearchSuiteLock(paths.lock)
+			if err == nil || !strings.Contains(err.Error(), test.message) {
+				t.Fatalf("err=%v want %q", err, test.message)
+			}
+		})
+	}
+}
+
+func TestSearchSuiteLockRejectsTrailingJSON(t *testing.T) {
+	paths := writeSearchSuiteFixture(t)
+	content, err := os.ReadFile(paths.lock)
+	if err != nil {
+		t.Fatalf("read lock: %v", err)
+	}
+	writeFile(t, paths.lock, string(content)+"\n{}")
+	_, err = LoadSearchSuiteLock(paths.lock)
+	if err == nil || !strings.Contains(err.Error(), "unexpected trailing JSON value") {
+		t.Fatalf("err=%v", err)
+	}
+}
+
 func TestObserveSearchSuiteIsStableAcrossFormatting(t *testing.T) {
 	paths := writeSearchSuiteFixture(t)
 	first, err := ObserveSearchSuite(paths.manifest, paths.catalog)

@@ -61,9 +61,18 @@ func LoadSearchSuiteLock(path string) (SearchSuiteLock, error) {
 	if err != nil {
 		return SearchSuiteLock{}, err
 	}
+	decoder := json.NewDecoder(bytes.NewReader(content))
+	decoder.DisallowUnknownFields()
 	var lock SearchSuiteLock
-	if err := json.Unmarshal(content, &lock); err != nil {
+	if err := decoder.Decode(&lock); err != nil {
 		return SearchSuiteLock{}, err
+	}
+	var trailing any
+	if err := decoder.Decode(&trailing); err != io.EOF {
+		if err == nil {
+			return SearchSuiteLock{}, fmt.Errorf("unexpected trailing JSON value")
+		}
+		return SearchSuiteLock{}, fmt.Errorf("trailing JSON: %w", err)
 	}
 	if err := lock.Validate(); err != nil {
 		return SearchSuiteLock{}, err
