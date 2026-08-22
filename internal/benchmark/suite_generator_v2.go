@@ -21,41 +21,59 @@ const searchSuiteGeneratorV2Attempts = 64
 // only score-adjacent operation is canonical catalog compatibility matching.
 // It never imports solver code or evaluates a score to select a case.
 func materializeGeneratedSearchSuiteCaseV2(catalog model.Catalog, entry GeneratedSearchSuiteCase) (scenario.Scenario, error) {
+	generated, _, err := materializeGeneratedSearchSuiteCaseV2WithDiagnostics(catalog, entry)
+	return generated, err
+}
+
+// v2MaterializationDiagnostics is deliberately ephemeral. It records only
+// generator-control-flow reasons so tests can prove that witness exhaustion
+// did not filter accepted corpus cases; it is never locked or benchmarked.
+type v2MaterializationDiagnostics struct {
+	AcceptedAttempt int
+	Rejections      map[string]int
+}
+
+func materializeGeneratedSearchSuiteCaseV2WithDiagnostics(catalog model.Catalog, entry GeneratedSearchSuiteCase) (scenario.Scenario, v2MaterializationDiagnostics, error) {
+	diagnostics := v2MaterializationDiagnostics{AcceptedAttempt: -1, Rejections: map[string]int{}}
 	if err := validateGeneratedSearchSuiteCaseV2(entry); err != nil {
-		return scenario.Scenario{}, err
+		return scenario.Scenario{}, diagnostics, err
 	}
 	if entry.Role == SuiteRolePrivateHoldout || entry.Seed == nil {
-		return scenario.Scenario{}, fmt.Errorf("v2 generated case %q has no public seed", entry.ID)
+		return scenario.Scenario{}, diagnostics, fmt.Errorf("v2 generated case %q has no public seed", entry.ID)
 	}
 	descriptor := *entry.StructuralDescriptor
 	pairs, err := viableV2SourcePairs(catalog, descriptor)
 	if err != nil {
-		return scenario.Scenario{}, err
+		return scenario.Scenario{}, diagnostics, err
 	}
 	if len(pairs) == 0 {
-		return scenario.Scenario{}, fmt.Errorf("cannot materialize case %q: no eligible source pair for requested target overlap %s", entry.ID, descriptor.TargetOverlap)
+		return scenario.Scenario{}, diagnostics, fmt.Errorf("cannot materialize case %q: no eligible source pair for requested target overlap %s", entry.ID, descriptor.TargetOverlap)
 	}
-	rejections := map[string]int{}
 	for attempt := 0; attempt < searchSuiteGeneratorV2Attempts; attempt++ {
 		generated, rejection, err := materializeGeneratedSearchSuiteCaseV2Attempt(catalog, entry.ID, *entry.Seed, descriptor, append([]v2SourcePair(nil), pairs...), attempt)
 		if err != nil {
-			return scenario.Scenario{}, err
+			return scenario.Scenario{}, diagnostics, err
 		}
 		if rejection != "" {
-			rejections[rejection]++
+			diagnostics.Rejections[rejection]++
 			continue
 		}
-		return generated, nil
+		diagnostics.AcceptedAttempt = attempt
+		return generated, diagnostics, nil
 	}
-	return scenario.Scenario{}, fmt.Errorf("cannot materialize case %q\n\ndescriptor:\n  topology=%s\n  density=%s\n  multiplicity=%s\n  overlap=%s\n  symmetry=%s\n  rotation=%s\n\nattempts: %d\n\nrejections:\n  no_source_pair: %d\n  insufficient_targets: %d\n  filler_area_unsatisfied: %d\n  witness_unpacked: %d\n  witness_exhausted: %d",
+	return scenario.Scenario{}, diagnostics, fmt.Errorf("cannot materialize case %q\n\ndescriptor:\n  topology=%s\n  density=%s\n  multiplicity=%s\n  overlap=%s\n  symmetry=%s\n  rotation=%s\n\nattempts: %d\n\nrejections:\n  insufficient_targets: %d\n  filler_area_unsatisfied: %d\n  witness_unpacked: %d",
 		entry.ID,
 		descriptor.GridTopology, descriptor.DensityBand, descriptor.SourceMultiplicity, descriptor.TargetOverlap, descriptor.CopySymmetry, descriptor.RotationEntropy,
 		searchSuiteGeneratorV2Attempts,
-		rejections["no_source_pair"], rejections["insufficient_targets"], rejections["filler_area_unsatisfied"], rejections["witness_unpacked"], rejections["witness_exhausted"],
+		diagnostics.Rejections["insufficient_targets"], diagnostics.Rejections["filler_area_unsatisfied"], diagnostics.Rejections["witness_unpacked"],
 	)
 }
 
 func materializeGeneratedSearchSuiteCaseV2Attempt(catalog model.Catalog, caseID string, seed int64, descriptor GeneratedSearchSuiteStructuralDescriptor, pairs []v2SourcePair, attempt int) (scenario.Scenario, string, error) {
+	return materializeGeneratedSearchSuiteCaseV2AttemptWithWitnessMaxNodes(catalog, caseID, seed, descriptor, pairs, attempt, searchSuiteGeneratorV2WitnessMaxNodes)
+}
+
+func materializeGeneratedSearchSuiteCaseV2AttemptWithWitnessMaxNodes(catalog model.Catalog, caseID string, seed int64, descriptor GeneratedSearchSuiteStructuralDescriptor, pairs []v2SourcePair, attempt int, witnessMaxNodes int) (scenario.Scenario, string, error) {
 	topologyRandom := v2Random(seed, "topology", attempt)
 	grid, err := chooseTopologyGridV2(descriptor.GridTopology, topologyRandom)
 	if err != nil {
@@ -70,8 +88,7 @@ func materializeGeneratedSearchSuiteCaseV2Attempt(catalog model.Catalog, caseID 
 	}
 
 	sourceRandom := v2Random(seed, "source-pair", attempt)
-	shuffleV2SourcePairs(pairs, sourceRandom)
-	pair := pairs[0]
+	pair := chooseV2SourcePair(pairs, sourceRandom)
 
 	targetRandom := v2Random(seed, "targets", attempt)
 	selectedTargets, err := chooseV2Targets(catalog, pair, descriptor, targetRandom)
@@ -117,10 +134,10 @@ func materializeGeneratedSearchSuiteCaseV2Attempt(catalog model.Catalog, caseID 
 	if err := generated.Validate(); err != nil {
 		return scenario.Scenario{}, "", err
 	}
-	if _, err := ValidateGeneratedSearchSuiteScenarioAgainstRequestedV2(catalog, generated, descriptor); err != nil {
-		return scenario.Scenario{}, "filler_area_unsatisfied", nil
+	if err := validateV2GeneratedCandidate(catalog, generated, descriptor); err != nil {
+		return scenario.Scenario{}, "", err
 	}
-	witnessStatus, err := verifyGeneratedSearchSuiteV2Packability(catalog, generated)
+	witnessStatus, err := verifyGeneratedSearchSuiteV2PackabilityWithMaxNodes(catalog, generated, witnessMaxNodes)
 	if err != nil {
 		return scenario.Scenario{}, "", err
 	}
@@ -130,10 +147,22 @@ func materializeGeneratedSearchSuiteCaseV2Attempt(catalog model.Catalog, caseID 
 	case v2WitnessUnpackable:
 		return scenario.Scenario{}, "witness_unpacked", nil
 	case v2WitnessExhausted:
-		return scenario.Scenario{}, "witness_exhausted", nil
+		return scenario.Scenario{}, "", fmt.Errorf("v2 packing witness exhausted its fixed %d-node budget", witnessMaxNodes)
 	default:
 		return scenario.Scenario{}, "", fmt.Errorf("unknown v2 witness status %q", witnessStatus)
 	}
+}
+
+func validateV2GeneratedCandidate(catalog model.Catalog, generated scenario.Scenario, descriptor GeneratedSearchSuiteStructuralDescriptor) error {
+	if _, err := ValidateGeneratedSearchSuiteScenarioAgainstRequestedV2(catalog, generated, descriptor); err != nil {
+		return fmt.Errorf("v2 generated candidate violates structural invariant: %w", err)
+	}
+	return nil
+}
+
+func chooseV2SourcePair(pairs []v2SourcePair, random *rand.Rand) v2SourcePair {
+	random.Shuffle(len(pairs), func(left, right int) { pairs[left], pairs[right] = pairs[right], pairs[left] })
+	return pairs[0]
 }
 
 func searchSuiteV2Seed(base int64, label string, attempt int) int64 {
@@ -156,19 +185,17 @@ func v2Random(base int64, label string, attempt int) *rand.Rand {
 
 type v2CompatibilityProfile struct {
 	ItemID  string
-	Area    int
 	Matches []uint64
 }
 
 type v2SourcePair struct {
-	SourceA    string
-	SourceB    string
-	SourceArea int
-	AOnly      []uint64
-	BOnly      []uint64
-	Shared     []uint64
-	Neutral    []uint64
-	Targets    []string
+	SourceA string
+	SourceB string
+	AOnly   []uint64
+	BOnly   []uint64
+	Shared  []uint64
+	Neutral []uint64
+	Targets []string
 }
 
 func viableV2SourcePairs(catalog model.Catalog, descriptor GeneratedSearchSuiteStructuralDescriptor) ([]v2SourcePair, error) {
@@ -189,7 +216,7 @@ func viableV2SourcePairs(catalog model.Catalog, descriptor GeneratedSearchSuiteS
 			}
 		}
 		if anyV2Bits(matches) {
-			profiles = append(profiles, v2CompatibilityProfile{ItemID: itemID, Area: len(item.Shape), Matches: matches})
+			profiles = append(profiles, v2CompatibilityProfile{ItemID: itemID, Matches: matches})
 		}
 	}
 	wantAOnly, wantBOnly, wantShared, _ := targetOverlapCountsV2(descriptor.TargetOverlap)
@@ -199,7 +226,10 @@ func viableV2SourcePairs(catalog model.Catalog, descriptor GeneratedSearchSuiteS
 		fullTargetMask[index/64] |= uint64(1) << uint(index%64)
 	}
 	for left := 0; left < len(profiles); left++ {
-		for right := left + 1; right < len(profiles); right++ {
+		for right := 0; right < len(profiles); right++ {
+			if left == right || !sourcePairIsIsolatedV2(catalog, profiles[left].ItemID, profiles[right].ItemID) {
+				continue
+			}
 			aOnly, bOnly, shared, neutral := make([]uint64, len(fullTargetMask)), make([]uint64, len(fullTargetMask)), make([]uint64, len(fullTargetMask)), make([]uint64, len(fullTargetMask))
 			for word := range fullTargetMask {
 				aOnly[word] = profiles[left].Matches[word] &^ profiles[right].Matches[word]
@@ -211,15 +241,12 @@ func viableV2SourcePairs(catalog model.Catalog, descriptor GeneratedSearchSuiteS
 				continue
 			}
 			pairs = append(pairs, v2SourcePair{
-				SourceA: profiles[left].ItemID, SourceB: profiles[right].ItemID, SourceArea: profiles[left].Area + profiles[right].Area,
+				SourceA: profiles[left].ItemID, SourceB: profiles[right].ItemID,
 				AOnly: aOnly, BOnly: bOnly, Shared: shared, Neutral: neutral, Targets: targets,
 			})
 		}
 	}
 	sort.Slice(pairs, func(left, right int) bool {
-		if pairs[left].SourceArea != pairs[right].SourceArea {
-			return pairs[left].SourceArea < pairs[right].SourceArea
-		}
 		if pairs[left].SourceA != pairs[right].SourceA {
 			return pairs[left].SourceA < pairs[right].SourceA
 		}
@@ -228,25 +255,28 @@ func viableV2SourcePairs(catalog model.Catalog, descriptor GeneratedSearchSuiteS
 	return pairs, nil
 }
 
-func shuffleV2SourcePairs(pairs []v2SourcePair, random *rand.Rand) {
-	start := 0
-	for start < len(pairs) {
-		end := start + 1
-		for end < len(pairs) && pairs[end].SourceArea == pairs[start].SourceArea {
-			end++
-		}
-		random.Shuffle(end-start, func(left, right int) { pairs[start+left], pairs[start+right] = pairs[start+right], pairs[start+left] })
-		start = end
+// sourcePairIsIsolatedV2 keeps source multiplicity from introducing hidden
+// source-to-source priority opportunities. It is intentionally evaluated with
+// the canonical StarMatchesItem semantics, including aliases and exclusions.
+func sourcePairIsIsolatedV2(catalog model.Catalog, sourceA string, sourceB string) bool {
+	a, aExists := catalog.Items[sourceA]
+	b, bExists := catalog.Items[sourceB]
+	if !aExists || !bExists {
+		return false
 	}
+	return !sourceTargetsItemV2(sourceA, a, sourceA, a) &&
+		!sourceTargetsItemV2(sourceA, a, sourceB, b) &&
+		!sourceTargetsItemV2(sourceB, b, sourceA, a) &&
+		!sourceTargetsItemV2(sourceB, b, sourceB, b)
 }
 
 var errV2InsufficientTargets = fmt.Errorf("insufficient v2 targets")
 
 func chooseV2Targets(catalog model.Catalog, pair v2SourcePair, descriptor GeneratedSearchSuiteStructuralDescriptor, random *rand.Rand) ([]string, error) {
 	wantAOnly, wantBOnly, wantShared, _ := targetOverlapCountsV2(descriptor.TargetOverlap)
-	aOnly := rankV2IDsByArea(catalog, v2IDsFromBits(pair.Targets, pair.AOnly), random)
-	bOnly := rankV2IDsByArea(catalog, v2IDsFromBits(pair.Targets, pair.BOnly), random)
-	shared := rankV2IDsByArea(catalog, v2IDsFromBits(pair.Targets, pair.Shared), random)
+	aOnly := shuffleV2IDs(v2IDsFromBits(pair.Targets, pair.AOnly), random)
+	bOnly := shuffleV2IDs(v2IDsFromBits(pair.Targets, pair.BOnly), random)
+	shared := shuffleV2IDs(v2IDsFromBits(pair.Targets, pair.Shared), random)
 	if len(aOnly) < wantAOnly || len(bOnly) < wantBOnly || len(shared) < wantShared {
 		return nil, errV2InsufficientTargets
 	}
@@ -306,23 +336,8 @@ func v2FillerCandidates(catalog model.Catalog, pair v2SourcePair, entropy string
 			result = append(result, v2FillerCandidate{ItemID: itemID, Area: len(item.Shape)})
 		}
 	}
-	sort.Slice(result, func(left, right int) bool {
-		if result[left].Area != result[right].Area {
-			return result[left].Area < result[right].Area
-		}
-		return result[left].ItemID < result[right].ItemID
-	})
-	start := 0
-	for start < len(result) {
-		end := start + 1
-		for end < len(result) && result[end].Area == result[start].Area {
-			end++
-		}
-		random.Shuffle(end-start, func(left, right int) {
-			result[start+left], result[start+right] = result[start+right], result[start+left]
-		})
-		start = end
-	}
+	sort.Slice(result, func(left, right int) bool { return result[left].ItemID < result[right].ItemID })
+	random.Shuffle(len(result), func(left, right int) { result[left], result[right] = result[right], result[left] })
 	return result, nil
 }
 
@@ -447,27 +462,10 @@ func diverseV2HighFillerCandidates(candidates []v2FillerCandidate, limit int) []
 	return result
 }
 
-func rankV2IDsByArea(catalog model.Catalog, ids []string, random *rand.Rand) []string {
+func shuffleV2IDs(ids []string, random *rand.Rand) []string {
 	result := append([]string(nil), ids...)
-	sort.Slice(result, func(left, right int) bool {
-		leftArea, rightArea := len(catalog.Items[result[left]].Shape), len(catalog.Items[result[right]].Shape)
-		if leftArea != rightArea {
-			return leftArea < rightArea
-		}
-		return result[left] < result[right]
-	})
-	start := 0
-	for start < len(result) {
-		area := len(catalog.Items[result[start]].Shape)
-		end := start + 1
-		for end < len(result) && len(catalog.Items[result[end]].Shape) == area {
-			end++
-		}
-		random.Shuffle(end-start, func(left, right int) {
-			result[start+left], result[start+right] = result[start+right], result[start+left]
-		})
-		start = end
-	}
+	sort.Strings(result)
+	random.Shuffle(len(result), func(left, right int) { result[left], result[right] = result[right], result[left] })
 	return result
 }
 

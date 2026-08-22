@@ -50,21 +50,35 @@ type GeneratedSearchSuiteRealizedDescriptor struct {
 	UsableCells              int `json:"usable_cells"`
 	InventoryArea            int `json:"inventory_area"`
 	DensityBPS               int `json:"density_bps"`
+	TotalItemInstances       int `json:"total_item_instances"`
+	DistinctItemDefinitions  int `json:"distinct_item_definitions"`
 	ConnectedComponents      int `json:"connected_components"`
 	ArticulationCells        int `json:"articulation_cells"`
 	InteriorBlockedCells     int `json:"interior_blocked_cells"`
 	CorridorCells            int `json:"corridor_cells"`
 	SourceACopies            int `json:"source_a_copies"`
 	SourceBCopies            int `json:"source_b_copies"`
+	SourceAArea              int `json:"source_a_area"`
+	SourceBArea              int `json:"source_b_area"`
+	SourceARotationVariants  int `json:"source_a_rotation_variants"`
+	SourceBRotationVariants  int `json:"source_b_rotation_variants"`
 	AOnlyTargets             int `json:"a_only_targets"`
 	BOnlyTargets             int `json:"b_only_targets"`
 	SharedTargets            int `json:"shared_targets"`
+	TargetArea1              int `json:"target_area_1"`
+	TargetArea2              int `json:"target_area_2"`
+	TargetArea3              int `json:"target_area_3"`
+	TargetArea4              int `json:"target_area_4"`
 	NeutralFillerInstances   int `json:"neutral_filler_instances"`
 	DuplicateFillerInstances int `json:"duplicate_filler_instances"`
 	DuplicateFillerGroups    int `json:"duplicate_filler_groups"`
 	RotationVariants1        int `json:"rotation_variants_1"`
 	RotationVariants2        int `json:"rotation_variants_2"`
 	RotationVariants3Plus    int `json:"rotation_variants_3_plus"`
+	FillerArea1              int `json:"filler_area_1"`
+	FillerArea2              int `json:"filler_area_2"`
+	FillerArea3              int `json:"filler_area_3"`
+	FillerArea4              int `json:"filler_area_4"`
 }
 
 // SearchSuiteLockedStructuralDescriptor records requested structural input and

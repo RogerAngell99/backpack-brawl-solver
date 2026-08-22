@@ -37,6 +37,18 @@ jobs:
           go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v1.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v1.lock
           go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v2.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v2.lock
 
+      - name: Verify protected private v2 holdouts
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GENERAL_SEARCH_V2_PRIVATE_SEEDS: ${{ secrets.GENERAL_SEARCH_V2_PRIVATE_SEEDS }}
+        run: |
+          test -n "$GENERAL_SEARCH_V2_PRIVATE_SEEDS"
+          umask 077
+          private_seeds_file="$(mktemp)"
+          trap 'rm -f "$private_seeds_file"' EXIT
+          printf '%s' "$GENERAL_SEARCH_V2_PRIVATE_SEEDS" > "$private_seeds_file"
+          go run ./cmd/backpack-brawl-solver verify-private-search-suite --manifest benchmarks/suites/general-search-v2.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v2.lock --seeds "$private_seeds_file"
+
       - name: Install web dependencies
         run: npm ci
         working-directory: web

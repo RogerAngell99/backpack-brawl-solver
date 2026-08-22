@@ -13,7 +13,7 @@ import (
 
 // This cap belongs to corpus generation, never to a solver benchmark. A
 // capped proof is reported as exhausted rather than as an unpackable scenario.
-const searchSuiteGeneratorV2WitnessMaxNodes = 250_000
+const searchSuiteGeneratorV2WitnessMaxNodes = 2_000_000
 
 type v2WitnessStatus string
 
