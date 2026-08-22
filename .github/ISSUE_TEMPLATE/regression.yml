@@ -1,0 +1,17 @@
+name: Search regression
+description: Report a score, determinism, budget, or benchmark regression.
+title: "regression: "
+labels: [regression]
+body:
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Scenario, catalog hash, policy, budget, workers, and command.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected and actual
+      description: Include scores, hashes, nodes, and report artifact.
+    validations:
+      required: true
