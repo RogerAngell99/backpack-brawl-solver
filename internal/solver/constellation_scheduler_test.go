@@ -82,6 +82,34 @@ func TestConstellationProgressiveRootPackingIsStableAndReclaimsDeadFamilyRounds(
 	}
 }
 
+func TestConstellationProgressiveRootPackingFinalizesAtBudgetEnd(t *testing.T) {
+	catalog, instances, options, roots := progressiveRootPackingFixture(false)
+	schedule := runProgressiveRootPacking(catalog, instances, options, roots, 1)
+	if schedule.nodesConsumed != 1 {
+		t.Fatalf("consumed=%d schedule=%+v", schedule.nodesConsumed, schedule)
+	}
+	living := schedule.families[1]
+	if !living.session.Done() || living.result.terminationReason != "budget_exhausted" || living.result.nodes != 1 {
+		t.Fatalf("living family was not finalized at budget end: %+v", living)
+	}
+}
+
+func TestConstellationRootPackingFamilyLivingUsesSessionDone(t *testing.T) {
+	catalog, instances, options, roots := progressiveRootPackingFixture(false)
+	session := newConstellationRootPackingSession(catalog, instances, options, roots[0], Config{}, 0b111, func(bool) bool { return true })
+	family := constellationRootPackingFamilySession{
+		session: session,
+		result:  constellationRootPackingResult{terminationReason: "completed"},
+	}
+	if !constellationRootPackingFamilyLiving(&family) {
+		t.Fatal("unfinished session was treated as terminal from its snapshot")
+	}
+	session.FinalizeBudgetExhausted()
+	if constellationRootPackingFamilyLiving(&family) {
+		t.Fatal("finished session remained living")
+	}
+}
+
 func TestConstellationV4DoesNotEnableProgressiveRootPacking(t *testing.T) {
 	config := Config{
 		MaxNodes:                 1_000,

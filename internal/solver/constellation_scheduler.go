@@ -161,17 +161,17 @@ func constellationProgressiveRootPacking(
 			break
 		}
 	}
+	if nodesLeft <= 0 {
+		for index := range schedule.families {
+			family := &schedule.families[index]
+			if !family.session.Done() {
+				family.result = family.session.FinalizeBudgetExhausted()
+			}
+		}
+	}
 	return schedule
 }
 
 func constellationRootPackingFamilyLiving(family *constellationRootPackingFamilySession) bool {
-	if family.session.Done() {
-		return false
-	}
-	switch family.result.terminationReason {
-	case "completed", "no_states", "hard_dead":
-		return false
-	default:
-		return true
-	}
+	return !family.session.Done()
 }
