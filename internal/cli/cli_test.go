@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"backpack-brawl-solver/internal/benchmark"
 )
 
 func catalogPath() string {
@@ -58,6 +60,7 @@ func TestFreezeSearchSuiteCommandRefusesExistingLock(t *testing.T) {
 		"freeze-search-suite",
 		"--manifest", suiteManifestPath(),
 		"--catalog", catalogPath(),
+		"--generator-version", benchmark.SearchSuiteGeneratorV1,
 		"--out", lockPath,
 	}, &firstOut, &firstErr)
 	if firstCode != 0 || !strings.Contains(firstOut.String(), "Suite frozen: general-search-v1") {
@@ -69,10 +72,63 @@ func TestFreezeSearchSuiteCommandRefusesExistingLock(t *testing.T) {
 		"freeze-search-suite",
 		"--manifest", suiteManifestPath(),
 		"--catalog", catalogPath(),
+		"--generator-version", benchmark.SearchSuiteGeneratorV1,
 		"--out", lockPath,
 	}, &stdout, &stderr)
 	if code != 1 || !strings.Contains(stderr.String(), "refusing to overwrite") {
 		t.Fatalf("second code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+}
+
+func TestFreezeSearchSuiteRequiresGeneratorVersion(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"freeze-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--out", filepath.Join(t.TempDir(), "fixture.lock"),
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "freeze-search-suite requires --generator-version") {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+}
+
+func TestFreezeSearchSuiteRejectsUnsupportedGeneratorVersion(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"freeze-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--generator-version", "search-suite-generator-v99",
+		"--out", filepath.Join(t.TempDir(), "fixture.lock"),
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), `unsupported search suite generator version "search-suite-generator-v99"`) {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+}
+
+func TestFreezeSearchSuitePinsSelectedGeneratorVersion(t *testing.T) {
+	lockPath := filepath.Join(t.TempDir(), "fixture.lock")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"freeze-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--generator-version", benchmark.SearchSuiteGeneratorV1,
+		"--out", lockPath,
+	}, &stdout, &stderr)
+	if code != 0 {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+	lock, err := benchmark.LoadSearchSuiteLock(lockPath)
+	if err != nil {
+		t.Fatalf("load lock: %v", err)
+	}
+	if lock.GeneratorVersion != benchmark.SearchSuiteGeneratorV1 {
+		t.Fatalf("generator=%q", lock.GeneratorVersion)
 	}
 }
 
@@ -108,6 +164,34 @@ func TestMaterializeSearchSuiteVerifiesLockBeforeWriting(t *testing.T) {
 	}
 	if _, err := os.Stat(outDir); !os.IsNotExist(err) {
 		t.Fatalf("materializer created output before verification: %v", err)
+	}
+}
+
+func TestMaterializeSearchSuiteUsesGeneratorPinnedByLock(t *testing.T) {
+	lockPath := filepath.Join(t.TempDir(), "unsupported.lock")
+	content, err := os.ReadFile(suiteLockPath())
+	if err != nil {
+		t.Fatalf("read committed lock: %v", err)
+	}
+	unsupported := strings.Replace(string(content), benchmark.SearchSuiteGeneratorV1, "search-suite-generator-v99", 1)
+	if err := os.WriteFile(lockPath, []byte(unsupported), 0o600); err != nil {
+		t.Fatalf("write unsupported lock: %v", err)
+	}
+	outDir := filepath.Join(t.TempDir(), "out")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{
+		"materialize-search-suite",
+		"--manifest", suiteManifestPath(),
+		"--catalog", catalogPath(),
+		"--lock", lockPath,
+		"--out", outDir,
+	}, &stdout, &stderr)
+	if code != 1 || !strings.Contains(stderr.String(), `unsupported search suite generator version "search-suite-generator-v99"`) {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+	if _, err := os.Stat(outDir); !os.IsNotExist(err) {
+		t.Fatalf("materializer created output before generator validation: %v", err)
 	}
 }
 

@@ -85,7 +85,7 @@ func TestSearchSuiteLockRejectsTrailingJSON(t *testing.T) {
 
 func TestObserveSearchSuiteIsStableAcrossFormatting(t *testing.T) {
 	paths := writeSearchSuiteFixture(t)
-	first, err := ObserveSearchSuite(paths.manifest, paths.catalog)
+	first, err := ObserveSearchSuite(paths.manifest, paths.catalog, SearchSuiteGeneratorV1)
 	if err != nil {
 		t.Fatalf("observe suite first: %v", err)
 	}
@@ -121,7 +121,7 @@ func TestObserveSearchSuiteIsStableAcrossFormatting(t *testing.T) {
 `), 0o600); err != nil {
 		t.Fatalf("rewrite manifest: %v", err)
 	}
-	second, err := ObserveSearchSuite(paths.manifest, paths.catalog)
+	second, err := ObserveSearchSuite(paths.manifest, paths.catalog, SearchSuiteGeneratorV1)
 	if err != nil {
 		t.Fatalf("observe suite second: %v", err)
 	}
@@ -132,7 +132,7 @@ func TestObserveSearchSuiteIsStableAcrossFormatting(t *testing.T) {
 
 func TestWriteSearchSuiteLockRefusesOverwrite(t *testing.T) {
 	paths := writeSearchSuiteFixture(t)
-	lock, err := ObserveSearchSuite(paths.manifest, paths.catalog)
+	lock, err := ObserveSearchSuite(paths.manifest, paths.catalog, SearchSuiteGeneratorV1)
 	if err != nil {
 		t.Fatalf("observe suite: %v", err)
 	}
@@ -233,7 +233,7 @@ func TestVerifySearchSuiteLockDetectsDrift(t *testing.T) {
 				lock.GeneratorVersion = "search-suite-generator-v2"
 				writeFixtureLock(t, paths.lock, lock)
 			},
-			message: "generator version mismatch",
+			message: `unsupported search suite generator version "search-suite-generator-v2"`,
 		},
 		{
 			name: "generated scenario hash",
@@ -297,7 +297,7 @@ func TestPublicGeneratedScenarioMatchesPinnedHash(t *testing.T) {
 	if err != nil {
 		t.Fatalf("load catalog: %v", err)
 	}
-	generated, err := MaterializeSearchSuiteCases(loadedCatalog, manifest, SuiteRoleDevelopment)
+	generated, err := MaterializeSearchSuiteCases(SearchSuiteGeneratorV1, loadedCatalog, manifest, SuiteRoleDevelopment)
 	if err != nil {
 		t.Fatalf("materialize suite: %v", err)
 	}
@@ -353,7 +353,7 @@ func writeSearchSuiteFixture(t *testing.T) searchSuiteFixturePaths {
 	writeFile(t, paths.catalog, fixtureCatalog)
 	writeFile(t, paths.static, fixtureStaticScenario)
 	writeFixtureManifest(t, paths.manifest, 7, GeneratedFamilySparse, false)
-	lock, err := ObserveSearchSuite(paths.manifest, paths.catalog)
+	lock, err := ObserveSearchSuite(paths.manifest, paths.catalog, SearchSuiteGeneratorV1)
 	if err != nil {
 		t.Fatalf("observe fixture suite: %v", err)
 	}
