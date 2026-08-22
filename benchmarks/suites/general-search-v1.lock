@@ -1,0 +1,99 @@
+{
+  "lock_version": 1,
+  "suite_name": "general-search-v1",
+  "manifest_sha256": "a8dbfacda827dfa31b321ae7b81729892c7928317417c4a7e14a93b65219033f",
+  "catalog_sha256": "0ab356afc52fa8479b627d4a917bc7f31d4cad1b6e021fd618ec17ef773c57c6",
+  "generator_version": "search-suite-generator-v1",
+  "static_cases": [
+    {
+      "id": "armor-craft-coverage",
+      "path": "benchmarks/scenarios/armor-craft-coverage.json",
+      "scenario_sha256": "9a44561fb5f437ef749e91383d5414b7b69de1b1948fbdd7d0eeb0153a2f050a"
+    },
+    {
+      "id": "global-priority-mixed",
+      "path": "benchmarks/scenarios/global-priority-mixed.json",
+      "scenario_sha256": "f84b63663f988788105a270f8a734244593f556f148878b6480a9c9be8eb9b20"
+    },
+    {
+      "id": "groups-weapons-food-armor",
+      "path": "benchmarks/scenarios/groups-weapons-food-armor.json",
+      "scenario_sha256": "193800fa3ae7f7f0186dbf4a4a40b487d455ddd0383801d7b95c00d10be0cffd"
+    },
+    {
+      "id": "loose-any-stars",
+      "path": "benchmarks/scenarios/loose-any-stars.json",
+      "scenario_sha256": "1aef7b745b60f9d202687982e0b5a386ad5f36d55440c76bef9c509cc215f1e6"
+    },
+    {
+      "id": "magic-ranged-crafts",
+      "path": "benchmarks/scenarios/magic-ranged-crafts.json",
+      "scenario_sha256": "bb6dc761005a879c2a94a48cbdb29a1283654e4b69938e42a44cd6317ec58ca4"
+    },
+    {
+      "id": "micro-coverage-belt",
+      "path": "benchmarks/exhaustive-scenarios/small-coverage-belt.json",
+      "scenario_sha256": "ddf110bd514f36a7342e3f3f543dae5a45228f47cf28e03bf545afff8d9a70ef"
+    },
+    {
+      "id": "micro-craft-chain",
+      "path": "benchmarks/exhaustive-scenarios/small-craft-chain.json",
+      "scenario_sha256": "db71ea0ee29dae00233ed9af3ac5c40ba9643c4252a1ae2e3093a9660c07bd91"
+    },
+    {
+      "id": "outgoing-debug-v3",
+      "path": "benchmarks/scenarios/outgoing-debug-reference-v3.json",
+      "scenario_sha256": "c78e78c94cb5e188185516972139a464a515e750bc7507ad243c31c272aea8ba"
+    },
+    {
+      "id": "outgoing-food-experiment",
+      "path": "benchmarks/scenarios/outgoing-per-instance-food.json",
+      "scenario_sha256": "1228b423abfb1b7a4391751d3993330a5367484c94d6013afac2e5a786b90a53"
+    },
+    {
+      "id": "star-relocation-refine",
+      "path": "benchmarks/scenarios/star-relocation-refine.json",
+      "scenario_sha256": "88513ebe48ec6e62ede9c8e51950394ccfdf5fe71d8b6e6ff1053522df8d34f7"
+    }
+  ],
+  "generated_cases": [
+    {
+      "id": "duplicated-validation-01",
+      "family": "star-source-duplicated",
+      "role": "validation",
+      "seed": 130363,
+      "scenario_sha256": "29af5c05d8acfdbbb21acf70a1cdb0090810db1e8867511782d66059c6c22ad1"
+    },
+    {
+      "id": "loose-validation-01",
+      "family": "star-source-loose",
+      "role": "validation",
+      "seed": 155921,
+      "scenario_sha256": "cff7ef110dff34d7b65bb2ca564d65aa890f1b7f252db9f236db8ea71764ffcc"
+    },
+    {
+      "id": "public-holdout-01",
+      "family": "star-source-sparse",
+      "role": "public_holdout",
+      "seed": 196613,
+      "scenario_sha256": "7b70bb917c991f2853cbf24ecaf44eb01015fbd4810660446085564f13cec6e9"
+    },
+    {
+      "id": "sparse-dev-01",
+      "family": "star-source-sparse",
+      "role": "development",
+      "seed": 104729,
+      "scenario_sha256": "9f5423d5be3c38f02f424e639909e7273fc2338ac86550978da4bfaebfbe4776"
+    }
+  ],
+  "private_cases": [
+    {
+      "id": "private-holdout-01",
+      "private_seed_id": "general-search-v1-private-01"
+    },
+    {
+      "id": "private-holdout-02",
+      "private_seed_id": "general-search-v1-private-02"
+    }
+  ]
+}

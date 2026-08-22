@@ -1,8 +1,6 @@
 package benchmark
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"math/rand"
@@ -89,18 +87,26 @@ func ResolveSearchSuiteManifest(path string) (ResolvedSearchSuiteManifest, error
 		Manifest:       manifest,
 		ScenarioSHA256: make(map[string]string, len(manifest.Scenarios)),
 	}
-	digest := sha256.Sum256(content)
-	resolved.ManifestSHA256 = hex.EncodeToString(digest[:])
-	root := filepath.Dir(filepath.Dir(filepath.Dir(path)))
+	resolved.ManifestSHA256, err = canonicalJSONSHA256(content)
+	if err != nil {
+		return ResolvedSearchSuiteManifest{}, fmt.Errorf("canonicalize manifest: %w", err)
+	}
+	root := searchSuiteRoot(path)
 	for _, entry := range manifest.Scenarios {
 		scenarioContent, err := os.ReadFile(filepath.Join(root, entry.Path))
 		if err != nil {
 			return ResolvedSearchSuiteManifest{}, fmt.Errorf("%s: %w", entry.ID, err)
 		}
-		digest := sha256.Sum256(scenarioContent)
-		resolved.ScenarioSHA256[entry.ID] = hex.EncodeToString(digest[:])
+		resolved.ScenarioSHA256[entry.ID], err = canonicalJSONSHA256(scenarioContent)
+		if err != nil {
+			return ResolvedSearchSuiteManifest{}, fmt.Errorf("%s: canonicalize scenario: %w", entry.ID, err)
+		}
 	}
 	return resolved, nil
+}
+
+func searchSuiteRoot(manifestPath string) string {
+	return filepath.Dir(filepath.Dir(filepath.Dir(manifestPath)))
 }
 
 func (manifest SearchSuiteManifest) Validate() error {
@@ -284,6 +290,18 @@ func MaterializeSearchSuiteCases(catalog model.Catalog, manifest SearchSuiteMani
 	requested := make(map[string]struct{}, len(roles))
 	for _, role := range roles {
 		requested[role] = struct{}{}
+	}
+	if _, requestedPrivate := requested[SuiteRolePrivateHoldout]; requestedPrivate {
+		privateIDs := make([]string, 0)
+		for _, entry := range manifest.Generated {
+			if entry.Role == SuiteRolePrivateHoldout {
+				privateIDs = append(privateIDs, entry.ID)
+			}
+		}
+		sort.Strings(privateIDs)
+		if len(privateIDs) > 0 {
+			return nil, fmt.Errorf("private holdout %q cannot be materialized by the public suite materializer", privateIDs[0])
+		}
 	}
 	result := make([]scenario.Scenario, 0, len(manifest.Generated))
 	for _, entry := range manifest.Generated {
