@@ -21,6 +21,18 @@ func TestSearchSuiteGeneratorV1IsSupported(t *testing.T) {
 	}
 }
 
+func TestEverySupportedSearchSuiteGeneratorHasMaterializer(t *testing.T) {
+	for _, version := range SupportedSearchSuiteGeneratorVersions() {
+		generator, err := lookupSearchSuiteGenerator(version)
+		if err != nil {
+			t.Fatalf("lookup %q: %v", version, err)
+		}
+		if generator == nil {
+			t.Fatalf("generator %q has no materializer", version)
+		}
+	}
+}
+
 func TestSearchSuiteGeneratorRejectsUnsupportedVersion(t *testing.T) {
 	for _, version := range []string{"", "search-suite-generator-v2"} {
 		err := ValidateSearchSuiteGeneratorVersion(version)
