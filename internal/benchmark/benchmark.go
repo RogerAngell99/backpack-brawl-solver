@@ -44,6 +44,7 @@ type RunConfig struct {
 	RepairSearchMode                                                              string
 	PlateauVariant                                                                string
 	Diagnostic                                                                    bool
+	OperationProfiling                                                            bool
 	ConstellationSeedV1                                                           bool
 	ConstellationSeedVariant                                                      string
 	ConstellationFeasibilityProbe                                                 bool
@@ -78,6 +79,7 @@ type Report struct {
 	RepairSearchMode                                                              string  `json:"repair_search_mode"`
 	PlateauVariant                                                                string  `json:"plateau_variant"`
 	Diagnostic                                                                    bool    `json:"diagnostic"`
+	OperationProfiling                                                            bool    `json:"operation_profiling,omitempty"`
 	ConstellationSeedV1                                                           bool    `json:"constellation_seed_v1"`
 	ConstellationSeedVariant                                                      string  `json:"constellation_seed_variant,omitempty"`
 	ConstellationFeasibilityProbe                                                 bool    `json:"constellation_feasibility_probe"`
@@ -132,6 +134,7 @@ type Run struct {
 	ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint     string                   `json:"constellation_forced_candidate_rooted_packing_shadow_witness_semantic_fingerprint,omitempty"`
 	ConstellationParentFrontierHedgeProbe                                         bool                     `json:"constellation_parent_frontier_hedge_probe"`
 	ConstellationParentFrontierHedgeProbeStage                                    string                   `json:"constellation_parent_frontier_hedge_probe_stage,omitempty"`
+	OperationProfiling                                                            bool                     `json:"operation_profiling,omitempty"`
 	PrioritySemantics                                                             model.PrioritySemantics  `json:"priority_semantics"`
 	Priorities                                                                    []string                 `json:"priorities"`
 	NoSkips                                                                       bool                     `json:"no_skips"`
@@ -333,6 +336,15 @@ func RunScenarios(config RunConfig) (Report, error) {
 	if config.Diagnostic && config.Workers != 1 {
 		return Report{}, fmt.Errorf("diagnostic runs require exactly one worker")
 	}
+	if config.OperationProfiling && !solver.OperationProfilingAvailable() {
+		return Report{}, fmt.Errorf("operation profiling requires a binary built with -tags searchprofile")
+	}
+	if config.OperationProfiling && config.Diagnostic {
+		return Report{}, fmt.Errorf("operation profiling and diagnostic runs must be separate")
+	}
+	if config.OperationProfiling && config.Workers != 1 {
+		return Report{}, fmt.Errorf("operation profiling requires exactly one worker")
+	}
 	if config.Top <= 0 {
 		config.Top = 1
 	}
@@ -455,6 +467,7 @@ func RunScenarios(config RunConfig) (Report, error) {
 		RepairSearchMode:                         config.RepairSearchMode,
 		PlateauVariant:                           config.PlateauVariant,
 		Diagnostic:                               config.Diagnostic,
+		OperationProfiling:                       config.OperationProfiling,
 		ConstellationSeedV1:                      config.ConstellationSeedV1,
 		ConstellationSeedVariant:                 config.ConstellationSeedVariant,
 		ConstellationFeasibilityProbe:            config.ConstellationFeasibilityProbe,
@@ -623,7 +636,8 @@ func runScenario(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, 
 		ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint:     config.ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint,
 		ConstellationParentFrontierHedgeProbe:                                         config.ConstellationParentFrontierHedgeProbe,
 		ConstellationParentFrontierHedgeProbeStage:                                    config.ConstellationParentFrontierHedgeProbeStage,
-		SolverSettings: solver.SettingsForBenchmark(budget, config.PlateauVariant),
+		OperationProfiling: config.OperationProfiling,
+		SolverSettings:     solver.SettingsForBenchmark(budget, config.PlateauVariant),
 	}
 	gridMask, err := scenarioGridMask(loadedScenario)
 	if err != nil {
@@ -668,6 +682,7 @@ func runScenario(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, 
 		RepairSearch:                             repairSearch,
 		PlateauVariant:                           config.PlateauVariant,
 		Diagnostics:                              config.Diagnostic,
+		OperationProfiling:                       config.OperationProfiling,
 		EnableConstellationSeedV1:                config.ConstellationSeedV1,
 		ConstellationSeedVariant:                 config.ConstellationSeedVariant,
 		ConstellationFeasibilityProbe:            config.ConstellationFeasibilityProbe,

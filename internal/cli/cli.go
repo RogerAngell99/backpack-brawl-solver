@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"runtime/pprof"
 	"strings"
 	"time"
 
@@ -44,6 +45,8 @@ func Run(args []string, stdout io.Writer, stderr io.Writer) int {
 		return runCompareBenchmarks(args[1:], stdout, stderr)
 	case "compare-constellation-benchmarks":
 		return runCompareConstellationBenchmarks(args[1:], stdout, stderr)
+	case "summarize-operation-profile":
+		return runSummarizeOperationProfile(args[1:], stdout, stderr)
 	case "materialize-search-suite":
 		return runMaterializeSearchSuite(args[1:], stdout, stderr)
 	case "freeze-search-suite":
@@ -75,6 +78,9 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 	repairSearchMode := flags.String("repair-search-mode", benchmark.RepairSearchModeScenario, "Repair search override: scenario, on, or off")
 	plateauVariant := flags.String("plateau-variant", solver.DefaultPlateauVariant, "Plateau LNS policy: legacy-large-off, large-16, large-16-18, or large-16-18-20")
 	diagnostic := flags.Bool("diagnostic", false, "Record deterministic incumbent and plateau diagnostics (requires --workers 1)")
+	operationProfile := flags.Bool("operation-profile", false, "Record deterministic rooted-packing operation counts (requires -tags searchprofile)")
+	cpuProfile := flags.String("cpu-profile", "", "Write a CPU profile for this benchmark run")
+	heapProfile := flags.String("heap-profile", "", "Write a heap profile after this benchmark run")
 	constellationSeedV1 := flags.Bool("constellation-seed-v1", false, "Enable constellation seed v1")
 	constellationSeedVariant := flags.String("constellation-seed-variant", "", "Constellation seed experiment: v1, v2, v3, v4, v5, v5.1, or general-search-v1")
 	constellationFeasibilityProbe := flags.Bool("constellation-feasibility-probe", false, "Diagnose constellation root completion (requires --diagnostic)")
@@ -111,6 +117,18 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 	}
 	if *top <= 0 {
 		fmt.Fprintln(stderr, "ERROR: --top must be positive")
+		return 2
+	}
+	if *operationProfile && !solver.OperationProfilingAvailable() {
+		fmt.Fprintln(stderr, "ERROR: operation profiling requires a binary built with -tags searchprofile")
+		return 2
+	}
+	if *operationProfile && *diagnostic {
+		fmt.Fprintln(stderr, "ERROR: --operation-profile and --diagnostic must be run separately")
+		return 2
+	}
+	if *operationProfile && (*cpuProfile != "" || *heapProfile != "") {
+		fmt.Fprintln(stderr, "ERROR: --operation-profile cannot be combined with --cpu-profile or --heap-profile")
 		return 2
 	}
 	budgets, err := benchmark.ParseBudgets(*budgetsText)
@@ -225,6 +243,19 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 		return 2
 	}
 
+	var cpuProfileFile *os.File
+	if *cpuProfile != "" {
+		cpuProfileFile, err = os.Create(*cpuProfile)
+		if err != nil {
+			fmt.Fprintf(stderr, "ERROR: create CPU profile: %v\n", err)
+			return 1
+		}
+		if err := pprof.StartCPUProfile(cpuProfileFile); err != nil {
+			cpuProfileFile.Close()
+			fmt.Fprintf(stderr, "ERROR: start CPU profile: %v\n", err)
+			return 1
+		}
+	}
 	report, err := benchmark.RunScenarios(benchmark.RunConfig{
 		CatalogPath:                              *catalogPath,
 		ScenarioDir:                              *dir,
@@ -236,6 +267,7 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 		RepairSearchMode:                         *repairSearchMode,
 		PlateauVariant:                           *plateauVariant,
 		Diagnostic:                               *diagnostic,
+		OperationProfiling:                       *operationProfile,
 		ConstellationSeedV1:                      *constellationSeedV1,
 		ConstellationSeedVariant:                 *constellationSeedVariant,
 		ConstellationFeasibilityProbe:            *constellationFeasibilityProbe,
@@ -258,9 +290,29 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 		ConstellationParentFrontierHedgeProbe:                                         *constellationParentFrontierHedgeProbe,
 		ConstellationParentFrontierHedgeProbeStage:                                    *constellationParentFrontierHedgeProbeStage,
 	})
+	if cpuProfileFile != nil {
+		pprof.StopCPUProfile()
+		if closeErr := cpuProfileFile.Close(); closeErr != nil && err == nil {
+			err = fmt.Errorf("close CPU profile: %w", closeErr)
+		}
+	}
 	if err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 2
+	}
+	if *heapProfile != "" {
+		runtime.GC()
+		heapProfileFile, profileErr := os.Create(*heapProfile)
+		if profileErr == nil {
+			profileErr = pprof.WriteHeapProfile(heapProfileFile)
+			if closeErr := heapProfileFile.Close(); profileErr == nil && closeErr != nil {
+				profileErr = closeErr
+			}
+		}
+		if profileErr != nil {
+			fmt.Fprintf(stderr, "ERROR: write heap profile: %v\n", profileErr)
+			return 1
+		}
 	}
 	content, err := json.MarshalIndent(report, "", "  ")
 	if err != nil {
@@ -354,6 +406,40 @@ func runCompareConstellationBenchmarks(args []string, stdout io.Writer, stderr i
 	if comparison.ScoreLosses > 0 {
 		return 1
 	}
+	return 0
+}
+
+func runSummarizeOperationProfile(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("summarize-operation-profile", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	out := flags.String("out", "", "Optional path for deterministic summary JSON")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if flags.NArg() != 1 {
+		fmt.Fprintln(stderr, "ERROR: summarize-operation-profile expects one benchmark report JSON file")
+		return 2
+	}
+	report, err := benchmark.LoadReport(flags.Arg(0))
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	summary := benchmark.SummarizeOperationProfile(report)
+	benchmark.FormatOperationProfileSummary(stdout, summary)
+	if *out == "" {
+		return 0
+	}
+	content, err := json.MarshalIndent(summary, "", "  ")
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	if err := os.WriteFile(*out, append(content, '\n'), 0o600); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "Wrote operation profile summary to %s\n", *out)
 	return 0
 }
 
@@ -610,6 +696,7 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 	unknownHeroPolicy := flags.String("hero-unknown-policy", "", "Unknown hero scope policy: exclude, include, or error")
 	jsonOutput := flags.Bool("json", false, "Print machine-readable JSON")
 	workers := flags.Int("workers", runtime.NumCPU(), "Number of search workers")
+	operationProfile := flags.Bool("operation-profile", false, "Record deterministic rooted-packing operation counts (requires -tags searchprofile and --workers 1)")
 	if err := flags.Parse(args); err != nil {
 		return 2
 	}
@@ -650,6 +737,14 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 	}
 	if effectiveWorkers <= 0 {
 		fmt.Fprintln(stderr, "ERROR: --workers must be positive")
+		return 2
+	}
+	if *operationProfile && !solver.OperationProfilingAvailable() {
+		fmt.Fprintln(stderr, "ERROR: operation profiling requires a binary built with -tags searchprofile")
+		return 2
+	}
+	if *operationProfile && effectiveWorkers != 1 {
+		fmt.Fprintln(stderr, "ERROR: operation profiling requires --workers 1")
 		return 2
 	}
 	if effectiveMaxNodes < 0 {
@@ -695,6 +790,7 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 		CoverageGroups:        effectiveCoverageGroups,
 		StopOnCoverageCeiling: effectiveStopOnCoverageCeiling,
 		RepairSearch:          effectiveRepairSearch && effectiveMaxNodes > 0,
+		OperationProfiling:    *operationProfile,
 	})
 	elapsed := time.Since(startedAt)
 	if err != nil {
@@ -945,6 +1041,7 @@ func printUsage(writer io.Writer) {
 	fmt.Fprintln(writer, "  benchmark-scenarios")
 	fmt.Fprintln(writer, "  compare-benchmarks")
 	fmt.Fprintln(writer, "  compare-constellation-benchmarks")
+	fmt.Fprintln(writer, "  summarize-operation-profile")
 	fmt.Fprintln(writer, "  freeze-search-suite")
 	fmt.Fprintln(writer, "  verify-search-suite")
 	fmt.Fprintln(writer, "  verify-private-search-suite")

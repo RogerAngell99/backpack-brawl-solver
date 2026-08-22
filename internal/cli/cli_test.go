@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"backpack-brawl-solver/internal/benchmark"
+	"backpack-brawl-solver/internal/model"
 )
 
 func catalogPath() string {
@@ -49,6 +50,33 @@ func TestVerifySearchSuiteCommand(t *testing.T) {
 		if !strings.Contains(stdout.String(), expected) {
 			t.Fatalf("output missing %q: %s", expected, stdout.String())
 		}
+	}
+}
+
+func TestSummarizeOperationProfileCommand(t *testing.T) {
+	reportPath := filepath.Join(t.TempDir(), "profile.json")
+	reportContent, err := json.Marshal(benchmark.Report{Runs: []benchmark.Run{{
+		Scenario: "fixture",
+		Budget:   100,
+		Search: benchmark.SearchSummary{ConstellationSeedDiagnostics: &model.ConstellationSeedDiagnostics{
+			RootPackingOperationProfile: &model.ConstellationRootPackingOperationProfile{Version: "root-packing-ops-v1", CandidateExpansions: 2},
+		}},
+	}}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(reportPath, reportContent, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	summaryPath := filepath.Join(t.TempDir(), "summary.json")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{"summarize-operation-profile", "--out", summaryPath, reportPath}, &stdout, &stderr)
+	if code != 0 || !strings.Contains(stdout.String(), "Rooted packing operations — fixture @ 100") {
+		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
+	}
+	if _, err := os.Stat(summaryPath); err != nil {
+		t.Fatalf("summary file: %v", err)
 	}
 }
 

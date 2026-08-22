@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "name": "root-packing-p0",
+  "suite": "general-search-v2",
+  "manifest": "benchmarks/suites/general-search-v2.json",
+  "lock": "benchmarks/suites/general-search-v2.lock",
+  "allowed_role": "development",
+  "operation_case_ids": [
+    "gsv2-013",
+    "gsv2-014",
+    "gsv2-015",
+    "gsv2-016",
+    "gsv2-017",
+    "gsv2-018",
+    "gsv2-019",
+    "gsv2-020",
+    "gsv2-021",
+    "gsv2-022",
+    "gsv2-023",
+    "gsv2-024",
+    "gsv2-025",
+    "gsv2-026"
+  ],
+  "cpu_heap_case_ids": [
+    "gsv2-013",
+    "gsv2-015",
+    "gsv2-016",
+    "gsv2-018",
+    "gsv2-021",
+    "gsv2-024"
+  ],
+  "operation_budgets": [250000, 1000000],
+  "scheduler_budgets": [250000, 500000, 1000000, 5000000],
+  "cpu_heap_budget": 1000000,
+  "policies": ["v4", "general-search-v1"],
+  "workers": 1
+}
