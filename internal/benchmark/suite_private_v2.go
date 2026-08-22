@@ -42,6 +42,7 @@ func VerifySearchSuiteV2PrivateHoldouts(catalog model.Catalog, manifest SearchSu
 		privateEntry := entry
 		privateEntry.Role = SuiteRoleDevelopment
 		privateEntry.PrivateSeedID = ""
+		privateEntry.PrivateSeedCommitment = ""
 		privateEntry.Seed = &seed
 		if _, _, err := materializeGeneratedSearchSuiteCaseV2WithDiagnostics(catalog, privateEntry); err != nil {
 			return fmt.Errorf("private holdout %q: %w", entry.ID, err)

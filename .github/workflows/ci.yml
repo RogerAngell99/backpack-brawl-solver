@@ -38,7 +38,7 @@ jobs:
           go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v2.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v2.lock
 
       - name: Verify protected private v2 holdouts
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        if: github.ref == 'refs/heads/main'
         env:
           GENERAL_SEARCH_V2_PRIVATE_SEEDS: ${{ secrets.GENERAL_SEARCH_V2_PRIVATE_SEEDS }}
         run: |
