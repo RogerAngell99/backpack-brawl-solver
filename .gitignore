@@ -33,3 +33,7 @@ web/public/scenarios/
 # Playwright artifacts.
 web/playwright-report/
 web/test-results/
+
+# Recoverable local benchmark units and generated public suite materializations.
+benchmarks/runs/
+benchmarks/generated/

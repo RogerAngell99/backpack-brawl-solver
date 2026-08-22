@@ -1,0 +1,23 @@
+name: Search mechanism
+description: Propose one isolated solver mechanism experiment.
+title: "mechanism: "
+labels: [mechanism]
+body:
+  - type: textarea
+    attributes:
+      label: Hypothesis
+      description: State a falsifiable search hypothesis.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Scope
+      description: List phases, policies, and code paths that may change.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Evaluation
+      description: Define development, validation, holdout, budgets, and stop conditions.
+    validations:
+      required: true
