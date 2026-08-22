@@ -23,6 +23,7 @@ func main() {
 	js.Global().Set("solveScenario", js.FuncOf(solveScenario))
 	js.Global().Set("installCatalog", js.FuncOf(installCatalog))
 	js.Global().Set("solvePreparedScenario", js.FuncOf(solvePreparedScenario))
+	js.Global().Set("evaluatePreparedLayout", js.FuncOf(evaluatePreparedLayout))
 	select {}
 }
 
@@ -72,6 +73,20 @@ func solvePreparedScenario(_ js.Value, args []js.Value) any {
 		return errorJSON(err.Error())
 	}
 	return string(result.JSON)
+}
+
+func evaluatePreparedLayout(_ js.Value, args []js.Value) any {
+	if len(args) != 1 || args[0].Type() != js.TypeString {
+		return errorJSON("evaluatePreparedLayout expects a JSON string")
+	}
+	if !preparedCatalogSet {
+		return errorJSON("catalog has not been installed")
+	}
+	result, err := websolve.EvaluatePreparedLayoutJSON(preparedCatalog, []byte(args[0].String()))
+	if err != nil {
+		return errorJSON(err.Error())
+	}
+	return string(result)
 }
 
 func wasmOptions(args []js.Value) websolve.Options {

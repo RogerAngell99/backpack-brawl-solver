@@ -17,13 +17,59 @@ import type {
   SolverBackend,
   Star,
 } from "./types";
-import { RemoteSolveError, solveWithOci, solveWithRemote, solveWithWorker } from "./wasm";
+import { evaluateLayoutWithWasm, RemoteSolveError, solveWithOci, solveWithRemote, solveWithWorker } from "./wasm";
 
 const ROWS = 6;
 const COLS = 9;
 
 type Grid = boolean[][];
 type HeroViewMode = "all" | "hero" | "shared";
+type OutgoingPrioritySemantics = "outgoing-v2" | "outgoing-per-instance-v3";
+
+interface DraftPlacementSpec {
+  instanceID: string;
+  itemID: string;
+  rotation: number;
+  origin: CoordTuple;
+}
+
+interface ManualEditorPlacement extends DraftPlacementSpec {
+  key: string;
+}
+
+// Transcribed from the supplied screenshot. This remains the manual-editor
+// source; its literal solver evaluation is frozen separately as an oracle.
+const PRINT_RECONSTRUCTION: DraftPlacementSpec[] = [
+  { instanceID: "banana#0", itemID: "banana", rotation: 0, origin: [2, 2] },
+  { instanceID: "cactrio#1", itemID: "cactrio", rotation: 0, origin: [0, 0] },
+  { instanceID: "champion_s_ripper#2", itemID: "champion_s_ripper", rotation: 0, origin: [1, 6] },
+  { instanceID: "cleansing_crown#3", itemID: "cleansing_crown", rotation: 90, origin: [1, 0] },
+  { instanceID: "death_essence#4", itemID: "death_essence", rotation: 0, origin: [3, 7] },
+  { instanceID: "discordant_harp#5", itemID: "discordant_harp", rotation: 270, origin: [0, 4] },
+  { instanceID: "donut#6", itemID: "donut", rotation: 0, origin: [4, 3] },
+  { instanceID: "ginseng_root#7", itemID: "ginseng_root", rotation: 90, origin: [4, 0] },
+  { instanceID: "ginseng_root#8", itemID: "ginseng_root", rotation: 90, origin: [3, 5] },
+  { instanceID: "green_snapper#9", itemID: "green_snapper", rotation: 0, origin: [5, 5] },
+  { instanceID: "hooded_cowl#10", itemID: "hooded_cowl", rotation: 0, origin: [0, 7] },
+  { instanceID: "longing_begonia#11", itemID: "longing_begonia", rotation: 90, origin: [0, 2] },
+  { instanceID: "pitahaya#12", itemID: "pitahaya", rotation: 90, origin: [3, 0] },
+  { instanceID: "pitahaya#13", itemID: "pitahaya", rotation: 0, origin: [4, 4] },
+  { instanceID: "spice#14", itemID: "spice", rotation: 270, origin: [3, 4] },
+  { instanceID: "spice#15", itemID: "spice", rotation: 0, origin: [5, 1] },
+  { instanceID: "spice#16", itemID: "spice", rotation: 0, origin: [5, 2] },
+  { instanceID: "spicy_sausage#17", itemID: "spicy_sausage", rotation: 0, origin: [2, 1] },
+  { instanceID: "spiked_sickle#18", itemID: "spiked_sickle", rotation: 180, origin: [1, 4] },
+  { instanceID: "spirit_biscuit#19", itemID: "spirit_biscuit", rotation: 0, origin: [5, 3] },
+  { instanceID: "steadfast_boots#20", itemID: "steadfast_boots", rotation: 180, origin: [2, 7] },
+  { instanceID: "tender_sausage#21", itemID: "tender_sausage", rotation: 0, origin: [4, 1] },
+  { instanceID: "thornwall#22", itemID: "thornwall", rotation: 0, origin: [4, 7] },
+  { instanceID: "twinmaw#23", itemID: "twinmaw", rotation: 90, origin: [1, 1] },
+];
+
+const PRINT_RECONSTRUCTION_ITEMS = PRINT_RECONSTRUCTION.reduce<Record<string, number>>((items, placement) => {
+  items[placement.itemID] = (items[placement.itemID] || 0) + 1;
+  return items;
+}, {});
 
 const defaultGrid = (): Grid => Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => true));
 const emptyGrid = (): Grid => Array.from({ length: ROWS }, () => Array.from({ length: COLS }, () => false));
@@ -54,7 +100,9 @@ interface WebScenarioInput {
   maxNodes: number;
   noSkips: boolean;
   stopOnCoverageCeiling: boolean;
+  stopOnPriorityCeiling: boolean;
   repairSearch: boolean;
+  prioritySemantics: OutgoingPrioritySemantics;
   priorityOrder: string[];
   priorityOptionsByKey: Map<string, PriorityOption>;
   coverageGroups: CoverageGroup[];
@@ -95,7 +143,9 @@ export default function App() {
   const [maxNodes, setMaxNodes] = useState(0);
   const [noSkips, setNoSkips] = useState(false);
   const [stopOnCoverageCeiling, setStopOnCoverageCeiling] = useState(false);
+  const [stopOnPriorityCeiling, setStopOnPriorityCeiling] = useState(false);
   const [repairSearch, setRepairSearch] = useState(true);
+  const [prioritySemantics, setPrioritySemantics] = useState<OutgoingPrioritySemantics>("outgoing-v2");
   const [solutions, setSolutions] = useState<Solution[]>([]);
   const [partialResultStatus, setPartialResultStatus] = useState<"running" | "canceled" | null>(null);
   const [selectedSolution, setSelectedSolution] = useState(0);
@@ -119,7 +169,12 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [debugCopyStatus, setDebugCopyStatus] = useState<string | null>(null);
   const [debugFallbackText, setDebugFallbackText] = useState<string | null>(null);
+	const [printReconstructionPreview, setPrintReconstructionPreview] = useState(false);
+	const [manualEditorPlacements, setManualEditorPlacements] = useState<ManualEditorPlacement[]>([]);
+	const [manualLayoutStatus, setManualLayoutStatus] = useState<string | null>(null);
+	const [manualLayoutEvaluating, setManualLayoutEvaluating] = useState(false);
   const lastPartialSolutionsRef = useRef<{ value: Solution[] | null; signature: string | null }>({ value: null, signature: null });
+  const initializedStarPriorityKeysRef = useRef(new Set<string>());
 
   useEffect(() => {
     void loadInitialState();
@@ -156,7 +211,11 @@ export default function App() {
       setMaxNodes(loadedScenario.max_nodes ?? 0);
       setNoSkips(loadedScenario.no_skips ?? false);
       setStopOnCoverageCeiling(loadedScenario.stop_on_coverage_ceiling ?? false);
+      setStopOnPriorityCeiling(loadedScenario.stop_on_priority_ceiling ?? false);
       setRepairSearch(loadedScenario.repair_search ?? true);
+      setPrioritySemantics(
+        loadedScenario.priority_semantics === "outgoing-per-instance-v3" ? "outgoing-per-instance-v3" : "outgoing-v2",
+      );
       const loadedHeroFilter = loadedScenario.hero_filter;
       if (loadedHeroFilter?.mode === "shared") {
         setHeroViewMode("shared");
@@ -167,6 +226,9 @@ export default function App() {
       setExcludedHeroID(loadedHeroFilter?.exclude_heroes?.[0] || "");
       setHeroExcludeMode(loadedHeroFilter?.exclude_mode || "strict");
       setPriorityOrder(loadedScenario.priorities || []);
+      loadedScenario.priorities
+        ?.filter((key) => key.startsWith("star_source:"))
+        .forEach((key) => initializedStarPriorityKeysRef.current.add(key));
       setCoverageGroups(loadedScenario.coverage_groups || []);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Failed to load catalog");
@@ -263,7 +325,9 @@ export default function App() {
         maxNodes,
         noSkips,
         stopOnCoverageCeiling,
+        stopOnPriorityCeiling,
         repairSearch,
+        prioritySemantics,
         priorityOrder,
         priorityOptionsByKey,
         coverageGroups,
@@ -278,7 +342,9 @@ export default function App() {
       maxNodes,
       noSkips,
       stopOnCoverageCeiling,
+      stopOnPriorityCeiling,
       repairSearch,
+      prioritySemantics,
       priorityOrder,
       priorityOptionsByKey,
       coverageGroups,
@@ -316,7 +382,18 @@ export default function App() {
       ...priorityOptions.filter((option) => option.kind === "craft").map((option) => option.key),
     ];
     setPriorityOrder((current) => reconcilePriorityOrder(current, optionKeys, coverageGroupPriorityKeys));
-    setDisabledPriorityKeys((current) => current.filter((key) => optionKeys.includes(key)));
+    setDisabledPriorityKeys((current) => {
+      const next = new Set(current.filter((key) => optionKeys.includes(key)));
+      priorityOptions
+        .filter((option) => option.kind === "star_source")
+        .forEach((option) => {
+          if (!initializedStarPriorityKeysRef.current.has(option.key)) {
+            initializedStarPriorityKeysRef.current.add(option.key);
+            next.add(option.key);
+          }
+        });
+      return [...next];
+    });
   }, [priorityOptions, coverageGroupPriorityKeys]);
 
   useEffect(() => {
@@ -358,6 +435,7 @@ export default function App() {
     setIsSolving(true);
     setSolveProgress(initialSolveProgress(currentScenario));
     setError(null);
+	setPrintReconstructionPreview(false);
     setSolutions([]);
     setPartialResultStatus(null);
     setSolveDurationMs(null);
@@ -483,6 +561,77 @@ export default function App() {
     solveAbortController?.abort();
   }
 
+  function previewPrintReconstruction() {
+    if (!catalog) {
+      return;
+    }
+    try {
+      const draft = buildPrintReconstructionSolution(catalog);
+      const starKeys = buildPriorityOptions(catalog, PRINT_RECONSTRUCTION_ITEMS)
+        .filter((option) => option.kind === "star_source")
+        .map((option) => option.key);
+      const enabled = new Set(["star_source:spirit_biscuit", "star_source:spice"]);
+      starKeys.forEach((key) => initializedStarPriorityKeysRef.current.add(key));
+      setGrid(defaultGrid());
+      setQuantities(PRINT_RECONSTRUCTION_ITEMS);
+      setTop(1);
+      setNoSkips(true);
+      setPrioritySemantics("outgoing-per-instance-v3");
+      setPriorityOrder(["star_source:spirit_biscuit", "star_source:spice"]);
+      setCoverageGroups([]);
+      setDisabledPriorityKeys(starKeys.filter((key) => !enabled.has(key)));
+		setManualEditorPlacements(PRINT_RECONSTRUCTION.map((placement, index) => ({ ...placement, key: `print-${index}` })));
+		setManualLayoutStatus("Draft loaded. Click Evaluate manual layout to calculate its real stars.");
+      setSolutions([draft]);
+      setSelectedSolution(0);
+      setPrintReconstructionPreview(true);
+      setError(null);
+    } catch (previewError) {
+      setError(previewError instanceof Error ? previewError.message : "Could not build print reconstruction");
+    }
+  }
+
+  async function evaluateManualLayout() {
+    if (!catalog || manualLayoutEvaluating) {
+      return;
+    }
+	try {
+		if (manualEditorPlacements.length === 0) {
+			throw new Error("Place at least one item before evaluating the manual layout.");
+		}
+		const placements = manualEditorPlacements.map((placement) => ({
+			...(placement.instanceID ? { instance_id: placement.instanceID } : {}),
+			item_id: placement.itemID,
+			rotation: placement.rotation,
+			origin: placement.origin,
+		}));
+		const items = placements.reduce<Record<string, number>>((counts, placement) => {
+			counts[placement.item_id] = (counts[placement.item_id] || 0) + 1;
+			return counts;
+		}, {});
+		const scenario: Scenario = {
+			...currentScenario,
+			grid: rowsFromGrid(grid),
+			items,
+			no_skips: true,
+		};
+		setManualLayoutEvaluating(true);
+		setManualLayoutStatus("Evaluating layout locally...");
+		const solution = await evaluateLayoutWithWasm(catalog, { scenario, placements });
+		setQuantities(items);
+		setSolutions([solution]);
+		setSelectedSolution(0);
+		setPrintReconstructionPreview(false);
+		setManualLayoutStatus(`Evaluated: ${solution.score.stars} stars, priority ${solution.score.priority_counts?.join("/") || "none"}.`);
+		setError(null);
+	} catch (layoutError) {
+		setManualLayoutStatus(null);
+		setError(layoutError instanceof Error ? layoutError.message : "Manual layout evaluation failed");
+	} finally {
+		setManualLayoutEvaluating(false);
+	}
+  }
+
   async function copyDebugLog() {
     if (!catalog || !currentSolution) {
       return;
@@ -537,6 +686,14 @@ export default function App() {
       } else {
         updated[itemID] = next;
       }
+		setManualEditorPlacements((placements) => {
+			const currentPlaced = placements.filter((placement) => placement.itemID === itemID);
+			if (currentPlaced.length <= next) {
+				return placements;
+			}
+			const removeKeys = new Set(currentPlaced.slice(next).map((placement) => placement.key));
+			return placements.filter((placement) => !removeKeys.has(placement.key));
+		});
       return updated;
     });
   }
@@ -594,6 +751,8 @@ export default function App() {
 
   function moveStarSourceToGroup(sourceID: string, groupIndex: number) {
     setCoverageGroups((current) => moveSourceToGroup(current, sourceID, groupIndex));
+	// Dropping a source into an incoming group is an explicit activation choice.
+	setDisabledPriorityKeys((current) => current.filter((key) => key !== `star_source:${sourceID}`));
     setDraggingStarSourceID(null);
   }
 
@@ -737,6 +896,9 @@ export default function App() {
           <div className="panel-header">
             <h2>Backpack</h2>
             <div className="panel-header-actions">
+			  <button className="secondary-action" disabled={!catalog || isSolving} onClick={previewPrintReconstruction}>
+				Preview print
+			  </button>
               <button className="secondary-action" onClick={() => setGrid(defaultGrid())}>
                 Full
               </button>
@@ -746,10 +908,28 @@ export default function App() {
             </div>
           </div>
           <EditableGrid grid={grid} onToggle={(row, col) => setGrid(toggleGridCell(grid, row, col))} />
+		  <ManualLayoutPanel
+			catalog={catalog}
+			visualMetadata={itemVisualMetadata}
+			quantities={quantities}
+			placements={manualEditorPlacements}
+			onPlacementsChange={(placements) => {
+			  setManualEditorPlacements(placements);
+			  setManualLayoutStatus("Layout changed. Evaluate it to calculate the exact stars.");
+			  setSolutions([]);
+			  setPrintReconstructionPreview(false);
+			}}
+			onEvaluate={evaluateManualLayout}
+			onCopyDetails={copyDebugLog}
+			evaluating={manualLayoutEvaluating}
+			canCopy={Boolean(currentSolution)}
+			status={manualLayoutStatus || debugCopyStatus}
+		  />
           <PriorityPanel
             craftOptions={craftPriorityOptions}
             starOptions={starSourceOptions}
             looseStarOptions={looseStarPriorityOptions}
+            prioritySemantics={prioritySemantics}
             globalEntries={globalPriorityEntries}
             coverageGroups={coverageGroups}
             catalog={catalog}
@@ -759,6 +939,7 @@ export default function App() {
             draggingStarSourceID={draggingStarSourceID}
             onMoveCraft={moveCraftPriority}
             onMoveLooseStar={moveLooseStarPriority}
+            onPrioritySemanticsChange={setPrioritySemantics}
             onAddGroup={addCoverageGroup}
             onMoveGroup={moveCoverageGroup}
             onRenameGroup={renameCoverageGroup}
@@ -793,6 +974,15 @@ export default function App() {
               />
               Stop on coverage ceiling
             </label>
+			<label className="checkbox-control">
+			  <input
+				type="checkbox"
+				checked={stopOnPriorityCeiling}
+				disabled={prioritySemantics !== "outgoing-per-instance-v3"}
+				onChange={(event) => setStopOnPriorityCeiling(event.target.checked)}
+			  />
+			  Stop on priority ceiling
+			</label>
             <label className="checkbox-control">
               <input
                 type="checkbox"
@@ -893,6 +1083,7 @@ export default function App() {
                 scenario={currentScenario}
                 grid={grid}
                 visualMetadata={itemVisualMetadata}
+				draft={printReconstructionPreview}
                 onInspectItem={showItemInfo}
                 onInspectEnd={hideItemInfo}
                 onTogglePinItem={togglePinnedItem}
@@ -925,7 +1116,9 @@ function buildWebScenario({
   maxNodes,
   noSkips,
   stopOnCoverageCeiling,
+  stopOnPriorityCeiling,
   repairSearch,
+  prioritySemantics,
   priorityOrder,
   priorityOptionsByKey,
   coverageGroups,
@@ -949,7 +1142,9 @@ function buildWebScenario({
     max_nodes: maxNodes,
     no_skips: noSkips,
     stop_on_coverage_ceiling: stopOnCoverageCeiling,
+    stop_on_priority_ceiling: prioritySemantics === "outgoing-per-instance-v3" && stopOnPriorityCeiling,
     repair_search: maxNodes > 0 && repairSearch,
+    priority_semantics: prioritySemantics,
     priorities: buildScenarioPriorityOrder(priorityOrder, priorityOptionsByKey, indexByOriginal, cleanGroups, disabledPrioritySet),
     coverage_groups: cleanGroups,
     hero_filter: heroFilter,
@@ -1054,6 +1249,25 @@ function buildDebugLog({
       ).toLocaleString()}`,
     );
   }
+	if (solution.search.priority_ceiling && solution.search.priority_ceiling.length > 0) {
+		lines.push(
+		  `Priority ceiling: ${solution.search.priority_ceiling.join("/")}${
+				solution.search.priority_ceiling_reached ? " (reached)" : ""
+		  }${solution.search.stopped_after_priority_ceiling ? ", stopped" : ""}`,
+		);
+	}
+	const phasePriorityLines: Array<[string, number[] | undefined]> = [
+		["Initial", solution.search.initial_best_priority_counts],
+		["Seed", solution.search.seed_best_priority_counts],
+		["Search", solution.search.search_best_priority_counts],
+		["Post-repair", solution.search.post_repair_best_priority_counts],
+		["Refine", solution.search.refine_best_priority_counts],
+	];
+	phasePriorityLines.forEach(([phase, counts]) => {
+		if (counts && counts.length > 0) {
+			lines.push(`${phase} best priority: ${counts.join("/")}`);
+		}
+	});
   if (solution.search.refine_moves_checked && solution.search.refine_moves_checked > 0) {
     lines.push(
       `Refine: moves=${solution.search.refine_moves_checked.toLocaleString()}, improvements=${
@@ -1061,7 +1275,20 @@ function buildDebugLog({
       }${solution.search.refine_best_delta ? `, ${solution.search.refine_best_delta}` : ""}`,
     );
   }
-  lines.push(`Score: crafts=${solution.score.crafts}, stars=${solution.score.stars}, items=${solution.score.items}`);
+  if (solution.search.completion_moves_checked && solution.search.completion_moves_checked > 0) {
+    lines.push(
+      `Completion: moves=${solution.search.completion_moves_checked.toLocaleString()}, improvements=${
+        solution.search.completion_improvements || 0
+      }`,
+    );
+  }
+  lines.push(
+    `Score: crafts=${solution.score.crafts}, stars=${solution.score.stars}, items=${solution.score.items}, targets=${
+      solution.score.star_target_breadth || 0
+    }, reciprocal=${solution.score.star_reciprocal_pairs || 0}, source_diversity=${
+      solution.score.star_source_definition_diversity || 0
+    }`,
+  );
   if (solution.score.priority_counts && solution.score.priority_counts.length > 0) {
     lines.push(`Priority counts: ${solution.score.priority_counts.join("/")}`);
   }
@@ -1070,7 +1297,9 @@ function buildDebugLog({
   lines.push(`Grid: ${safeArray(scenario.grid).join("/")}`);
   lines.push(`Top: ${scenario.top}, max_nodes: ${scenario.max_nodes}, no_skips: ${Boolean(scenario.no_skips)}`);
   lines.push(`Stop on coverage ceiling: ${Boolean(scenario.stop_on_coverage_ceiling)}`);
+  lines.push(`Stop on priority ceiling: ${Boolean(scenario.stop_on_priority_ceiling)}`);
   lines.push(`Repair search: ${Boolean(scenario.repair_search)}`);
+  lines.push(`Priority semantics: ${scenario.priority_semantics || "legacy-incoming-v1"}`);
   lines.push("Selected items:");
   selectedItems.forEach((entry) => lines.push(`- ${entry.item_name} (${entry.item_id}) x${entry.selected}`));
   if (selectedItemsNotPlaced.length > 0) {
@@ -1083,7 +1312,7 @@ function buildDebugLog({
   }
   lines.push("");
   lines.push("## Priorities");
-  lines.push("Coverage groups sent:");
+  lines.push("Incoming coverage groups sent:");
   safeArray(scenario.coverage_groups).forEach((group, index) => {
     const targetText = safeArray(group.targets).length > 0 ? ` | targets: ${safeArray(group.targets).join(", ")}` : "";
     lines.push(`- ${group.name || `Group ${index + 1}`}: ${safeArray(group.sources).join(", ")}${targetText}`);
@@ -1094,7 +1323,7 @@ function buildDebugLog({
   lines.push(`Priorities sent: ${safeArray(scenario.priorities).join(", ") || "none"}`);
   lines.push(`Disabled priority keys: ${uiPriorityState.disabled_priority_keys.join(", ") || "none"}`);
   lines.push("");
-  lines.push("## Coverage");
+  lines.push("## Incoming Convergence");
   if (coverageBreakdowns.length === 0) {
     lines.push("none");
   } else {
@@ -1115,13 +1344,18 @@ function buildDebugLog({
     });
   }
   lines.push("");
-  lines.push("## Loose Stars");
+  const perInstanceOutgoing = scenario.priority_semantics === "outgoing-per-instance-v3";
+  lines.push(perInstanceOutgoing ? "## Outgoing Targets Per Copy" : "## Outgoing Distinct Targets");
   if (!solution.loose_star_priorities || solution.loose_star_priorities.length === 0) {
     lines.push("none");
   } else {
-    solution.loose_star_priorities.forEach((priority) =>
-      lines.push(`- ${itemName(itemByID, priority.source_item_id)} (${priority.source_item_id}): ${priority.target_count}`),
-    );
+    solution.loose_star_priorities.forEach((priority) => {
+      const count = perInstanceOutgoing ? priority.link_count ?? priority.target_count : priority.target_count;
+      const perCopy = perInstanceOutgoing && priority.instance_target_counts?.length
+        ? ` (${priority.instance_target_counts.map((instance) => `${instance.source_instance}=${instance.target_count}`).join(", ")})`
+        : "";
+      lines.push(`- ${itemName(itemByID, priority.source_item_id)} (${priority.source_item_id}): ${count}${perCopy}`);
+    });
   }
   lines.push("");
   lines.push("## Crafts");
@@ -1269,10 +1503,266 @@ function EditableGrid({ grid, onToggle }: { grid: Grid; onToggle: (row: number, 
   );
 }
 
+function ManualLayoutPanel({
+	catalog,
+	visualMetadata,
+	quantities,
+	placements,
+	onPlacementsChange,
+	onEvaluate,
+	onCopyDetails,
+	evaluating,
+	canCopy,
+	status,
+}: {
+	catalog: Catalog | null;
+	visualMetadata: ItemVisualMetadataMap;
+	quantities: Record<string, number>;
+	placements: ManualEditorPlacement[];
+	onPlacementsChange: (placements: ManualEditorPlacement[]) => void;
+	onEvaluate: () => void;
+	onCopyDetails: () => void;
+	evaluating: boolean;
+	canCopy: boolean;
+	status: string | null;
+}) {
+  const [selectedItemID, setSelectedItemID] = useState("");
+  const [selectedPlacementKey, setSelectedPlacementKey] = useState<string | null>(null);
+  const [rotation, setRotation] = useState(0);
+	const [placementHint, setPlacementHint] = useState("");
+	const itemByID = useMemo(() => new Map(catalog?.items.map((item) => [item.id, item]) || []), [catalog]);
+	const selectedItems = useMemo(
+		() => [...itemByID.values()].filter((item) => (quantities[item.id] || 0) > 0).sort((left, right) => left.name.localeCompare(right.name)),
+		[itemByID, quantities],
+	);
+	const displayedPlacements = useMemo(() => {
+		if (!catalog) return [];
+		return placements.map((placement) => manualPlacementDisplay(catalog, placement));
+	}, [catalog, placements]);
+	const selectedPlacement = selectedPlacementKey ? placements.find((placement) => placement.key === selectedPlacementKey) : undefined;
+
+	useEffect(() => {
+		if (selectedPlacementKey && !placements.some((placement) => placement.key === selectedPlacementKey)) {
+			setSelectedPlacementKey(null);
+		}
+	}, [placements, selectedPlacementKey]);
+
+	const occupied = useMemo(() => {
+		const byCell = new Map<string, ManualEditorPlacement>();
+		displayedPlacements.forEach((placement, index) => {
+			placement.cells.forEach((cell) => byCell.set(coordKey(cell), placements[index]));
+		});
+		return byCell;
+	}, [displayedPlacements, placements]);
+
+	const applyRotation = (nextRotation: number) => {
+		if (!selectedPlacement) {
+			setRotation(nextRotation);
+			setPlacementHint(`Next item will use R${nextRotation}.`);
+			return;
+		}
+		const candidate = { ...selectedPlacement, rotation: nextRotation };
+		if (!manualPlacementFits(catalog, candidate, placements.filter((placement) => placement.key !== candidate.key))) {
+			setPlacementHint(`R${nextRotation} does not fit for the selected item.`);
+			return;
+		}
+		onPlacementsChange(placements.map((placement) => (placement.key === candidate.key ? candidate : placement)));
+		setRotation(nextRotation);
+		setPlacementHint(`Selected item rotated to R${nextRotation}.`);
+	};
+
+	const updateSelectedRotation = (delta: number) => {
+		applyRotation(normalizeRotation(rotation + delta));
+	};
+
+	const removeSelected = () => {
+		if (!selectedPlacementKey) return;
+		onPlacementsChange(placements.filter((placement) => placement.key !== selectedPlacementKey));
+		setSelectedPlacementKey(null);
+		setPlacementHint("Selected item removed.");
+	};
+
+	const clearSelection = () => {
+		setSelectedPlacementKey(null);
+		setSelectedItemID("");
+		setPlacementHint("");
+	};
+
+	const moveSelectedBy = (rowDelta: number, colDelta: number, direction: string) => {
+		if (!selectedPlacement) return;
+		const origin: CoordTuple = [selectedPlacement.origin[0] + rowDelta, selectedPlacement.origin[1] + colDelta];
+		const candidate = { ...selectedPlacement, origin };
+		if (manualPlacementFits(catalog, candidate, placements.filter((placement) => placement.key !== candidate.key))) {
+			onPlacementsChange(placements.map((placement) => (placement.key === candidate.key ? candidate : placement)));
+			setPlacementHint(`Moved selected item ${direction} to r${origin[0]} c${origin[1]}.`);
+			return;
+		}
+		setPlacementHint(`Cannot move ${selectedPlacement.itemID} ${direction}: its occupied cells would overlap another item or leave the grid.`);
+	};
+
+	const selectPlacement = (key: string) => {
+		const placement = placements.find((entry) => entry.key === key);
+		if (!placement) return;
+		setSelectedPlacementKey(key);
+		setSelectedItemID("");
+		setRotation(placement.rotation);
+		setPlacementHint(`Selected ${placement.itemID} at R${placement.rotation}.`);
+	};
+
+	const handleCell = (origin: CoordTuple) => {
+		if (!catalog) return;
+		if (selectedPlacement) {
+			const candidate = { ...selectedPlacement, origin };
+			if (manualPlacementFits(catalog, candidate, placements.filter((placement) => placement.key !== candidate.key))) {
+				onPlacementsChange(placements.map((placement) => (placement.key === candidate.key ? candidate : placement)));
+				setPlacementHint(`Moved selected item to r${origin[0]} c${origin[1]}.`);
+			} else {
+				setPlacementHint(`The selected item does not fit at r${origin[0]} c${origin[1]} with R${rotation}.`);
+			}
+			return;
+		}
+		if (!selectedItemID) return;
+		const available = (quantities[selectedItemID] || 0) - placements.filter((placement) => placement.itemID === selectedItemID).length;
+		if (available <= 0) return;
+		const candidate: ManualEditorPlacement = {
+			key: `${selectedItemID}-${crypto.randomUUID()}`,
+			instanceID: "",
+			itemID: selectedItemID,
+			rotation,
+			origin,
+		};
+		if (manualPlacementFits(catalog, candidate, placements)) {
+			onPlacementsChange([...placements, candidate]);
+			setSelectedPlacementKey(candidate.key);
+			setSelectedItemID("");
+			setPlacementHint(`Placed ${candidate.itemID} at r${origin[0]} c${origin[1]} with R${rotation}.`);
+			return;
+		}
+		const suggestedRotation = [0, 90, 180, 270].find((candidateRotation) =>
+			manualPlacementFits(catalog, { ...candidate, rotation: candidateRotation }, placements),
+		);
+		if (suggestedRotation !== undefined) {
+			setRotation(suggestedRotation);
+			setPlacementHint(`R${rotation} does not fit at r${origin[0]} c${origin[1]}. Switched to R${suggestedRotation}; click the same origin again to place it.`);
+		} else {
+			setPlacementHint(`No rotation fits ${candidate.itemID} at r${origin[0]} c${origin[1]}.`);
+		}
+	};
+
+	return (
+	  <details className="manual-layout-panel">
+		<summary>Manual layout comparison</summary>
+		<p>
+		  Select an item, choose a rotation, then click a free cell to place it. Click a placed item to select it; rotate, move, or remove it. Evaluate uses the local WASM evaluator and shows exact stars below.
+		</p>
+		<div className="manual-layout-tools">
+		  <label>
+			Item
+			<select
+			  aria-label="Manual layout item"
+			  value={selectedItemID}
+			  onChange={(event) => {
+				setSelectedItemID(event.target.value);
+				setSelectedPlacementKey(null);
+				setPlacementHint(event.target.value ? `Choose a rotation, then click its origin cell.` : "");
+			  }}
+			>
+			  <option value="">Choose an available item</option>
+			  {selectedItems.map((item) => {
+				const remaining = (quantities[item.id] || 0) - placements.filter((placement) => placement.itemID === item.id).length;
+				return <option key={item.id} value={item.id} disabled={remaining <= 0}>{item.name} ({Math.max(0, remaining)} left)</option>;
+			  })}
+			</select>
+		  </label>
+		  <label>
+			Rotation
+			<select aria-label="Manual layout rotation" value={rotation} onChange={(event) => applyRotation(Number(event.target.value))}>
+			  <option value={0}>R0</option>
+			  <option value={90}>R90</option>
+			  <option value={180}>R180</option>
+			  <option value={270}>R270</option>
+			</select>
+		  </label>
+		  <span className="manual-layout-selection">{selectedPlacement ? `Selected ${selectedPlacement.itemID}` : selectedItemID ? `Placing ${selectedItemID}` : "Select an item or placed tile"}</span>
+		</div>
+		<div className="manual-layout-actions">
+		  <button className="secondary-action" onClick={() => updateSelectedRotation(-90)} disabled={!selectedPlacement && !selectedItemID}>
+			Rotate left
+		  </button>
+		  <button className="secondary-action" onClick={() => updateSelectedRotation(90)} disabled={!selectedPlacement && !selectedItemID}>
+			Rotate right
+		  </button>
+		  <button className="secondary-action" onClick={removeSelected} disabled={!selectedPlacement}>
+			Remove selected
+		  </button>
+		  <button className="secondary-action" onClick={() => moveSelectedBy(0, -1, "left")} disabled={!selectedPlacement}>
+			Move left
+		  </button>
+		  <button className="secondary-action" onClick={() => moveSelectedBy(0, 1, "right")} disabled={!selectedPlacement}>
+			Move right
+		  </button>
+		  <button className="secondary-action" onClick={() => moveSelectedBy(-1, 0, "up")} disabled={!selectedPlacement}>
+			Move up
+		  </button>
+		  <button className="secondary-action" onClick={() => moveSelectedBy(1, 0, "down")} disabled={!selectedPlacement}>
+			Move down
+		  </button>
+		  <button className="secondary-action" onClick={clearSelection} disabled={!selectedPlacement && !selectedItemID}>
+			Clear selection
+		  </button>
+		</div>
+		<div
+		  className={selectedItemID || selectedPlacement ? "manual-layout-grid placing" : "manual-layout-grid"}
+		  style={{ gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`, gridTemplateRows: `repeat(${ROWS}, minmax(0, 1fr))` }}
+		>
+		  {Array.from({ length: ROWS }, (_, row) =>
+			Array.from({ length: COLS }, (_, col) => {
+			  const owner = occupied.get(coordKey([row, col]));
+			  return (
+				<button
+				  key={`${row}-${col}`}
+				  className={owner ? "manual-layout-cell occupied" : "manual-layout-cell"}
+				  style={{ gridRow: `${row + 1}`, gridColumn: `${col + 1}` }}
+				  onClick={() => handleCell([row, col])}
+				  aria-label={`Manual layout cell r${row} c${col}${owner ? ` occupied by ${owner.itemID}` : ""}`}
+				/>
+			  );
+			}),
+		  )}
+		  {displayedPlacements.map((placement, index) => (
+			<PlacedItem
+			  key={placements[index].key}
+			  placement={placement}
+			  item={itemByID.get(placement.item_id)}
+			  itemColor={ITEM_BORDER_COLORS[index % ITEM_BORDER_COLORS.length]}
+			  visualMetadata={visualMetadata}
+			  label={labelFor(index)}
+			  onInspect={() => undefined}
+			  onInspectEnd={() => undefined}
+			  onTogglePin={() => selectPlacement(placements[index].key)}
+			  isPinned={selectedPlacementKey === placements[index].key}
+			/>
+		  ))}
+		</div>
+		<div className="manual-layout-actions">
+		  <button className="secondary-action" onClick={onEvaluate} disabled={evaluating || placements.length === 0}>
+			{evaluating ? "Evaluating..." : "Evaluate manual layout"}
+		  </button>
+		  <button className="secondary-action" onClick={onCopyDetails} disabled={!canCopy || evaluating}>
+			Copy evaluated details
+		  </button>
+		</div>
+		{status && <p className="manual-layout-status">{status}</p>}
+		{placementHint && <p className="manual-layout-hint">{placementHint}</p>}
+	  </details>
+	);
+}
+
 function PriorityPanel({
   craftOptions,
   starOptions,
   looseStarOptions,
+  prioritySemantics,
   globalEntries,
   coverageGroups,
   catalog,
@@ -1282,6 +1772,7 @@ function PriorityPanel({
   draggingStarSourceID,
   onMoveCraft,
   onMoveLooseStar,
+  onPrioritySemanticsChange,
   onAddGroup,
   onMoveGroup,
   onRenameGroup,
@@ -1298,6 +1789,7 @@ function PriorityPanel({
   craftOptions: PriorityOption[];
   starOptions: PriorityOption[];
   looseStarOptions: PriorityOption[];
+  prioritySemantics: OutgoingPrioritySemantics;
   globalEntries: GlobalPriorityEntry[];
   coverageGroups: CoverageGroup[];
   catalog: Catalog | null;
@@ -1307,6 +1799,7 @@ function PriorityPanel({
   draggingStarSourceID: string | null;
   onMoveCraft: (key: string, delta: number) => void;
   onMoveLooseStar: (key: string, delta: number) => void;
+  onPrioritySemanticsChange: (semantics: OutgoingPrioritySemantics) => void;
   onAddGroup: () => void;
   onMoveGroup: (index: number, delta: number) => void;
   onRenameGroup: (index: number, name: string) => void;
@@ -1338,6 +1831,16 @@ function PriorityPanel({
           {enabledCount}/{totalCount}
         </span>
       </div>
+      <p className="muted priority-semantics-hint">
+        By default, star sources are disabled so the solver maximizes total valid links. Coverage groups prioritize incoming convergence.
+      </p>
+      <label className="priority-semantics-select">
+        Outgoing source objective
+        <select value={prioritySemantics} onChange={(event) => onPrioritySemanticsChange(event.target.value as OutgoingPrioritySemantics)}>
+          <option value="outgoing-v2">Distinct targets between copies</option>
+          <option value="outgoing-per-instance-v3">Targets per copy</option>
+        </select>
+      </label>
       {totalCount === 0 ? (
         <p className="muted priority-empty">none</p>
       ) : (
@@ -1386,7 +1889,7 @@ function PriorityPanel({
                       aria-label={`Coverage group ${groupIndex + 1} name`}
                     />
                     <span>
-                      {groupSources.length} source(s), {targetCount} target item(s)
+                      Incoming convergence: {activeGroup.sources.length} active source(s), {targetCount} target item(s)
                     </span>
                   </div>
                   <div className="priority-actions">
@@ -1403,7 +1906,7 @@ function PriorityPanel({
                   </div>
                 </div>
                 {groupSources.length === 0 ? (
-                  <p className="muted coverage-group-empty">drop star sources here</p>
+                  <p className="muted coverage-group-empty">drop star sources here for incoming convergence</p>
                 ) : (
                   groupSources.map((option) => {
                     const disabled = disabledKeys.has(option.key);
@@ -1439,26 +1942,29 @@ function PriorityPanel({
                           <strong>{option.title}</strong>
                           <span>{option.subtitle}</span>
                         </div>
-                        <span className="priority-kind star">Stars</span>
+                        <span className="priority-kind star">Incoming</span>
                         <label className="orbit-toggle">
                           <input
                             type="checkbox"
                             checked={orbitTarget}
                             onChange={() => onToggleGroupTarget(groupIndex, option.itemID)}
-                            aria-label={`${orbitTarget ? "Remove" : "Set"} ${option.title} as orbit target`}
+                            aria-label={`${orbitTarget ? "Remove" : "Set"} ${option.title} as an incoming convergence target`}
                           />
-                          Orbit
+                          Target
                         </label>
                         <button className="priority-mini-action" onClick={() => onRemoveFromGroups(option.itemID)}>
-                          Loose
+                          Outgoing
                         </button>
                       </article>
                     );
                   })
                 )}
+                {groupSources.length > 0 && activeGroup.sources.length === 0 && (
+                  <p className="muted coverage-group-empty">enable at least one source to choose incoming targets</p>
+                )}
                 {targetOptions.length > 0 && (
                   <div className="orbit-target-panel">
-                    <div className="orbit-target-title">Orbit targets</div>
+                    <div className="orbit-target-title">Incoming convergence targets</div>
                     <div className="orbit-target-options">
                       {targetOptions.map((item) => {
                         const checked = safeArray(group.targets).includes(item.id);
@@ -1468,7 +1974,7 @@ function PriorityPanel({
                               type="checkbox"
                               checked={checked}
                               onChange={() => onToggleGroupTarget(groupIndex, item.id)}
-                              aria-label={`${checked ? "Remove" : "Set"} ${item.name} as orbit target`}
+                              aria-label={`${checked ? "Remove" : "Set"} ${item.name} as an incoming convergence target`}
                             />
                             {item.image_path && <img src={assetPath(item.image_path)} alt="" loading="lazy" decoding="async" />}
                             <span>{item.name}</span>
@@ -1476,7 +1982,7 @@ function PriorityPanel({
                         );
                       })}
                     </div>
-                    <p className="orbit-target-hint">none selected = automatic targets</p>
+                    <p className="orbit-target-hint">none selected = all eligible incoming targets</p>
                   </div>
                 )}
               </section>
@@ -1520,7 +2026,7 @@ function PriorityPanel({
                     <strong>{option.title}</strong>
                     <span>{option.subtitle}</span>
                   </div>
-                  <span className="priority-kind star">Stars</span>
+                  <span className="priority-kind star">Outgoing</span>
                   <div className="priority-actions">
                     <button onClick={() => onMoveLooseStar(option.key, -1)} disabled={index === 0} aria-label={`Move ${option.title} up`}>
                       Up
@@ -1583,7 +2089,7 @@ function PriorityPanel({
           })}
           {starOptions.length > 0 && (
             <button className="coverage-add" onClick={onAddGroup}>
-              Add group
+              Add incoming group
             </button>
           )}
         </div>
@@ -1633,6 +2139,7 @@ function SolutionView({
   scenario,
   grid,
   visualMetadata,
+	draft,
   onInspectItem,
   onInspectEnd,
   onTogglePinItem,
@@ -1643,6 +2150,7 @@ function SolutionView({
   scenario: Scenario;
   grid: Grid;
   visualMetadata: ItemVisualMetadataMap;
+	draft: boolean;
   onInspectItem: (itemID: string) => void;
   onInspectEnd: () => void;
   onTogglePinItem: (itemID: string) => void;
@@ -1660,6 +2168,7 @@ function SolutionView({
         ? [solution.coverage]
         : [];
   const looseStarPriorities = safeArray(solution.loose_star_priorities);
+  const perInstanceOutgoing = scenario.priority_semantics === "outgoing-per-instance-v3";
   const itemColors = useMemo(() => buildItemColorMap(solution.placements), [solution.placements]);
   const selectedItemsNotPlaced = useMemo(
     () => selectedItemSummaries(itemsByID, scenario.items, solution.placements).filter((entry) => entry.not_placed > 0),
@@ -1695,16 +2204,30 @@ function SolutionView({
 
   return (
     <div className="solution-detail">
+	  {draft && (
+		<div className="status-warning draft-preview-notice">
+		  <strong>Draft print reconstruction.</strong> Validate the item cells and rotation badges against the screenshot. Stars and score are intentionally not evaluated yet.
+		</div>
+	  )}
       <div className="score-strip">
         <span>Crafts {solution.score.crafts}</span>
         <span>Stars {solution.score.stars}</span>
         <span>Items {solution.score.items}</span>
+        {typeof solution.score.star_target_breadth === "number" && <span>Targets {solution.score.star_target_breadth}</span>}
+        {typeof solution.score.star_reciprocal_pairs === "number" && <span>Reciprocal {solution.score.star_reciprocal_pairs}</span>}
         {solution.score.priority_counts && solution.score.priority_counts.length > 0 && (
           <span>Priority {solution.score.priority_counts.join("/")}</span>
         )}
-        {coverageBreakdowns.length > 0 && <span>Coverage {coverageBreakdowns.map((coverage) => coverage.summary).join(" | ")}</span>}
+        {coverageBreakdowns.length > 0 && (
+          <span>Incoming convergence {coverageBreakdowns.map((coverage) => coverage.summary).join(" | ")}</span>
+        )}
         {looseStarPriorities.length > 0 && (
-          <span>Loose stars {looseStarPriorities.map((priority) => `${priority.source_item_id}=${priority.target_count}`).join(" | ")}</span>
+          <span>
+            {perInstanceOutgoing ? "Outgoing links per copy" : "Outgoing targets"}{" "}
+            {looseStarPriorities
+              .map((priority) => `${priority.source_item_id}=${perInstanceOutgoing ? priority.link_count ?? priority.target_count : priority.target_count}`)
+              .join(" | ")}
+          </span>
         )}
       </div>
       {selectedItemsNotPlaced.length > 0 && (
@@ -1803,7 +2326,7 @@ function SolutionView({
       </section>
       {coverageBreakdowns.length > 0 && (
         <section className="activation-list">
-          <h3>Coverage</h3>
+          <h3>Incoming convergence</h3>
           {coverageBreakdowns.map((coverage, coverageIndex) => (
             <div className="coverage-result-group" key={`${coverage.name || "coverage"}-${coverageIndex}`}>
               <p>
@@ -1824,17 +2347,30 @@ function SolutionView({
       )}
       {looseStarPriorities.length > 0 && (
         <section className="activation-list">
-          <h3>Loose stars</h3>
+          <h3>{perInstanceOutgoing ? "Outgoing targets per copy" : "Outgoing distinct targets"}</h3>
           {looseStarPriorities.map((priority) => {
             const item = itemsByID.get(priority.source_item_id);
             return (
               <p key={priority.source_item_id}>
-                {item?.name || priority.source_item_id}: {priority.target_count}
+                {item?.name || priority.source_item_id}: {perInstanceOutgoing ? priority.link_count ?? priority.target_count : priority.target_count}
+                {perInstanceOutgoing && priority.instance_target_counts?.length
+                  ? ` (${priority.instance_target_counts.map((instance) => `${instance.source_instance}=${instance.target_count}`).join(", ")})`
+                  : ""}
               </p>
             );
           })}
         </section>
       )}
+	  {draft && (
+		<section className="activation-list draft-placement-list">
+		  <h3>Draft coordinates</h3>
+		  {solution.placements.map((placement) => (
+			<p key={placement.instance_id}>
+			  {placement.instance_id}: r{placement.origin[0]} c{placement.origin[1]}, R{placement.rotation}
+			</p>
+		  ))}
+		</section>
+	  )}
     </div>
   );
 }
@@ -2164,7 +2700,7 @@ function buildPriorityOptions(catalog: Catalog, quantities: Record<string, numbe
     .map((itemID) => itemByID.get(itemID))
     .filter(isCatalogItem)
     .filter((item) => item.stars.length > 0)
-    .filter((item) => starSourceCanTargetInventory(item, catalog, quantities))
+    .filter((item) => starSourceCanTargetInventory(item, quantities))
     .sort((left, right) => left.name.localeCompare(right.name) || left.id.localeCompare(right.id))
     .forEach((item) => {
       options.push({
@@ -2188,17 +2724,8 @@ function recipeCanUseInventory(recipe: Recipe, quantities: Record<string, number
   return Object.entries(required).every(([itemID, count]) => (quantities[itemID] || 0) >= count);
 }
 
-function starSourceCanTargetInventory(source: CatalogItem, catalog: Catalog, quantities: Record<string, number>): boolean {
-  return source.stars.some((star) =>
-    catalog.items.some((target) => {
-      if (star.exclude_source_item && target.id === source.id) {
-        return false;
-      }
-      const selectedCount = quantities[target.id] || 0;
-      const availableTargets = target.id === source.id ? selectedCount - 1 : selectedCount;
-      return availableTargets > 0 && itemMatchesStarFilter(source, target, star);
-    }),
-  );
+function starSourceCanTargetInventory(source: CatalogItem, quantities: Record<string, number>): boolean {
+  return Object.entries(quantities).some(([itemID, count]) => (itemID !== source.id || count > 1) && count > 0);
 }
 
 function itemMatchesStarFilter(source: CatalogItem, target: CatalogItem, star: Star): boolean {
@@ -2276,15 +2803,6 @@ function buildGlobalPriorityEntries(
     .filter(isGlobalPriorityEntry);
 }
 
-function coverageGroupsFromPriorities(priorities: string[]): CoverageGroup[] {
-  const sources = priorities
-    .map((priority) => priority.trim())
-    .filter((priority) => priority.startsWith("star_source:"))
-    .map((priority) => priority.slice("star_source:".length))
-    .filter(Boolean);
-  return sources.length > 0 ? [{ name: "Group 1", sources: uniqueStrings(sources), targets: [] }] : [];
-}
-
 function reconcileCoverageGroups(current: CoverageGroup[], availableSourceIDs: string[]): CoverageGroup[] {
   const available = new Set(availableSourceIDs);
   return current.map((group, index) => {
@@ -2345,12 +2863,14 @@ function buildScenarioPriorityOrder(
 ): string[] {
   const groupedSources = new Set(cleanGroups.flatMap((group) => group.sources));
   const priorities: string[] = [];
+  const emittedGroups = new Set<number>();
   priorityOrder.forEach((key) => {
     const groupIndex = parseCoverageGroupPriorityKey(key);
     if (groupIndex !== null) {
       const cleanIndex = groupIndexByOriginal.get(groupIndex);
       if (typeof cleanIndex === "number") {
         priorities.push(coverageGroupPriorityKey(cleanIndex));
+        emittedGroups.add(cleanIndex);
       }
       return;
     }
@@ -2362,6 +2882,11 @@ function buildScenarioPriorityOrder(
       return;
     }
     priorities.push(key);
+  });
+  cleanGroups.forEach((_, index) => {
+    if (!emittedGroups.has(index)) {
+      priorities.push(coverageGroupPriorityKey(index));
+    }
   });
   return priorities;
 }
@@ -2595,6 +3120,114 @@ const DEFAULT_ITEM_BORDER_COLOR = ITEM_BORDER_COLORS[0];
 function buildItemColorMap(placements: Placement[]): Map<string, string> {
   const itemIDs = [...new Set(placements.map((placement) => placement.item_id))].sort();
   return new Map(itemIDs.map((itemID, index) => [itemID, ITEM_BORDER_COLORS[index % ITEM_BORDER_COLORS.length]]));
+}
+
+function buildPrintReconstructionSolution(catalog: Catalog): Solution {
+  const itemByID = new Map(catalog.items.map((item) => [item.id, item]));
+  const occupied = new Set<string>();
+  const instanceIDs = new Set<string>();
+  const placements = PRINT_RECONSTRUCTION.map((spec) => {
+    if (instanceIDs.has(spec.instanceID)) {
+      throw new Error(`Draft repeats ${spec.instanceID}`);
+    }
+    instanceIDs.add(spec.instanceID);
+    const item = itemByID.get(spec.itemID);
+    if (!item) {
+      throw new Error(`Draft references unknown item ${spec.itemID}`);
+    }
+    const variant = draftVariant(item, spec.rotation);
+    const cells = variant.cells.map(([row, col]) => [spec.origin[0] + row, spec.origin[1] + col] as CoordTuple);
+    cells.forEach((cell) => {
+      if (!inBoundsCoord(cell)) {
+        throw new Error(`Draft places ${spec.instanceID} out of bounds at r${cell[0]} c${cell[1]}`);
+      }
+      const key = coordKey(cell);
+      if (occupied.has(key)) {
+        throw new Error(`Draft overlaps at r${cell[0]} c${cell[1]}`);
+      }
+      occupied.add(key);
+    });
+    return {
+      instance_id: spec.instanceID,
+      item_id: spec.itemID,
+      rotation: spec.rotation,
+      origin: spec.origin,
+      cells,
+      star_positions: variant.stars.map(([row, col]) => [spec.origin[0] + row, spec.origin[1] + col] as CoordTuple),
+    };
+  });
+  if (occupied.size !== ROWS * COLS) {
+    throw new Error(`Draft covers ${occupied.size}/${ROWS * COLS} cells; it is not a complete reconstruction`);
+  }
+  return {
+    layout_key: "draft-print-reconstruction",
+    score: { crafts: 0, stars: 0, items: placements.length },
+    search: { nodes_explored: 0, limited: false, refined: false },
+    placements,
+    crafts: [],
+    stars: [],
+  };
+}
+
+function manualPlacementDisplay(catalog: Catalog, placement: ManualEditorPlacement): Placement {
+	const item = catalog.items.find((entry) => entry.id === placement.itemID);
+	if (!item) {
+		throw new Error(`Manual layout references unknown item ${placement.itemID}`);
+	}
+	const variant = draftVariant(item, placement.rotation);
+	return {
+		instance_id: placement.instanceID || placement.key,
+		item_id: placement.itemID,
+		rotation: placement.rotation,
+		origin: placement.origin,
+		cells: variant.cells.map(([row, col]) => [placement.origin[0] + row, placement.origin[1] + col] as CoordTuple),
+		star_positions: variant.stars.map(([row, col]) => [placement.origin[0] + row, placement.origin[1] + col] as CoordTuple),
+	};
+}
+
+function manualPlacementFits(catalog: Catalog | null, candidate: ManualEditorPlacement, others: ManualEditorPlacement[]): boolean {
+	if (!catalog) {
+		return false;
+	}
+	try {
+		const occupied = new Set<string>();
+		for (const placement of others) {
+			for (const cell of manualPlacementDisplay(catalog, placement).cells) {
+				occupied.add(coordKey(cell));
+			}
+		}
+		for (const cell of manualPlacementDisplay(catalog, candidate).cells) {
+			if (!inBoundsCoord(cell) || occupied.has(coordKey(cell))) {
+				return false;
+			}
+		}
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+function draftVariant(item: CatalogItem, rotation: number): { cells: CoordTuple[]; stars: CoordTuple[] } {
+  const normalizedRotation = normalizeRotation(rotation);
+  const shape = item.shape.map((coord) => rotateDraftCoord(coord, normalizedRotation));
+  const minRow = Math.min(...shape.map(([row]) => row));
+  const minCol = Math.min(...shape.map(([, col]) => col));
+  const normalize = ([row, col]: CoordTuple): CoordTuple => [row - minRow, col - minCol];
+  return {
+    cells: shape.map(normalize).sort(compareCoords),
+    stars: item.stars.map((star) => normalize(rotateDraftCoord(star.offset, normalizedRotation))),
+  };
+}
+
+function rotateDraftCoord([row, col]: CoordTuple, rotation: number): CoordTuple {
+  if (rotation === 90) return [col, -row];
+  if (rotation === 180) return [-row, -col];
+  if (rotation === 270) return [-col, row];
+  return [row, col];
+}
+
+function compareCoords(left: CoordTuple, right: CoordTuple): number {
+  return left[0] - right[0] || left[1] - right[1];
 }
 
 function normalizeRotation(rotation: number | undefined): number {

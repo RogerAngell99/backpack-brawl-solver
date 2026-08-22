@@ -1,4 +1,4 @@
-import type { Catalog, RemoteSolveMetadata, Scenario, Solution, SolveProgress } from "./types";
+import type { Catalog, ManualLayoutRequest, RemoteSolveMetadata, Scenario, Solution, SolveProgress } from "./types";
 
 declare global {
   interface Window {
@@ -9,6 +9,7 @@ declare global {
     solveScenario?: (input: string) => string;
     installCatalog?: (input: string) => string;
     solvePreparedScenario?: (input: string) => string;
+		evaluatePreparedLayout?: (input: string) => string;
   }
 }
 
@@ -371,6 +372,30 @@ export async function solveWithWasm(catalog: Catalog, scenario: Scenario): Promi
     throw new Error(parsed.error || "Solver returned an unknown error");
   }
   return parsed;
+}
+
+export async function evaluateLayoutWithWasm(catalog: Catalog, request: ManualLayoutRequest): Promise<Solution> {
+	await loadWasmSolver();
+	if (!window.installCatalog || !window.evaluatePreparedLayout) {
+		throw new Error("WASM layout evaluator did not initialize");
+	}
+
+	const catalogVersion = versionCatalog(catalog);
+	if (!catalogMatches(installedDirectCatalog, catalogVersion)) {
+		const installOutput = window.installCatalog(catalogVersion.catalogJSON);
+		const installResult = parseWasmResult<{ ok?: boolean; error?: string }>(installOutput);
+		if (!installResult.ok) {
+			throw new Error(installResult.error || "WASM catalog installer returned an unknown error");
+		}
+		installedDirectCatalog = catalogVersion;
+	}
+
+	const output = window.evaluatePreparedLayout(JSON.stringify(request));
+	const parsed = parseWasmResult<Solution[] | { error?: string }>(output);
+	if (!Array.isArray(parsed) || parsed.length !== 1) {
+		throw new Error(Array.isArray(parsed) ? "Layout evaluator returned no solution" : parsed.error || "Layout evaluator returned an unknown error");
+	}
+	return parsed[0];
 }
 
 function parseWasmResult<T>(output: unknown): T {
