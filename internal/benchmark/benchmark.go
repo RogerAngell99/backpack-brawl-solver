@@ -1,11 +1,15 @@
 package benchmark
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"math"
 	"os"
 	"path/filepath"
+	"reflect"
+	"runtime/debug"
 	"sort"
 	"strconv"
 	"strings"
@@ -19,90 +23,230 @@ import (
 	"backpack-brawl-solver/internal/solver"
 )
 
-var DefaultBudgets = []int64{10000, 50000, 100000, 250000, 500000, 1000000}
+var DefaultBudgets = []int64{250000, 1000000, 5000000, 20000000, 100000000}
 
 const (
 	RepairSearchModeScenario = "scenario"
 	RepairSearchModeOn       = "on"
 	RepairSearchModeOff      = "off"
+
+	outgoingPerInstanceFoodScenarioName = "outgoing-per-instance-food"
 )
 
 type RunConfig struct {
-	CatalogPath      string
-	ScenarioDir      string
-	Budgets          []int64
-	Repeat           int
-	Workers          int
-	Top              int
-	RepairSearchMode string
+	CatalogPath                                                                   string
+	ScenarioDir                                                                   string
+	Scenarios                                                                     []string
+	Budgets                                                                       []int64
+	Repeat                                                                        int
+	Workers                                                                       int
+	Top                                                                           int
+	RepairSearchMode                                                              string
+	PlateauVariant                                                                string
+	Diagnostic                                                                    bool
+	ConstellationSeedV1                                                           bool
+	ConstellationSeedVariant                                                      string
+	ConstellationFeasibilityProbe                                                 bool
+	ConstellationCompletionOptimizationProbe                                      bool
+	ConstellationCandidatePoolFeasibilitySweep                                    bool
+	ConstellationCandidateCompletionOptimizationProbe                             bool
+	ConstellationCandidateCompletionOptimizationCandidateID                       string
+	ConstellationCandidateCompletionOptimizationStage                             string
+	ConstellationCandidateCompletionOptimizationNodeBudget                        int64
+	ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey           string
+	ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint string
+	ConstellationForcedCandidateRootedPackingProbe                                bool
+	ConstellationForcedCandidateRootedPackingCandidateID                          string
+	ConstellationForcedCandidateRootedPackingSlot                                 int
+	ConstellationForcedCandidateRootedPackingStage                                string
+	ConstellationForcedCandidateRootedPackingBeamWidth                            int
+	ConstellationForcedCandidateRootedPackingRanking                              string
+	ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey               string
+	ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint     string
+	ConstellationParentFrontierHedgeProbe                                         bool
+	ConstellationParentFrontierHedgeProbeStage                                    string
 }
 
 type Report struct {
-	GeneratedAt      string  `json:"generated_at"`
-	CatalogPath      string  `json:"catalog_path"`
-	ScenarioDir      string  `json:"scenario_dir"`
-	Budgets          []int64 `json:"budgets"`
-	Repeat           int     `json:"repeat"`
-	Workers          int     `json:"workers"`
-	Top              int     `json:"top"`
-	RepairSearchMode string  `json:"repair_search_mode"`
-	Runs             []Run   `json:"runs"`
+	GeneratedAt                                                                   string  `json:"generated_at"`
+	CatalogPath                                                                   string  `json:"catalog_path"`
+	ScenarioDir                                                                   string  `json:"scenario_dir"`
+	Budgets                                                                       []int64 `json:"budgets"`
+	Repeat                                                                        int     `json:"repeat"`
+	Workers                                                                       int     `json:"workers"`
+	Top                                                                           int     `json:"top"`
+	RepairSearchMode                                                              string  `json:"repair_search_mode"`
+	PlateauVariant                                                                string  `json:"plateau_variant"`
+	Diagnostic                                                                    bool    `json:"diagnostic"`
+	ConstellationSeedV1                                                           bool    `json:"constellation_seed_v1"`
+	ConstellationSeedVariant                                                      string  `json:"constellation_seed_variant,omitempty"`
+	ConstellationFeasibilityProbe                                                 bool    `json:"constellation_feasibility_probe"`
+	ConstellationCompletionOptimizationProbe                                      bool    `json:"constellation_completion_optimization_probe"`
+	ConstellationCandidatePoolFeasibilitySweep                                    bool    `json:"constellation_candidate_pool_feasibility_sweep"`
+	ConstellationCandidateCompletionOptimizationProbe                             bool    `json:"constellation_candidate_completion_optimization_probe"`
+	ConstellationCandidateCompletionOptimizationCandidateID                       string  `json:"constellation_candidate_completion_optimization_candidate_id,omitempty"`
+	ConstellationCandidateCompletionOptimizationStage                             string  `json:"constellation_candidate_completion_optimization_stage,omitempty"`
+	ConstellationCandidateCompletionOptimizationNodeBudget                        int64   `json:"constellation_candidate_completion_optimization_node_budget,omitempty"`
+	ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey           string  `json:"constellation_candidate_completion_optimization_initial_witness_layout_key,omitempty"`
+	ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint string  `json:"constellation_candidate_completion_optimization_initial_witness_semantic_fingerprint,omitempty"`
+	ConstellationForcedCandidateRootedPackingProbe                                bool    `json:"constellation_forced_candidate_rooted_packing_probe"`
+	ConstellationForcedCandidateRootedPackingCandidateID                          string  `json:"constellation_forced_candidate_rooted_packing_candidate_id,omitempty"`
+	ConstellationForcedCandidateRootedPackingSlot                                 int     `json:"constellation_forced_candidate_rooted_packing_slot,omitempty"`
+	ConstellationForcedCandidateRootedPackingStage                                string  `json:"constellation_forced_candidate_rooted_packing_stage,omitempty"`
+	ConstellationForcedCandidateRootedPackingBeamWidth                            int     `json:"constellation_forced_candidate_rooted_packing_beam_width,omitempty"`
+	ConstellationForcedCandidateRootedPackingRanking                              string  `json:"constellation_forced_candidate_rooted_packing_ranking,omitempty"`
+	ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey               string  `json:"constellation_forced_candidate_rooted_packing_shadow_witness_layout_key,omitempty"`
+	ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint     string  `json:"constellation_forced_candidate_rooted_packing_shadow_witness_semantic_fingerprint,omitempty"`
+	ConstellationParentFrontierHedgeProbe                                         bool    `json:"constellation_parent_frontier_hedge_probe"`
+	ConstellationParentFrontierHedgeProbeStage                                    string  `json:"constellation_parent_frontier_hedge_probe_stage,omitempty"`
+	CatalogSHA256                                                                 string  `json:"catalog_sha256"`
+	BuildRevision                                                                 string  `json:"build_revision"`
+	Runs                                                                          []Run   `json:"runs"`
 }
 
 type Run struct {
-	Scenario            string             `json:"scenario"`
-	ScenarioPath        string             `json:"scenario_path"`
-	Budget              int64              `json:"budget"`
-	Repeat              int                `json:"repeat"`
-	RepairSearch        bool               `json:"repair_search"`
-	ElapsedMS           int64              `json:"elapsed_ms"`
-	NodesPerSecond      float64            `json:"nodes_per_second,omitempty"`
-	Score               ScoreSummary       `json:"score"`
-	LayoutKey           string             `json:"layout_key,omitempty"`
-	Search              SearchSummary      `json:"search"`
-	CoverageSummaries   []CoverageSummary  `json:"coverage_summaries,omitempty"`
-	LooseStarPriorities []LooseStarSummary `json:"loose_star_priorities,omitempty"`
-	Crafts              []string           `json:"crafts,omitempty"`
-	Solution            json.RawMessage    `json:"solution,omitempty"`
-	Error               string             `json:"error,omitempty"`
+	Scenario                                                                      string                   `json:"scenario"`
+	ScenarioPath                                                                  string                   `json:"scenario_path"`
+	Budget                                                                        int64                    `json:"budget"`
+	Repeat                                                                        int                      `json:"repeat"`
+	RepairSearch                                                                  bool                     `json:"repair_search"`
+	PlateauVariant                                                                string                   `json:"plateau_variant"`
+	ConstellationSeedV1                                                           bool                     `json:"constellation_seed_v1"`
+	ConstellationSeedVariant                                                      string                   `json:"constellation_seed_variant,omitempty"`
+	ConstellationFeasibilityProbe                                                 bool                     `json:"constellation_feasibility_probe"`
+	ConstellationCompletionOptimizationProbe                                      bool                     `json:"constellation_completion_optimization_probe"`
+	ConstellationCandidatePoolFeasibilitySweep                                    bool                     `json:"constellation_candidate_pool_feasibility_sweep"`
+	ConstellationCandidateCompletionOptimizationProbe                             bool                     `json:"constellation_candidate_completion_optimization_probe"`
+	ConstellationCandidateCompletionOptimizationCandidateID                       string                   `json:"constellation_candidate_completion_optimization_candidate_id,omitempty"`
+	ConstellationCandidateCompletionOptimizationStage                             string                   `json:"constellation_candidate_completion_optimization_stage,omitempty"`
+	ConstellationCandidateCompletionOptimizationNodeBudget                        int64                    `json:"constellation_candidate_completion_optimization_node_budget,omitempty"`
+	ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey           string                   `json:"constellation_candidate_completion_optimization_initial_witness_layout_key,omitempty"`
+	ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint string                   `json:"constellation_candidate_completion_optimization_initial_witness_semantic_fingerprint,omitempty"`
+	ConstellationForcedCandidateRootedPackingProbe                                bool                     `json:"constellation_forced_candidate_rooted_packing_probe"`
+	ConstellationForcedCandidateRootedPackingCandidateID                          string                   `json:"constellation_forced_candidate_rooted_packing_candidate_id,omitempty"`
+	ConstellationForcedCandidateRootedPackingSlot                                 int                      `json:"constellation_forced_candidate_rooted_packing_slot,omitempty"`
+	ConstellationForcedCandidateRootedPackingStage                                string                   `json:"constellation_forced_candidate_rooted_packing_stage,omitempty"`
+	ConstellationForcedCandidateRootedPackingBeamWidth                            int                      `json:"constellation_forced_candidate_rooted_packing_beam_width,omitempty"`
+	ConstellationForcedCandidateRootedPackingRanking                              string                   `json:"constellation_forced_candidate_rooted_packing_ranking,omitempty"`
+	ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey               string                   `json:"constellation_forced_candidate_rooted_packing_shadow_witness_layout_key,omitempty"`
+	ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint     string                   `json:"constellation_forced_candidate_rooted_packing_shadow_witness_semantic_fingerprint,omitempty"`
+	ConstellationParentFrontierHedgeProbe                                         bool                     `json:"constellation_parent_frontier_hedge_probe"`
+	ConstellationParentFrontierHedgeProbeStage                                    string                   `json:"constellation_parent_frontier_hedge_probe_stage,omitempty"`
+	PrioritySemantics                                                             model.PrioritySemantics  `json:"priority_semantics"`
+	Priorities                                                                    []string                 `json:"priorities"`
+	NoSkips                                                                       bool                     `json:"no_skips"`
+	StopOnCoverageCeiling                                                         bool                     `json:"stop_on_coverage_ceiling"`
+	StopOnPriorityCeiling                                                         bool                     `json:"stop_on_priority_ceiling"`
+	SolverSettings                                                                solver.BenchmarkSettings `json:"solver_settings"`
+	ElapsedMS                                                                     int64                    `json:"elapsed_ms"`
+	NodesPerSecond                                                                float64                  `json:"nodes_per_second,omitempty"`
+	Score                                                                         ScoreSummary             `json:"score"`
+	LayoutKey                                                                     string                   `json:"layout_key,omitempty"`
+	CanonicalLayoutHash                                                           string                   `json:"canonical_layout_hash,omitempty"`
+	Search                                                                        SearchSummary            `json:"search"`
+	CoverageSummaries                                                             []CoverageSummary        `json:"coverage_summaries,omitempty"`
+	LooseStarPriorities                                                           []LooseStarSummary       `json:"loose_star_priorities,omitempty"`
+	Crafts                                                                        []string                 `json:"crafts,omitempty"`
+	Solution                                                                      json.RawMessage          `json:"solution,omitempty"`
+	Error                                                                         string                   `json:"error,omitempty"`
 }
 
 type ScoreSummary struct {
-	PriorityCounts []int `json:"priority_counts,omitempty"`
-	Crafts         int   `json:"crafts"`
-	Stars          int   `json:"stars"`
-	Items          int   `json:"items"`
+	PriorityCounts                []int `json:"priority_counts,omitempty"`
+	Crafts                        int   `json:"crafts"`
+	Stars                         int   `json:"stars"`
+	Items                         int   `json:"items"`
+	StarTargetBreadth             int   `json:"star_target_breadth,omitempty"`
+	StarReciprocalPairs           int   `json:"star_reciprocal_pairs,omitempty"`
+	StarSourceDefinitionDiversity int   `json:"star_source_definition_diversity,omitempty"`
 }
 
 type SearchSummary struct {
-	NodesExplored               int64                   `json:"nodes_explored"`
-	NodesPerSecond              float64                 `json:"nodes_per_second,omitempty"`
-	Limited                     bool                    `json:"limited"`
-	Refined                     bool                    `json:"refined"`
-	CoverageSources             []string                `json:"coverage_sources,omitempty"`
-	CoverageTargetCount         int                     `json:"coverage_target_count,omitempty"`
-	CoverageCeiling             []CoverageBucketSummary `json:"coverage_ceiling,omitempty"`
-	CoverageCeilingReached      bool                    `json:"coverage_ceiling_reached,omitempty"`
-	CoverageBoundChecks         int64                   `json:"coverage_bound_checks,omitempty"`
-	CoveragePrunedNodes         int64                   `json:"coverage_pruned_nodes,omitempty"`
-	ExactBoundChecks            int64                   `json:"exact_bound_checks,omitempty"`
-	ExactBoundPrunedNodes       int64                   `json:"exact_bound_pruned_nodes,omitempty"`
-	CoverageSeedNodes           int64                   `json:"coverage_seed_nodes,omitempty"`
-	CoverageSeedCandidates      int                     `json:"coverage_seed_candidates,omitempty"`
-	CoverageSeedBest            string                  `json:"coverage_seed_best,omitempty"`
-	ParallelTasks               int                     `json:"parallel_tasks,omitempty"`
-	ParallelWorkersUsed         int                     `json:"parallel_workers_used,omitempty"`
-	RefineMovesChecked          int64                   `json:"refine_moves_checked,omitempty"`
-	RefineImprovements          int                     `json:"refine_improvements,omitempty"`
-	RefineBestDelta             string                  `json:"refine_best_delta,omitempty"`
-	RepairNodes                 int64                   `json:"repair_nodes,omitempty"`
-	RepairIterations            int                     `json:"repair_iterations,omitempty"`
-	RepairImprovements          int                     `json:"repair_improvements,omitempty"`
-	RepairCandidates            int                     `json:"repair_candidates,omitempty"`
-	RepairBest                  string                  `json:"repair_best,omitempty"`
-	RepairParallelTasks         int                     `json:"repair_parallel_tasks,omitempty"`
-	RepairParallelWorkersUsed   int                     `json:"repair_parallel_workers_used,omitempty"`
-	StoppedAfterCoverageCeiling bool                    `json:"stopped_after_coverage_ceiling,omitempty"`
+	NodesExplored                 int64                               `json:"nodes_explored"`
+	NodesPerSecond                float64                             `json:"nodes_per_second,omitempty"`
+	SetupMS                       int64                               `json:"setup_ms,omitempty"`
+	Limited                       bool                                `json:"limited"`
+	Refined                       bool                                `json:"refined"`
+	CoverageSources               []string                            `json:"coverage_sources,omitempty"`
+	CoverageTargetCount           int                                 `json:"coverage_target_count,omitempty"`
+	CoverageCeiling               []CoverageBucketSummary             `json:"coverage_ceiling,omitempty"`
+	CoverageCeilingReached        bool                                `json:"coverage_ceiling_reached,omitempty"`
+	PriorityCeiling               []int                               `json:"priority_ceiling,omitempty"`
+	PriorityCeilingReached        bool                                `json:"priority_ceiling_reached,omitempty"`
+	CoverageBoundChecks           int64                               `json:"coverage_bound_checks,omitempty"`
+	CoveragePrunedNodes           int64                               `json:"coverage_pruned_nodes,omitempty"`
+	ExactBoundChecks              int64                               `json:"exact_bound_checks,omitempty"`
+	ExactBoundPrunedNodes         int64                               `json:"exact_bound_pruned_nodes,omitempty"`
+	OutgoingBoundChecks           int64                               `json:"outgoing_bound_checks,omitempty"`
+	OutgoingBoundPrunedNodes      int64                               `json:"outgoing_bound_pruned_nodes,omitempty"`
+	CoverageSeedNodes             int64                               `json:"coverage_seed_nodes,omitempty"`
+	CoverageSeedCandidates        int                                 `json:"coverage_seed_candidates,omitempty"`
+	CoverageSeedBest              string                              `json:"coverage_seed_best,omitempty"`
+	StarSeedNodes                 int64                               `json:"star_seed_nodes,omitempty"`
+	StarSeedCandidates            int                                 `json:"star_seed_candidates,omitempty"`
+	PackingSeedNodes              int64                               `json:"packing_seed_nodes,omitempty"`
+	PackingSeedCandidates         int                                 `json:"packing_seed_candidates,omitempty"`
+	PackingSeedHardPruned         int64                               `json:"packing_seed_hard_pruned,omitempty"`
+	PackingSeedStatesDeduplicated int64                               `json:"packing_seed_states_deduplicated,omitempty"`
+	SymmetryPrunedBranches        int64                               `json:"symmetry_pruned_branches,omitempty"`
+	FirstCompletePhase            string                              `json:"first_complete_phase,omitempty"`
+	FirstCompleteNodes            int64                               `json:"first_complete_nodes,omitempty"`
+	FirstCompleteMS               int64                               `json:"first_complete_ms,omitempty"`
+	SeedBest                      ScoreSummary                        `json:"seed_best"`
+	SearchBest                    ScoreSummary                        `json:"search_best"`
+	PostRepairBest                ScoreSummary                        `json:"post_repair_best"`
+	RefineBest                    ScoreSummary                        `json:"refine_best"`
+	InitialBestPriorityCounts     []int                               `json:"initial_best_priority_counts,omitempty"`
+	SeedBestPriorityCounts        []int                               `json:"seed_best_priority_counts,omitempty"`
+	SearchBestPriorityCounts      []int                               `json:"search_best_priority_counts,omitempty"`
+	PostRepairBestPriorityCounts  []int                               `json:"post_repair_best_priority_counts,omitempty"`
+	RefineBestPriorityCounts      []int                               `json:"refine_best_priority_counts,omitempty"`
+	ParallelTasks                 int                                 `json:"parallel_tasks,omitempty"`
+	ParallelWorkersUsed           int                                 `json:"parallel_workers_used,omitempty"`
+	RefineMovesChecked            int64                               `json:"refine_moves_checked,omitempty"`
+	RefineImprovements            int                                 `json:"refine_improvements,omitempty"`
+	RefineBestDelta               string                              `json:"refine_best_delta,omitempty"`
+	RepairNodes                   int64                               `json:"repair_nodes,omitempty"`
+	RepairIterations              int                                 `json:"repair_iterations,omitempty"`
+	RepairImprovements            int                                 `json:"repair_improvements,omitempty"`
+	RepairCandidates              int                                 `json:"repair_candidates,omitempty"`
+	RepairBest                    string                              `json:"repair_best,omitempty"`
+	RepairParallelTasks           int                                 `json:"repair_parallel_tasks,omitempty"`
+	RepairParallelWorkersUsed     int                                 `json:"repair_parallel_workers_used,omitempty"`
+	StoppedAfterCoverageCeiling   bool                                `json:"stopped_after_coverage_ceiling,omitempty"`
+	StoppedAfterPriorityCeiling   bool                                `json:"stopped_after_priority_ceiling,omitempty"`
+	DiagnosticsEnabled            bool                                `json:"diagnostics_enabled,omitempty"`
+	GlobalBudgetConsumed          int64                               `json:"global_budget_consumed,omitempty"`
+	UnusedGlobalNodes             int64                               `json:"unused_global_nodes,omitempty"`
+	NormalBudgetConfigured        int64                               `json:"normal_budget_configured,omitempty"`
+	NormalBudgetConsumed          int64                               `json:"normal_budget_consumed,omitempty"`
+	DiagnosticBudgetConfigured    int64                               `json:"diagnostic_budget_configured,omitempty"`
+	DiagnosticBudgetConsumed      int64                               `json:"diagnostic_budget_consumed,omitempty"`
+	ExecutionBudgetConfigured     int64                               `json:"execution_budget_configured,omitempty"`
+	ExecutionBudgetConsumed       int64                               `json:"execution_budget_consumed,omitempty"`
+	UnchargedWork                 int64                               `json:"uncharged_work,omitempty"`
+	PhaseWork                     []model.SearchPhaseWork             `json:"phase_work,omitempty"`
+	IncumbentTrace                []model.IncumbentEvent              `json:"incumbent_trace,omitempty"`
+	PriorityCeilingStats          *model.PriorityCeilingStats         `json:"priority_ceiling_stats,omitempty"`
+	Plateau                       model.PlateauStats                  `json:"plateau"`
+	StarUpperBounds               model.StarUpperBounds               `json:"star_upper_bounds"`
+	FirstFullyPackedPhase         string                              `json:"first_fully_packed_phase,omitempty"`
+	FirstFullyPackedNodes         int64                               `json:"first_fully_packed_nodes,omitempty"`
+	FirstFullyPackedMS            int64                               `json:"first_fully_packed_ms,omitempty"`
+	PackingSeedDiagnostics        model.PackingSeedDiagnostics        `json:"packing_seed_diagnostics,omitempty"`
+	ConstellationSeedNodes        int64                               `json:"constellation_seed_nodes,omitempty"`
+	ConstellationSeedCandidates   int                                 `json:"constellation_seed_candidates,omitempty"`
+	ConstellationSeedDiagnostics  *model.ConstellationSeedDiagnostics `json:"constellation_seed_diagnostics,omitempty"`
+	ConfigFingerprint             string                              `json:"config_fingerprint,omitempty"`
+	ExecutionFingerprint          string                              `json:"execution_fingerprint,omitempty"`
+	Stages                        []model.SearchStageStats            `json:"stages,omitempty"`
+	TaskAllocation                *model.TaskAllocationStats          `json:"task_allocation,omitempty"`
+	PlateauArchive                *model.PlateauArchiveStats          `json:"plateau_archive,omitempty"`
+	PlateauLNSNodes               int64                               `json:"plateau_lns_nodes,omitempty"`
+	PlateauRefineNodes            int64                               `json:"plateau_refine_nodes,omitempty"`
+	PlateauRefineWalkLength       int                                 `json:"plateau_refine_walk_length,omitempty"`
+	PlateauRefineMaxValley        int                                 `json:"plateau_refine_max_valley,omitempty"`
+	PlateauRefineImproved         bool                                `json:"plateau_refine_improved,omitempty"`
 }
 
 type CoverageBucketSummary struct {
@@ -120,6 +264,7 @@ type CoverageSummary struct {
 type LooseStarSummary struct {
 	SourceItemID string `json:"source_item_id"`
 	TargetCount  int    `json:"target_count"`
+	LinkCount    int    `json:"link_count,omitempty"`
 }
 
 func ParseBudgets(value string) ([]int64, error) {
@@ -165,6 +310,10 @@ func ValidateRepairSearchMode(value string) error {
 	}
 }
 
+func ValidatePlateauVariant(value string) error {
+	return solver.ValidatePlateauVariant(value)
+}
+
 func RunScenarios(config RunConfig) (Report, error) {
 	if config.CatalogPath == "" {
 		config.CatalogPath = catalog.DefaultPath
@@ -181,6 +330,9 @@ func RunScenarios(config RunConfig) (Report, error) {
 	if config.Workers <= 0 {
 		config.Workers = 1
 	}
+	if config.Diagnostic && config.Workers != 1 {
+		return Report{}, fmt.Errorf("diagnostic runs require exactly one worker")
+	}
 	if config.Top <= 0 {
 		config.Top = 1
 	}
@@ -189,6 +341,91 @@ func RunScenarios(config RunConfig) (Report, error) {
 	}
 	if err := ValidateRepairSearchMode(config.RepairSearchMode); err != nil {
 		return Report{}, err
+	}
+	if config.PlateauVariant == "" {
+		config.PlateauVariant = solver.DefaultPlateauVariant
+	}
+	if err := ValidatePlateauVariant(config.PlateauVariant); err != nil {
+		return Report{}, err
+	}
+	if config.ConstellationSeedVariant != "" {
+		if err := solver.ValidateConstellationSeedVariant(config.ConstellationSeedVariant); err != nil {
+			return Report{}, err
+		}
+	}
+	if config.ConstellationSeedV1 && config.ConstellationSeedVariant != "" && config.ConstellationSeedVariant != solver.ConstellationSeedVariantV1 {
+		return Report{}, fmt.Errorf("constellation seed v1 alias conflicts with explicit variant")
+	}
+	if config.ConstellationFeasibilityProbe && !config.Diagnostic {
+		return Report{}, fmt.Errorf("constellation feasibility probe requires diagnostic runs")
+	}
+	if config.ConstellationCompletionOptimizationProbe && !config.Diagnostic {
+		return Report{}, fmt.Errorf("constellation completion optimization probe requires diagnostic runs")
+	}
+	if config.ConstellationCompletionOptimizationProbe {
+		if err := solver.ValidateConstellationCompletionOptimizationProbeVariant(config.ConstellationSeedVariant); err != nil {
+			return Report{}, err
+		}
+	}
+	if config.ConstellationFeasibilityProbe && config.ConstellationCompletionOptimizationProbe {
+		return Report{}, fmt.Errorf("constellation feasibility and completion optimization probes cannot run together")
+	}
+	if config.ConstellationCandidatePoolFeasibilitySweep && !config.Diagnostic {
+		return Report{}, fmt.Errorf("constellation candidate pool feasibility sweep requires diagnostic runs")
+	}
+	if config.ConstellationCandidatePoolFeasibilitySweep && config.ConstellationSeedVariant != solver.ConstellationSeedVariantV4 {
+		return Report{}, fmt.Errorf("constellation candidate pool feasibility sweep requires constellation seed variant %q", solver.ConstellationSeedVariantV4)
+	}
+	if config.ConstellationCandidatePoolFeasibilitySweep && (config.ConstellationFeasibilityProbe || config.ConstellationCompletionOptimizationProbe) {
+		return Report{}, fmt.Errorf("constellation candidate pool feasibility sweep cannot run with another constellation probe")
+	}
+	if config.ConstellationCandidateCompletionOptimizationProbe && !config.Diagnostic {
+		return Report{}, fmt.Errorf("constellation candidate completion optimization probe requires diagnostic runs")
+	}
+	if config.ConstellationCandidateCompletionOptimizationProbe {
+		if err := solver.ValidateConstellationCandidateCompletionOptimizationTarget(config.ConstellationSeedVariant, config.ConstellationCandidateCompletionOptimizationCandidateID, config.ConstellationCandidateCompletionOptimizationStage); err != nil {
+			return Report{}, err
+		}
+		if config.ConstellationCandidateCompletionOptimizationNodeBudget < 0 {
+			return Report{}, fmt.Errorf("constellation candidate completion optimization node budget must be non-negative")
+		}
+		if (config.ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey == "") != (config.ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint == "") {
+			return Report{}, fmt.Errorf("candidate completion optimization witness layout key and semantic fingerprint must be supplied together")
+		}
+	}
+	if config.ConstellationCandidateCompletionOptimizationProbe && (config.ConstellationFeasibilityProbe || config.ConstellationCompletionOptimizationProbe || config.ConstellationCandidatePoolFeasibilitySweep) {
+		return Report{}, fmt.Errorf("constellation candidate completion optimization probe cannot run with another constellation probe")
+	}
+	if config.ConstellationForcedCandidateRootedPackingProbe && !config.Diagnostic {
+		return Report{}, fmt.Errorf("constellation forced candidate rooted packing probe requires diagnostic runs")
+	}
+	if config.ConstellationForcedCandidateRootedPackingProbe {
+		if err := solver.ValidateConstellationForcedCandidateRootedPackingTarget(config.ConstellationSeedVariant, config.ConstellationForcedCandidateRootedPackingCandidateID, config.ConstellationForcedCandidateRootedPackingSlot, config.ConstellationForcedCandidateRootedPackingStage); err != nil {
+			return Report{}, err
+		}
+		if (config.ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey == "") != (config.ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint == "") {
+			return Report{}, fmt.Errorf("forced rooted packing shadow witness layout key and semantic fingerprint must be supplied together")
+		}
+		if config.ConstellationForcedCandidateRootedPackingBeamWidth < 0 {
+			return Report{}, fmt.Errorf("constellation forced candidate rooted packing beam width must be non-negative")
+		}
+		if err := solver.ValidateConstellationForcedCandidateRootedPackingRanking(config.ConstellationForcedCandidateRootedPackingRanking); err != nil {
+			return Report{}, err
+		}
+	}
+	if config.ConstellationForcedCandidateRootedPackingProbe && (config.ConstellationFeasibilityProbe || config.ConstellationCompletionOptimizationProbe || config.ConstellationCandidatePoolFeasibilitySweep || config.ConstellationCandidateCompletionOptimizationProbe) {
+		return Report{}, fmt.Errorf("constellation forced candidate rooted packing probe cannot run with another constellation probe")
+	}
+	if config.ConstellationParentFrontierHedgeProbe {
+		if !config.Diagnostic {
+			return Report{}, fmt.Errorf("constellation parent-frontier hedge probe requires diagnostic runs")
+		}
+		if err := solver.ValidateConstellationParentFrontierHedgeProbeTarget(config.ConstellationSeedVariant, config.ConstellationParentFrontierHedgeProbeStage); err != nil {
+			return Report{}, err
+		}
+	}
+	if config.ConstellationParentFrontierHedgeProbe && (config.ConstellationFeasibilityProbe || config.ConstellationCompletionOptimizationProbe || config.ConstellationCandidatePoolFeasibilitySweep || config.ConstellationCandidateCompletionOptimizationProbe || config.ConstellationForcedCandidateRootedPackingProbe) {
+		return Report{}, fmt.Errorf("constellation parent-frontier hedge probe cannot run with another constellation probe")
 	}
 
 	loadedCatalog, err := catalog.Load(config.CatalogPath)
@@ -202,16 +439,45 @@ func RunScenarios(config RunConfig) (Report, error) {
 	if len(files) == 0 {
 		return Report{}, fmt.Errorf("no scenario JSON files found in %s", config.ScenarioDir)
 	}
+	files = filterScenarioFiles(files, config.Scenarios)
+	if len(files) == 0 {
+		return Report{}, fmt.Errorf("no selected scenario JSON files found in %s", config.ScenarioDir)
+	}
 
 	report := Report{
-		GeneratedAt:      time.Now().UTC().Format(time.RFC3339),
-		CatalogPath:      config.CatalogPath,
-		ScenarioDir:      config.ScenarioDir,
-		Budgets:          append([]int64(nil), config.Budgets...),
-		Repeat:           config.Repeat,
-		Workers:          config.Workers,
-		Top:              config.Top,
-		RepairSearchMode: config.RepairSearchMode,
+		GeneratedAt:                              time.Now().UTC().Format(time.RFC3339),
+		CatalogPath:                              config.CatalogPath,
+		ScenarioDir:                              config.ScenarioDir,
+		Budgets:                                  append([]int64(nil), config.Budgets...),
+		Repeat:                                   config.Repeat,
+		Workers:                                  config.Workers,
+		Top:                                      config.Top,
+		RepairSearchMode:                         config.RepairSearchMode,
+		PlateauVariant:                           config.PlateauVariant,
+		Diagnostic:                               config.Diagnostic,
+		ConstellationSeedV1:                      config.ConstellationSeedV1,
+		ConstellationSeedVariant:                 config.ConstellationSeedVariant,
+		ConstellationFeasibilityProbe:            config.ConstellationFeasibilityProbe,
+		ConstellationCompletionOptimizationProbe: config.ConstellationCompletionOptimizationProbe,
+		ConstellationCandidatePoolFeasibilitySweep:                                    config.ConstellationCandidatePoolFeasibilitySweep,
+		ConstellationCandidateCompletionOptimizationProbe:                             config.ConstellationCandidateCompletionOptimizationProbe,
+		ConstellationCandidateCompletionOptimizationCandidateID:                       config.ConstellationCandidateCompletionOptimizationCandidateID,
+		ConstellationCandidateCompletionOptimizationStage:                             config.ConstellationCandidateCompletionOptimizationStage,
+		ConstellationCandidateCompletionOptimizationNodeBudget:                        config.ConstellationCandidateCompletionOptimizationNodeBudget,
+		ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey:           config.ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey,
+		ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint: config.ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint,
+		ConstellationForcedCandidateRootedPackingProbe:                                config.ConstellationForcedCandidateRootedPackingProbe,
+		ConstellationForcedCandidateRootedPackingCandidateID:                          config.ConstellationForcedCandidateRootedPackingCandidateID,
+		ConstellationForcedCandidateRootedPackingSlot:                                 config.ConstellationForcedCandidateRootedPackingSlot,
+		ConstellationForcedCandidateRootedPackingStage:                                config.ConstellationForcedCandidateRootedPackingStage,
+		ConstellationForcedCandidateRootedPackingBeamWidth:                            config.ConstellationForcedCandidateRootedPackingBeamWidth,
+		ConstellationForcedCandidateRootedPackingRanking:                              config.ConstellationForcedCandidateRootedPackingRanking,
+		ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey:               config.ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey,
+		ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint:     config.ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint,
+		ConstellationParentFrontierHedgeProbe:                                         config.ConstellationParentFrontierHedgeProbe,
+		ConstellationParentFrontierHedgeProbeStage:                                    config.ConstellationParentFrontierHedgeProbeStage,
+		CatalogSHA256: catalogSHA256(config.CatalogPath),
+		BuildRevision: buildRevision(),
 	}
 	for _, path := range files {
 		loadedScenario, err := scenario.Load(path)
@@ -269,6 +535,28 @@ func scenarioFiles(dir string) ([]string, error) {
 	return files, nil
 }
 
+func filterScenarioFiles(files []string, names []string) []string {
+	if len(names) == 0 {
+		return files
+	}
+	selected := map[string]bool{}
+	for _, name := range names {
+		name = strings.TrimSpace(name)
+		if name == "" {
+			continue
+		}
+		selected[strings.TrimSuffix(filepath.Base(name), filepath.Ext(name))] = true
+	}
+	filtered := make([]string, 0, len(files))
+	for _, file := range files {
+		name := strings.TrimSuffix(filepath.Base(file), filepath.Ext(file))
+		if selected[name] {
+			filtered = append(filtered, file)
+		}
+	}
+	return filtered
+}
+
 func validateScenarioItems(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, path string) error {
 	var missing []string
 	for itemID := range loadedScenario.Items {
@@ -309,10 +597,33 @@ func validateScenarioItems(loadedCatalog model.Catalog, loadedScenario scenario.
 
 func runScenario(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, name string, path string, budget int64, repeat int, config RunConfig) Run {
 	run := Run{
-		Scenario:     name,
-		ScenarioPath: path,
-		Budget:       budget,
-		Repeat:       repeat,
+		Scenario:                                 name,
+		ScenarioPath:                             path,
+		Budget:                                   budget,
+		Repeat:                                   repeat,
+		PlateauVariant:                           config.PlateauVariant,
+		ConstellationSeedV1:                      config.ConstellationSeedV1,
+		ConstellationSeedVariant:                 config.ConstellationSeedVariant,
+		ConstellationFeasibilityProbe:            config.ConstellationFeasibilityProbe,
+		ConstellationCompletionOptimizationProbe: config.ConstellationCompletionOptimizationProbe,
+		ConstellationCandidatePoolFeasibilitySweep:                                    config.ConstellationCandidatePoolFeasibilitySweep,
+		ConstellationCandidateCompletionOptimizationProbe:                             config.ConstellationCandidateCompletionOptimizationProbe,
+		ConstellationCandidateCompletionOptimizationCandidateID:                       config.ConstellationCandidateCompletionOptimizationCandidateID,
+		ConstellationCandidateCompletionOptimizationStage:                             config.ConstellationCandidateCompletionOptimizationStage,
+		ConstellationCandidateCompletionOptimizationNodeBudget:                        config.ConstellationCandidateCompletionOptimizationNodeBudget,
+		ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey:           config.ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey,
+		ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint: config.ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint,
+		ConstellationForcedCandidateRootedPackingProbe:                                config.ConstellationForcedCandidateRootedPackingProbe,
+		ConstellationForcedCandidateRootedPackingCandidateID:                          config.ConstellationForcedCandidateRootedPackingCandidateID,
+		ConstellationForcedCandidateRootedPackingSlot:                                 config.ConstellationForcedCandidateRootedPackingSlot,
+		ConstellationForcedCandidateRootedPackingStage:                                config.ConstellationForcedCandidateRootedPackingStage,
+		ConstellationForcedCandidateRootedPackingBeamWidth:                            config.ConstellationForcedCandidateRootedPackingBeamWidth,
+		ConstellationForcedCandidateRootedPackingRanking:                              config.ConstellationForcedCandidateRootedPackingRanking,
+		ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey:               config.ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey,
+		ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint:     config.ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint,
+		ConstellationParentFrontierHedgeProbe:                                         config.ConstellationParentFrontierHedgeProbe,
+		ConstellationParentFrontierHedgeProbeStage:                                    config.ConstellationParentFrontierHedgeProbeStage,
+		SolverSettings: solver.SettingsForBenchmark(budget, config.PlateauVariant),
 	}
 	gridMask, err := scenarioGridMask(loadedScenario)
 	if err != nil {
@@ -324,10 +635,19 @@ func runScenario(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, 
 	if loadedScenario.NoSkips != nil {
 		noSkips = *loadedScenario.NoSkips
 	}
+	run.NoSkips = noSkips
+	run.PrioritySemantics = loadedScenario.PrioritySemantics
+	run.Priorities = append([]string(nil), loadedScenario.Priorities...)
 	stopOnCoverageCeiling := false
 	if loadedScenario.StopOnCoverageCeiling != nil {
 		stopOnCoverageCeiling = *loadedScenario.StopOnCoverageCeiling
 	}
+	run.StopOnCoverageCeiling = stopOnCoverageCeiling
+	stopOnPriorityCeiling := false
+	if loadedScenario.StopOnPriorityCeiling != nil {
+		stopOnPriorityCeiling = *loadedScenario.StopOnPriorityCeiling
+	}
+	run.StopOnPriorityCeiling = stopOnPriorityCeiling
 	repairSearch := budget > 0
 	if loadedScenario.RepairSearch != nil {
 		repairSearch = *loadedScenario.RepairSearch
@@ -335,17 +655,48 @@ func runScenario(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, 
 	repairSearch = effectiveRepairSearch(config.RepairSearchMode, repairSearch, budget)
 	run.RepairSearch = repairSearch
 
+	solveConfig := solver.Config{
+		TopN:                                     config.Top,
+		AllowSkips:                               !noSkips,
+		MaxNodes:                                 budget,
+		Workers:                                  config.Workers,
+		PrioritySemantics:                        loadedScenario.PrioritySemantics,
+		Priorities:                               append([]string(nil), loadedScenario.Priorities...),
+		CoverageGroups:                           loadedScenario.ModelCoverageGroups(),
+		StopOnCoverageCeiling:                    stopOnCoverageCeiling,
+		StopOnPriorityCeiling:                    stopOnPriorityCeiling,
+		RepairSearch:                             repairSearch,
+		PlateauVariant:                           config.PlateauVariant,
+		Diagnostics:                              config.Diagnostic,
+		EnableConstellationSeedV1:                config.ConstellationSeedV1,
+		ConstellationSeedVariant:                 config.ConstellationSeedVariant,
+		ConstellationFeasibilityProbe:            config.ConstellationFeasibilityProbe,
+		ConstellationCompletionOptimizationProbe: config.ConstellationCompletionOptimizationProbe,
+		ConstellationCandidatePoolFeasibilitySweep:                                    config.ConstellationCandidatePoolFeasibilitySweep,
+		ConstellationCandidateCompletionOptimizationProbe:                             config.ConstellationCandidateCompletionOptimizationProbe,
+		ConstellationCandidateCompletionOptimizationCandidateID:                       config.ConstellationCandidateCompletionOptimizationCandidateID,
+		ConstellationCandidateCompletionOptimizationStage:                             config.ConstellationCandidateCompletionOptimizationStage,
+		ConstellationCandidateCompletionOptimizationNodeBudget:                        config.ConstellationCandidateCompletionOptimizationNodeBudget,
+		ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey:           config.ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey,
+		ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint: config.ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint,
+		ConstellationForcedCandidateRootedPackingProbe:                                config.ConstellationForcedCandidateRootedPackingProbe,
+		ConstellationForcedCandidateRootedPackingCandidateID:                          config.ConstellationForcedCandidateRootedPackingCandidateID,
+		ConstellationForcedCandidateRootedPackingSlot:                                 config.ConstellationForcedCandidateRootedPackingSlot,
+		ConstellationForcedCandidateRootedPackingStage:                                config.ConstellationForcedCandidateRootedPackingStage,
+		ConstellationForcedCandidateRootedPackingBeamWidth:                            config.ConstellationForcedCandidateRootedPackingBeamWidth,
+		ConstellationForcedCandidateRootedPackingRanking:                              config.ConstellationForcedCandidateRootedPackingRanking,
+		ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey:               config.ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey,
+		ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint:     config.ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint,
+		ConstellationParentFrontierHedgeProbe:                                         config.ConstellationParentFrontierHedgeProbe,
+		ConstellationParentFrontierHedgeProbeStage:                                    config.ConstellationParentFrontierHedgeProbeStage,
+	}
+	if reference := diagnosticReferenceForScenario(name, config.Diagnostic); reference != nil {
+		solveConfig.DiagnosticReference = reference
+	}
+	run.SolverSettings = solver.SettingsForBenchmarkConfig(solveConfig)
+
 	startedAt := time.Now()
-	solutions, err := solver.SolveLayout(loadedCatalog, loadedScenario.ItemIDs(), gridMask, solver.Config{
-		TopN:                  config.Top,
-		AllowSkips:            !noSkips,
-		MaxNodes:              budget,
-		Workers:               config.Workers,
-		Priorities:            append([]string(nil), loadedScenario.Priorities...),
-		CoverageGroups:        loadedScenario.ModelCoverageGroups(),
-		StopOnCoverageCeiling: stopOnCoverageCeiling,
-		RepairSearch:          repairSearch,
-	})
+	solutions, err := solver.SolveLayout(loadedCatalog, loadedScenario.ItemIDs(), gridMask, solveConfig)
 	elapsed := time.Since(startedAt)
 	run.ElapsedMS = elapsed.Milliseconds()
 	if err != nil {
@@ -366,6 +717,7 @@ func runScenario(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, 
 	run.NodesPerSecond = best.Search.NodesPerSecond
 	run.Score = scoreSummary(best.Evaluation.Score)
 	run.LayoutKey = best.LayoutKey
+	run.CanonicalLayoutHash = best.CanonicalLayoutHash
 	run.Search = searchSummary(best.Search)
 	run.CoverageSummaries = coverageSummaries(best.Evaluation)
 	run.LooseStarPriorities = looseStarSummaries(best.Evaluation.LooseStarPriorities)
@@ -378,6 +730,13 @@ func runScenario(loadedCatalog model.Catalog, loadedScenario scenario.Scenario, 
 	}
 	run.Solution = solutionJSON
 	return run
+}
+
+func diagnosticReferenceForScenario(name string, diagnostic bool) []model.Placement {
+	if !diagnostic || name != outgoingPerInstanceFoodScenarioName {
+		return nil
+	}
+	return solver.OutgoingPerInstanceFoodDiagnosticReference()
 }
 
 func effectiveRepairSearch(mode string, scenarioValue bool, budget int64) bool {
@@ -418,44 +777,142 @@ func solutionRawJSON(solution model.Solution) (json.RawMessage, error) {
 
 func scoreSummary(score model.Score) ScoreSummary {
 	return ScoreSummary{
-		PriorityCounts: append([]int(nil), score.PriorityCounts...),
-		Crafts:         score.CraftCount,
-		Stars:          score.StarCount,
-		Items:          score.ItemCount,
+		PriorityCounts:                append([]int(nil), score.PriorityCounts...),
+		Crafts:                        score.CraftCount,
+		Stars:                         score.StarCount,
+		Items:                         score.ItemCount,
+		StarTargetBreadth:             score.StarTargetBreadth,
+		StarReciprocalPairs:           score.StarReciprocalPairs,
+		StarSourceDefinitionDiversity: score.StarSourceDefinitionDiversity,
 	}
 }
 
 func searchSummary(search model.SearchStats) SearchSummary {
 	return SearchSummary{
-		NodesExplored:               search.NodesExplored,
-		NodesPerSecond:              search.NodesPerSecond,
-		Limited:                     search.Limited,
-		Refined:                     search.Refined,
-		CoverageSources:             append([]string(nil), search.CoverageSources...),
-		CoverageTargetCount:         search.CoverageTargetCount,
-		CoverageCeiling:             coverageBucketSummaries(search.CoverageCeiling),
-		CoverageCeilingReached:      search.CoverageCeilingReached,
-		CoverageBoundChecks:         search.CoverageBoundChecks,
-		CoveragePrunedNodes:         search.CoveragePrunedNodes,
-		ExactBoundChecks:            search.ExactBoundChecks,
-		ExactBoundPrunedNodes:       search.ExactBoundPrunedNodes,
-		CoverageSeedNodes:           search.CoverageSeedNodes,
-		CoverageSeedCandidates:      search.CoverageSeedCandidates,
-		CoverageSeedBest:            search.CoverageSeedBest,
-		ParallelTasks:               search.ParallelTasks,
-		ParallelWorkersUsed:         search.ParallelWorkersUsed,
-		RefineMovesChecked:          search.RefineMovesChecked,
-		RefineImprovements:          search.RefineImprovements,
-		RefineBestDelta:             search.RefineBestDelta,
-		RepairNodes:                 search.RepairNodes,
-		RepairIterations:            search.RepairIterations,
-		RepairImprovements:          search.RepairImprovements,
-		RepairCandidates:            search.RepairCandidates,
-		RepairBest:                  search.RepairBest,
-		RepairParallelTasks:         search.RepairParallelTasks,
-		RepairParallelWorkersUsed:   search.RepairParallelWorkersUsed,
-		StoppedAfterCoverageCeiling: search.StoppedAfterCoverageCeiling,
+		NodesExplored:                 search.NodesExplored,
+		NodesPerSecond:                search.NodesPerSecond,
+		SetupMS:                       search.SetupMS,
+		Limited:                       search.Limited,
+		Refined:                       search.Refined,
+		CoverageSources:               append([]string(nil), search.CoverageSources...),
+		CoverageTargetCount:           search.CoverageTargetCount,
+		CoverageCeiling:               coverageBucketSummaries(search.CoverageCeiling),
+		CoverageCeilingReached:        search.CoverageCeilingReached,
+		PriorityCeiling:               append([]int(nil), search.PriorityCeiling...),
+		PriorityCeilingReached:        search.PriorityCeilingReached,
+		CoverageBoundChecks:           search.CoverageBoundChecks,
+		CoveragePrunedNodes:           search.CoveragePrunedNodes,
+		ExactBoundChecks:              search.ExactBoundChecks,
+		ExactBoundPrunedNodes:         search.ExactBoundPrunedNodes,
+		OutgoingBoundChecks:           search.OutgoingBoundChecks,
+		OutgoingBoundPrunedNodes:      search.OutgoingBoundPrunedNodes,
+		CoverageSeedNodes:             search.CoverageSeedNodes,
+		CoverageSeedCandidates:        search.CoverageSeedCandidates,
+		CoverageSeedBest:              search.CoverageSeedBest,
+		StarSeedNodes:                 search.StarSeedNodes,
+		StarSeedCandidates:            search.StarSeedCandidates,
+		PackingSeedNodes:              search.PackingSeedNodes,
+		PackingSeedCandidates:         search.PackingSeedCandidates,
+		PackingSeedHardPruned:         search.PackingSeedHardPruned,
+		PackingSeedStatesDeduplicated: search.PackingSeedStatesDeduplicated,
+		SymmetryPrunedBranches:        search.SymmetryPrunedBranches,
+		FirstCompletePhase:            search.FirstCompletePhase,
+		FirstCompleteNodes:            search.FirstCompleteNodes,
+		FirstCompleteMS:               search.FirstCompleteMS,
+		SeedBest:                      scoreSummary(search.SeedBestScore),
+		SearchBest:                    scoreSummary(search.SearchBestScore),
+		PostRepairBest:                scoreSummary(search.PostRepairBestScore),
+		RefineBest:                    scoreSummary(search.RefineBestScore),
+		InitialBestPriorityCounts:     append([]int(nil), search.InitialBestPriorityCounts...),
+		SeedBestPriorityCounts:        append([]int(nil), search.SeedBestPriorityCounts...),
+		SearchBestPriorityCounts:      append([]int(nil), search.SearchBestPriorityCounts...),
+		PostRepairBestPriorityCounts:  append([]int(nil), search.PostRepairBestPriorityCounts...),
+		RefineBestPriorityCounts:      append([]int(nil), search.RefineBestPriorityCounts...),
+		ParallelTasks:                 search.ParallelTasks,
+		ParallelWorkersUsed:           search.ParallelWorkersUsed,
+		RefineMovesChecked:            search.RefineMovesChecked,
+		RefineImprovements:            search.RefineImprovements,
+		RefineBestDelta:               search.RefineBestDelta,
+		RepairNodes:                   search.RepairNodes,
+		RepairIterations:              search.RepairIterations,
+		RepairImprovements:            search.RepairImprovements,
+		RepairCandidates:              search.RepairCandidates,
+		RepairBest:                    search.RepairBest,
+		RepairParallelTasks:           search.RepairParallelTasks,
+		RepairParallelWorkersUsed:     search.RepairParallelWorkersUsed,
+		StoppedAfterCoverageCeiling:   search.StoppedAfterCoverageCeiling,
+		StoppedAfterPriorityCeiling:   search.StoppedAfterPriorityCeiling,
+		DiagnosticsEnabled:            search.DiagnosticsEnabled,
+		GlobalBudgetConsumed:          search.GlobalBudgetConsumed,
+		UnusedGlobalNodes:             search.UnusedGlobalNodes,
+		NormalBudgetConfigured:        search.NormalBudgetConfigured,
+		NormalBudgetConsumed:          search.NormalBudgetConsumed,
+		DiagnosticBudgetConfigured:    search.DiagnosticBudgetConfigured,
+		DiagnosticBudgetConsumed:      search.DiagnosticBudgetConsumed,
+		ExecutionBudgetConfigured:     search.ExecutionBudgetConfigured,
+		ExecutionBudgetConsumed:       search.ExecutionBudgetConsumed,
+		UnchargedWork:                 search.UnchargedWork,
+		PhaseWork:                     diagnosticPhaseWork(search),
+		IncumbentTrace:                append([]model.IncumbentEvent(nil), search.IncumbentTrace...),
+		PriorityCeilingStats:          search.PriorityCeilingStats,
+		Plateau:                       search.Plateau,
+		StarUpperBounds:               search.StarUpperBounds,
+		FirstFullyPackedPhase:         search.FirstFullyPackedPhase,
+		FirstFullyPackedNodes:         search.FirstFullyPackedNodes,
+		FirstFullyPackedMS:            search.FirstFullyPackedMS,
+		PackingSeedDiagnostics:        search.PackingSeedDiagnostics,
+		ConstellationSeedNodes:        search.ConstellationSeedNodes,
+		ConstellationSeedCandidates:   search.ConstellationSeedCandidates,
+		ConstellationSeedDiagnostics:  constellationSeedDiagnostics(search),
+		ConfigFingerprint:             search.ConfigFingerprint,
+		ExecutionFingerprint:          search.ExecutionFingerprint,
+		Stages:                        diagnosticStages(search),
+		TaskAllocation:                diagnosticTaskAllocation(search),
+		PlateauArchive:                diagnosticPlateauArchive(search),
+		PlateauLNSNodes:               search.PlateauLNSNodes,
+		PlateauRefineNodes:            search.PlateauRefineNodes,
+		PlateauRefineWalkLength:       search.PlateauRefineWalkLength,
+		PlateauRefineMaxValley:        search.PlateauRefineMaxValley,
+		PlateauRefineImproved:         search.PlateauRefineImproved,
 	}
+}
+
+func constellationSeedDiagnostics(search model.SearchStats) *model.ConstellationSeedDiagnostics {
+	diagnostics := search.ConstellationSeedDiagnostics
+	if search.ConstellationSeedNodes == 0 && search.ConstellationSeedCandidates == 0 && reflect.ValueOf(diagnostics).IsZero() {
+		return nil
+	}
+	return &diagnostics
+}
+
+func diagnosticPlateauArchive(search model.SearchStats) *model.PlateauArchiveStats {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	archive := search.PlateauArchive
+	return &archive
+}
+
+func diagnosticPhaseWork(search model.SearchStats) []model.SearchPhaseWork {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	return append([]model.SearchPhaseWork(nil), search.PhaseWork...)
+}
+
+func diagnosticStages(search model.SearchStats) []model.SearchStageStats {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	return append([]model.SearchStageStats(nil), search.Stages...)
+}
+
+func diagnosticTaskAllocation(search model.SearchStats) *model.TaskAllocationStats {
+	if !search.DiagnosticsEnabled {
+		return nil
+	}
+	taskAllocation := search.TaskAllocation
+	return &taskAllocation
 }
 
 func coverageBucketSummaries(buckets []model.StarCoverageBucket) []CoverageBucketSummary {
@@ -512,6 +969,7 @@ func looseStarSummaries(priorities []model.LooseStarPriority) []LooseStarSummary
 		out = append(out, LooseStarSummary{
 			SourceItemID: priority.SourceItemID,
 			TargetCount:  priority.TargetCount,
+			LinkCount:    priority.LinkCount,
 		})
 	}
 	return out
@@ -530,19 +988,7 @@ func craftSummaries(crafts []model.CraftActivation) []string {
 }
 
 func compareScoreOnly(left ScoreSummary, right ScoreSummary) int {
-	if compare := comparePriorityCounts(left.PriorityCounts, right.PriorityCounts); compare != 0 {
-		return compare
-	}
-	if left.Crafts != right.Crafts {
-		return left.Crafts - right.Crafts
-	}
-	if left.Stars != right.Stars {
-		return left.Stars - right.Stars
-	}
-	if left.Items != right.Items {
-		return left.Items - right.Items
-	}
-	return 0
+	return model.CompareScores(scoreSummaryModelScore(left), scoreSummaryModelScore(right))
 }
 
 func compareRunScore(current Run, baseline Run) int {
@@ -568,24 +1014,19 @@ func compareRunScore(current Run, baseline Run) int {
 }
 
 func comparePriorityCounts(left []int, right []int) int {
-	maxLen := len(left)
-	if len(right) > maxLen {
-		maxLen = len(right)
+	return model.ComparePriorityCounts(left, right)
+}
+
+func scoreSummaryModelScore(summary ScoreSummary) model.Score {
+	return model.Score{
+		PriorityCounts:                append([]int(nil), summary.PriorityCounts...),
+		CraftCount:                    summary.Crafts,
+		StarCount:                     summary.Stars,
+		ItemCount:                     summary.Items,
+		StarTargetBreadth:             summary.StarTargetBreadth,
+		StarReciprocalPairs:           summary.StarReciprocalPairs,
+		StarSourceDefinitionDiversity: summary.StarSourceDefinitionDiversity,
 	}
-	for idx := 0; idx < maxLen; idx++ {
-		leftValue := 0
-		if idx < len(left) {
-			leftValue = left[idx]
-		}
-		rightValue := 0
-		if idx < len(right) {
-			rightValue = right[idx]
-		}
-		if leftValue != rightValue {
-			return leftValue - rightValue
-		}
-	}
-	return 0
 }
 
 func medianInt64(values []int64) float64 {
@@ -637,7 +1078,7 @@ func scoreText(score ScoreSummary) string {
 		}
 		priority = "[" + strings.Join(parts, "/") + "]"
 	}
-	return fmt.Sprintf("%s c%d s%d i%d", priority, score.Crafts, score.Stars, score.Items)
+	return fmt.Sprintf("%s c%d s%d i%d t%d r%d d%d", priority, score.Crafts, score.Stars, score.Items, score.StarTargetBreadth, score.StarReciprocalPairs, score.StarSourceDefinitionDiversity)
 }
 
 func uniqueStrings(values []string) []string {
@@ -653,4 +1094,26 @@ func uniqueStrings(values []string) []string {
 		}
 	}
 	return result
+}
+
+func catalogSHA256(path string) string {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return ""
+	}
+	digest := sha256.Sum256(content)
+	return hex.EncodeToString(digest[:])
+}
+
+func buildRevision() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "unknown"
+	}
+	for _, setting := range info.Settings {
+		if setting.Key == "vcs.revision" && setting.Value != "" {
+			return setting.Value
+		}
+	}
+	return "unknown"
 }

@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "name": "general-search-v1",
+  "budgets": [250000, 500000, 1000000, 5000000],
+  "workers": 1,
+  "baseline_policy": "v4",
+  "scenarios": [
+    {
+      "id": "micro-coverage-belt",
+      "path": "benchmarks/exhaustive-scenarios/small-coverage-belt.json",
+      "role": "development",
+      "tags": ["micro", "coverage", "tight-packing"]
+    },
+    {
+      "id": "micro-craft-chain",
+      "path": "benchmarks/exhaustive-scenarios/small-craft-chain.json",
+      "role": "development",
+      "tags": ["micro", "crafts", "dependency-chain"]
+    },
+    {
+      "id": "armor-craft-coverage",
+      "path": "benchmarks/scenarios/armor-craft-coverage.json",
+      "role": "development",
+      "tags": ["coverage", "crafts", "tight-packing"]
+    },
+    {
+      "id": "global-priority-mixed",
+      "path": "benchmarks/scenarios/global-priority-mixed.json",
+      "role": "development",
+      "tags": ["mixed-priorities", "packing"]
+    },
+    {
+      "id": "outgoing-food-experiment",
+      "path": "benchmarks/scenarios/outgoing-per-instance-food.json",
+      "role": "experiment_development",
+      "tags": ["outgoing-v3", "two-star-sources", "constellation"]
+    },
+    {
+      "id": "groups-weapons-food-armor",
+      "path": "benchmarks/scenarios/groups-weapons-food-armor.json",
+      "role": "validation",
+      "tags": ["coverage", "multiple-groups", "packing"]
+    },
+    {
+      "id": "loose-any-stars",
+      "path": "benchmarks/scenarios/loose-any-stars.json",
+      "role": "validation",
+      "tags": ["loose-stars", "low-constraint"]
+    },
+    {
+      "id": "magic-ranged-crafts",
+      "path": "benchmarks/scenarios/magic-ranged-crafts.json",
+      "role": "validation",
+      "tags": ["crafts", "spatial-interaction"]
+    },
+    {
+      "id": "star-relocation-refine",
+      "path": "benchmarks/scenarios/star-relocation-refine.json",
+      "role": "validation",
+      "tags": ["stars", "refinement", "packing"]
+    },
+    {
+      "id": "outgoing-debug-v3",
+      "path": "benchmarks/scenarios/outgoing-debug-reference-v3.json",
+      "role": "validation",
+      "tags": ["outgoing-v3", "many-star-sources", "allow-skips"]
+    }
+  ],
+  "generated": [
+    {
+      "id": "sparse-dev-01",
+      "family": "star-source-sparse",
+      "role": "development",
+      "seed": 104729
+    },
+    {
+      "id": "duplicated-validation-01",
+      "family": "star-source-duplicated",
+      "role": "validation",
+      "seed": 130363
+    },
+    {
+      "id": "loose-validation-01",
+      "family": "star-source-loose",
+      "role": "validation",
+      "seed": 155921
+    },
+    {
+      "id": "public-holdout-01",
+      "family": "star-source-sparse",
+      "role": "public_holdout",
+      "seed": 196613
+    },
+    {
+      "id": "private-holdout-01",
+      "family": "private",
+      "role": "private_holdout",
+      "private_seed_id": "general-search-v1-private-01"
+    },
+    {
+      "id": "private-holdout-02",
+      "family": "private",
+      "role": "private_holdout",
+      "private_seed_id": "general-search-v1-private-02"
+    }
+  ]
+}
