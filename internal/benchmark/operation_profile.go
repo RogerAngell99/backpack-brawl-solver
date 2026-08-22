@@ -41,6 +41,8 @@ type SchedulerOpportunitySummary struct {
 	FamiliesCompleted        int                          `json:"families_completed"`
 	FamiliesBudgetExhausted  int                          `json:"families_budget_exhausted"`
 	FamiliesHardDead         int                          `json:"families_hard_dead"`
+	FamiliesNoStates         int                          `json:"families_no_states"`
+	TerminationReasonCounts  []SchedulerTerminationCount  `json:"termination_reason_counts"`
 	AllocationRounds         int                          `json:"allocation_rounds"`
 	ReservedTotal            int64                        `json:"reserved_total"`
 	ReservationTurnover      int64                        `json:"reservation_turnover"`
@@ -52,6 +54,13 @@ type SchedulerOpportunitySummary struct {
 	FinalDepth               OperationProfileDistribution `json:"final_depth"`
 	FirstCompleteFamilyCount int                          `json:"first_complete_family_count"`
 	FirstCompleteNodes       OperationProfileDistribution `json:"first_complete_nodes"`
+}
+
+// SchedulerTerminationCount retains every terminal family reason so new
+// scheduler outcomes cannot silently disappear from P0 opportunity telemetry.
+type SchedulerTerminationCount struct {
+	Reason string `json:"reason"`
+	Count  int    `json:"count"`
 }
 
 type OperationProfileDistribution struct {
@@ -163,7 +172,6 @@ func mergeOperationProfiles(total *model.ConstellationRootPackingOperationProfil
 	total.DepthFinishCalls += next.DepthFinishCalls
 	total.PrecutStates += next.PrecutStates
 	total.StatesSorted += next.StatesSorted
-	total.ComparatorCalls += next.ComparatorCalls
 	return total
 }
 
@@ -182,11 +190,16 @@ func summarizeSchedulerOpportunity(roots []model.ConstellationRootDiagnostic) *S
 	rounds := make([]int64, 0, len(familyRoots))
 	depths := make([]int64, 0, len(familyRoots))
 	firstComplete := make([]int64, 0, len(familyRoots))
+	terminationCounts := make(map[string]int)
 	for _, root := range familyRoots {
 		termination := root.FamilyTerminationReason
 		if termination == "" {
 			termination = root.TerminationReason
 		}
+		if termination == "" {
+			termination = "unknown"
+		}
+		terminationCounts[termination]++
 		switch termination {
 		case "completed":
 			summary.FamiliesCompleted++
@@ -194,6 +207,8 @@ func summarizeSchedulerOpportunity(roots []model.ConstellationRootDiagnostic) *S
 			summary.FamiliesBudgetExhausted++
 		case "hard_dead":
 			summary.FamiliesHardDead++
+		case "no_states":
+			summary.FamiliesNoStates++
 		}
 		consumed = append(consumed, root.FamilyTotalConsumed)
 		rounds = append(rounds, int64(len(root.FamilyAllocationRounds)))
@@ -217,6 +232,14 @@ func summarizeSchedulerOpportunity(roots []model.ConstellationRootDiagnostic) *S
 	summary.RoundsPerFamily = operationProfileDistribution(rounds)
 	summary.FinalDepth = operationProfileDistribution(depths)
 	summary.FirstCompleteNodes = operationProfileDistribution(firstComplete)
+	terminationReasons := make([]string, 0, len(terminationCounts))
+	for reason := range terminationCounts {
+		terminationReasons = append(terminationReasons, reason)
+	}
+	sort.Strings(terminationReasons)
+	for _, reason := range terminationReasons {
+		summary.TerminationReasonCounts = append(summary.TerminationReasonCounts, SchedulerTerminationCount{Reason: reason, Count: terminationCounts[reason]})
+	}
 	return summary
 }
 
@@ -267,7 +290,7 @@ func FormatOperationProfileSummary(writer io.Writer, summary OperationProfileSum
 		}
 		if entry.Scheduler != nil {
 			scheduler := entry.Scheduler
-			fmt.Fprintf(writer, "  scheduler — families: %d, completed: %d, budget exhausted: %d, returned capacity: %d/%d (%d bps)\n", scheduler.FamilyCount, scheduler.FamiliesCompleted, scheduler.FamiliesBudgetExhausted, scheduler.ReturnedCapacityTotal, scheduler.ReservationTurnover, scheduler.ReturnedFractionBPS)
+			fmt.Fprintf(writer, "  scheduler — families: %d, completed: %d, budget exhausted: %d, hard dead: %d, no states: %d, returned capacity: %d/%d (%d bps)\n", scheduler.FamilyCount, scheduler.FamiliesCompleted, scheduler.FamiliesBudgetExhausted, scheduler.FamiliesHardDead, scheduler.FamiliesNoStates, scheduler.ReturnedCapacityTotal, scheduler.ReservationTurnover, scheduler.ReturnedFractionBPS)
 			fmt.Fprintf(writer, "  scheduler distributions — consumed p50/p90: %d/%d, rounds p50/p90: %d/%d, final depth p50/p90: %d/%d, first-complete families: %d\n", scheduler.ConsumedPerFamily.P50, scheduler.ConsumedPerFamily.P90, scheduler.RoundsPerFamily.P50, scheduler.RoundsPerFamily.P90, scheduler.FinalDepth.P50, scheduler.FinalDepth.P90, scheduler.FirstCompleteFamilyCount)
 		}
 	}

@@ -66,6 +66,37 @@ func TestSummarizeOperationProfileGroupsAndDerivesSchedulerTelemetry(t *testing.
 	}
 }
 
+func TestSummarizeOperationProfileAccountsForEveryFamilyTermination(t *testing.T) {
+	report := Report{Runs: []Run{{
+		Scenario: "alpha",
+		Budget:   1_000,
+		Search: SearchSummary{ConstellationSeedDiagnostics: &model.ConstellationSeedDiagnostics{
+			Roots: []model.ConstellationRootDiagnostic{
+				{FamilyID: "single/completed", FamilyTerminationReason: "completed"},
+				{FamilyID: "single/budget", FamilyTerminationReason: "budget_exhausted"},
+				{FamilyID: "single/dead", FamilyTerminationReason: "hard_dead"},
+				{FamilyID: "single/empty", FamilyTerminationReason: "no_states"},
+				{FamilyID: "single/future", FamilyTerminationReason: "future_terminal_reason"},
+			},
+		}},
+	}}}
+
+	summary := SummarizeOperationProfile(report).Scenarios[0].Scheduler
+	if summary == nil || summary.FamilyCount != 5 || summary.FamiliesCompleted != 1 || summary.FamiliesBudgetExhausted != 1 || summary.FamiliesHardDead != 1 || summary.FamiliesNoStates != 1 {
+		t.Fatalf("scheduler summary=%+v", summary)
+	}
+	var counted int
+	for _, termination := range summary.TerminationReasonCounts {
+		counted += termination.Count
+	}
+	if counted != summary.FamilyCount {
+		t.Fatalf("termination counts=%+v sum=%d family_count=%d", summary.TerminationReasonCounts, counted, summary.FamilyCount)
+	}
+	if got := summary.TerminationReasonCounts; len(got) != 5 || got[0].Reason != "budget_exhausted" || got[1].Reason != "completed" || got[2].Reason != "future_terminal_reason" || got[3].Reason != "hard_dead" || got[4].Reason != "no_states" {
+		t.Fatalf("termination counts=%+v", got)
+	}
+}
+
 func TestP0ProfileSetUsesOnlyFrozenV2DevelopmentCases(t *testing.T) {
 	profileSetPath := filepath.Join("..", "..", "benchmarks", "profiling", "p0-profile-set.json")
 	content, err := os.ReadFile(profileSetPath)

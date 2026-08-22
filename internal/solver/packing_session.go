@@ -507,27 +507,11 @@ func constellationRootPackingFinishMRVDepthWithOperations(
 		}
 	}
 	next := make([]constellationRootMRVState, 0, len(nextByClass))
-	if operations != nil {
-		// Go deliberately randomizes map iteration. The ranked state order is
-		// still determined by the existing total comparator, but canonicalizing
-		// the input order makes the *number* of comparator calls reproducible
-		// for operation-count runs without affecting normal builds.
-		classKeys := make([]string, 0, len(nextByClass))
-		for classKey := range nextByClass {
-			classKeys = append(classKeys, classKey)
-		}
-		sort.Strings(classKeys)
-		for _, classKey := range classKeys {
-			next = append(next, nextByClass[classKey])
-		}
-	} else {
-		for _, state := range nextByClass {
-			next = append(next, state)
-		}
+	for _, state := range nextByClass {
+		next = append(next, state)
 	}
 	operations.statesSorted(len(next))
 	sort.Slice(next, func(i, j int) bool {
-		operations.comparatorCall()
 		return constellationRootPackingStateLess(config, next[i].packingSeedState, next[j].packingSeedState)
 	})
 	if shadowDepth != nil {

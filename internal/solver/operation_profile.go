@@ -61,5 +61,4 @@ func addRootPackingOperationProfile(total *model.ConstellationRootPackingOperati
 	total.DepthFinishCalls += next.DepthFinishCalls
 	total.PrecutStates += next.PrecutStates
 	total.StatesSorted += next.StatesSorted
-	total.ComparatorCalls += next.ComparatorCalls
 }

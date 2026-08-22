@@ -696,7 +696,6 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 	unknownHeroPolicy := flags.String("hero-unknown-policy", "", "Unknown hero scope policy: exclude, include, or error")
 	jsonOutput := flags.Bool("json", false, "Print machine-readable JSON")
 	workers := flags.Int("workers", runtime.NumCPU(), "Number of search workers")
-	operationProfile := flags.Bool("operation-profile", false, "Record deterministic rooted-packing operation counts (requires -tags searchprofile and --workers 1)")
 	if err := flags.Parse(args); err != nil {
 		return 2
 	}
@@ -737,14 +736,6 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 	}
 	if effectiveWorkers <= 0 {
 		fmt.Fprintln(stderr, "ERROR: --workers must be positive")
-		return 2
-	}
-	if *operationProfile && !solver.OperationProfilingAvailable() {
-		fmt.Fprintln(stderr, "ERROR: operation profiling requires a binary built with -tags searchprofile")
-		return 2
-	}
-	if *operationProfile && effectiveWorkers != 1 {
-		fmt.Fprintln(stderr, "ERROR: operation profiling requires --workers 1")
 		return 2
 	}
 	if effectiveMaxNodes < 0 {
@@ -790,7 +781,6 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 		CoverageGroups:        effectiveCoverageGroups,
 		StopOnCoverageCeiling: effectiveStopOnCoverageCeiling,
 		RepairSearch:          effectiveRepairSearch && effectiveMaxNodes > 0,
-		OperationProfiling:    *operationProfile,
 	})
 	elapsed := time.Since(startedAt)
 	if err != nil {
