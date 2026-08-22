@@ -1,0 +1,35 @@
+{
+  "name": "outgoing-stars-v2",
+  "grid": [
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111",
+    "111111111"
+  ],
+  "items": {
+    "apple": 1,
+    "banana": 1,
+    "cactus": 1,
+    "cauldron": 1,
+    "fine_sword": 1,
+    "iron_bar": 1,
+    "life_essence": 1,
+    "magic_essence": 1,
+    "piercing_lance": 1,
+    "spinegrowth_breastplate": 1
+  },
+  "top": 1,
+  "workers": 1,
+  "max_nodes": 100000,
+  "no_skips": false,
+  "repair_search": true,
+  "priority_semantics": "outgoing-v2",
+  "priorities": [
+    "star_source:spinegrowth_breastplate",
+    "star_source:iron_bar",
+    "star_source:life_essence",
+    "star_source:magic_essence"
+  ]
+}

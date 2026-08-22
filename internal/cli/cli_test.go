@@ -372,9 +372,30 @@ func TestSolveWorkersProduceSameBestJSON(t *testing.T) {
 	oneWorker := solveJSON(t, "1")
 	fourWorkers := solveJSON(t, "4")
 
-	if oneWorker != fourWorkers {
+	if normalizeSolveJSON(t, oneWorker) != normalizeSolveJSON(t, fourWorkers) {
 		t.Fatalf("worker outputs differ:\n1=%s\n4=%s", oneWorker, fourWorkers)
 	}
+}
+
+func normalizeSolveJSON(t *testing.T, value string) string {
+	t.Helper()
+	var payload []map[string]any
+	if err := json.Unmarshal([]byte(value), &payload); err != nil {
+		t.Fatalf("invalid solve JSON: %v\n%s", err, value)
+	}
+	for _, solution := range payload {
+		if search, ok := solution["search"].(map[string]any); ok {
+			delete(search, "setup_ms")
+			// Workers intentionally participate in execution_fingerprint while
+			// the solver result itself remains deterministic across worker counts.
+			delete(search, "execution_fingerprint")
+		}
+	}
+	normalized, err := json.Marshal(payload)
+	if err != nil {
+		t.Fatalf("marshal normalized solve JSON: %v", err)
+	}
+	return string(normalized)
 }
 
 func TestSolveHeroFilterRejectsUnavailableItem(t *testing.T) {
@@ -430,6 +451,8 @@ func TestBenchmarkScenariosCommandWritesReport(t *testing.T) {
 		"--dir", dir,
 		"--budgets", "100,200",
 		"--repeat", "1",
+		"--plateau-variant", "large-16",
+		"--constellation-seed-v1",
 		"--out", outPath,
 	}, &stdout, &stderr)
 
@@ -447,6 +470,12 @@ func TestBenchmarkScenariosCommandWritesReport(t *testing.T) {
 	if payload["repair_search_mode"] != "scenario" {
 		t.Fatalf("repair_search_mode=%v want scenario", payload["repair_search_mode"])
 	}
+	if payload["plateau_variant"] != "large-16" {
+		t.Fatalf("plateau_variant=%v want large-16", payload["plateau_variant"])
+	}
+	if payload["constellation_seed_v1"] != true {
+		t.Fatalf("constellation_seed_v1=%v want true", payload["constellation_seed_v1"])
+	}
 	runs := payload["runs"].([]any)
 	if len(runs) != 2 {
 		t.Fatalf("len(runs)=%d want 2", len(runs))
@@ -455,6 +484,12 @@ func TestBenchmarkScenariosCommandWritesReport(t *testing.T) {
 		run := rawRun.(map[string]any)
 		if run["repair_search"].(bool) {
 			t.Fatalf("repair_search=true want false from scenario")
+		}
+		if run["plateau_variant"] != "large-16" {
+			t.Fatalf("run plateau_variant=%v want large-16", run["plateau_variant"])
+		}
+		if run["constellation_seed_v1"] != true {
+			t.Fatalf("run constellation_seed_v1=%v want true", run["constellation_seed_v1"])
 		}
 	}
 }
@@ -497,6 +532,9 @@ func TestBenchmarkScenariosCommandRepairSearchModeOff(t *testing.T) {
 	if payload["repair_search_mode"] != "off" {
 		t.Fatalf("repair_search_mode=%v want off", payload["repair_search_mode"])
 	}
+	if payload["constellation_seed_v1"] != false {
+		t.Fatalf("constellation_seed_v1=%v want false", payload["constellation_seed_v1"])
+	}
 	runs := payload["runs"].([]any)
 	run := runs[0].(map[string]any)
 	if run["repair_search"].(bool) {
@@ -518,6 +556,176 @@ func TestBenchmarkScenariosCommandRejectsInvalidRepairSearchMode(t *testing.T) {
 	}
 	if !strings.Contains(stderr.String(), "repair search mode") {
 		t.Fatalf("unexpected stderr: %s", stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosCommandRejectsInvalidPlateauVariant(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{
+		"benchmark-scenarios",
+		"--plateau-variant", "bad",
+	}, &stdout, &stderr)
+
+	if code != 2 {
+		t.Fatalf("exit code=%d want 2", code)
+	}
+	if !strings.Contains(stderr.String(), "plateau variant") {
+		t.Fatalf("unexpected stderr: %s", stderr.String())
+	}
+}
+
+func TestCompareConstellationBenchmarksCommandRequiresReports(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	code := Run([]string{"compare-constellation-benchmarks"}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "expects baseline and current") {
+		t.Fatalf("code=%d stderr=%s", code, stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosCommandRejectsInvalidConstellationSeedVariant(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{
+		"benchmark-scenarios",
+		"--constellation-seed-variant", "bad",
+	}, &stdout, &stderr)
+
+	if code != 2 {
+		t.Fatalf("exit code=%d want 2", code)
+	}
+	if !strings.Contains(stderr.String(), "constellation seed variant") {
+		t.Fatalf("unexpected stderr: %s", stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosCommandRejectsConstellationSeedV1AliasConflict(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{
+		"benchmark-scenarios",
+		"--constellation-seed-v1",
+		"--constellation-seed-variant", "v2",
+	}, &stdout, &stderr)
+
+	if code != 2 {
+		t.Fatalf("exit code=%d want 2", code)
+	}
+	if !strings.Contains(stderr.String(), "alias conflicts") {
+		t.Fatalf("unexpected stderr: %s", stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosCommandRejectsConstellationFeasibilityProbeWithoutDiagnostics(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{
+		"benchmark-scenarios",
+		"--constellation-feasibility-probe",
+	}, &stdout, &stderr)
+
+	if code != 2 {
+		t.Fatalf("exit code=%d want 2", code)
+	}
+	if !strings.Contains(stderr.String(), "requires --diagnostic") {
+		t.Fatalf("unexpected stderr: %s", stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosCommandValidatesConstellationCompletionOptimizationProbe(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{
+		"benchmark-scenarios",
+		"--constellation-completion-optimization-probe",
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "requires --diagnostic") {
+		t.Fatalf("without diagnostics code=%d stderr=%s", code, stderr.String())
+	}
+
+	stdout.Reset()
+	stderr.Reset()
+	code = Run([]string{
+		"benchmark-scenarios",
+		"--diagnostic",
+		"--constellation-seed-variant", "v2",
+		"--constellation-completion-optimization-probe",
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "requires constellation seed variant") {
+		t.Fatalf("without V3 code=%d stderr=%s", code, stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosCommandValidatesConstellationCandidatePoolFeasibilitySweep(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{
+		"benchmark-scenarios",
+		"--constellation-candidate-pool-feasibility-sweep",
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "requires --diagnostic") {
+		t.Fatalf("without diagnostics code=%d stderr=%s", code, stderr.String())
+	}
+
+	stdout.Reset()
+	stderr.Reset()
+	code = Run([]string{
+		"benchmark-scenarios",
+		"--diagnostic",
+		"--constellation-seed-variant", "v3",
+		"--constellation-candidate-pool-feasibility-sweep",
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "requires --constellation-seed-variant v4") {
+		t.Fatalf("without V4 code=%d stderr=%s", code, stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosCommandValidatesConstellationCandidateCompletionOptimization(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{
+		"benchmark-scenarios",
+		"--constellation-candidate-completion-optimization-probe",
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "requires --diagnostic") {
+		t.Fatalf("without diagnostics code=%d stderr=%s", code, stderr.String())
+	}
+
+	stdout.Reset()
+	stderr.Reset()
+	code = Run([]string{
+		"benchmark-scenarios",
+		"--diagnostic",
+		"--constellation-seed-variant", "v4",
+		"--constellation-candidate-completion-optimization-probe",
+		"--constellation-candidate-completion-optimization-candidate-id", "bad",
+	}, &stdout, &stderr)
+	if code != 2 || !strings.Contains(stderr.String(), "candidate id") {
+		t.Fatalf("invalid ID code=%d stderr=%s", code, stderr.String())
+	}
+}
+
+func TestBenchmarkScenariosUsageIncludesPlateauVariant(t *testing.T) {
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+
+	code := Run([]string{"benchmark-scenarios", "--help"}, &stdout, &stderr)
+
+	if code != 2 {
+		t.Fatalf("exit code=%d want 2", code)
+	}
+	for _, flag := range []string{"-plateau-variant", "-constellation-seed-v1", "-constellation-seed-variant", "-constellation-feasibility-probe", "-constellation-completion-optimization-probe", "-constellation-candidate-pool-feasibility-sweep", "-constellation-candidate-completion-optimization-probe", "-constellation-candidate-completion-optimization-candidate-id", "-constellation-candidate-completion-optimization-stage"} {
+		if !strings.Contains(stderr.String(), flag) {
+			t.Fatalf("benchmark usage missing %s: %s", flag, stderr.String())
+		}
 	}
 }
 

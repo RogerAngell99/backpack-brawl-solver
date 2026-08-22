@@ -42,6 +42,10 @@ func Run(args []string, stdout io.Writer, stderr io.Writer) int {
 		return runBenchmarkScenarios(args[1:], stdout, stderr)
 	case "compare-benchmarks":
 		return runCompareBenchmarks(args[1:], stdout, stderr)
+	case "compare-constellation-benchmarks":
+		return runCompareConstellationBenchmarks(args[1:], stdout, stderr)
+	case "materialize-search-suite":
+		return runMaterializeSearchSuite(args[1:], stdout, stderr)
 	case "-h", "--help", "help":
 		printUsage(stdout)
 		return 0
@@ -57,15 +61,40 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 	flags.SetOutput(stderr)
 	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
 	dir := flags.String("dir", filepath.Join("benchmarks", "scenarios"), "Directory containing scenario JSON files")
+	scenariosText := flags.String("scenarios", "", "Comma-separated scenario filenames (without .json), or all when empty")
 	budgetsText := flags.String("budgets", benchmark.FormatBudgets(benchmark.DefaultBudgets), "Comma-separated node budgets")
 	repeat := flags.Int("repeat", 3, "Number of repetitions per scenario and budget")
 	workers := flags.Int("workers", 1, "Number of solver workers")
 	top := flags.Int("top", 1, "Number of solutions to keep")
 	repairSearchMode := flags.String("repair-search-mode", benchmark.RepairSearchModeScenario, "Repair search override: scenario, on, or off")
+	plateauVariant := flags.String("plateau-variant", solver.DefaultPlateauVariant, "Plateau LNS policy: legacy-large-off, large-16, large-16-18, or large-16-18-20")
+	diagnostic := flags.Bool("diagnostic", false, "Record deterministic incumbent and plateau diagnostics (requires --workers 1)")
+	constellationSeedV1 := flags.Bool("constellation-seed-v1", false, "Enable constellation seed v1")
+	constellationSeedVariant := flags.String("constellation-seed-variant", "", "Constellation seed experiment: v1, v2, v3, v4, v5, v5.1, or general-search-v1")
+	constellationFeasibilityProbe := flags.Bool("constellation-feasibility-probe", false, "Diagnose constellation root completion (requires --diagnostic)")
+	constellationCompletionOptimizationProbe := flags.Bool("constellation-completion-optimization-probe", false, "Exactly optimize completed MRV constellation roots (requires --diagnostic)")
+	constellationCandidatePoolFeasibilitySweep := flags.Bool("constellation-candidate-pool-feasibility-sweep", false, "Classify V4 constellation pool candidates (requires --diagnostic)")
+	constellationCandidateCompletionOptimizationProbe := flags.Bool("constellation-candidate-completion-optimization-probe", false, "Exactly optimize one V4 constellation candidate (requires --diagnostic)")
+	constellationCandidateCompletionOptimizationCandidateID := flags.String("constellation-candidate-completion-optimization-candidate-id", "", "Stable V4 candidate SHA-256 ID")
+	constellationCandidateCompletionOptimizationStage := flags.String("constellation-candidate-completion-optimization-stage", "", "Optional target stage: single, prefix-5m, or remainder-15m")
+	constellationCandidateCompletionOptimizationNodeBudget := flags.Int64("constellation-candidate-completion-optimization-node-budget", 0, "Dedicated diagnostic node budget for one V4 candidate")
+	constellationCandidateCompletionOptimizationInitialWitnessLayoutKey := flags.String("constellation-candidate-completion-optimization-initial-witness-layout-key", "", "Validated lower-bound witness layout key")
+	constellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint := flags.String("constellation-candidate-completion-optimization-initial-witness-semantic-fingerprint", "", "Semantic fingerprint paired with witness layout key")
+	constellationForcedCandidateRootedPackingProbe := flags.Bool("constellation-forced-candidate-rooted-packing-probe", false, "Replay one V4 candidate through normal rooted packing (requires --diagnostic)")
+	constellationForcedCandidateRootedPackingCandidateID := flags.String("constellation-forced-candidate-rooted-packing-candidate-id", "", "Stable V4 candidate SHA-256 ID")
+	constellationForcedCandidateRootedPackingSlot := flags.Int("constellation-forced-candidate-rooted-packing-slot", 0, "Counterfactual root slot 1 through 4")
+	constellationForcedCandidateRootedPackingStage := flags.String("constellation-forced-candidate-rooted-packing-stage", "", "Optional target stage: single, prefix-5m, or remainder-15m")
+	constellationForcedCandidateRootedPackingBeamWidth := flags.Int("constellation-forced-candidate-rooted-packing-beam-width", 0, "Forced replay beam width; zero keeps normal V4 width")
+	constellationForcedCandidateRootedPackingRanking := flags.String("constellation-forced-candidate-rooted-packing-ranking", "", "Forced replay ranking: baseline or priority-score-first")
+	constellationForcedCandidateRootedPackingShadowWitnessLayoutKey := flags.String("constellation-forced-candidate-rooted-packing-shadow-witness-layout-key", "", "Shadow-only witness layout key")
+	constellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint := flags.String("constellation-forced-candidate-rooted-packing-shadow-witness-semantic-fingerprint", "", "Semantic fingerprint paired with the shadow witness")
+	constellationParentFrontierHedgeProbe := flags.Bool("constellation-parent-frontier-hedge-probe", false, "Replay the selected V5 parent-frontier family inside one diagnostic slot quota (requires --diagnostic)")
+	constellationParentFrontierHedgeProbeStage := flags.String("constellation-parent-frontier-hedge-probe-stage", "", "Optional target stage: single, prefix-5m, or remainder-15m")
 	out := flags.String("out", "", "Path to write benchmark JSON; stdout when empty")
 	if err := flags.Parse(args); err != nil {
 		return 2
 	}
+	setFlags := explicitlySetFlags(flags)
 	if *repeat <= 0 {
 		fmt.Fprintln(stderr, "ERROR: --repeat must be positive")
 		return 2
@@ -87,15 +116,141 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 2
 	}
+	if err := benchmark.ValidatePlateauVariant(*plateauVariant); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	if setFlags["constellation-seed-variant"] {
+		if err := solver.ValidateConstellationSeedVariant(*constellationSeedVariant); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 2
+		}
+	}
+	if *constellationSeedV1 && *constellationSeedVariant != "" && *constellationSeedVariant != solver.ConstellationSeedVariantV1 {
+		fmt.Fprintln(stderr, "ERROR: constellation seed v1 alias conflicts with explicit variant")
+		return 2
+	}
+	if *constellationFeasibilityProbe && !*diagnostic {
+		fmt.Fprintln(stderr, "ERROR: constellation feasibility probe requires --diagnostic")
+		return 2
+	}
+	if *constellationCompletionOptimizationProbe && !*diagnostic {
+		fmt.Fprintln(stderr, "ERROR: constellation completion optimization probe requires --diagnostic")
+		return 2
+	}
+	if *constellationCompletionOptimizationProbe {
+		if err := solver.ValidateConstellationCompletionOptimizationProbeVariant(*constellationSeedVariant); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 2
+		}
+	}
+	if *constellationFeasibilityProbe && *constellationCompletionOptimizationProbe {
+		fmt.Fprintln(stderr, "ERROR: constellation feasibility and completion optimization probes cannot run together")
+		return 2
+	}
+	if *constellationCandidatePoolFeasibilitySweep && !*diagnostic {
+		fmt.Fprintln(stderr, "ERROR: constellation candidate pool feasibility sweep requires --diagnostic")
+		return 2
+	}
+	if *constellationCandidatePoolFeasibilitySweep && *constellationSeedVariant != solver.ConstellationSeedVariantV4 {
+		fmt.Fprintf(stderr, "ERROR: constellation candidate pool feasibility sweep requires --constellation-seed-variant %s\n", solver.ConstellationSeedVariantV4)
+		return 2
+	}
+	if *constellationCandidatePoolFeasibilitySweep && (*constellationFeasibilityProbe || *constellationCompletionOptimizationProbe) {
+		fmt.Fprintln(stderr, "ERROR: constellation candidate pool feasibility sweep cannot run with another constellation probe")
+		return 2
+	}
+	if *constellationCandidateCompletionOptimizationProbe && !*diagnostic {
+		fmt.Fprintln(stderr, "ERROR: constellation candidate completion optimization probe requires --diagnostic")
+		return 2
+	}
+	if *constellationCandidateCompletionOptimizationProbe {
+		if err := solver.ValidateConstellationCandidateCompletionOptimizationTarget(*constellationSeedVariant, *constellationCandidateCompletionOptimizationCandidateID, *constellationCandidateCompletionOptimizationStage); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 2
+		}
+		if *constellationCandidateCompletionOptimizationNodeBudget < 0 {
+			fmt.Fprintln(stderr, "ERROR: constellation candidate completion optimization node budget must be non-negative")
+			return 2
+		}
+	}
+	if *constellationCandidateCompletionOptimizationProbe && (*constellationFeasibilityProbe || *constellationCompletionOptimizationProbe || *constellationCandidatePoolFeasibilitySweep) {
+		fmt.Fprintln(stderr, "ERROR: constellation candidate completion optimization probe cannot run with another constellation probe")
+		return 2
+	}
+	if *constellationForcedCandidateRootedPackingProbe && !*diagnostic {
+		fmt.Fprintln(stderr, "ERROR: constellation forced candidate rooted packing probe requires --diagnostic")
+		return 2
+	}
+	if *constellationForcedCandidateRootedPackingProbe {
+		if err := solver.ValidateConstellationForcedCandidateRootedPackingTarget(*constellationSeedVariant, *constellationForcedCandidateRootedPackingCandidateID, *constellationForcedCandidateRootedPackingSlot, *constellationForcedCandidateRootedPackingStage); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 2
+		}
+		if (*constellationForcedCandidateRootedPackingShadowWitnessLayoutKey == "") != (*constellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint == "") {
+			fmt.Fprintln(stderr, "ERROR: forced rooted packing shadow witness layout key and semantic fingerprint must be supplied together")
+			return 2
+		}
+		if *constellationForcedCandidateRootedPackingBeamWidth < 0 {
+			fmt.Fprintln(stderr, "ERROR: constellation forced candidate rooted packing beam width must be non-negative")
+			return 2
+		}
+		if err := solver.ValidateConstellationForcedCandidateRootedPackingRanking(*constellationForcedCandidateRootedPackingRanking); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 2
+		}
+	}
+	if *constellationForcedCandidateRootedPackingProbe && (*constellationFeasibilityProbe || *constellationCompletionOptimizationProbe || *constellationCandidatePoolFeasibilitySweep || *constellationCandidateCompletionOptimizationProbe) {
+		fmt.Fprintln(stderr, "ERROR: constellation forced candidate rooted packing probe cannot run with another constellation probe")
+		return 2
+	}
+	if *constellationParentFrontierHedgeProbe && !*diagnostic {
+		fmt.Fprintln(stderr, "ERROR: constellation parent-frontier hedge probe requires --diagnostic")
+		return 2
+	}
+	if *constellationParentFrontierHedgeProbe {
+		if err := solver.ValidateConstellationParentFrontierHedgeProbeTarget(*constellationSeedVariant, *constellationParentFrontierHedgeProbeStage); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 2
+		}
+	}
+	if *constellationParentFrontierHedgeProbe && (*constellationFeasibilityProbe || *constellationCompletionOptimizationProbe || *constellationCandidatePoolFeasibilitySweep || *constellationCandidateCompletionOptimizationProbe || *constellationForcedCandidateRootedPackingProbe) {
+		fmt.Fprintln(stderr, "ERROR: constellation parent-frontier hedge probe cannot run with another constellation probe")
+		return 2
+	}
 
 	report, err := benchmark.RunScenarios(benchmark.RunConfig{
-		CatalogPath:      *catalogPath,
-		ScenarioDir:      *dir,
-		Budgets:          budgets,
-		Repeat:           *repeat,
-		Workers:          *workers,
-		Top:              *top,
-		RepairSearchMode: *repairSearchMode,
+		CatalogPath:                              *catalogPath,
+		ScenarioDir:                              *dir,
+		Scenarios:                                splitCSV(*scenariosText),
+		Budgets:                                  budgets,
+		Repeat:                                   *repeat,
+		Workers:                                  *workers,
+		Top:                                      *top,
+		RepairSearchMode:                         *repairSearchMode,
+		PlateauVariant:                           *plateauVariant,
+		Diagnostic:                               *diagnostic,
+		ConstellationSeedV1:                      *constellationSeedV1,
+		ConstellationSeedVariant:                 *constellationSeedVariant,
+		ConstellationFeasibilityProbe:            *constellationFeasibilityProbe,
+		ConstellationCompletionOptimizationProbe: *constellationCompletionOptimizationProbe,
+		ConstellationCandidatePoolFeasibilitySweep:                                    *constellationCandidatePoolFeasibilitySweep,
+		ConstellationCandidateCompletionOptimizationProbe:                             *constellationCandidateCompletionOptimizationProbe,
+		ConstellationCandidateCompletionOptimizationCandidateID:                       *constellationCandidateCompletionOptimizationCandidateID,
+		ConstellationCandidateCompletionOptimizationStage:                             *constellationCandidateCompletionOptimizationStage,
+		ConstellationCandidateCompletionOptimizationNodeBudget:                        *constellationCandidateCompletionOptimizationNodeBudget,
+		ConstellationCandidateCompletionOptimizationInitialWitnessLayoutKey:           *constellationCandidateCompletionOptimizationInitialWitnessLayoutKey,
+		ConstellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint: *constellationCandidateCompletionOptimizationInitialWitnessSemanticFingerprint,
+		ConstellationForcedCandidateRootedPackingProbe:                                *constellationForcedCandidateRootedPackingProbe,
+		ConstellationForcedCandidateRootedPackingCandidateID:                          *constellationForcedCandidateRootedPackingCandidateID,
+		ConstellationForcedCandidateRootedPackingSlot:                                 *constellationForcedCandidateRootedPackingSlot,
+		ConstellationForcedCandidateRootedPackingStage:                                *constellationForcedCandidateRootedPackingStage,
+		ConstellationForcedCandidateRootedPackingBeamWidth:                            *constellationForcedCandidateRootedPackingBeamWidth,
+		ConstellationForcedCandidateRootedPackingRanking:                              *constellationForcedCandidateRootedPackingRanking,
+		ConstellationForcedCandidateRootedPackingShadowWitnessLayoutKey:               *constellationForcedCandidateRootedPackingShadowWitnessLayoutKey,
+		ConstellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint:     *constellationForcedCandidateRootedPackingShadowWitnessSemanticFingerprint,
+		ConstellationParentFrontierHedgeProbe:                                         *constellationParentFrontierHedgeProbe,
+		ConstellationParentFrontierHedgeProbeStage:                                    *constellationParentFrontierHedgeProbeStage,
 	})
 	if err != nil {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
@@ -148,6 +303,114 @@ func runCompareBenchmarks(args []string, stdout io.Writer, stderr io.Writer) int
 	if comparison.ScoreLosses > 0 {
 		return 1
 	}
+	return 0
+}
+
+func runCompareConstellationBenchmarks(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("compare-constellation-benchmarks", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	out := flags.String("out", "", "Optional path for comparison JSON")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if flags.NArg() != 2 {
+		fmt.Fprintln(stderr, "ERROR: compare-constellation-benchmarks expects baseline and current JSON files")
+		return 2
+	}
+	baseline, err := benchmark.LoadReport(flags.Arg(0))
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	current, err := benchmark.LoadReport(flags.Arg(1))
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	comparison, err := benchmark.CompareConstellationExperimentReports(baseline, current)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	benchmark.FormatConstellationExperimentComparison(stdout, comparison)
+	if *out != "" {
+		content, err := json.MarshalIndent(comparison, "", "  ")
+		if err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 1
+		}
+		if err := os.WriteFile(*out, append(content, '\n'), 0o600); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 1
+		}
+		fmt.Fprintf(stdout, "Wrote constellation comparison to %s\n", *out)
+	}
+	if comparison.ScoreLosses > 0 {
+		return 1
+	}
+	return 0
+}
+
+func runMaterializeSearchSuite(args []string, stdout io.Writer, stderr io.Writer) int {
+	flags := flag.NewFlagSet("materialize-search-suite", flag.ContinueOnError)
+	flags.SetOutput(stderr)
+	manifestPath := flags.String("manifest", filepath.Join("benchmarks", "suites", "general-search-v1.json"), "Path to suite manifest")
+	catalogPath := flags.String("catalog", catalog.DefaultPath, "Path to catalog JSON")
+	outDir := flags.String("out", "", "Output directory for public generated scenarios")
+	rolesText := flags.String("roles", "development,validation", "Comma-separated suite roles")
+	if err := flags.Parse(args); err != nil {
+		return 2
+	}
+	if *outDir == "" {
+		fmt.Fprintln(stderr, "ERROR: materialize-search-suite requires --out")
+		return 2
+	}
+	manifest, err := benchmark.LoadSearchSuiteManifest(*manifestPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	resolved, err := benchmark.ResolveSearchSuiteManifest(*manifestPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	loadedCatalog, err := catalog.Load(*catalogPath)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	generated, err := benchmark.MaterializeSearchSuiteCases(loadedCatalog, manifest, splitCSV(*rolesText)...)
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 2
+	}
+	if err := os.MkdirAll(*outDir, 0o755); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	for _, generatedScenario := range generated {
+		content, err := json.MarshalIndent(generatedScenario, "", "  ")
+		if err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 1
+		}
+		path := filepath.Join(*outDir, generatedScenario.Name+".json")
+		if err := os.WriteFile(path, append(content, '\n'), 0o600); err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 1
+		}
+	}
+	lockContent, err := json.MarshalIndent(resolved, "", "  ")
+	if err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	if err := os.WriteFile(filepath.Join(*outDir, "suite-lock.lock"), append(lockContent, '\n'), 0o600); err != nil {
+		fmt.Fprintf(stderr, "ERROR: %v\n", err)
+		return 1
+	}
+	fmt.Fprintf(stdout, "Materialized %d public suite scenarios to %s\n", len(generated), *outDir)
 	return 0
 }
 
@@ -237,6 +500,17 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 		fmt.Fprintf(stderr, "ERROR: %v\n", err)
 		return 2
 	}
+	prioritySemantics := model.PrioritySemanticsLegacyIncomingV1
+	if *scenarioPath != "" {
+		loadedScenario, err := scenario.Load(*scenarioPath)
+		if err != nil {
+			fmt.Fprintf(stderr, "ERROR: %v\n", err)
+			return 2
+		}
+		if loadedScenario.PrioritySemantics != "" {
+			prioritySemantics = loadedScenario.PrioritySemantics
+		}
+	}
 
 	if effectiveTop <= 0 {
 		fmt.Fprintln(stderr, "ERROR: --top must be positive")
@@ -284,6 +558,7 @@ func runSolve(args []string, stdout io.Writer, stderr io.Writer) int {
 		AllowSkips:            !effectiveNoSkips,
 		MaxNodes:              effectiveMaxNodes,
 		Workers:               effectiveWorkers,
+		PrioritySemantics:     prioritySemantics,
 		Priorities:            effectivePriorities,
 		CoverageGroups:        effectiveCoverageGroups,
 		StopOnCoverageCeiling: effectiveStopOnCoverageCeiling,
@@ -537,4 +812,17 @@ func printUsage(writer io.Writer) {
 	fmt.Fprintln(writer, "  import-html")
 	fmt.Fprintln(writer, "  benchmark-scenarios")
 	fmt.Fprintln(writer, "  compare-benchmarks")
+	fmt.Fprintln(writer, "  compare-constellation-benchmarks")
+	fmt.Fprintln(writer, "  materialize-search-suite")
+}
+
+func splitCSV(value string) []string {
+	var values []string
+	for _, part := range strings.Split(value, ",") {
+		part = strings.TrimSpace(part)
+		if part != "" {
+			values = append(values, part)
+		}
+	}
+	return values
 }

@@ -92,6 +92,13 @@ func CompareReports(baseline Report, current Report) (Comparison, error) {
 	for _, key := range keys {
 		base := baselineRuns[key]
 		next := currentRuns[key]
+		if base.Search.ExecutionFingerprint != "" && next.Search.ExecutionFingerprint != "" {
+			if base.Search.ExecutionFingerprint != next.Search.ExecutionFingerprint {
+				return Comparison{}, fmt.Errorf("run key %s has different execution fingerprints", key)
+			}
+		} else if base.Search.ConfigFingerprint != next.Search.ConfigFingerprint {
+			return Comparison{}, fmt.Errorf("run key %s has different configuration fingerprints", key)
+		}
 		row := compareRun(base, next)
 		comparison.Rows = append(comparison.Rows, row)
 		switch row.Status {
