@@ -268,15 +268,21 @@ func placementRespectsCanonicalCopyOrderProfiled(
 	counters *model.PackingSeedCanonicalCopyOrderOperationProfile,
 ) bool {
 	counters.Calls++
-	key := placementKey(placement)
-	counters.PlacementKeyCalls++
-	counters.PlacementKeyBytes += int64(len(key))
+	var key string
+	keyReady := false
 	for _, other := range existing {
 		counters.ExistingScanned++
 		if other.ItemID != placement.ItemID || other.InstanceID == placement.InstanceID {
 			continue
 		}
 		counters.SameItemComparisons++
+		if !keyReady {
+			key = placementKey(placement)
+			keyReady = true
+			counters.CandidatePlacementKeyCalls++
+			counters.PlacementKeyCalls++
+			counters.PlacementKeyBytes += int64(len(key))
+		}
 		otherKey := placementKey(other)
 		counters.PlacementKeyCalls++
 		counters.PlacementKeyBytes += int64(len(otherKey))

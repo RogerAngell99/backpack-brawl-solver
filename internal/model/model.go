@@ -539,16 +539,26 @@ type PackingSeedDiagnostics struct {
 	BeamEvictions      int64                   `json:"beam_evictions,omitempty"`
 }
 
+const (
+	// PackingSeedFeasibilityProfileVersionV1 is the eager canonical-key
+	// accounting contract preserved for previously collected P0.1 artifacts.
+	PackingSeedFeasibilityProfileVersionV1 = "packing-seed-feasibility-ops-v1"
+	// PackingSeedFeasibilityProfileVersionV2 records lazy candidate-key
+	// materialization introduced by H2a.
+	PackingSeedFeasibilityProfileVersionV2 = "packing-seed-feasibility-ops-v2"
+)
+
 // PackingSeedCanonicalCopyOrderOperationProfile attributes canonical-copy
 // ordering work to one caller inside packing-seed search. It is
 // measurement-only and does not participate in search policy decisions.
 type PackingSeedCanonicalCopyOrderOperationProfile struct {
-	Calls               int64 `json:"calls"`
-	Rejects             int64 `json:"rejects"`
-	ExistingScanned     int64 `json:"existing_scanned"`
-	SameItemComparisons int64 `json:"same_item_comparisons"`
-	PlacementKeyCalls   int64 `json:"placement_key_calls"`
-	PlacementKeyBytes   int64 `json:"placement_key_bytes"`
+	Calls                      int64 `json:"calls"`
+	Rejects                    int64 `json:"rejects"`
+	ExistingScanned            int64 `json:"existing_scanned"`
+	SameItemComparisons        int64 `json:"same_item_comparisons"`
+	CandidatePlacementKeyCalls int64 `json:"candidate_placement_key_calls"`
+	PlacementKeyCalls          int64 `json:"placement_key_calls"`
+	PlacementKeyBytes          int64 `json:"placement_key_bytes"`
 }
 
 // PackingSeedFeasibilityOperationProfile is a deterministic count of generic

@@ -8,7 +8,7 @@ const SearchOperationProfileVersion = "root-packing-ops-v1"
 
 // PackingSeedFeasibilityProfileVersion identifies the deterministic
 // packing-seed feasibility counter contract serialized in benchmark reports.
-const PackingSeedFeasibilityProfileVersion = "packing-seed-feasibility-ops-v1"
+const PackingSeedFeasibilityProfileVersion = model.PackingSeedFeasibilityProfileVersionV2
 
 // OperationProfilingAvailable reports whether this binary contains the
 // benchmark-only counter implementation.
@@ -47,6 +47,7 @@ func addPackingSeedCanonicalCopyOrderOperationProfile(total *model.PackingSeedCa
 	total.Rejects += next.Rejects
 	total.ExistingScanned += next.ExistingScanned
 	total.SameItemComparisons += next.SameItemComparisons
+	total.CandidatePlacementKeyCalls += next.CandidatePlacementKeyCalls
 	total.PlacementKeyCalls += next.PlacementKeyCalls
 	total.PlacementKeyBytes += next.PlacementKeyBytes
 }
