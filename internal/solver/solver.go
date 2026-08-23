@@ -81,9 +81,9 @@ type Config struct {
 	// Diagnostics records an unthrottled incumbent trace without affecting
 	// search ordering, progress reporting, or pruning.
 	Diagnostics bool
-	// OperationProfiling enables benchmark-only deterministic rooted-packing
-	// operation counters. It never participates in search ordering, pruning,
-	// ranking, or budgets, and requires a binary built with -tags searchprofile.
+	// OperationProfiling enables benchmark-only deterministic search-operation
+	// counters. It never participates in search ordering, pruning, ranking, or
+	// budgets, and requires a binary built with -tags searchprofile.
 	OperationProfiling bool
 	ProgressReporter   ProgressReporter
 	Context            context.Context
@@ -705,6 +705,7 @@ func aggregateStageSearches(stages []model.SearchStats, charged int64) model.Sea
 	aggregated.PackingSeedCandidates = 0
 	aggregated.PackingSeedHardPruned = 0
 	aggregated.PackingSeedStatesDeduplicated = 0
+	aggregated.PackingSeedOperationProfile = nil
 	aggregated.SymmetryPrunedBranches = 0
 	aggregated.ParallelTasks = 0
 	aggregated.RepairNodes = 0
@@ -735,6 +736,7 @@ func aggregateStageSearches(stages []model.SearchStats, charged int64) model.Sea
 		aggregated.PackingSeedCandidates += stage.PackingSeedCandidates
 		aggregated.PackingSeedHardPruned += stage.PackingSeedHardPruned
 		aggregated.PackingSeedStatesDeduplicated += stage.PackingSeedStatesDeduplicated
+		aggregated.PackingSeedOperationProfile = mergePackingSeedFeasibilityOperationProfiles(aggregated.PackingSeedOperationProfile, stage.PackingSeedOperationProfile)
 		aggregated.SymmetryPrunedBranches += stage.SymmetryPrunedBranches
 		aggregated.ParallelTasks += stage.ParallelTasks
 		aggregated.RepairNodes += stage.RepairNodes
@@ -1871,17 +1873,15 @@ func packingSeedOrder(instances []model.InventoryInstance, optionsByInstance map
 
 func mergeSeedResults(left coverageSeedResult, right coverageSeedResult, topN int) coverageSeedResult {
 	merged := coverageSeedResult{
-		Solutions:                   mergeSolutions(left.Solutions, right.Solutions, topN),
-		NodesExplored:               left.NodesExplored + right.NodesExplored,
-		CandidateCount:              left.CandidateCount + right.CandidateCount,
-		SymmetryPrunedBranches:      left.SymmetryPrunedBranches + right.SymmetryPrunedBranches,
-		StatesDeduplicated:          left.StatesDeduplicated + right.StatesDeduplicated,
-		HardPrunedNodes:             left.HardPrunedNodes + right.HardPrunedNodes,
-		PackingSeedOperationProfile: left.PackingSeedOperationProfile,
+		Solutions:              mergeSolutions(left.Solutions, right.Solutions, topN),
+		NodesExplored:          left.NodesExplored + right.NodesExplored,
+		CandidateCount:         left.CandidateCount + right.CandidateCount,
+		SymmetryPrunedBranches: left.SymmetryPrunedBranches + right.SymmetryPrunedBranches,
+		StatesDeduplicated:     left.StatesDeduplicated + right.StatesDeduplicated,
+		HardPrunedNodes:        left.HardPrunedNodes + right.HardPrunedNodes,
 	}
-	if merged.PackingSeedOperationProfile == nil {
-		merged.PackingSeedOperationProfile = right.PackingSeedOperationProfile
-	}
+	merged.PackingSeedOperationProfile = mergePackingSeedFeasibilityOperationProfiles(nil, left.PackingSeedOperationProfile)
+	merged.PackingSeedOperationProfile = mergePackingSeedFeasibilityOperationProfiles(merged.PackingSeedOperationProfile, right.PackingSeedOperationProfile)
 	if left.PackingDiagnostics.MaxDepth > 0 {
 		merged.PackingDiagnostics = left.PackingDiagnostics
 	} else {
