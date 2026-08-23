@@ -138,6 +138,35 @@ func TestAggregateStageSearchesSelectsDeterministicReferenceMinimum(t *testing.T
 	}
 }
 
+func TestAggregateStageSearchesMergesPackingSeedFeasibilityOperationProfiles(t *testing.T) {
+	first := &model.PackingSeedFeasibilityOperationProfile{
+		Version:                 PackingSeedFeasibilityProfileVersion,
+		SearchCalls:             1,
+		CandidateExpansions:     10,
+		FeasibilityOptionChecks: 100,
+		CandidateCanonical: model.PackingSeedCanonicalCopyOrderOperationProfile{
+			PlacementKeyBytes: 200,
+		},
+	}
+	second := &model.PackingSeedFeasibilityOperationProfile{
+		Version:                 PackingSeedFeasibilityProfileVersion,
+		SearchCalls:             1,
+		CandidateExpansions:     20,
+		FeasibilityOptionChecks: 300,
+		CandidateCanonical: model.PackingSeedCanonicalCopyOrderOperationProfile{
+			PlacementKeyBytes: 500,
+		},
+	}
+	aggregated := aggregateStageSearches([]model.SearchStats{
+		{PackingSeedOperationProfile: first},
+		{PackingSeedOperationProfile: second},
+	}, 30)
+	profile := aggregated.PackingSeedOperationProfile
+	if profile == nil || profile.SearchCalls != 2 || profile.CandidateExpansions != 30 || profile.FeasibilityOptionChecks != 400 || profile.CandidateCanonical.PlacementKeyBytes != 700 {
+		t.Fatalf("aggregated packing-seed feasibility profile=%+v", profile)
+	}
+}
+
 func TestConfiguredTwentyMillionRunPreservesEnabledConstellationPrefix(t *testing.T) {
 	cat := model.Catalog{Items: map[string]model.Item{
 		"left":  {ID: "left", Shape: []model.Coord{{}}, Stars: []model.Star{{Offset: model.Coord{Col: 1}, TargetTypes: []string{"Food"}}}, Rotations: []int{0}},

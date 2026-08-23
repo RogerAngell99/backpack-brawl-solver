@@ -16,6 +16,41 @@ func OperationProfilingAvailable() bool {
 	return searchOperationProfilingAvailable
 }
 
+func mergePackingSeedFeasibilityOperationProfiles(total *model.PackingSeedFeasibilityOperationProfile, next *model.PackingSeedFeasibilityOperationProfile) *model.PackingSeedFeasibilityOperationProfile {
+	if next == nil {
+		return total
+	}
+	if total == nil {
+		copy := *next
+		return &copy
+	}
+	total.SearchCalls += next.SearchCalls
+	total.StatesVisited += next.StatesVisited
+	total.CandidateOptionChecks += next.CandidateOptionChecks
+	total.CandidateOverlapRejects += next.CandidateOverlapRejects
+	total.CandidateChargeAttempts += next.CandidateChargeAttempts
+	total.CandidateChargeDenied += next.CandidateChargeDenied
+	total.CandidateExpansions += next.CandidateExpansions
+	total.FeasibilityCalls += next.FeasibilityCalls
+	total.FeasibilityInstancesConsidered += next.FeasibilityInstancesConsidered
+	total.FeasibilityOptionChecks += next.FeasibilityOptionChecks
+	total.FeasibilityOverlapRejects += next.FeasibilityOverlapRejects
+	total.FeasibilityLegalPlacements += next.FeasibilityLegalPlacements
+	total.FeasibilityDeadReturns += next.FeasibilityDeadReturns
+	addPackingSeedCanonicalCopyOrderOperationProfile(&total.CandidateCanonical, next.CandidateCanonical)
+	addPackingSeedCanonicalCopyOrderOperationProfile(&total.FeasibilityCanonical, next.FeasibilityCanonical)
+	return total
+}
+
+func addPackingSeedCanonicalCopyOrderOperationProfile(total *model.PackingSeedCanonicalCopyOrderOperationProfile, next model.PackingSeedCanonicalCopyOrderOperationProfile) {
+	total.Calls += next.Calls
+	total.Rejects += next.Rejects
+	total.ExistingScanned += next.ExistingScanned
+	total.SameItemComparisons += next.SameItemComparisons
+	total.PlacementKeyCalls += next.PlacementKeyCalls
+	total.PlacementKeyBytes += next.PlacementKeyBytes
+}
+
 func aggregateRootPackingOperationProfiles(roots []model.ConstellationRootDiagnostic) *model.ConstellationRootPackingOperationProfile {
 	var aggregate *model.ConstellationRootPackingOperationProfile
 	for _, root := range roots {

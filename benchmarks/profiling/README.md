@@ -86,17 +86,43 @@ The normal build keeps the existing feasibility and canonical implementations. T
 Do not use `go run` for an official P0.1 collection. Start in a clean worktree outside OneDrive, freeze the post-merge SHA, and build both binaries with VCS metadata:
 
 ```powershell
+if (git status --porcelain) {
+  throw "P0.1 requires a clean worktree"
+}
 $SHA = git rev-parse HEAD
 $ArtifactDir = "C:\p01-artifacts\$SHA"
 New-Item -ItemType Directory -Force $ArtifactDir | Out-Null
 
 go build -buildvcs=true -o "$ArtifactDir\solver.exe" ./cmd/backpack-brawl-solver
 go build -buildvcs=true -tags searchprofile -o "$ArtifactDir\solver-searchprofile.exe" ./cmd/backpack-brawl-solver
-go version -m "$ArtifactDir\solver.exe"
-go version -m "$ArtifactDir\solver-searchprofile.exe"
+$NormalMetadata = go version -m "$ArtifactDir\solver.exe"
+$ProfiledMetadata = go version -m "$ArtifactDir\solver-searchprofile.exe"
+$NormalMetadata
+$ProfiledMetadata
+
+$MetadataSets = @(
+  ($NormalMetadata -join [Environment]::NewLine)
+  ($ProfiledMetadata -join [Environment]::NewLine)
+)
+foreach ($Metadata in $MetadataSets) {
+  if ($Metadata -notmatch "vcs.revision=$SHA") {
+    throw "binary revision does not match $SHA"
+  }
+  if ($Metadata -notmatch "vcs.modified=false") {
+    throw "binary was built from modified source"
+  }
+}
+
+@(
+  "git_sha=$SHA"
+  "normal_binary_metadata:"
+  $NormalMetadata
+  "searchprofile_binary_metadata:"
+  $ProfiledMetadata
+) | Set-Content "$ArtifactDir\p01-provenance.txt"
 ```
 
-Both metadata outputs must contain `vcs.revision = $SHA`. Run a 250k smoke report before the full collection and abort if its `build_revision` is `unknown` or differs from `$SHA`.
+Both metadata outputs must contain `vcs.revision = $SHA` and `vcs.modified = false`; the full output is retained in `p01-provenance.txt`. Run a 250k smoke report before the full collection and abort if its `build_revision` is `unknown` or differs from `$SHA`.
 
 For operation counts, materialize only the fourteen `development` cases from `general-search-v2`, use `repeat=1`, `workers=1`, no diagnostics, and the tagged binary. Collect GSV1 at 250k and 1M, then V4 at 1M. CPU/heap profiling uses the normal binary, GSV1 at 1M, and the frozen six-case slice `gsv2-013`, `gsv2-015`, `gsv2-016`, `gsv2-018`, `gsv2-021`, and `gsv2-024`.
 

@@ -78,7 +78,7 @@ func runBenchmarkScenarios(args []string, stdout io.Writer, stderr io.Writer) in
 	repairSearchMode := flags.String("repair-search-mode", benchmark.RepairSearchModeScenario, "Repair search override: scenario, on, or off")
 	plateauVariant := flags.String("plateau-variant", solver.DefaultPlateauVariant, "Plateau LNS policy: legacy-large-off, large-16, large-16-18, or large-16-18-20")
 	diagnostic := flags.Bool("diagnostic", false, "Record deterministic incumbent and plateau diagnostics (requires --workers 1)")
-	operationProfile := flags.Bool("operation-profile", false, "Record deterministic rooted-packing operation counts (requires -tags searchprofile)")
+	operationProfile := flags.Bool("operation-profile", false, "Record deterministic search operation counts (requires -tags searchprofile)")
 	cpuProfile := flags.String("cpu-profile", "", "Write a CPU profile for this benchmark run")
 	heapProfile := flags.String("heap-profile", "", "Write a heap profile after this benchmark run")
 	constellationSeedV1 := flags.Bool("constellation-seed-v1", false, "Enable constellation seed v1")

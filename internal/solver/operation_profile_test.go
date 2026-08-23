@@ -273,11 +273,20 @@ func assertPackingSeedFeasibilityOperationProfileIdentities(t testing.TB, profil
 	if profile.CandidateCanonical.PlacementKeyCalls != profile.CandidateCanonical.Calls+profile.CandidateCanonical.SameItemComparisons {
 		t.Fatalf("candidate key identity failed: %+v", profile.CandidateCanonical)
 	}
+	if profile.CandidateCanonical.Calls != profile.CandidateCanonical.Rejects+profile.CandidateChargeAttempts {
+		t.Fatalf("candidate canonical identity failed: %+v", profile)
+	}
 	if profile.FeasibilityCanonical.PlacementKeyCalls != profile.FeasibilityCanonical.Calls+profile.FeasibilityCanonical.SameItemComparisons {
 		t.Fatalf("feasibility key identity failed: %+v", profile.FeasibilityCanonical)
 	}
+	if profile.FeasibilityCanonical.Calls != profile.FeasibilityCanonical.Rejects+profile.FeasibilityLegalPlacements {
+		t.Fatalf("feasibility canonical identity failed: %+v", profile)
+	}
 	if profile.CandidateChargeAttempts != profile.CandidateChargeDenied+profile.CandidateExpansions {
 		t.Fatalf("candidate charge identity failed: %+v", profile)
+	}
+	if profile.SearchCalls > 0 && profile.FeasibilityCalls != profile.CandidateExpansions {
+		t.Fatalf("search feasibility identity failed: %+v", profile)
 	}
 }
 
