@@ -67,15 +67,15 @@ P0 correctness gates run in both build variants. They prove profiling is rejecte
 
 The repository versions this protocol, profile set, schema, summaries, and findings template. It does not version machine-dependent `.pprof` binaries or results before measurements exist.
 
-## P0.1A — packing-seed feasibility instrumentation
+## P0.1A / H2a — packing-seed feasibility instrumentation
 
-P0.1A adds the independent `packing-seed-feasibility-ops-v1` contract. It does not select or implement an optimization, and it does not add official measurement artifacts. The existing `root-packing-ops-v1` contract keeps its original meaning.
+P0.1A added the independent `packing-seed-feasibility-ops-v1` eager canonical-key contract. H2a adds `packing-seed-feasibility-ops-v2`, which records lazy candidate-key materialization with `candidate_placement_key_calls`. Existing P0.1 artifacts remain v1 and are not rewritten. The summary reads both contracts but preserves mixed versions separately rather than aggregating them. The existing `root-packing-ops-v1` contract keeps its original meaning.
 
 With a `searchprofile` binary and `--operation-profile`, the packing-seed phase emits `search.packing_seed_operation_profile`. Its counters separate the candidate loop from generic `packingFeasibility`:
 
 - candidate options, overlap rejects, charge attempts/denials, expansions, and direct canonical-copy-order work;
 - feasibility calls, remaining instances, options, overlap rejects, legal placements, dead returns, and internal canonical-copy-order work;
-- canonical calls/rejects, existing placements scanned, same-item comparisons, and logical `placementKey` calls/bytes for each origin.
+- canonical calls/rejects, existing placements scanned, same-item comparisons, candidate key calls, and logical `placementKey` calls/bytes for each origin.
 
 The summary command now writes `operation-profile-summary-v2`. Its `packing_seed_feasibility` section contains raw counts, while `packing_seed_feasibility_derived` contains weighted ratios such as feasibility calls per state, options per call/expansion, canonical calls per option, key bytes per expansion, and rejection/dead-return rates. V2 continues to read P0 report JSON that has only the rooted profile.
 
