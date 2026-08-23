@@ -2765,10 +2765,15 @@ func insertPlacementSorted(placements []model.Placement, placement model.Placeme
 // identical inventory copies. The physical layout remains representable by
 // assigning its placements to copies in original-index order.
 func placementRespectsCanonicalCopyOrder(placement model.Placement, existing []model.Placement) bool {
-	key := placementKey(placement)
+	var key string
+	keyReady := false
 	for _, other := range existing {
 		if other.ItemID != placement.ItemID || other.InstanceID == placement.InstanceID {
 			continue
+		}
+		if !keyReady {
+			key = placementKey(placement)
+			keyReady = true
 		}
 		otherKey := placementKey(other)
 		if other.OriginalIndex < placement.OriginalIndex && otherKey > key {
