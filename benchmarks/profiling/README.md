@@ -1,4 +1,4 @@
-# P0 rooted-packing profiling protocol
+# P0 and P0.1 profiling protocol
 
 P0 measures a fixed `general-search-v2` development population without changing a search policy, beam, quota, ranking, pruning rule, generator, or suite lock. Generated scenarios are materialized locally; do not materialize or select `validation`, `public_holdout`, or `private_holdout` cases for P0.
 
@@ -66,3 +66,46 @@ go test ./internal/solver -run '^$' -bench 'Benchmark.*' -benchmem -count=10
 P0 correctness gates run in both build variants. They prove profiling is rejected without the tag, preserves rooted-packing outputs with the tag, keeps resumable work counters stable across allocation partitions, and keeps terminal projection from mutating resumable state. `run_calls` and `pause_returns` intentionally describe scheduler slicing, so they are the two lifecycle counters excluded from the partition-invariant work comparison.
 
 The repository versions this protocol, profile set, schema, summaries, and findings template. It does not version machine-dependent `.pprof` binaries or results before measurements exist.
+
+## P0.1A — packing-seed feasibility instrumentation
+
+P0.1A adds the independent `packing-seed-feasibility-ops-v1` contract. It does not select or implement an optimization, and it does not add official measurement artifacts. The existing `root-packing-ops-v1` contract keeps its original meaning.
+
+With a `searchprofile` binary and `--operation-profile`, the packing-seed phase emits `search.packing_seed_operation_profile`. Its counters separate the candidate loop from generic `packingFeasibility`:
+
+- candidate options, overlap rejects, charge attempts/denials, expansions, and direct canonical-copy-order work;
+- feasibility calls, remaining instances, options, overlap rejects, legal placements, dead returns, and internal canonical-copy-order work;
+- canonical calls/rejects, existing placements scanned, same-item comparisons, and logical `placementKey` calls/bytes for each origin.
+
+The summary command now writes `operation-profile-summary-v2`. Its `packing_seed_feasibility` section contains raw counts, while `packing_seed_feasibility_derived` contains weighted ratios such as feasibility calls per state, options per call/expansion, canonical calls per option, key bytes per expansion, and rejection/dead-return rates. V2 continues to read P0 report JSON that has only the rooted profile.
+
+The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
+
+### P0.1 collection protocol — only after P0.1A is merged
+
+Do not use `go run` for an official P0.1 collection. Start in a clean worktree outside OneDrive, freeze the post-merge SHA, and build both binaries with VCS metadata:
+
+```powershell
+$SHA = git rev-parse HEAD
+$ArtifactDir = "C:\p01-artifacts\$SHA"
+New-Item -ItemType Directory -Force $ArtifactDir | Out-Null
+
+go build -buildvcs=true -o "$ArtifactDir\solver.exe" ./cmd/backpack-brawl-solver
+go build -buildvcs=true -tags searchprofile -o "$ArtifactDir\solver-searchprofile.exe" ./cmd/backpack-brawl-solver
+go version -m "$ArtifactDir\solver.exe"
+go version -m "$ArtifactDir\solver-searchprofile.exe"
+```
+
+Both metadata outputs must contain `vcs.revision = $SHA`. Run a 250k smoke report before the full collection and abort if its `build_revision` is `unknown` or differs from `$SHA`.
+
+For operation counts, materialize only the fourteen `development` cases from `general-search-v2`, use `repeat=1`, `workers=1`, no diagnostics, and the tagged binary. Collect GSV1 at 250k and 1M, then V4 at 1M. CPU/heap profiling uses the normal binary, GSV1 at 1M, and the frozen six-case slice `gsv2-013`, `gsv2-015`, `gsv2-016`, `gsv2-018`, `gsv2-021`, and `gsv2-024`.
+
+Run the new baselines separately and retain the raw output for the later evidence PR:
+
+```powershell
+go test ./internal/solver -run '^$' `
+  -bench '^(BenchmarkPlacementKey|BenchmarkCanonicalCopyOrder|BenchmarkPackingFeasibility)$' `
+  -benchmem -count=10
+```
+
+The P0.1B evidence PR, after collection, is documentation-only. It records the SHA, Go version, CPU/OS, binary hashes, `go version -m`, catalog and suite-lock hashes, compact summaries and pprof extracts, then selects exactly one of H2, P2-global, P2-root, or no change.
