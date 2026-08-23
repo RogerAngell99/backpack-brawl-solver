@@ -1,0 +1,38 @@
+measured_source_sha=9cfeb6cf875b10860bf72eb00f775b84c569e800 normal:
+C:\p01-artifacts\9cfeb6cf875b10860bf72eb00f775b84c569e800\rerun-01\solver.exe: go1.25.6
+	path	backpack-brawl-solver/cmd/backpack-brawl-solver
+	mod	backpack-brawl-solver	v0.0.0-20260823154704-9cfeb6cf875b
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=9cfeb6cf875b10860bf72eb00f775b84c569e800
+	build	vcs.time=2026-08-23T15:47:04Z
+	build	vcs.modified=false
+
+searchprofile:
+C:\p01-artifacts\9cfeb6cf875b10860bf72eb00f775b84c569e800\rerun-01\solver-searchprofile.exe: go1.25.6
+	path	backpack-brawl-solver/cmd/backpack-brawl-solver
+	mod	backpack-brawl-solver	v0.0.0-20260823154704-9cfeb6cf875b
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	-tags=searchprofile
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=9cfeb6cf875b10860bf72eb00f775b84c569e800
+	build	vcs.time=2026-08-23T15:47:04Z
+	build	vcs.modified=false

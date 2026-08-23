@@ -1,0 +1,30 @@
+File: solver.exe
+Build ID: C:\p01-artifacts\9cfeb6cf875b10860bf72eb00f775b84c569e800\rerun-01\solver.exe2026-08-23 13:03:01.1822831 -0300 -03
+Type: alloc_objects
+Time: 2026-08-23 13:35:13 -03
+Active filters:
+   focus=packingSeedSearch|packingFeasibility
+Showing nodes accounting for 393300723, 56.71% of 693570301 total
+Dropped 39 nodes (cum <= 3467851)
+      flat  flat%   sum%        cum   cum%
+ 262577219 37.86% 37.86%  262577219 37.86%  strings.(*Builder).Write
+ 123981386 17.88% 55.73%  386561581 55.74%  backpack-brawl-solver/internal/solver.placementKey
+   6374497  0.92% 56.65%    6374497  0.92%  backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents
+    367621 0.053% 56.71%  396262928 57.13%  backpack-brawl-solver/internal/solver.packingSeedSearch
+         0     0% 56.71%  396295696 57.14%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0% 56.71%  396295696 57.14%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0% 56.71%  396295696 57.14%  backpack-brawl-solver/internal/cli.Run
+         0     0% 56.71%  396295696 57.14%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0% 56.71%  396295696 57.14%  backpack-brawl-solver/internal/solver.SolveLayout
+         0     0% 56.71%  384797731 55.48%  backpack-brawl-solver/internal/solver.packingFeasibility
+         0     0% 56.71%    6263883   0.9%  backpack-brawl-solver/internal/solver.packingSeedSearch.func3
+         0     0% 56.71%    6374497  0.92%  backpack-brawl-solver/internal/solver.packingSeedStateFirstDecisive
+         0     0% 56.71%    6374497  0.92%  backpack-brawl-solver/internal/solver.packingSeedStateLess (inline)
+         0     0% 56.71%  385813568 55.63%  backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+         0     0% 56.71%  396295696 57.14%  backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0% 56.71%  262580195 37.86%  fmt.Fprintf
+         0     0% 56.71%  396295696 57.14%  main.main
+         0     0% 56.71%  396295696 57.14%  runtime.main
+         0     0% 56.71%    6263883   0.9%  sort.Slice
+         0     0% 56.71%    4663492  0.67%  sort.partition_func
+         0     0% 56.71%    6263883   0.9%  sort.pdqsort_func
