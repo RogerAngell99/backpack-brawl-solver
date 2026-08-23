@@ -1,0 +1,17 @@
+# P0 targeted CPU excerpt
+
+Source profile: `gsv1-1m.cpu.pprof`
+Source SHA-256: `ba22e1d53e8f065f625bc42d9940c925ccf52b046a14b2c38a0677dc7a71dc28`
+Command: `go tool pprof -top -cum -nodefraction=0 -nodecount=500 gsv1-1m.cpu.pprof`
+Profile total: 375.38 CPU-seconds.
+
+The columns are pprof's `flat`, `flat%`, cumulative `cum`, and `cum%`.
+Only the decision-record targets are reproduced below; the unfiltered top reports
+remain in `p0-cpu-top.txt` and `p0-cpu-top-cum.txt`.
+
+    flat  flat%      cum   cum%  function
+   0.03s 0.008%   66.25s 17.65%  backpack-brawl-solver/internal/solver.packingSeedSearch
+   0.91s  0.24%   62.85s 16.74%  backpack-brawl-solver/internal/solver.packingFeasibility
+   0.12s 0.032%    6.54s  1.74%  backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations
+      0s     0%    0.54s  0.14%  backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+      0s     0%    0.51s  0.14%  backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations

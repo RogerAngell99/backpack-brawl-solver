@@ -7,7 +7,7 @@
 - Host: Windows 11 Home `10.0.26200`, Intel i5-11300H (4 cores / 8 logical processors), balanced power plan.
 - Collection date: 2026-08-22.
 - Raw artifact directory: `C:\p0-artifacts\5015875f589f`; `SHA256SUMS.txt` hashes its collected files.
-- The compact evidence needed to audit this record is versioned in [`p0-evidence/`](p0-evidence/README.md): the operation/scheduler summaries, CPU and allocation text reports, and compact timing CSV/JSON. Raw `.pprof` files and multi-megabyte raw reports remain outside Git.
+- The compact evidence needed to audit this record is versioned in [`p0-evidence/`](p0-evidence/README.md): operation/scheduler summaries; top, targeted, and caller CPU extracts; allocation reports; microbenchmarks; and compact timing CSV/JSON. Raw `.pprof` files and multi-megabyte raw reports remain outside Git.
 - Both correctness gates passed: `go test ./...` and `go test -tags searchprofile ./...`.
 - The `general-search-v2` lock verified and only its fourteen development cases (`gsv2-013`–`gsv2-026`) were materialized. Validation and holdouts were not used.
 - Preflight (`gsv2-013`, 250k) matched normal and `searchprofile` builds for score, canonical-layout hash, nodes explored (237,135), budget consumption, and termination.
@@ -50,6 +50,8 @@ The important call-stack grouping is more useful than those flat frames:
 - **Rooted-packing-specific mechanisms are small in this whole-program profile:** `constellationRootMRVFeasibilityWithOperations` is 1.74%, `constellationRootPackingFinishMRVDepthWithOperations` is 0.14%, and `constellationRootMRVStateKey` is 0.14% cumulative CPU. The root-MRV function is the function measured by the rooted-packing operation counters; the generic `packingFeasibility` function is used only for rooted-session initialization there, while it is repeatedly called for packing-seed children.
 
 The `1 / (1 - 0.1674 × r) = 1.04–1.09×` Amdahl range applies only to an experiment that removes 25–50% of the **generic `packingFeasibility` region**. It is not a bound for a rooted-packing-only domain cache; the directly profiled rooted-MRV region is 1.74% cumulative CPU. This record therefore does not use 16.74% to promote a rooted-only change.
+
+[`p0-cpu-targeted.txt`](p0-evidence/p0-cpu-targeted.txt) makes the four feasibility/rooted targets above auditable, and [`p0-cpu-callers.txt`](p0-evidence/p0-cpu-callers.txt) records the caller-edge evidence for the 81.92% and 87.17% shares.
 
 ## Allocation profile
 
@@ -102,7 +104,7 @@ P0 does **not** establish that one optimization is supported by three measuremen
 
 This leaves two distinct, unselected planning hypotheses:
 
-1. **P2-root — rooted-packing incremental domains.** Maintain legal domains in `constellationRootPackingSession` and avoid the root-MRV rescan. Its evaluation corpus must be limited to cases that reach rooted packing, and it must not cite the generic 16.74% Amdahl bound.
+1. **P2-root — rooted-packing incremental domains.** Maintain legal domains in `constellationRootPackingSession` and avoid the root-MRV rescan. Its primary whole-program evaluation uses all 14 frozen development cases; the rooted-reaching subset is secondary, mechanism-only analysis with membership frozen from the P0 baseline. It must not cite the generic 16.74% Amdahl bound.
 2. **P2-global — a shared feasibility/domain engine.** Change both `packingSeedSearch` and rooted packing. This may address the generic hotspot, but requires separate equivalence gates for each phase and evidence that its domain maintenance removes enough of `packingFeasibility` to justify the broader scope.
 
 There is also a competing, smaller hypothesis: **H2 — canonical-order representation.** The `placementKey`/`fmt.Fprintf` allocation and CPU evidence shows that making canonical-copy-order checks cheaper (for example, with a precomputed canonical rank/key) may be more direct than reducing scan count. H2 is not implemented or selected here; it must be compared with P2-global/P2-root during planning rather than silently folded into either one.
@@ -118,10 +120,10 @@ There is also a competing, smaller hypothesis: **H2 — canonical-order represen
 
 ## Required P0.1 before an implementation PR
 
-No P1/P2 implementation is selected by this record. Before planning or implementing one, collect a narrow caller-path breakdown that attributes feasibility work separately to `packingSeedSearch` and rooted packing, then choose one of P2-root, P2-global, H2, or no change.
+No P1/P2 implementation is selected by this record. Before planning or implementing one, P0.1 must distinguish scan multiplicity from canonical-order cost in generic `packingFeasibility`: generic feasibility calls, remaining-instance checks, option checks, canonical-order calls, `placementKey` calls/bytes/allocations, and packing-seed-only CPU and allocation attribution. This approximates `cost = number_of_checks × cost_per_check`, so a later plan can compare P2-global (primarily fewer checks) against H2 (primarily cheaper checks). P0.1 should also stamp the measured binary with its Git revision rather than report `build_revision: unknown`.
 
 The implementation plan must state its scope and gates in advance:
 
-- **Semantic invariants that must remain equal:** deterministic score, canonical layout key/hash, nodes explored where the selected algorithm does not intentionally alter search work, root-node budget consumption, scheduler allocations/termination reasons, beam evictions, depths, and ranking/policy behavior.
+- **Semantic invariants that must remain exactly equal for P2-root/P2-global/H2:** deterministic score; canonical layout key/hash; `NodesExplored`; node charges; expansion sequence; feasibility boolean outcomes; MRV-selected instance; legal-option order; root-node budget consumption; scheduler allocations/termination reasons; beam contents/evictions; depths; and ranking/policy behavior. Any change to pruning, node charges, MRV choice, ranking, or frontier membership reclassifies the proposal as a new search mechanism rather than an efficiency experiment.
 - **Work counters expected to change for a feasibility optimization:** `FeasibilityOptionChecks`, `FeasibilityInstancesConsidered`, and potentially `MRVOptionChecks` and allocations. A successful optimization should reduce its intended work; equality is not a valid success criterion for these counters.
-- **Scope-specific evaluation:** P2-root uses only rooted-reaching cases; P2-global proves equivalence independently in generic packing seed and rooted packing. Do not combine this work with scheduler changes, policy tuning, beam changes, ranking changes, or dedup-key redesign.
+- **Scope-specific evaluation:** the primary E1 comparison uses all 14 frozen development cases for whole-program time, allocations, and semantic equivalence. The P0-baseline rooted-reaching subset is secondary analysis only, with membership not recomputed after an optimization; it reports rooted-specific counters and session microbenchmarks. P2-global additionally proves equivalence independently in generic packing seed and rooted packing. Do not combine this work with scheduler changes, policy tuning, beam changes, ranking changes, or dedup-key redesign.

@@ -1,0 +1,37 @@
+File: backpack-brawl-solver.exe
+Build ID: C:\Users\roger\AppData\Local\go-build\d5\d5343d8ccef129b431d610ad11b57618b09985eabe3bb8dffea6d51a6ac6c463-d\backpack-brawl-solver.exe2026-08-22 19:22:05.6959988 -0300 -03
+Type: inuse_space
+Time: 2026-08-22 21:06:43 -03
+Showing nodes accounting for 30514.84kB, 100% of 30514.84kB total
+Showing top 30 nodes out of 44
+      flat  flat%   sum%        cum   cum%
+22092.42kB 72.40% 72.40% 24142.17kB 79.12%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+    2052kB  6.72% 79.12%     2052kB  6.72%  runtime.allocm
+ 2049.75kB  6.72% 85.84%  2049.75kB  6.72%  backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+ 1537.12kB  5.04% 90.88%  1537.12kB  5.04%  backpack-brawl-solver/internal/solver.PlacementOptions
+  632.14kB  2.07% 92.95%   632.14kB  2.07%  backpack-brawl-solver/internal/solver.filterInventoryImpossibleRecipes
+  613.99kB  2.01% 94.96%   613.99kB  2.01%  backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations
+     513kB  1.68% 96.64%      513kB  1.68%  backpack-brawl-solver/internal/solver.clonePlateauSolution (inline)
+  512.38kB  1.68% 98.32% 27950.80kB 91.60%  backpack-brawl-solver/internal/solver.SolveLayout
+  512.04kB  1.68%   100%   512.04kB  1.68%  reflect.New
+         0     0%   100% 28462.84kB 93.28%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%   100% 27950.80kB 91.60%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%   100%   512.04kB  1.68%  backpack-brawl-solver/internal/catalog.Load
+         0     0%   100%   512.04kB  1.68%  backpack-brawl-solver/internal/catalog.Parse
+         0     0%   100% 28462.84kB 93.28%  backpack-brawl-solver/internal/cli.Run
+         0     0%   100% 28462.84kB 93.28%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%   100% 24756.16kB 81.13%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0%   100%   613.99kB  2.01%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).commitDepth
+         0     0%   100%      513kB  1.68%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+         0     0%   100% 24756.16kB 81.13%  backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+         0     0%   100% 24756.16kB 81.13%  backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0%   100%      513kB  1.68%  backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+         0     0%   100%      513kB  1.68%  backpack-brawl-solver/internal/solver.observeSearchCandidate
+         0     0%   100%      513kB  1.68%  backpack-brawl-solver/internal/solver.runTask
+         0     0%   100%      513kB  1.68%  backpack-brawl-solver/internal/solver.runTask.func3
+         0     0%   100%      513kB  1.68%  backpack-brawl-solver/internal/solver.runTasks
+         0     0%   100% 27438.43kB 89.92%  backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%   100%   512.04kB  1.68%  encoding/json.(*decodeState).array
+         0     0%   100%   512.04kB  1.68%  encoding/json.(*decodeState).object
+         0     0%   100%   512.04kB  1.68%  encoding/json.(*decodeState).unmarshal
+         0     0%   100%   512.04kB  1.68%  encoding/json.(*decodeState).value
