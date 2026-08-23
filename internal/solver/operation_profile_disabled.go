@@ -41,3 +41,28 @@ func (*rootPackingOperationCounters) dedupHit()                {}
 func (*rootPackingOperationCounters) dedupReplacement()        {}
 func (*rootPackingOperationCounters) depthFinish(int)          {}
 func (*rootPackingOperationCounters) statesSorted(int)         {}
+
+type packingSeedFeasibilityOperationCounters struct{}
+
+func newPackingSeedFeasibilityOperationCounters(Config) *packingSeedFeasibilityOperationCounters {
+	return nil
+}
+func (*packingSeedFeasibilityOperationCounters) snapshot() *model.PackingSeedFeasibilityOperationProfile {
+	return nil
+}
+func (*packingSeedFeasibilityOperationCounters) searchCall()             {}
+func (*packingSeedFeasibilityOperationCounters) stateVisited()           {}
+func (*packingSeedFeasibilityOperationCounters) candidateOption()        {}
+func (*packingSeedFeasibilityOperationCounters) candidateOverlapReject() {}
+func (*packingSeedFeasibilityOperationCounters) candidateChargeAttempt() {}
+func (*packingSeedFeasibilityOperationCounters) candidateChargeDenied()  {}
+func (*packingSeedFeasibilityOperationCounters) candidateExpansion()     {}
+func (*packingSeedFeasibilityOperationCounters) candidateCanonical(placement model.Placement, existing []model.Placement) bool {
+	return placementRespectsCanonicalCopyOrder(placement, existing)
+}
+func packingSeedFeasibilityProfiled(remaining []model.InventoryInstance, optionsByInstance map[string][]model.Placement, occupied uint64, placements []model.Placement, _ *packingSeedFeasibilityOperationCounters) (int, int, bool) {
+	return packingFeasibility(remaining, optionsByInstance, occupied, placements)
+}
+func placementRespectsCanonicalCopyOrderProfiled(placement model.Placement, existing []model.Placement, _ *model.PackingSeedCanonicalCopyOrderOperationProfile) bool {
+	return placementRespectsCanonicalCopyOrder(placement, existing)
+}

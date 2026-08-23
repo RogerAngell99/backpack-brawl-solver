@@ -539,6 +539,41 @@ type PackingSeedDiagnostics struct {
 	BeamEvictions      int64                   `json:"beam_evictions,omitempty"`
 }
 
+// PackingSeedCanonicalCopyOrderOperationProfile attributes canonical-copy
+// ordering work to one caller inside packing-seed search. It is
+// measurement-only and does not participate in search policy decisions.
+type PackingSeedCanonicalCopyOrderOperationProfile struct {
+	Calls               int64 `json:"calls"`
+	Rejects             int64 `json:"rejects"`
+	ExistingScanned     int64 `json:"existing_scanned"`
+	SameItemComparisons int64 `json:"same_item_comparisons"`
+	PlacementKeyCalls   int64 `json:"placement_key_calls"`
+	PlacementKeyBytes   int64 `json:"placement_key_bytes"`
+}
+
+// PackingSeedFeasibilityOperationProfile is a deterministic count of generic
+// packing feasibility and canonical-copy-order work performed by
+// packingSeedSearch. It deliberately remains separate from rooted dynamic-MRV
+// packing telemetry.
+type PackingSeedFeasibilityOperationProfile struct {
+	Version                        string                                        `json:"version"`
+	SearchCalls                    int64                                         `json:"search_calls"`
+	StatesVisited                  int64                                         `json:"states_visited"`
+	CandidateOptionChecks          int64                                         `json:"candidate_option_checks"`
+	CandidateOverlapRejects        int64                                         `json:"candidate_overlap_rejects"`
+	CandidateChargeAttempts        int64                                         `json:"candidate_charge_attempts"`
+	CandidateChargeDenied          int64                                         `json:"candidate_charge_denied"`
+	CandidateExpansions            int64                                         `json:"candidate_expansions"`
+	FeasibilityCalls               int64                                         `json:"feasibility_calls"`
+	FeasibilityInstancesConsidered int64                                         `json:"feasibility_instances_considered"`
+	FeasibilityOptionChecks        int64                                         `json:"feasibility_option_checks"`
+	FeasibilityOverlapRejects      int64                                         `json:"feasibility_overlap_rejects"`
+	FeasibilityLegalPlacements     int64                                         `json:"feasibility_legal_placements"`
+	FeasibilityDeadReturns         int64                                         `json:"feasibility_dead_returns"`
+	CandidateCanonical             PackingSeedCanonicalCopyOrderOperationProfile `json:"candidate_canonical"`
+	FeasibilityCanonical           PackingSeedCanonicalCopyOrderOperationProfile `json:"feasibility_canonical"`
+}
+
 // ConstellationRootPackingOperationProfile is a deterministic count of work
 // performed by one rooted dynamic-MRV packing session. It is measurement-only:
 // none of these fields participate in ranking, pruning, allocation, or search
@@ -1174,6 +1209,7 @@ type SearchStats struct {
 	PackingSeedCandidates         int
 	PackingSeedHardPruned         int64
 	PackingSeedStatesDeduplicated int64
+	PackingSeedOperationProfile   *PackingSeedFeasibilityOperationProfile
 	SymmetryPrunedBranches        int64
 	FirstCompletePhase            string
 	FirstCompleteNodes            int64

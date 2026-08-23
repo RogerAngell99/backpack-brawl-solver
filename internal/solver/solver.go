@@ -145,6 +145,7 @@ type coverageSeedResult struct {
 	StatesDeduplicated          int64
 	HardPrunedNodes             int64
 	FirstCompleteNode           int64
+	PackingSeedOperationProfile *model.PackingSeedFeasibilityOperationProfile
 	PackingDiagnostics          model.PackingSeedDiagnostics
 }
 
@@ -1054,6 +1055,7 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 			searchStats.CoverageTargetCount = coverage.targetCount()
 			searchStats.CoverageCeiling = append([]model.StarCoverageBucket(nil), coverage.coverageCeiling...)
 		}
+		applyPackingSeedStats(&searchStats, seed)
 		config.trace.apply(&searchStats)
 		applyPlateauSearchStats(&searchStats, config)
 		results := append([]model.Solution(nil), seed.Solutions...)
@@ -1153,6 +1155,7 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 				searchStats.CoverageTargetCount = coverage.targetCount()
 				searchStats.CoverageCeiling = append([]model.StarCoverageBucket(nil), coverage.coverageCeiling...)
 			}
+			applyPackingSeedStats(&searchStats, seed)
 			config.trace.apply(&searchStats)
 			applyPlateauSearchStats(&searchStats, config)
 			results := append([]model.Solution(nil), initialSolutions...)
@@ -1557,10 +1560,13 @@ func bestScore(solutions []model.Solution) model.Score {
 }
 
 func applyPackingSeedStats(stats *model.SearchStats, seed coverageSeedResult) {
-	if stats == nil || seed.PackingDiagnostics.MaxDepth == 0 {
+	if stats == nil {
 		return
 	}
-	stats.PackingSeedDiagnostics = seed.PackingDiagnostics
+	if seed.PackingDiagnostics.MaxDepth > 0 {
+		stats.PackingSeedDiagnostics = seed.PackingDiagnostics
+	}
+	stats.PackingSeedOperationProfile = seed.PackingSeedOperationProfile
 }
 
 func initializeDiagnosticPhasePlans(config Config) {
@@ -1772,6 +1778,7 @@ func finishPriorityCeilingResult(
 		stats.PriorityCeiling = append([]int(nil), priorityBounds.ceiling...)
 		stats.PriorityCeilingReached = priorityBounds.reached(bestScore(results))
 	}
+	applyPackingSeedStats(&stats, seed)
 	config.trace.apply(&stats)
 	applyPlateauSearchStats(&stats, config)
 	for index := range results {
@@ -1864,12 +1871,16 @@ func packingSeedOrder(instances []model.InventoryInstance, optionsByInstance map
 
 func mergeSeedResults(left coverageSeedResult, right coverageSeedResult, topN int) coverageSeedResult {
 	merged := coverageSeedResult{
-		Solutions:              mergeSolutions(left.Solutions, right.Solutions, topN),
-		NodesExplored:          left.NodesExplored + right.NodesExplored,
-		CandidateCount:         left.CandidateCount + right.CandidateCount,
-		SymmetryPrunedBranches: left.SymmetryPrunedBranches + right.SymmetryPrunedBranches,
-		StatesDeduplicated:     left.StatesDeduplicated + right.StatesDeduplicated,
-		HardPrunedNodes:        left.HardPrunedNodes + right.HardPrunedNodes,
+		Solutions:                   mergeSolutions(left.Solutions, right.Solutions, topN),
+		NodesExplored:               left.NodesExplored + right.NodesExplored,
+		CandidateCount:              left.CandidateCount + right.CandidateCount,
+		SymmetryPrunedBranches:      left.SymmetryPrunedBranches + right.SymmetryPrunedBranches,
+		StatesDeduplicated:          left.StatesDeduplicated + right.StatesDeduplicated,
+		HardPrunedNodes:             left.HardPrunedNodes + right.HardPrunedNodes,
+		PackingSeedOperationProfile: left.PackingSeedOperationProfile,
+	}
+	if merged.PackingSeedOperationProfile == nil {
+		merged.PackingSeedOperationProfile = right.PackingSeedOperationProfile
 	}
 	if left.PackingDiagnostics.MaxDepth > 0 {
 		merged.PackingDiagnostics = left.PackingDiagnostics

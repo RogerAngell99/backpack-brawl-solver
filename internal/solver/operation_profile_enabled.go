@@ -169,3 +169,125 @@ func (c *rootPackingOperationCounters) statesSorted(count int) {
 		c.profile.StatesSorted += int64(count)
 	}
 }
+
+// packingSeedFeasibilityOperationCounters is local to one packing-seed
+// search. Operation profiling requires a single worker, so no synchronization
+// is required for its deterministic integer counters.
+type packingSeedFeasibilityOperationCounters struct {
+	profile model.PackingSeedFeasibilityOperationProfile
+}
+
+func newPackingSeedFeasibilityOperationCounters(config Config) *packingSeedFeasibilityOperationCounters {
+	if !config.OperationProfiling {
+		return nil
+	}
+	return &packingSeedFeasibilityOperationCounters{profile: model.PackingSeedFeasibilityOperationProfile{Version: PackingSeedFeasibilityProfileVersion}}
+}
+
+func (c *packingSeedFeasibilityOperationCounters) snapshot() *model.PackingSeedFeasibilityOperationProfile {
+	if c == nil {
+		return nil
+	}
+	copy := c.profile
+	return &copy
+}
+
+func (c *packingSeedFeasibilityOperationCounters) searchCall() {
+	c.profile.SearchCalls++
+}
+
+func (c *packingSeedFeasibilityOperationCounters) stateVisited() {
+	c.profile.StatesVisited++
+}
+
+func (c *packingSeedFeasibilityOperationCounters) candidateOption() {
+	c.profile.CandidateOptionChecks++
+}
+
+func (c *packingSeedFeasibilityOperationCounters) candidateOverlapReject() {
+	c.profile.CandidateOverlapRejects++
+}
+
+func (c *packingSeedFeasibilityOperationCounters) candidateChargeAttempt() {
+	c.profile.CandidateChargeAttempts++
+}
+
+func (c *packingSeedFeasibilityOperationCounters) candidateChargeDenied() {
+	c.profile.CandidateChargeDenied++
+}
+
+func (c *packingSeedFeasibilityOperationCounters) candidateExpansion() {
+	c.profile.CandidateExpansions++
+}
+
+func (c *packingSeedFeasibilityOperationCounters) candidateCanonical(placement model.Placement, existing []model.Placement) bool {
+	return placementRespectsCanonicalCopyOrderProfiled(placement, existing, &c.profile.CandidateCanonical)
+}
+
+func packingSeedFeasibilityProfiled(
+	remaining []model.InventoryInstance,
+	optionsByInstance map[string][]model.Placement,
+	occupied uint64,
+	placements []model.Placement,
+	counters *packingSeedFeasibilityOperationCounters,
+) (restricted int, flexibility int, feasible bool) {
+	counters.profile.FeasibilityCalls++
+	if len(remaining) == 0 {
+		return 0, 0, true
+	}
+	restricted = int(^uint(0) >> 1)
+	for _, instance := range remaining {
+		counters.profile.FeasibilityInstancesConsidered++
+		legal := 0
+		for _, option := range optionsByInstance[instance.InstanceID] {
+			counters.profile.FeasibilityOptionChecks++
+			if option.Mask&occupied != 0 {
+				counters.profile.FeasibilityOverlapRejects++
+				continue
+			}
+			if placementRespectsCanonicalCopyOrderProfiled(option, placements, &counters.profile.FeasibilityCanonical) {
+				legal++
+				counters.profile.FeasibilityLegalPlacements++
+			}
+		}
+		if legal == 0 {
+			counters.profile.FeasibilityDeadReturns++
+			return 0, 0, false
+		}
+		if legal < restricted {
+			restricted = legal
+		}
+		flexibility += legal
+	}
+	return restricted, flexibility, true
+}
+
+func placementRespectsCanonicalCopyOrderProfiled(
+	placement model.Placement,
+	existing []model.Placement,
+	counters *model.PackingSeedCanonicalCopyOrderOperationProfile,
+) bool {
+	counters.Calls++
+	key := placementKey(placement)
+	counters.PlacementKeyCalls++
+	counters.PlacementKeyBytes += int64(len(key))
+	for _, other := range existing {
+		counters.ExistingScanned++
+		if other.ItemID != placement.ItemID || other.InstanceID == placement.InstanceID {
+			continue
+		}
+		counters.SameItemComparisons++
+		otherKey := placementKey(other)
+		counters.PlacementKeyCalls++
+		counters.PlacementKeyBytes += int64(len(otherKey))
+		if other.OriginalIndex < placement.OriginalIndex && otherKey > key {
+			counters.Rejects++
+			return false
+		}
+		if other.OriginalIndex > placement.OriginalIndex && otherKey < key {
+			counters.Rejects++
+			return false
+		}
+	}
+	return true
+}
