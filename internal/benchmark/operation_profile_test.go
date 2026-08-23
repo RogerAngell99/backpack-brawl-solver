@@ -75,7 +75,7 @@ func TestSummarizeOperationProfileGroupsAndDerivesSchedulerTelemetry(t *testing.
 	if alpha.RootedPacking == nil || alpha.RootedPacking.CandidateExpansions != 10 || alpha.PerCandidateExpansion == nil || alpha.PerCandidateExpansion.FeasibilityOptionChecks != 7 {
 		t.Fatalf("alpha operation summary=%+v", alpha)
 	}
-	if summary.Version != "operation-profile-summary-v2" || alpha.PackingSeedFeasibility == nil || alpha.PackingSeedFeasibility.FeasibilityOptionChecks != 90 || alpha.PackingSeedFeasibilityDerived == nil || alpha.PackingSeedFeasibilityDerived.FeasibilityCallsPerState != 3 || alpha.PackingSeedFeasibilityDerived.PlacementKeyBytesPerCandidateExpansion != 60 || alpha.PackingSeedFeasibilityDerived.FeasibilityCanonicalCallsPerOptionCheck != float64(7)/9 {
+	if summary.Version != "operation-profile-summary-v2" || alpha.PackingSeedFeasibility == nil || alpha.PackingSeedFeasibility.FeasibilityOptionChecks != 90 || alpha.PackingSeedFeasibilityDerived == nil || alpha.PackingSeedFeasibilityDerived.FeasibilityCallsPerState != 3 || alpha.PackingSeedFeasibilityDerived.PlacementKeyBytesPerCandidateExpansion != 60 || alpha.PackingSeedFeasibilityDerived.FeasibilityCanonicalCallsPerOptionCheck != float64(7)/9 || alpha.PackingSeedFeasibilityDerived.FeasibilityCandidatePlacementKeyCallsPerCanonicalCall != 1 {
 		t.Fatalf("packing-seed summary=%+v", alpha)
 	}
 	if alpha.Scheduler == nil || alpha.Scheduler.FamilyCount != 1 || alpha.Scheduler.FamiliesCompleted != 1 || alpha.Scheduler.ReturnedCapacityTotal != 2 || alpha.Scheduler.ReturnedFractionBPS != 2_000 || alpha.Scheduler.FinalDepth.P50 != 3 {
@@ -102,6 +102,45 @@ func TestSummarizeOperationProfileV2ReadsP0V1StyleReports(t *testing.T) {
 	summary := SummarizeOperationProfile(report)
 	if summary.Version != "operation-profile-summary-v2" || summary.Scenarios[0].RootedPacking == nil || summary.Scenarios[0].PackingSeedFeasibility != nil || summary.Scenarios[0].PackingSeedFeasibilityDerived != nil {
 		t.Fatalf("v1 compatibility summary=%+v", summary)
+	}
+}
+
+func TestSummarizeOperationProfileSeparatesPackingSeedSchemaVersions(t *testing.T) {
+	v1 := &model.PackingSeedFeasibilityOperationProfile{
+		Version: model.PackingSeedFeasibilityProfileVersionV1,
+		CandidateCanonical: model.PackingSeedCanonicalCopyOrderOperationProfile{
+			Calls: 5, SameItemComparisons: 2, PlacementKeyCalls: 7,
+		},
+	}
+	v2 := &model.PackingSeedFeasibilityOperationProfile{
+		Version: model.PackingSeedFeasibilityProfileVersionV2,
+		CandidateCanonical: model.PackingSeedCanonicalCopyOrderOperationProfile{
+			Calls: 5, SameItemComparisons: 2, CandidatePlacementKeyCalls: 1, PlacementKeyCalls: 3,
+		},
+	}
+	report := Report{Runs: []Run{
+		{Scenario: "mixed", Budget: 1_000, Search: SearchSummary{PackingSeedOperationProfile: v1}},
+		{Scenario: "mixed", Budget: 1_000, Search: SearchSummary{PackingSeedOperationProfile: v2}},
+	}}
+	summary := SummarizeOperationProfile(report)
+	entry := summary.Scenarios[0]
+	if entry.PackingSeedFeasibility != nil || entry.PackingSeedFeasibilityDerived != nil {
+		t.Fatalf("mixed schemas were aggregated: %+v", entry)
+	}
+	if len(entry.PackingSeedFeasibilityByVersion) != 2 {
+		t.Fatalf("version-separated profiles=%+v", entry.PackingSeedFeasibilityByVersion)
+	}
+	first, second := entry.PackingSeedFeasibilityByVersion[0], entry.PackingSeedFeasibilityByVersion[1]
+	if first.Version != model.PackingSeedFeasibilityProfileVersionV1 || first.Runs != 1 || first.Profile.CandidateCanonical.PlacementKeyCalls != 7 || first.Derived.FeasibilityCandidatePlacementKeyCallsPerCanonicalCall != 0 {
+		t.Fatalf("v1 separate profile=%+v", first)
+	}
+	if second.Version != model.PackingSeedFeasibilityProfileVersionV2 || second.Runs != 1 || second.Profile.CandidateCanonical.CandidatePlacementKeyCalls != 1 || second.Derived.FeasibilityCandidatePlacementKeyCallsPerCanonicalCall != 0 {
+		t.Fatalf("v2 separate profile=%+v", second)
+	}
+	var formatted strings.Builder
+	FormatOperationProfileSummary(&formatted, summary)
+	if !strings.Contains(formatted.String(), "incompatible packing-seed profile versions retained separately") {
+		t.Fatalf("missing version-mismatch warning: %q", formatted.String())
 	}
 }
 

@@ -179,8 +179,17 @@ func TestProfiledCanonicalCopyOrderMatchesNormalAndAccountsPlacementKeys(t *test
 			if profile.Calls != 1 {
 				t.Fatalf("canonical calls=%d, want 1", profile.Calls)
 			}
-			if profile.PlacementKeyCalls != profile.Calls+profile.SameItemComparisons {
+			if profile.PlacementKeyCalls != profile.CandidatePlacementKeyCalls+profile.SameItemComparisons {
 				t.Fatalf("placement key identity failed: %+v", profile)
+			}
+			if profile.CandidatePlacementKeyCalls > profile.SameItemComparisons {
+				t.Fatalf("candidate key materialized without a same-item comparison: %+v", profile)
+			}
+			if profile.CandidatePlacementKeyCalls > profile.Calls {
+				t.Fatalf("candidate key calls exceeded canonical calls: %+v", profile)
+			}
+			if test.name == "unique item" && (profile.CandidatePlacementKeyCalls != 0 || profile.PlacementKeyCalls != 0 || profile.PlacementKeyBytes != 0) {
+				t.Fatalf("unique item constructed canonical keys: %+v", profile)
 			}
 			wantRejects := int64(0)
 			if !want {
@@ -270,14 +279,26 @@ func assertPackingSeedFeasibilityOperationProfileIdentities(t testing.TB, profil
 	if profile.FeasibilityOptionChecks != profile.FeasibilityOverlapRejects+profile.FeasibilityCanonical.Calls {
 		t.Fatalf("feasibility option identity failed: %+v", profile)
 	}
-	if profile.CandidateCanonical.PlacementKeyCalls != profile.CandidateCanonical.Calls+profile.CandidateCanonical.SameItemComparisons {
+	if profile.CandidateCanonical.PlacementKeyCalls != profile.CandidateCanonical.CandidatePlacementKeyCalls+profile.CandidateCanonical.SameItemComparisons {
 		t.Fatalf("candidate key identity failed: %+v", profile.CandidateCanonical)
+	}
+	if profile.CandidateCanonical.CandidatePlacementKeyCalls > profile.CandidateCanonical.SameItemComparisons {
+		t.Fatalf("candidate key materialization identity failed: %+v", profile.CandidateCanonical)
+	}
+	if profile.CandidateCanonical.CandidatePlacementKeyCalls > profile.CandidateCanonical.Calls {
+		t.Fatalf("candidate key calls exceeded candidate canonical calls: %+v", profile.CandidateCanonical)
 	}
 	if profile.CandidateCanonical.Calls != profile.CandidateCanonical.Rejects+profile.CandidateChargeAttempts {
 		t.Fatalf("candidate canonical identity failed: %+v", profile)
 	}
-	if profile.FeasibilityCanonical.PlacementKeyCalls != profile.FeasibilityCanonical.Calls+profile.FeasibilityCanonical.SameItemComparisons {
+	if profile.FeasibilityCanonical.PlacementKeyCalls != profile.FeasibilityCanonical.CandidatePlacementKeyCalls+profile.FeasibilityCanonical.SameItemComparisons {
 		t.Fatalf("feasibility key identity failed: %+v", profile.FeasibilityCanonical)
+	}
+	if profile.FeasibilityCanonical.CandidatePlacementKeyCalls > profile.FeasibilityCanonical.SameItemComparisons {
+		t.Fatalf("feasibility candidate key materialization identity failed: %+v", profile.FeasibilityCanonical)
+	}
+	if profile.FeasibilityCanonical.CandidatePlacementKeyCalls > profile.FeasibilityCanonical.Calls {
+		t.Fatalf("candidate key calls exceeded feasibility canonical calls: %+v", profile.FeasibilityCanonical)
 	}
 	if profile.FeasibilityCanonical.Calls != profile.FeasibilityCanonical.Rejects+profile.FeasibilityLegalPlacements {
 		t.Fatalf("feasibility canonical identity failed: %+v", profile)
