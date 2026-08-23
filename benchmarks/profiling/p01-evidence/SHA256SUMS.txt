@@ -1,0 +1,16 @@
+# Frozen P0.1 source artifacts from C:\p01-artifacts\9cfeb6cf875b10860bf72eb00f775b84c569e800\rerun-01
+# These are source-artifact hashes; the compact copies in this directory can
+# be independently re-hashed and compared with README.md.
+1fce991c9510a7059271d18611f5650fc66ed06c575d755523c28362e772c7dc  p01-operations-gsv1.json
+62dd75434b02538203cf02672eda2c106fc3e499dbd8760fabb7fd8a30095a81  p01-operations-gsv1-summary.json
+e268e642b7d45c1ff16bb6953939ff7153d2a54990da55c4f871cd31f1e65358  p01-operations-v4.json
+fddd7b9f0bb350c5c766f2a23a3b33998bb68efb28c3be51ae811df4fa77dd48  p01-operations-v4-summary.json
+ed61b5bb5c53a011afcf63fe3553b49b8debf5eebfe42c96d42adbea34d63809  p01-gsv1-1m.cpu.pprof
+37cd1de52a142778ad57922701090ec6ec44920dbc86be7ce994d88861715619  p01-gsv1-1m.heap.pprof
+8705e3abcf519ccc4ca481817cf312b97ab5d051e1a406e32f4094f73b05b6c8  p01-gsv1-1m-profile.json
+bdc75cc5fae1d05790a1be0d7b79dd0fbf234483f779015a710185867009f1e7  p01-microbench.txt
+508e9df7e40b4ae98e3b312e9a499f59ab068056c07bf40f0eed5c59be4b08dc  solver.exe
+63ba8995eb391c6935f1a8dc3588ed2e6e6c6d8b00c611c3aa0628b2573085e1  solver-searchprofile.exe
+5d45c2d1aa4632b66f4d52c88e663c92491cd3c2859761314217ea7e223bd13a  smoke-gsv2-013-250k.json
+7c778505af69aa940ae68c6a5fc86fced8c46046e99391a83558b4045047d73a  p01-provenance.txt
+b65771885c98d6a2fc93cfca64e013fdcc94485f92ed935d1426a304cd37e775  benchmarks/suites/general-search-v2.lock

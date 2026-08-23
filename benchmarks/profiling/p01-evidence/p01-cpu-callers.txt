@@ -1,0 +1,401 @@
+File: solver.exe
+Build ID: C:\p01-artifacts\9cfeb6cf875b10860bf72eb00f775b84c569e800\rerun-01\solver.exe2026-08-23 13:03:01.1822831 -0300 -03
+Type: cpu
+Time: 2026-08-23 13:31:32 -03
+Duration: 221.27s, Total samples = 367.09s (165.90%)
+Active filters:
+   focus=placementRespectsCanonicalCopyOrder|placementKey
+Showing nodes accounting for 77.40s, 21.08% of 367.09s total
+Dropped 162 nodes (cum <= 1.84s)
+Showing top 80 nodes out of 92
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context
+----------------------------------------------------------+-------------
+                                            45.80s   100% |   fmt.Fprintf
+    14.29s  3.89%  3.89%     45.80s 12.48%                | fmt.(*pp).doPrintf
+                                            22.27s 48.62% |   fmt.(*pp).printArg
+                                             4.24s  9.26% |   fmt.(*buffer).writeString (inline)
+                                             3.63s  7.93% |   fmt.(*pp).argNumber
+                                             1.20s  2.62% |   fmt.parsenum (inline)
+----------------------------------------------------------+-------------
+                                            16.79s   100% |   fmt.(*pp).fmtInteger
+     7.77s  2.12%  6.01%     16.79s  4.57%                | fmt.(*fmt).fmtInteger
+                                             9.02s 53.72% |   fmt.(*fmt).pad
+----------------------------------------------------------+-------------
+                                             1.69s 39.95% |   fmt.(*buffer).writeString
+                                             1.31s 30.97% |   fmt.(*buffer).write
+                                             0.87s 20.57% |   strings.(*Builder).Write
+                                             0.36s  8.51% |   runtime.growslice
+     4.23s  1.15%  7.16%      4.23s  1.15%                | runtime.memmove
+----------------------------------------------------------+-------------
+                                            22.27s   100% |   fmt.(*pp).doPrintf
+     3.81s  1.04%  8.20%     22.27s  6.07%                | fmt.(*pp).printArg
+                                            18.17s 81.59% |   fmt.(*pp).fmtInteger
+                                             0.29s  1.30% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             3.63s   100% |   fmt.(*pp).doPrintf
+     3.59s  0.98%  9.18%      3.63s  0.99%                | fmt.(*pp).argNumber
+----------------------------------------------------------+-------------
+                                             9.02s   100% |   fmt.(*fmt).fmtInteger
+     2.85s  0.78%  9.95%      9.02s  2.46%                | fmt.(*fmt).pad
+                                             3.89s 43.13% |   fmt.(*buffer).write (inline)
+                                             1.42s 15.74% |   fmt.(*fmt).writePadding
+                                             0.86s  9.53% |   unicode/utf8.RuneCount (inline)
+----------------------------------------------------------+-------------
+                                             2.78s   100% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+     2.78s  0.76% 10.71%      2.78s  0.76%                | runtime.duffcopy
+----------------------------------------------------------+-------------
+                                            14.13s   100% |   fmt.Fprintf
+     2.50s  0.68% 11.39%     14.13s  3.85%                | strings.(*Builder).Write
+                                            10.38s 73.46% |   runtime.growslice
+                                             0.87s  6.16% |   runtime.memmove
+                                             0.10s  0.71% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             1.57s 64.88% |   runtime.mallocgcSmallNoscan (inline)
+                                             0.75s 30.99% |   runtime.mallocgcSmallScanNoHeader (inline)
+                                             0.10s  4.13% |   runtime.mallocgc (inline)
+     2.42s  0.66% 12.05%      2.42s  0.66%                | runtime.nextFreeFast
+----------------------------------------------------------+-------------
+                                             4.24s   100% |   fmt.(*pp).doPrintf (inline)
+     2.37s  0.65% 12.70%      4.24s  1.16%                | fmt.(*buffer).writeString
+                                             1.69s 39.86% |   runtime.memmove
+                                             0.17s  4.01% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             3.89s   100% |   fmt.(*fmt).pad (inline)
+     2.31s  0.63% 13.33%      3.89s  1.06%                | fmt.(*buffer).write
+                                             1.31s 33.68% |   runtime.memmove
+                                             0.26s  6.68% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                            68.13s 86.82% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             8.92s 11.37% |   backpack-brawl-solver/internal/solver.coveragePlacementKey
+                                             0.67s  0.85% |   backpack-brawl-solver/internal/solver.constellationExactKey
+                                             0.51s  0.65% |   backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+                                             0.23s  0.29% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+     1.93s  0.53% 13.85%     78.47s 21.38%                | backpack-brawl-solver/internal/solver.placementKey
+                                            70.40s 89.72% |   fmt.Fprintf
+                                             4.54s  5.79% |   runtime.newobject
+                                             1.51s  1.92% |   runtime.convT64
+----------------------------------------------------------+-------------
+                                            70.40s   100% |   backpack-brawl-solver/internal/solver.placementKey
+     1.91s  0.52% 14.37%     70.40s 19.18%                | fmt.Fprintf
+                                            45.80s 65.06% |   fmt.(*pp).doPrintf
+                                            14.13s 20.07% |   strings.(*Builder).Write
+                                             4.39s  6.24% |   fmt.(*pp).free
+                                             4.17s  5.92% |   fmt.newPrinter
+----------------------------------------------------------+-------------
+                                             3.34s   100% |   fmt.(*pp).free
+     1.71s  0.47% 14.84%      3.34s  0.91%                | sync.(*Pool).Put
+                                             1.23s 36.83% |   sync.(*Pool).pin
+                                             0.34s 10.18% |   sync.runtime_procUnpin
+----------------------------------------------------------+-------------
+                                             1.42s   100% |   fmt.(*fmt).pad
+     1.42s  0.39% 15.23%      1.42s  0.39%                | fmt.(*fmt).writePadding
+----------------------------------------------------------+-------------
+                                            18.17s   100% |   fmt.(*pp).printArg
+     1.38s  0.38% 15.60%     18.17s  4.95%                | fmt.(*pp).fmtInteger
+                                            16.79s 92.41% |   fmt.(*fmt).fmtInteger
+----------------------------------------------------------+-------------
+                                             6.74s 58.25% |   runtime.growslice
+                                             4.36s 37.68% |   runtime.newobject
+                                             0.43s  3.72% |   runtime.convT64
+     1.38s  0.38% 15.98%     11.57s  3.15%                | runtime.mallocgc
+                                             5.76s 49.78% |   runtime.mallocgcSmallNoscan
+                                             3.87s 33.45% |   runtime.mallocgcSmallScanNoHeader
+                                             0.10s  0.86% |   runtime.nextFreeFast (inline)
+----------------------------------------------------------+-------------
+                                             1.10s 82.71% |   runtime.growslice
+                                             0.19s 14.29% |   runtime.mallocgcSmallScanNoHeader
+     1.33s  0.36% 16.34%      1.33s  0.36%                | runtime.memclrNoHeapPointers
+----------------------------------------------------------+-------------
+                                             3.28s   100% |   fmt.newPrinter
+     1.31s  0.36% 16.70%      3.28s  0.89%                | sync.(*Pool).Get
+                                             1.61s 49.09% |   sync.(*Pool).pin
+                                             0.29s  8.84% |   sync.runtime_procUnpin
+----------------------------------------------------------+-------------
+                                            10.38s 99.90% |   strings.(*Builder).Write
+     1.27s  0.35% 17.04%     10.39s  2.83%                | runtime.growslice
+                                             6.74s 64.87% |   runtime.mallocgc
+                                             1.10s 10.59% |   runtime.memclrNoHeapPointers
+                                             0.80s  7.70% |   runtime.roundupsize (inline)
+                                             0.36s  3.46% |   runtime.memmove
+----------------------------------------------------------+-------------
+                                             1.61s 56.69% |   sync.(*Pool).Get
+                                             1.23s 43.31% |   sync.(*Pool).Put
+     1.18s  0.32% 17.36%      2.84s  0.77%                | sync.(*Pool).pin
+                                             1.47s 51.76% |   sync.runtime_procPin
+----------------------------------------------------------+-------------
+                                             1.20s   100% |   fmt.(*pp).doPrintf (inline)
+     1.14s  0.31% 17.67%      1.20s  0.33%                | fmt.parsenum
+----------------------------------------------------------+-------------
+                                             5.76s   100% |   runtime.mallocgc
+     1.13s  0.31% 17.98%      5.76s  1.57%                | runtime.mallocgcSmallNoscan
+                                             1.57s 27.26% |   runtime.nextFreeFast (inline)
+                                             1.07s 18.58% |   runtime.(*mcache).nextFree
+                                             0.52s  9.03% |   runtime.acquirem (inline)
+                                             0.48s  8.33% |   runtime.getMCache (inline)
+                                             0.32s  5.56% |   runtime.callers
+                                             0.31s  5.38% |   runtime.makeSpanClass (inline)
+----------------------------------------------------------+-------------
+                                             1.51s   100% |   backpack-brawl-solver/internal/solver.placementKey
+     1.08s  0.29% 18.28%      1.51s  0.41%                | runtime.convT64
+                                             0.43s 28.48% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             0.86s   100% |   fmt.(*fmt).pad (inline)
+     0.86s  0.23% 18.51%      0.86s  0.23%                | unicode/utf8.RuneCount
+----------------------------------------------------------+-------------
+                                             4.39s   100% |   fmt.Fprintf
+     0.84s  0.23% 18.74%      4.39s  1.20%                | fmt.(*pp).free
+                                             3.34s 76.08% |   sync.(*Pool).Put
+                                             0.20s  4.56% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             0.52s 65.00% |   runtime.mallocgcSmallNoscan (inline)
+                                             0.26s 32.50% |   runtime.mallocgcSmallScanNoHeader (inline)
+     0.80s  0.22% 18.96%      0.80s  0.22%                | runtime.acquirem
+----------------------------------------------------------+-------------
+                                            58.69s 81.75% |   backpack-brawl-solver/internal/solver.packingFeasibility
+                                             5.89s  8.20% |   backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations
+                                             4.94s  6.88% |   backpack-brawl-solver/internal/solver.runTask.func3
+                                             0.90s  1.25% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+                                             0.58s  0.81% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.45s  0.63% |   backpack-brawl-solver/internal/solver.constellationRootMRVSelectionWithOperations
+                                             0.25s  0.35% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+     0.79s  0.22% 19.17%     71.79s 19.56%                | backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                            68.13s 94.90% |   backpack-brawl-solver/internal/solver.placementKey
+                                             2.78s  3.87% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.80s   100% |   runtime.growslice (inline)
+     0.76s  0.21% 19.38%      0.80s  0.22%                | runtime.roundupsize
+----------------------------------------------------------+-------------
+                                             1.47s   100% |   sync.(*Pool).pin
+     0.76s  0.21% 19.59%      1.47s   0.4%                | sync.runtime_procPin
+                                             0.71s 48.30% |   runtime.procPin (inline)
+----------------------------------------------------------+-------------
+                                             3.87s   100% |   runtime.mallocgc
+     0.73s   0.2% 19.79%      3.87s  1.05%                | runtime.mallocgcSmallScanNoHeader
+                                             0.75s 19.38% |   runtime.nextFreeFast (inline)
+                                             0.69s 17.83% |   runtime.heapSetTypeNoHeader (inline)
+                                             0.60s 15.50% |   runtime.(*mcache).nextFree
+                                             0.26s  6.72% |   runtime.acquirem (inline)
+                                             0.19s  4.91% |   runtime.memclrNoHeapPointers
+                                             0.16s  4.13% |   runtime.getMCache (inline)
+                                             0.15s  3.88% |   runtime.callers
+                                             0.13s  3.36% |   runtime.makeSpanClass (inline)
+----------------------------------------------------------+-------------
+                                             0.71s   100% |   sync.runtime_procPin (inline)
+     0.71s  0.19% 19.98%      0.71s  0.19%                | runtime.procPin
+----------------------------------------------------------+-------------
+                                             0.48s 71.64% |   runtime.mallocgcSmallNoscan (inline)
+                                             0.16s 23.88% |   runtime.mallocgcSmallScanNoHeader (inline)
+     0.67s  0.18% 20.16%      0.67s  0.18%                | runtime.getMCache
+----------------------------------------------------------+-------------
+                                             4.17s   100% |   fmt.Fprintf
+     0.65s  0.18% 20.34%      4.17s  1.14%                | fmt.newPrinter
+                                             3.28s 78.66% |   sync.(*Pool).Get
+                                             0.11s  2.64% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             0.34s 53.97% |   sync.(*Pool).Put
+                                             0.29s 46.03% |   sync.(*Pool).Get
+     0.62s  0.17% 20.51%      0.63s  0.17%                | sync.runtime_procUnpin
+----------------------------------------------------------+-------------
+                                             0.62s   100% |   runtime.heapSetTypeNoHeader
+     0.54s  0.15% 20.65%      0.62s  0.17%                | runtime.(*mspan).writeHeapBitsSmall
+----------------------------------------------------------+-------------
+                                             0.71s 98.61% |   runtime.wbBufFlush1
+     0.50s  0.14% 20.79%      0.72s   0.2%                | runtime.findObject
+----------------------------------------------------------+-------------
+                                             0.29s 24.37% |   fmt.(*pp).printArg
+                                             0.26s 21.85% |   fmt.(*buffer).write
+                                             0.20s 16.81% |   fmt.(*pp).free
+                                             0.17s 14.29% |   fmt.(*buffer).writeString
+                                             0.11s  9.24% |   fmt.newPrinter
+                                             0.10s  8.40% |   strings.(*Builder).Write
+     0.24s 0.065% 20.86%      1.19s  0.32%                | gcWriteBarrier
+                                             0.95s 79.83% |   runtime.wbBufFlush1
+----------------------------------------------------------+-------------
+                                             4.54s 99.13% |   backpack-brawl-solver/internal/solver.placementKey
+     0.22s  0.06% 20.92%      4.58s  1.25%                | runtime.newobject
+                                             4.36s 95.20% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             1.16s   100% |   runtime.(*mcache).refill
+     0.17s 0.046% 20.96%      1.16s  0.32%                | runtime.(*mcentral).cacheSpan
+                                             0.71s 61.21% |   runtime.(*mheap).alloc
+----------------------------------------------------------+-------------
+                                             0.95s   100% |   gcWriteBarrier
+     0.14s 0.038% 21.00%      0.95s  0.26%                | runtime.wbBufFlush1
+                                             0.71s 74.74% |   runtime.findObject
+----------------------------------------------------------+-------------
+                                             1.07s 62.94% |   runtime.mallocgcSmallNoscan
+                                             0.60s 35.29% |   runtime.mallocgcSmallScanNoHeader
+     0.08s 0.022% 21.02%      1.70s  0.46%                | runtime.(*mcache).nextFree
+                                             1.45s 85.29% |   runtime.(*mcache).refill
+----------------------------------------------------------+-------------
+                                             0.69s   100% |   runtime.mallocgcSmallScanNoHeader (inline)
+     0.07s 0.019% 21.04%      0.69s  0.19%                | runtime.heapSetTypeNoHeader
+                                             0.62s 89.86% |   runtime.(*mspan).writeHeapBitsSmall
+----------------------------------------------------------+-------------
+                                             0.31s 70.45% |   runtime.mallocgcSmallNoscan (inline)
+                                             0.13s 29.55% |   runtime.mallocgcSmallScanNoHeader (inline)
+     0.06s 0.016% 21.06%      0.44s  0.12%                | runtime.makeSpanClass
+----------------------------------------------------------+-------------
+                                             1.45s   100% |   runtime.(*mcache).nextFree
+     0.04s 0.011% 21.07%      1.45s  0.39%                | runtime.(*mcache).refill
+                                             1.16s 80.00% |   runtime.(*mcentral).cacheSpan
+----------------------------------------------------------+-------------
+                                             0.70s   100% |   runtime.(*mheap).alloc
+     0.02s 0.0054% 21.07%      0.70s  0.19%                | runtime.(*mheap).alloc.func1
+                                             0.68s 97.14% |   runtime.(*mheap).allocSpan
+----------------------------------------------------------+-------------
+                                             0.68s   100% |   runtime.(*mheap).alloc.func1
+     0.02s 0.0054% 21.08%      0.68s  0.19%                | runtime.(*mheap).allocSpan
+----------------------------------------------------------+-------------
+                                             0.71s   100% |   runtime.(*mcentral).cacheSpan
+     0.01s 0.0027% 21.08%      0.71s  0.19%                | runtime.(*mheap).alloc
+                                             0.70s 98.59% |   runtime.(*mheap).alloc.func1
+----------------------------------------------------------+-------------
+                                             0.32s 66.67% |   runtime.mallocgcSmallNoscan
+                                             0.15s 31.25% |   runtime.mallocgcSmallScanNoHeader
+     0.01s 0.0027% 21.08%      0.48s  0.13%                | runtime.callers
+----------------------------------------------------------+-------------
+                                            82.13s   100% |   backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0% 21.08%     82.13s 22.37%                | backpack-brawl-solver/internal/benchmark.RunScenarios
+                                            82.13s   100% |   backpack-brawl-solver/internal/benchmark.runScenario
+----------------------------------------------------------+-------------
+                                            82.13s   100% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0% 21.08%     82.13s 22.37%                | backpack-brawl-solver/internal/benchmark.runScenario
+                                            82.13s   100% |   backpack-brawl-solver/internal/solver.SolveLayout
+----------------------------------------------------------+-------------
+         0     0% 21.08%     82.13s 22.37%                | backpack-brawl-solver/internal/cli.Run
+                                            82.13s   100% |   backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+----------------------------------------------------------+-------------
+                                            82.13s   100% |   backpack-brawl-solver/internal/cli.Run
+         0     0% 21.08%     82.13s 22.37%                | backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+                                            82.13s   100% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+----------------------------------------------------------+-------------
+                                             6.98s   100% |   backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+         0     0% 21.08%      6.98s  1.90%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+                                             6.52s 93.41% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+                                             0.45s  6.45% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).prepareState
+----------------------------------------------------------+-------------
+                                             6.52s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0% 21.08%      6.52s  1.78%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+                                             5.89s 90.34% |   backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations
+                                             0.59s  9.05% |   backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+----------------------------------------------------------+-------------
+                                             0.45s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0% 21.08%      0.45s  0.12%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).prepareState
+                                             0.45s   100% |   backpack-brawl-solver/internal/solver.constellationRootMRVSelectionWithOperations
+----------------------------------------------------------+-------------
+                                             5.72s 73.81% |   backpack-brawl-solver/internal/solver.runTask.func3
+                                             2.03s 26.19% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+         0     0% 21.08%      7.75s  2.11%                | backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+                                             7.75s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+----------------------------------------------------------+-------------
+                                             7.75s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+         0     0% 21.08%      7.75s  2.11%                | backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+                                             7.75s   100% |   backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+----------------------------------------------------------+-------------
+                                             0.78s 77.23% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.17s 16.83% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0% 21.08%      1.01s  0.28%                | backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+                                             1.01s   100% |   backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+----------------------------------------------------------+-------------
+                                            82.13s   100% |   backpack-brawl-solver/internal/benchmark.runScenario
+         0     0% 21.08%     82.13s 22.37%                | backpack-brawl-solver/internal/solver.SolveLayout
+                                            82.13s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+----------------------------------------------------------+-------------
+                                             0.59s 88.06% |   backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+         0     0% 21.08%      0.67s  0.18%                | backpack-brawl-solver/internal/solver.constellationExactKey
+                                             0.67s   100% |   backpack-brawl-solver/internal/solver.placementKey
+----------------------------------------------------------+-------------
+                                             6.98s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0% 21.08%      6.98s  1.90%                | backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+                                             6.98s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+----------------------------------------------------------+-------------
+                                             5.89s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+         0     0% 21.08%      5.89s  1.60%                | backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations
+                                             5.89s   100% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+----------------------------------------------------------+-------------
+                                             0.45s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).prepareState
+         0     0% 21.08%      0.45s  0.12%                | backpack-brawl-solver/internal/solver.constellationRootMRVSelectionWithOperations
+                                             0.45s   100% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+----------------------------------------------------------+-------------
+                                             0.59s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+         0     0% 21.08%      0.59s  0.16%                | backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+                                             0.59s   100% |   backpack-brawl-solver/internal/solver.constellationExactKey
+----------------------------------------------------------+-------------
+                                             7.50s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0% 21.08%      7.50s  2.04%                | backpack-brawl-solver/internal/solver.constellationSeedSearch
+                                             6.98s 93.07% |   backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+                                             0.23s  3.07% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.17s  2.27% |   backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+----------------------------------------------------------+-------------
+                                             7.75s 86.88% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts (inline)
+                                             1.01s 11.32% |   backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement (inline)
+                                             0.16s  1.79% |   backpack-brawl-solver/internal/solver.solveLayoutStage (inline)
+         0     0% 21.08%      8.92s  2.43%                | backpack-brawl-solver/internal/solver.coveragePlacementKey
+                                             8.92s   100% |   backpack-brawl-solver/internal/solver.placementKey
+----------------------------------------------------------+-------------
+                                             0.32s 62.75% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.15s 29.41% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+         0     0% 21.08%      0.51s  0.14%                | backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+                                             0.51s   100% |   backpack-brawl-solver/internal/solver.placementKey
+----------------------------------------------------------+-------------
+                                            58.68s   100% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+         0     0% 21.08%     58.69s 15.99%                | backpack-brawl-solver/internal/solver.packingFeasibility
+                                            58.69s   100% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+----------------------------------------------------------+-------------
+                                            59.08s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0% 21.08%     59.08s 16.09%                | backpack-brawl-solver/internal/solver.packingSeedSearch
+                                            58.68s 99.32% |   backpack-brawl-solver/internal/solver.packingFeasibility
+                                             0.25s  0.42% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.15s  0.25% |   backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+----------------------------------------------------------+-------------
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0% 21.08%      2.93s   0.8%                | backpack-brawl-solver/internal/solver.repairSearch
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.runRepairNeighborhood
+----------------------------------------------------------+-------------
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.repairSearch
+         0     0% 21.08%      2.93s   0.8%                | backpack-brawl-solver/internal/solver.runRepairNeighborhood
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.runRepairTasks
+----------------------------------------------------------+-------------
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.runRepairTasks
+         0     0% 21.08%      2.93s   0.8%                | backpack-brawl-solver/internal/solver.runRepairTask
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+----------------------------------------------------------+-------------
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.runRepairTask
+         0     0% 21.08%      2.93s   0.8%                | backpack-brawl-solver/internal/solver.runRepairTask.func1
+                                             2.03s 69.28% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+                                             0.90s 30.72% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+----------------------------------------------------------+-------------
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.runRepairNeighborhood
+         0     0% 21.08%      2.93s   0.8%                | backpack-brawl-solver/internal/solver.runRepairTasks
+                                             2.93s   100% |   backpack-brawl-solver/internal/solver.runRepairTask
+----------------------------------------------------------+-------------
+                                            10.66s   100% |   backpack-brawl-solver/internal/solver.runTasks
+         0     0% 21.08%     10.66s  2.90%                | backpack-brawl-solver/internal/solver.runTask
+                                            10.66s   100% |   backpack-brawl-solver/internal/solver.runTask.func3
+----------------------------------------------------------+-------------
+                                            10.66s   100% |   backpack-brawl-solver/internal/solver.runTask
+         0     0% 21.08%     10.66s  2.90%                | backpack-brawl-solver/internal/solver.runTask.func3
+                                             5.72s 53.66% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+                                             4.94s 46.34% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+----------------------------------------------------------+-------------
+                                            10.66s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0% 21.08%     10.66s  2.90%                | backpack-brawl-solver/internal/solver.runTasks
+                                            10.66s   100% |   backpack-brawl-solver/internal/solver.runTask
+----------------------------------------------------------+-------------
+                                            82.13s   100% |   backpack-brawl-solver/internal/solver.SolveLayout
+         0     0% 21.08%     82.13s 22.37%                | backpack-brawl-solver/internal/solver.solveLayoutStage
+                                            59.08s 71.93% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+                                            10.66s 12.98% |   backpack-brawl-solver/internal/solver.runTasks
+                                             7.50s  9.13% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+                                             2.93s  3.57% |   backpack-brawl-solver/internal/solver.repairSearch
+                                             1.68s  2.05% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.16s  0.19% |   backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+----------------------------------------------------------+-------------
+                                             1.68s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0% 21.08%      1.68s  0.46%                | backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.78s 46.43% |   backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+                                             0.58s 34.52% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.32s 19.05% |   backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+----------------------------------------------------------+-------------

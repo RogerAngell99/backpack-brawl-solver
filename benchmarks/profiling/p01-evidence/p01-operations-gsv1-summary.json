@@ -1,0 +1,2490 @@
+{
+  "version": "operation-profile-summary-v2",
+  "scenarios": [
+    {
+      "scenario": "gsv2-013",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 570,
+        "candidate_option_checks": 40520,
+        "candidate_overlap_rejects": 26415,
+        "candidate_charge_attempts": 13855,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 13855,
+        "feasibility_calls": 13855,
+        "feasibility_instances_considered": 139080,
+        "feasibility_option_checks": 11698715,
+        "feasibility_overlap_rejects": 5560370,
+        "feasibility_legal_placements": 6071082,
+        "feasibility_dead_returns": 541,
+        "candidate_canonical": {
+          "calls": 14105,
+          "rejects": 250,
+          "existing_scanned": 107901,
+          "same_item_comparisons": 5647,
+          "placement_key_calls": 19752,
+          "placement_key_bytes": 616808
+        },
+        "feasibility_canonical": {
+          "calls": 6138345,
+          "rejects": 67263,
+          "existing_scanned": 36674811,
+          "same_item_comparisons": 165490,
+          "placement_key_calls": 6303835,
+          "placement_key_bytes": 193898020
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 24.30701754385965,
+        "feasibility_instances_per_call": 10.038253338145074,
+        "feasibility_option_checks_per_call": 844.3677372789607,
+        "feasibility_option_checks_per_candidate_expansion": 844.3677372789607,
+        "feasibility_canonical_calls_per_option_check": 0.5247024993770684,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.02696003564478699,
+        "feasibility_placement_key_calls_per_canonical_call": 1.026960035644787,
+        "placement_key_bytes_per_candidate_expansion": 14039.323565499819,
+        "feasibility_dead_return_rate": 0.039047275351858535,
+        "feasibility_overlap_reject_rate": 0.4752975006229317,
+        "feasibility_canonical_reject_rate": 0.010957839613120475
+      }
+    },
+    {
+      "scenario": "gsv2-013",
+      "budget": 1000000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1114,
+        "candidate_option_checks": 80040,
+        "candidate_overlap_rejects": 52665,
+        "candidate_charge_attempts": 26825,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 26825,
+        "feasibility_calls": 26825,
+        "feasibility_instances_considered": 265469,
+        "feasibility_option_checks": 22492126,
+        "feasibility_overlap_rejects": 10944080,
+        "feasibility_legal_placements": 11422196,
+        "feasibility_dead_returns": 1023,
+        "candidate_canonical": {
+          "calls": 27375,
+          "rejects": 550,
+          "existing_scanned": 213894,
+          "same_item_comparisons": 11402,
+          "placement_key_calls": 38777,
+          "placement_key_bytes": 1200284
+        },
+        "feasibility_canonical": {
+          "calls": 11548046,
+          "rejects": 125850,
+          "existing_scanned": 72019750,
+          "same_item_comparisons": 315908,
+          "placement_key_calls": 11863954,
+          "placement_key_bytes": 365337960
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 24.079892280071814,
+        "feasibility_instances_per_call": 9.896328052190121,
+        "feasibility_option_checks_per_call": 838.4762721342032,
+        "feasibility_option_checks_per_candidate_expansion": 838.4762721342032,
+        "feasibility_canonical_calls_per_option_check": 0.513426165227778,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.027355970005661565,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0273559700056616,
+        "placement_key_bytes_per_candidate_expansion": 13664.053830382107,
+        "feasibility_dead_return_rate": 0.03813606710158434,
+        "feasibility_overlap_reject_rate": 0.48657383477222205,
+        "feasibility_canonical_reject_rate": 0.010897947583513264
+      }
+    },
+    {
+      "scenario": "gsv2-014",
+      "budget": 250000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 13,
+        "depths_started": 16,
+        "states_prepared": 288,
+        "area_prunes": 0,
+        "mrv_selection_calls": 288,
+        "mrv_instances_considered": 2328,
+        "mrv_option_checks": 364368,
+        "mrv_legal_placements": 61185,
+        "ledger_charge_attempts": 3750,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 3750,
+        "complete_candidates": 0,
+        "placement_copy_calls": 3750,
+        "placement_elements_copied": 38109,
+        "feasibility_calls": 3750,
+        "feasibility_instances_considered": 23644,
+        "feasibility_option_checks": 3756520,
+        "fragmentation_evaluations": 3440,
+        "partial_score_evaluations": 3436,
+        "state_key_constructions": 3436,
+        "state_key_bytes": 2054828,
+        "dedup_lookups": 3436,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 16,
+        "precut_states": 3436,
+        "states_sorted": 3436
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 97.1648,
+        "feasibility_option_checks": 1001.7386666666666,
+        "placement_elements_copied": 10.1624,
+        "state_key_bytes": 547.9541333333333
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 323,
+        "candidate_option_checks": 35650,
+        "candidate_overlap_rejects": 13477,
+        "candidate_charge_attempts": 21875,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 21875,
+        "feasibility_calls": 21875,
+        "feasibility_instances_considered": 247221,
+        "feasibility_option_checks": 37674564,
+        "feasibility_overlap_rejects": 14933913,
+        "feasibility_legal_placements": 22412801,
+        "feasibility_dead_returns": 309,
+        "candidate_canonical": {
+          "calls": 22173,
+          "rejects": 298,
+          "existing_scanned": 123261,
+          "same_item_comparisons": 6492,
+          "placement_key_calls": 28665,
+          "placement_key_bytes": 1109676
+        },
+        "feasibility_canonical": {
+          "calls": 22740651,
+          "rejects": 327850,
+          "existing_scanned": 117428276,
+          "same_item_comparisons": 779586,
+          "placement_key_calls": 23520237,
+          "placement_key_bytes": 865146748
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 67.72445820433437,
+        "feasibility_instances_per_call": 11.301531428571428,
+        "feasibility_option_checks_per_call": 1722.2657828571428,
+        "feasibility_option_checks_per_candidate_expansion": 1722.2657828571428,
+        "feasibility_canonical_calls_per_option_check": 0.6036075427442239,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.0342816043392953,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0342816043392953,
+        "placement_key_bytes_per_candidate_expansion": 39600.29366857143,
+        "feasibility_dead_return_rate": 0.014125714285714285,
+        "feasibility_overlap_reject_rate": 0.3963924572557761,
+        "feasibility_canonical_reject_rate": 0.014416913570328307
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 4,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "budget_exhausted",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 3750,
+        "reservation_turnover": 3750,
+        "consumed_total": 3750,
+        "returned_capacity_total": 0,
+        "returned_fraction_bps": 0,
+        "consumed_per_family": {
+          "min": 936,
+          "p50": 936,
+          "p90": 936,
+          "max": 942
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-014",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 11,
+        "pause_returns": 7,
+        "depths_started": 35,
+        "states_prepared": 1762,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1762,
+        "mrv_instances_considered": 9534,
+        "mrv_option_checks": 1514000,
+        "mrv_legal_placements": 180061,
+        "ledger_charge_attempts": 21358,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 21358,
+        "complete_candidates": 0,
+        "placement_copy_calls": 21358,
+        "placement_elements_copied": 257656,
+        "feasibility_calls": 21358,
+        "feasibility_instances_considered": 97007,
+        "feasibility_option_checks": 15494600,
+        "fragmentation_evaluations": 18042,
+        "partial_score_evaluations": 18038,
+        "state_key_constructions": 18038,
+        "state_key_bytes": 12535129,
+        "dedup_lookups": 18038,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 35,
+        "precut_states": 18038,
+        "states_sorted": 18038
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 70.88678715235508,
+        "feasibility_option_checks": 725.470549676936,
+        "placement_elements_copied": 12.06367637419234,
+        "state_key_bytes": 586.9055623185692
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1079,
+        "candidate_option_checks": 143450,
+        "candidate_overlap_rejects": 89532,
+        "candidate_charge_attempts": 53063,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 53063,
+        "feasibility_calls": 53063,
+        "feasibility_instances_considered": 524689,
+        "feasibility_option_checks": 80658044,
+        "feasibility_overlap_rejects": 35651278,
+        "feasibility_legal_placements": 44272795,
+        "feasibility_dead_returns": 1144,
+        "candidate_canonical": {
+          "calls": 53918,
+          "rejects": 855,
+          "existing_scanned": 374542,
+          "same_item_comparisons": 23549,
+          "placement_key_calls": 77467,
+          "placement_key_bytes": 2949996
+        },
+        "feasibility_canonical": {
+          "calls": 45006766,
+          "rejects": 733971,
+          "existing_scanned": 243421031,
+          "same_item_comparisons": 1811507,
+          "placement_key_calls": 46818273,
+          "placement_key_bytes": 1718481212
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 49.177942539388326,
+        "feasibility_instances_per_call": 9.888038746395793,
+        "feasibility_option_checks_per_call": 1520.0430431750938,
+        "feasibility_option_checks_per_candidate_expansion": 1520.0430431750938,
+        "feasibility_canonical_calls_per_option_check": 0.5579947611920765,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.040249659351218436,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0402496593512185,
+        "placement_key_bytes_per_candidate_expansion": 32441.271846672822,
+        "feasibility_dead_return_rate": 0.021559278593370146,
+        "feasibility_overlap_reject_rate": 0.4420052388079235,
+        "feasibility_canonical_reject_rate": 0.016308014666061542
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 0,
+        "families_hard_dead": 0,
+        "families_no_states": 4,
+        "termination_reason_counts": [
+          {
+            "reason": "no_states",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 7,
+        "reserved_total": 27762,
+        "reservation_turnover": 27762,
+        "consumed_total": 21358,
+        "returned_capacity_total": 6404,
+        "returned_fraction_bps": 2306,
+        "consumed_per_family": {
+          "min": 3864,
+          "p50": 4811,
+          "p90": 5903,
+          "max": 6780
+        },
+        "rounds_per_family": {
+          "min": 1,
+          "p50": 2,
+          "p90": 2,
+          "max": 2
+        },
+        "final_depth": {
+          "min": 8,
+          "p50": 9,
+          "p90": 9,
+          "max": 9
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-015",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 353,
+        "candidate_option_checks": 29988,
+        "candidate_overlap_rejects": 12936,
+        "candidate_charge_attempts": 17050,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 17050,
+        "feasibility_calls": 17050,
+        "feasibility_instances_considered": 77124,
+        "feasibility_option_checks": 8341648,
+        "feasibility_overlap_rejects": 3303566,
+        "feasibility_legal_placements": 4979586,
+        "feasibility_dead_returns": 64,
+        "candidate_canonical": {
+          "calls": 17052,
+          "rejects": 2,
+          "existing_scanned": 110438,
+          "same_item_comparisons": 1868,
+          "placement_key_calls": 18920,
+          "placement_key_bytes": 560032
+        },
+        "feasibility_canonical": {
+          "calls": 5038082,
+          "rejects": 58496,
+          "existing_scanned": 26042282,
+          "same_item_comparisons": 116992,
+          "placement_key_calls": 5155074,
+          "placement_key_bytes": 150299624
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 48.30028328611898,
+        "feasibility_instances_per_call": 4.523401759530792,
+        "feasibility_option_checks_per_call": 489.24621700879766,
+        "feasibility_option_checks_per_candidate_expansion": 489.24621700879766,
+        "feasibility_canonical_calls_per_option_check": 0.6039672256609245,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.02322153549704034,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0232215354970404,
+        "placement_key_bytes_per_candidate_expansion": 8848.07366568915,
+        "feasibility_dead_return_rate": 0.00375366568914956,
+        "feasibility_overlap_reject_rate": 0.39603277433907547,
+        "feasibility_canonical_reject_rate": 0.01161076774852017
+      }
+    },
+    {
+      "scenario": "gsv2-015",
+      "budget": 1000000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 677,
+        "candidate_option_checks": 58932,
+        "candidate_overlap_rejects": 25774,
+        "candidate_charge_attempts": 33152,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 33152,
+        "feasibility_calls": 33152,
+        "feasibility_instances_considered": 145206,
+        "feasibility_option_checks": 15863808,
+        "feasibility_overlap_rejects": 6424046,
+        "feasibility_legal_placements": 9322770,
+        "feasibility_dead_returns": 128,
+        "candidate_canonical": {
+          "calls": 33158,
+          "rejects": 6,
+          "existing_scanned": 219502,
+          "same_item_comparisons": 3724,
+          "placement_key_calls": 36882,
+          "placement_key_bytes": 1079288
+        },
+        "feasibility_canonical": {
+          "calls": 9439762,
+          "rejects": 116992,
+          "existing_scanned": 50657716,
+          "same_item_comparisons": 233984,
+          "placement_key_calls": 9673746,
+          "placement_key_bytes": 282153752
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 48.96898079763663,
+        "feasibility_instances_per_call": 4.380007239382239,
+        "feasibility_option_checks_per_call": 478.5173745173745,
+        "feasibility_option_checks_per_candidate_expansion": 478.5173745173745,
+        "feasibility_canonical_calls_per_option_check": 0.5950501922363155,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.024787065606103206,
+        "feasibility_placement_key_calls_per_canonical_call": 1.024787065606103,
+        "placement_key_bytes_per_candidate_expansion": 8543.467664092665,
+        "feasibility_dead_return_rate": 0.003861003861003861,
+        "feasibility_overlap_reject_rate": 0.4049498077636845,
+        "feasibility_canonical_reject_rate": 0.012393532803051603
+      }
+    },
+    {
+      "scenario": "gsv2-016",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 395,
+        "candidate_option_checks": 32498,
+        "candidate_overlap_rejects": 10620,
+        "candidate_charge_attempts": 21878,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 21878,
+        "feasibility_calls": 21878,
+        "feasibility_instances_considered": 213343,
+        "feasibility_option_checks": 24315638,
+        "feasibility_overlap_rejects": 8018988,
+        "feasibility_legal_placements": 16282711,
+        "feasibility_dead_returns": 9,
+        "candidate_canonical": {
+          "calls": 21878,
+          "rejects": 0,
+          "existing_scanned": 136687,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 21878,
+          "placement_key_bytes": 642224
+        },
+        "feasibility_canonical": {
+          "calls": 16296650,
+          "rejects": 13939,
+          "existing_scanned": 91776569,
+          "same_item_comparisons": 28106,
+          "placement_key_calls": 16324756,
+          "placement_key_bytes": 469706528
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 55.3873417721519,
+        "feasibility_instances_per_call": 9.751485510558553,
+        "feasibility_option_checks_per_call": 1111.4195995977695,
+        "feasibility_option_checks_per_candidate_expansion": 1111.4195995977695,
+        "feasibility_canonical_calls_per_option_check": 0.6702127248316495,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.0017246489309152495,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0017246489309153,
+        "placement_key_bytes_per_candidate_expansion": 21498.708839930525,
+        "feasibility_dead_return_rate": 0.0004113721546759302,
+        "feasibility_overlap_reject_rate": 0.3297872751683505,
+        "feasibility_canonical_reject_rate": 0.0008553291627420359
+      }
+    },
+    {
+      "scenario": "gsv2-016",
+      "budget": 1000000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1025,
+        "candidate_option_checks": 101952,
+        "candidate_overlap_rejects": 47078,
+        "candidate_charge_attempts": 54837,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 54837,
+        "feasibility_calls": 54837,
+        "feasibility_instances_considered": 439516,
+        "feasibility_option_checks": 50885342,
+        "feasibility_overlap_rejects": 18130512,
+        "feasibility_legal_placements": 32608146,
+        "feasibility_dead_returns": 184,
+        "candidate_canonical": {
+          "calls": 54874,
+          "rejects": 37,
+          "existing_scanned": 438340,
+          "same_item_comparisons": 5824,
+          "placement_key_calls": 60698,
+          "placement_key_bytes": 1756960
+        },
+        "feasibility_canonical": {
+          "calls": 32754830,
+          "rejects": 146684,
+          "existing_scanned": 192617444,
+          "same_item_comparisons": 293368,
+          "placement_key_calls": 33048198,
+          "placement_key_bytes": 950043784
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 53.49951219512195,
+        "feasibility_instances_per_call": 8.014953407370935,
+        "feasibility_option_checks_per_call": 927.9381074821745,
+        "feasibility_option_checks_per_candidate_expansion": 927.9381074821745,
+        "feasibility_canonical_calls_per_option_check": 0.6436987295869997,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.00895648061675179,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0089564806167517,
+        "placement_key_bytes_per_candidate_expansion": 17356.907635355692,
+        "feasibility_dead_return_rate": 0.0033553987271367873,
+        "feasibility_overlap_reject_rate": 0.35630127041300025,
+        "feasibility_canonical_reject_rate": 0.004478240308375895
+      }
+    },
+    {
+      "scenario": "gsv2-017",
+      "budget": 250000,
+      "runs": 1
+    },
+    {
+      "scenario": "gsv2-017",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 9,
+        "depths_started": 29,
+        "states_prepared": 1501,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1501,
+        "mrv_instances_considered": 7788,
+        "mrv_option_checks": 934560,
+        "mrv_legal_placements": 157893,
+        "ledger_charge_attempts": 26130,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 26130,
+        "complete_candidates": 0,
+        "placement_copy_calls": 26130,
+        "placement_elements_copied": 312447,
+        "feasibility_calls": 26130,
+        "feasibility_instances_considered": 129710,
+        "feasibility_option_checks": 15565200,
+        "fragmentation_evaluations": 24580,
+        "partial_score_evaluations": 24576,
+        "state_key_constructions": 24576,
+        "state_key_bytes": 15716358,
+        "dedup_lookups": 24576,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 29,
+        "precut_states": 24576,
+        "states_sorted": 24576
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 35.765786452353616,
+        "feasibility_option_checks": 595.683122847302,
+        "placement_elements_copied": 11.957405281285878,
+        "state_key_bytes": 601.4679678530425
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1055,
+        "candidate_option_checks": 119486,
+        "candidate_overlap_rejects": 71189,
+        "candidate_charge_attempts": 48287,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 48287,
+        "feasibility_calls": 48287,
+        "feasibility_instances_considered": 427099,
+        "feasibility_option_checks": 57999936,
+        "feasibility_overlap_rejects": 25519987,
+        "feasibility_legal_placements": 32458445,
+        "feasibility_dead_returns": 64,
+        "candidate_canonical": {
+          "calls": 48297,
+          "rejects": 10,
+          "existing_scanned": 393940,
+          "same_item_comparisons": 1536,
+          "placement_key_calls": 49833,
+          "placement_key_bytes": 1568052
+        },
+        "feasibility_canonical": {
+          "calls": 32479949,
+          "rejects": 21504,
+          "existing_scanned": 209011741,
+          "same_item_comparisons": 43008,
+          "placement_key_calls": 32522957,
+          "placement_key_bytes": 972706636
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 45.7696682464455,
+        "feasibility_instances_per_call": 8.845010044111252,
+        "feasibility_option_checks_per_call": 1201.150123221571,
+        "feasibility_option_checks_per_candidate_expansion": 1201.150123221571,
+        "feasibility_canonical_calls_per_option_check": 0.5599997386204012,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.001324140010195213,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0013241400101953,
+        "placement_key_bytes_per_candidate_expansion": 20176.74918715182,
+        "feasibility_dead_return_rate": 0.0013254084950400729,
+        "feasibility_overlap_reject_rate": 0.44000026137959874,
+        "feasibility_canonical_reject_rate": 0.0006620700050976065
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 0,
+        "families_hard_dead": 0,
+        "families_no_states": 4,
+        "termination_reason_counts": [
+          {
+            "reason": "no_states",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 33471,
+        "reservation_turnover": 33471,
+        "consumed_total": 26130,
+        "returned_capacity_total": 7341,
+        "returned_fraction_bps": 2193,
+        "consumed_per_family": {
+          "min": 5812,
+          "p50": 5813,
+          "p90": 6219,
+          "max": 8286
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 7,
+          "p50": 7,
+          "p90": 7,
+          "max": 8
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-018",
+      "budget": 250000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 13,
+        "depths_started": 16,
+        "states_prepared": 271,
+        "area_prunes": 0,
+        "mrv_selection_calls": 271,
+        "mrv_instances_considered": 1922,
+        "mrv_option_checks": 214958,
+        "mrv_legal_placements": 48012,
+        "ledger_charge_attempts": 5982,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 5982,
+        "complete_candidates": 0,
+        "placement_copy_calls": 5982,
+        "placement_elements_copied": 48004,
+        "feasibility_calls": 5982,
+        "feasibility_instances_considered": 35744,
+        "feasibility_option_checks": 4175381,
+        "fragmentation_evaluations": 5986,
+        "partial_score_evaluations": 5982,
+        "state_key_constructions": 5982,
+        "state_key_bytes": 3030036,
+        "dedup_lookups": 5982,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 16,
+        "precut_states": 5982,
+        "states_sorted": 5982
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 35.934135740555,
+        "feasibility_option_checks": 697.9908057505851,
+        "placement_elements_copied": 8.024740889334671,
+        "state_key_bytes": 506.52557673019055
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 447,
+        "candidate_option_checks": 45916,
+        "candidate_overlap_rejects": 25637,
+        "candidate_charge_attempts": 20279,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 20279,
+        "feasibility_calls": 20279,
+        "feasibility_instances_considered": 152243,
+        "feasibility_option_checks": 18126242,
+        "feasibility_overlap_rejects": 8556911,
+        "feasibility_legal_placements": 9569331,
+        "feasibility_dead_returns": 0,
+        "candidate_canonical": {
+          "calls": 20279,
+          "rejects": 0,
+          "existing_scanned": 131663,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 20279,
+          "placement_key_bytes": 721364
+        },
+        "feasibility_canonical": {
+          "calls": 9569331,
+          "rejects": 0,
+          "existing_scanned": 48633374,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 9569331,
+          "placement_key_bytes": 355644124
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 45.3668903803132,
+        "feasibility_instances_per_call": 7.507421470486711,
+        "feasibility_option_checks_per_call": 893.8429902855171,
+        "feasibility_option_checks_per_candidate_expansion": 893.8429902855171,
+        "feasibility_canonical_calls_per_option_check": 0.5279269139185055,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 17573.12924700429,
+        "feasibility_dead_return_rate": 0,
+        "feasibility_overlap_reject_rate": 0.47207308608149445,
+        "feasibility_canonical_reject_rate": 0
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 4,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "budget_exhausted",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 5982,
+        "reservation_turnover": 5982,
+        "consumed_total": 5982,
+        "returned_capacity_total": 0,
+        "returned_fraction_bps": 0,
+        "consumed_per_family": {
+          "min": 1494,
+          "p50": 1494,
+          "p90": 1494,
+          "max": 1500
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-018",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 14,
+        "pause_returns": 10,
+        "depths_started": 34,
+        "states_prepared": 1746,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1746,
+        "mrv_instances_considered": 7700,
+        "mrv_option_checks": 917330,
+        "mrv_legal_placements": 176100,
+        "ledger_charge_attempts": 33622,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 33622,
+        "complete_candidates": 938,
+        "placement_copy_calls": 33622,
+        "placement_elements_copied": 336716,
+        "feasibility_calls": 33622,
+        "feasibility_instances_considered": 133480,
+        "feasibility_option_checks": 16185145,
+        "fragmentation_evaluations": 32746,
+        "partial_score_evaluations": 32742,
+        "state_key_constructions": 32742,
+        "state_key_bytes": 19691992,
+        "dedup_lookups": 32742,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 34,
+        "precut_states": 32742,
+        "states_sorted": 32742
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 27.283623817738384,
+        "feasibility_option_checks": 481.3855511272381,
+        "placement_elements_copied": 10.014752245553506,
+        "state_key_bytes": 585.6877044792101
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 863,
+        "candidate_option_checks": 90332,
+        "candidate_overlap_rejects": 51104,
+        "candidate_charge_attempts": 39228,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 39228,
+        "feasibility_calls": 39228,
+        "feasibility_instances_considered": 286492,
+        "feasibility_option_checks": 34333666,
+        "feasibility_overlap_rejects": 16671350,
+        "feasibility_legal_placements": 17662316,
+        "feasibility_dead_returns": 1,
+        "candidate_canonical": {
+          "calls": 39228,
+          "rejects": 0,
+          "existing_scanned": 262700,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 39228,
+          "placement_key_bytes": 1416320
+        },
+        "feasibility_canonical": {
+          "calls": 17662316,
+          "rejects": 0,
+          "existing_scanned": 94336539,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 17662316,
+          "placement_key_bytes": 657146136
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 45.45538818076477,
+        "feasibility_instances_per_call": 7.3032527786275105,
+        "feasibility_option_checks_per_call": 875.2336596308759,
+        "feasibility_option_checks_per_candidate_expansion": 875.2336596308759,
+        "feasibility_canonical_calls_per_option_check": 0.5144314038588248,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 16788.071173651475,
+        "feasibility_dead_return_rate": 0.00002549199551340879,
+        "feasibility_overlap_reject_rate": 0.48556859614117526,
+        "feasibility_canonical_reject_rate": 0
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 2,
+        "families_budget_exhausted": 0,
+        "families_hard_dead": 0,
+        "families_no_states": 2,
+        "termination_reason_counts": [
+          {
+            "reason": "completed",
+            "count": 2
+          },
+          {
+            "reason": "no_states",
+            "count": 2
+          }
+        ],
+        "allocation_rounds": 10,
+        "reserved_total": 40173,
+        "reservation_turnover": 40173,
+        "consumed_total": 33622,
+        "returned_capacity_total": 6551,
+        "returned_fraction_bps": 1630,
+        "consumed_per_family": {
+          "min": 6433,
+          "p50": 6433,
+          "p90": 9921,
+          "max": 10835
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 3,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 8,
+          "p50": 8,
+          "p90": 9,
+          "max": 9
+        },
+        "first_complete_family_count": 2,
+        "first_complete_nodes": {
+          "min": 9602,
+          "p50": 9602,
+          "p90": 9602,
+          "max": 10218
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-019",
+      "budget": 250000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 13,
+        "depths_started": 17,
+        "states_prepared": 298,
+        "area_prunes": 0,
+        "mrv_selection_calls": 298,
+        "mrv_instances_considered": 2915,
+        "mrv_option_checks": 143517,
+        "mrv_legal_placements": 69253,
+        "ledger_charge_attempts": 3935,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 3935,
+        "complete_candidates": 0,
+        "placement_copy_calls": 3935,
+        "placement_elements_copied": 41451,
+        "feasibility_calls": 3935,
+        "feasibility_instances_considered": 33314,
+        "feasibility_option_checks": 1688278,
+        "fragmentation_evaluations": 3939,
+        "partial_score_evaluations": 3935,
+        "state_key_constructions": 3935,
+        "state_key_bytes": 2395120,
+        "dedup_lookups": 3935,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 17,
+        "precut_states": 3935,
+        "states_sorted": 3935
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 36.471918678526045,
+        "feasibility_option_checks": 429.04142312579415,
+        "placement_elements_copied": 10.533926302414232,
+        "state_key_bytes": 608.6709021601016
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 606,
+        "candidate_option_checks": 40262,
+        "candidate_overlap_rejects": 20937,
+        "candidate_charge_attempts": 19325,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 19325,
+        "feasibility_calls": 19325,
+        "feasibility_instances_considered": 157225,
+        "feasibility_option_checks": 13693074,
+        "feasibility_overlap_rejects": 6134686,
+        "feasibility_legal_placements": 7558388,
+        "feasibility_dead_returns": 0,
+        "candidate_canonical": {
+          "calls": 19325,
+          "rejects": 0,
+          "existing_scanned": 209950,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 19325,
+          "placement_key_bytes": 502076
+        },
+        "feasibility_canonical": {
+          "calls": 7558388,
+          "rejects": 0,
+          "existing_scanned": 60458279,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 7558388,
+          "placement_key_bytes": 198566080
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 31.88943894389439,
+        "feasibility_instances_per_call": 8.135834411384216,
+        "feasibility_option_checks_per_call": 708.5678654592497,
+        "feasibility_option_checks_per_candidate_expansion": 708.5678654592497,
+        "feasibility_canonical_calls_per_option_check": 0.551986208502196,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 10301.068874514876,
+        "feasibility_dead_return_rate": 0,
+        "feasibility_overlap_reject_rate": 0.4480137914978039,
+        "feasibility_canonical_reject_rate": 0
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 4,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "budget_exhausted",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 3935,
+        "reservation_turnover": 3935,
+        "consumed_total": 3935,
+        "returned_capacity_total": 0,
+        "returned_fraction_bps": 0,
+        "consumed_per_family": {
+          "min": 982,
+          "p50": 982,
+          "p90": 982,
+          "max": 989
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 5
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-019",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 13,
+        "depths_started": 38,
+        "states_prepared": 1848,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1848,
+        "mrv_instances_considered": 13118,
+        "mrv_option_checks": 661054,
+        "mrv_legal_placements": 275669,
+        "ledger_charge_attempts": 32060,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 32060,
+        "complete_candidates": 0,
+        "placement_copy_calls": 32060,
+        "placement_elements_copied": 420820,
+        "feasibility_calls": 32060,
+        "feasibility_instances_considered": 188320,
+        "feasibility_option_checks": 9593584,
+        "fragmentation_evaluations": 32064,
+        "partial_score_evaluations": 32060,
+        "state_key_constructions": 32060,
+        "state_key_bytes": 22948477,
+        "dedup_lookups": 32060,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 38,
+        "precut_states": 32060,
+        "states_sorted": 32060
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 20.61927635683094,
+        "feasibility_option_checks": 299.23842794759827,
+        "placement_elements_copied": 13.126013724266999,
+        "state_key_bytes": 715.7977854023706
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1182,
+        "candidate_option_checks": 79654,
+        "candidate_overlap_rejects": 41859,
+        "candidate_charge_attempts": 37795,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 37795,
+        "feasibility_calls": 37795,
+        "feasibility_instances_considered": 300032,
+        "feasibility_option_checks": 26387534,
+        "feasibility_overlap_rejects": 12092962,
+        "feasibility_legal_placements": 14294572,
+        "feasibility_dead_returns": 0,
+        "candidate_canonical": {
+          "calls": 37795,
+          "rejects": 0,
+          "existing_scanned": 418073,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 37795,
+          "placement_key_bytes": 967308
+        },
+        "feasibility_canonical": {
+          "calls": 14294572,
+          "rejects": 0,
+          "existing_scanned": 118827744,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 14294572,
+          "placement_key_bytes": 375931600
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 31.975465313028764,
+        "feasibility_instances_per_call": 7.938404550866517,
+        "feasibility_option_checks_per_call": 698.1752612779468,
+        "feasibility_option_checks_per_candidate_expansion": 698.1752612779468,
+        "feasibility_canonical_calls_per_option_check": 0.5417168576646836,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 9972.189654716232,
+        "feasibility_dead_return_rate": 0,
+        "feasibility_overlap_reject_rate": 0.45828314233531636,
+        "feasibility_canonical_reject_rate": 0
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 4,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "budget_exhausted",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 32060,
+        "reservation_turnover": 32060,
+        "consumed_total": 32060,
+        "returned_capacity_total": 0,
+        "returned_fraction_bps": 0,
+        "consumed_per_family": {
+          "min": 8014,
+          "p50": 8014,
+          "p90": 8014,
+          "max": 8018
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 9,
+          "p50": 9,
+          "p90": 10,
+          "max": 10
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-020",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 545,
+        "candidate_option_checks": 43149,
+        "candidate_overlap_rejects": 27438,
+        "candidate_charge_attempts": 15671,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 15671,
+        "feasibility_calls": 15671,
+        "feasibility_instances_considered": 146497,
+        "feasibility_option_checks": 13553523,
+        "feasibility_overlap_rejects": 6903224,
+        "feasibility_legal_placements": 6559722,
+        "feasibility_dead_returns": 506,
+        "candidate_canonical": {
+          "calls": 15711,
+          "rejects": 40,
+          "existing_scanned": 117261,
+          "same_item_comparisons": 5682,
+          "placement_key_calls": 21393,
+          "placement_key_bytes": 707340
+        },
+        "feasibility_canonical": {
+          "calls": 6650299,
+          "rejects": 90577,
+          "existing_scanned": 37001546,
+          "same_item_comparisons": 235434,
+          "placement_key_calls": 6885733,
+          "placement_key_bytes": 221223772
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 28.754128440366973,
+        "feasibility_instances_per_call": 9.348286644119712,
+        "feasibility_option_checks_per_call": 864.8792674366665,
+        "feasibility_option_checks_per_candidate_expansion": 864.8792674366665,
+        "feasibility_canonical_calls_per_option_check": 0.49066940012570903,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.035402017262682474,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0354020172626826,
+        "placement_key_bytes_per_candidate_expansion": 14161.89853870206,
+        "feasibility_dead_return_rate": 0.032288941356646034,
+        "feasibility_overlap_reject_rate": 0.509330599874291,
+        "feasibility_canonical_reject_rate": 0.013619989116278833
+      }
+    },
+    {
+      "scenario": "gsv2-020",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 8,
+        "pause_returns": 4,
+        "depths_started": 35,
+        "states_prepared": 1700,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1700,
+        "mrv_instances_considered": 7329,
+        "mrv_option_checks": 559585,
+        "mrv_legal_placements": 61045,
+        "ledger_charge_attempts": 7175,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 7175,
+        "complete_candidates": 190,
+        "placement_copy_calls": 7175,
+        "placement_elements_copied": 95020,
+        "feasibility_calls": 7175,
+        "feasibility_instances_considered": 22791,
+        "feasibility_option_checks": 1763971,
+        "fragmentation_evaluations": 5704,
+        "partial_score_evaluations": 5700,
+        "state_key_constructions": 5700,
+        "state_key_bytes": 4383693,
+        "dedup_lookups": 5700,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 35,
+        "precut_states": 5700,
+        "states_sorted": 5700
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 77.99094076655052,
+        "feasibility_option_checks": 245.84961672473867,
+        "placement_elements_copied": 13.243205574912892,
+        "state_key_bytes": 610.9676655052265
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1070,
+        "candidate_option_checks": 85398,
+        "candidate_overlap_rejects": 55075,
+        "candidate_charge_attempts": 30206,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 30206,
+        "feasibility_calls": 30206,
+        "feasibility_instances_considered": 277276,
+        "feasibility_option_checks": 25793069,
+        "feasibility_overlap_rejects": 13517717,
+        "feasibility_legal_placements": 12098214,
+        "feasibility_dead_returns": 1042,
+        "candidate_canonical": {
+          "calls": 30323,
+          "rejects": 117,
+          "existing_scanned": 231245,
+          "same_item_comparisons": 11255,
+          "placement_key_calls": 41578,
+          "placement_key_bytes": 1365352
+        },
+        "feasibility_canonical": {
+          "calls": 12275352,
+          "rejects": 177138,
+          "existing_scanned": 70950628,
+          "same_item_comparisons": 460622,
+          "placement_key_calls": 12735974,
+          "placement_key_bytes": 408777536
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 28.229906542056074,
+        "feasibility_instances_per_call": 9.179500761438124,
+        "feasibility_option_checks_per_call": 853.9054823544991,
+        "feasibility_option_checks_per_candidate_expansion": 853.9054823544991,
+        "feasibility_canonical_calls_per_option_check": 0.47591668909194174,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.03752413780069199,
+        "feasibility_placement_key_calls_per_canonical_call": 1.037524137800692,
+        "placement_key_bytes_per_candidate_expansion": 13578.1926769516,
+        "feasibility_dead_return_rate": 0.03449645765741906,
+        "feasibility_overlap_reject_rate": 0.5240833109080583,
+        "feasibility_canonical_reject_rate": 0.01443038048929269
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 3,
+        "families_budget_exhausted": 0,
+        "families_hard_dead": 0,
+        "families_no_states": 1,
+        "termination_reason_counts": [
+          {
+            "reason": "completed",
+            "count": 3
+          },
+          {
+            "reason": "no_states",
+            "count": 1
+          }
+        ],
+        "allocation_rounds": 4,
+        "reserved_total": 15764,
+        "reservation_turnover": 15764,
+        "consumed_total": 7175,
+        "returned_capacity_total": 8589,
+        "returned_fraction_bps": 5448,
+        "consumed_per_family": {
+          "min": 1109,
+          "p50": 1924,
+          "p90": 1968,
+          "max": 2174
+        },
+        "rounds_per_family": {
+          "min": 1,
+          "p50": 1,
+          "p90": 1,
+          "max": 1
+        },
+        "final_depth": {
+          "min": 8,
+          "p50": 9,
+          "p90": 9,
+          "max": 9
+        },
+        "first_complete_family_count": 3,
+        "first_complete_nodes": {
+          "min": 1881,
+          "p50": 1898,
+          "p90": 1898,
+          "max": 2100
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-021",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 641,
+        "candidate_option_checks": 49192,
+        "candidate_overlap_rejects": 33837,
+        "candidate_charge_attempts": 14783,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 14783,
+        "feasibility_calls": 14783,
+        "feasibility_instances_considered": 145606,
+        "feasibility_option_checks": 14451856,
+        "feasibility_overlap_rejects": 7475549,
+        "feasibility_legal_placements": 6864463,
+        "feasibility_dead_returns": 290,
+        "candidate_canonical": {
+          "calls": 15355,
+          "rejects": 572,
+          "existing_scanned": 147674,
+          "same_item_comparisons": 9220,
+          "placement_key_calls": 24575,
+          "placement_key_bytes": 718908
+        },
+        "feasibility_canonical": {
+          "calls": 6976307,
+          "rejects": 111844,
+          "existing_scanned": 48966180,
+          "same_item_comparisons": 285230,
+          "placement_key_calls": 7261537,
+          "placement_key_bytes": 184764500
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 23.062402496099843,
+        "feasibility_instances_per_call": 9.849556923493202,
+        "feasibility_option_checks_per_call": 977.5996753027126,
+        "feasibility_option_checks_per_candidate_expansion": 977.5996753027126,
+        "feasibility_canonical_calls_per_option_check": 0.4827274088532296,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.04088552869017949,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0408855286901795,
+        "placement_key_bytes_per_candidate_expansion": 12547.074883311912,
+        "feasibility_dead_return_rate": 0.019617127781911655,
+        "feasibility_overlap_reject_rate": 0.5172725911467704,
+        "feasibility_canonical_reject_rate": 0.016031977950511637
+      }
+    },
+    {
+      "scenario": "gsv2-021",
+      "budget": 1000000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1255,
+        "candidate_option_checks": 97304,
+        "candidate_overlap_rejects": 67608,
+        "candidate_charge_attempts": 28765,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 28765,
+        "feasibility_calls": 28765,
+        "feasibility_instances_considered": 276570,
+        "feasibility_option_checks": 27727464,
+        "feasibility_overlap_rejects": 14714286,
+        "feasibility_legal_placements": 12791866,
+        "feasibility_dead_returns": 588,
+        "candidate_canonical": {
+          "calls": 29696,
+          "rejects": 931,
+          "existing_scanned": 293886,
+          "same_item_comparisons": 17496,
+          "placement_key_calls": 47192,
+          "placement_key_bytes": 1351104
+        },
+        "feasibility_canonical": {
+          "calls": 13013178,
+          "rejects": 221312,
+          "existing_scanned": 95467918,
+          "same_item_comparisons": 566020,
+          "placement_key_calls": 13579198,
+          "placement_key_bytes": 343962296
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 22.9203187250996,
+        "feasibility_instances_per_call": 9.614809664522857,
+        "feasibility_option_checks_per_call": 963.930610116461,
+        "feasibility_option_checks_per_candidate_expansion": 963.930610116461,
+        "feasibility_canonical_calls_per_option_check": 0.4693244935779197,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.043495908532104915,
+        "feasibility_placement_key_calls_per_canonical_call": 1.043495908532105,
+        "placement_key_bytes_per_candidate_expansion": 12004.637580392839,
+        "feasibility_dead_return_rate": 0.020441508778028854,
+        "feasibility_overlap_reject_rate": 0.5306755064220803,
+        "feasibility_canonical_reject_rate": 0.01700676037782623
+      }
+    },
+    {
+      "scenario": "gsv2-022",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 511,
+        "candidate_option_checks": 43094,
+        "candidate_overlap_rejects": 25898,
+        "candidate_charge_attempts": 17141,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 17141,
+        "feasibility_calls": 17141,
+        "feasibility_instances_considered": 145042,
+        "feasibility_option_checks": 14681416,
+        "feasibility_overlap_rejects": 7016768,
+        "feasibility_legal_placements": 7654392,
+        "feasibility_dead_returns": 173,
+        "candidate_canonical": {
+          "calls": 17196,
+          "rejects": 55,
+          "existing_scanned": 129117,
+          "same_item_comparisons": 1060,
+          "placement_key_calls": 18256,
+          "placement_key_bytes": 572640
+        },
+        "feasibility_canonical": {
+          "calls": 7664648,
+          "rejects": 10256,
+          "existing_scanned": 44798024,
+          "same_item_comparisons": 20512,
+          "placement_key_calls": 7685160,
+          "placement_key_bytes": 241814624
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 33.5440313111546,
+        "feasibility_instances_per_call": 8.461700017501895,
+        "feasibility_option_checks_per_call": 856.5087217781927,
+        "feasibility_option_checks_per_candidate_expansion": 856.5087217781927,
+        "feasibility_canonical_calls_per_option_check": 0.5220646291883562,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.002676182911465732,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0026761829114657,
+        "placement_key_bytes_per_candidate_expansion": 14140.788985473426,
+        "feasibility_dead_return_rate": 0.01009276004900531,
+        "feasibility_overlap_reject_rate": 0.4779353708116438,
+        "feasibility_canonical_reject_rate": 0.001338091455732866
+      }
+    },
+    {
+      "scenario": "gsv2-022",
+      "budget": 1000000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 991,
+        "candidate_option_checks": 85078,
+        "candidate_overlap_rejects": 51570,
+        "candidate_charge_attempts": 33400,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 33400,
+        "feasibility_calls": 33400,
+        "feasibility_instances_considered": 276618,
+        "feasibility_option_checks": 28186496,
+        "feasibility_overlap_rejects": 13726420,
+        "feasibility_legal_placements": 14439520,
+        "feasibility_dead_returns": 351,
+        "candidate_canonical": {
+          "calls": 33508,
+          "rejects": 108,
+          "existing_scanned": 257571,
+          "same_item_comparisons": 2126,
+          "placement_key_calls": 35634,
+          "placement_key_bytes": 1106584
+        },
+        "feasibility_canonical": {
+          "calls": 14460076,
+          "rejects": 20556,
+          "existing_scanned": 87851944,
+          "same_item_comparisons": 41112,
+          "placement_key_calls": 14501188,
+          "placement_key_bytes": 456739104
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 33.70332996972755,
+        "feasibility_instances_per_call": 8.281976047904191,
+        "feasibility_option_checks_per_call": 843.9070658682634,
+        "feasibility_option_checks_per_candidate_expansion": 843.9070658682634,
+        "feasibility_canonical_calls_per_option_check": 0.5130143172106245,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.002843138583780611,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0028431385837806,
+        "placement_key_bytes_per_candidate_expansion": 13707.954730538922,
+        "feasibility_dead_return_rate": 0.010508982035928144,
+        "feasibility_overlap_reject_rate": 0.48698568278937543,
+        "feasibility_canonical_reject_rate": 0.0014215692918903055
+      }
+    },
+    {
+      "scenario": "gsv2-023",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 343,
+        "candidate_option_checks": 33869,
+        "candidate_overlap_rejects": 11947,
+        "candidate_charge_attempts": 21876,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 21876,
+        "feasibility_calls": 21876,
+        "feasibility_instances_considered": 155681,
+        "feasibility_option_checks": 22048507,
+        "feasibility_overlap_rejects": 6360051,
+        "feasibility_legal_placements": 15513173,
+        "feasibility_dead_returns": 180,
+        "candidate_canonical": {
+          "calls": 21922,
+          "rejects": 46,
+          "existing_scanned": 128111,
+          "same_item_comparisons": 4947,
+          "placement_key_calls": 26869,
+          "placement_key_bytes": 878236
+        },
+        "feasibility_canonical": {
+          "calls": 15688456,
+          "rejects": 175283,
+          "existing_scanned": 81486756,
+          "same_item_comparisons": 350566,
+          "placement_key_calls": 16039022,
+          "placement_key_bytes": 449240056
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 63.778425655976676,
+        "feasibility_instances_per_call": 7.116520387639422,
+        "feasibility_option_checks_per_call": 1007.8856737977693,
+        "feasibility_option_checks_per_candidate_expansion": 1007.8856737977693,
+        "feasibility_canonical_calls_per_option_check": 0.7115427815588602,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.022345474914803598,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0223454749148035,
+        "placement_key_bytes_per_candidate_expansion": 20575.895593344303,
+        "feasibility_dead_return_rate": 0.008228195282501372,
+        "feasibility_overlap_reject_rate": 0.2884572184411398,
+        "feasibility_canonical_reject_rate": 0.011172737457401799
+      }
+    },
+    {
+      "scenario": "gsv2-023",
+      "budget": 1000000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 818,
+        "candidate_option_checks": 95378,
+        "candidate_overlap_rejects": 40394,
+        "candidate_charge_attempts": 54855,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 54855,
+        "feasibility_calls": 54855,
+        "feasibility_instances_considered": 310084,
+        "feasibility_option_checks": 44559209,
+        "feasibility_overlap_rejects": 13622233,
+        "feasibility_legal_placements": 30370356,
+        "feasibility_dead_returns": 433,
+        "candidate_canonical": {
+          "calls": 54984,
+          "rejects": 129,
+          "existing_scanned": 401890,
+          "same_item_comparisons": 16428,
+          "placement_key_calls": 71412,
+          "placement_key_bytes": 2133152
+        },
+        "feasibility_canonical": {
+          "calls": 30936976,
+          "rejects": 566620,
+          "existing_scanned": 166616540,
+          "same_item_comparisons": 1133240,
+          "placement_key_calls": 32070216,
+          "placement_key_bytes": 887941520
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 67.05990220048899,
+        "feasibility_instances_per_call": 5.6527937289217025,
+        "feasibility_option_checks_per_call": 812.3089782152948,
+        "feasibility_option_checks_per_candidate_expansion": 812.3089782152948,
+        "feasibility_canonical_calls_per_option_check": 0.6942891647829745,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.03663060022414602,
+        "feasibility_placement_key_calls_per_canonical_call": 1.036630600224146,
+        "placement_key_bytes_per_candidate_expansion": 16225.953367970103,
+        "feasibility_dead_return_rate": 0.007893537507975572,
+        "feasibility_overlap_reject_rate": 0.3057108352170255,
+        "feasibility_canonical_reject_rate": 0.01831530011207301
+      }
+    },
+    {
+      "scenario": "gsv2-024",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 973,
+        "candidate_option_checks": 51033,
+        "candidate_overlap_rejects": 29158,
+        "candidate_charge_attempts": 21875,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 21875,
+        "feasibility_calls": 21875,
+        "feasibility_instances_considered": 416191,
+        "feasibility_option_checks": 28094496,
+        "feasibility_overlap_rejects": 12541311,
+        "feasibility_legal_placements": 15553185,
+        "feasibility_dead_returns": 0,
+        "candidate_canonical": {
+          "calls": 21875,
+          "rejects": 0,
+          "existing_scanned": 283809,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 21875,
+          "placement_key_bytes": 484684
+        },
+        "feasibility_canonical": {
+          "calls": 15553185,
+          "rejects": 0,
+          "existing_scanned": 148005804,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 15553185,
+          "placement_key_bytes": 354018852
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 22.48201438848921,
+        "feasibility_instances_per_call": 19.025874285714284,
+        "feasibility_option_checks_per_call": 1284.3198171428571,
+        "feasibility_option_checks_per_candidate_expansion": 1284.3198171428571,
+        "feasibility_canonical_calls_per_option_check": 0.5536025632921124,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 16205.87593142857,
+        "feasibility_dead_return_rate": 0,
+        "feasibility_overlap_reject_rate": 0.44639743670788756,
+        "feasibility_canonical_reject_rate": 0
+      }
+    },
+    {
+      "scenario": "gsv2-024",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 13,
+        "depths_started": 36,
+        "states_prepared": 1702,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1702,
+        "mrv_instances_considered": 34437,
+        "mrv_option_checks": 1647252,
+        "mrv_legal_placements": 753065,
+        "ledger_charge_attempts": 31204,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 31204,
+        "complete_candidates": 0,
+        "placement_copy_calls": 31204,
+        "placement_elements_copied": 406110,
+        "feasibility_calls": 31204,
+        "feasibility_instances_considered": 592418,
+        "feasibility_option_checks": 28428936,
+        "fragmentation_evaluations": 31208,
+        "partial_score_evaluations": 31204,
+        "state_key_constructions": 31204,
+        "state_key_bytes": 21787611,
+        "dedup_lookups": 31204,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 36,
+        "precut_states": 31204,
+        "states_sorted": 31204
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 52.78977054223817,
+        "feasibility_option_checks": 911.0670426868351,
+        "placement_elements_copied": 13.014677605435201,
+        "state_key_bytes": 698.2313485450584
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 2015,
+        "candidate_option_checks": 119074,
+        "candidate_overlap_rejects": 75393,
+        "candidate_charge_attempts": 43681,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 43681,
+        "feasibility_calls": 43681,
+        "feasibility_instances_considered": 808330,
+        "feasibility_option_checks": 54782132,
+        "feasibility_overlap_rejects": 24867410,
+        "feasibility_legal_placements": 29914722,
+        "feasibility_dead_returns": 0,
+        "candidate_canonical": {
+          "calls": 43681,
+          "rejects": 0,
+          "existing_scanned": 589462,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 43681,
+          "placement_key_bytes": 950788
+        },
+        "feasibility_canonical": {
+          "calls": 29914722,
+          "rejects": 0,
+          "existing_scanned": 293421017,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 29914722,
+          "placement_key_bytes": 681090552
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 21.677915632754342,
+        "feasibility_instances_per_call": 18.505299787092785,
+        "feasibility_option_checks_per_call": 1254.140976625993,
+        "feasibility_option_checks_per_candidate_expansion": 1254.140976625993,
+        "feasibility_canonical_calls_per_option_check": 0.546067137365154,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 15614.142075501935,
+        "feasibility_dead_return_rate": 0,
+        "feasibility_overlap_reject_rate": 0.453932862634846,
+        "feasibility_canonical_reject_rate": 0
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 4,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "budget_exhausted",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 31204,
+        "reservation_turnover": 31204,
+        "consumed_total": 31204,
+        "returned_capacity_total": 0,
+        "returned_fraction_bps": 0,
+        "consumed_per_family": {
+          "min": 7800,
+          "p50": 7800,
+          "p90": 7800,
+          "max": 7804
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 9,
+          "p50": 9,
+          "p90": 9,
+          "max": 9
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-025",
+      "budget": 250000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 13,
+        "depths_started": 16,
+        "states_prepared": 194,
+        "area_prunes": 0,
+        "mrv_selection_calls": 194,
+        "mrv_instances_considered": 3866,
+        "mrv_option_checks": 188712,
+        "mrv_legal_placements": 97970,
+        "ledger_charge_attempts": 4097,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 4097,
+        "complete_candidates": 0,
+        "placement_copy_calls": 4097,
+        "placement_elements_copied": 41961,
+        "feasibility_calls": 4097,
+        "feasibility_instances_considered": 76852,
+        "feasibility_option_checks": 3765178,
+        "fragmentation_evaluations": 4101,
+        "partial_score_evaluations": 4097,
+        "state_key_constructions": 4097,
+        "state_key_bytes": 2429061,
+        "dedup_lookups": 4097,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 16,
+        "precut_states": 4097,
+        "states_sorted": 4097
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 46.0610202587259,
+        "feasibility_option_checks": 919.0085428362216,
+        "placement_elements_copied": 10.241884305589455,
+        "state_key_bytes": 592.8877227239443
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 868,
+        "candidate_option_checks": 44563,
+        "candidate_overlap_rejects": 22686,
+        "candidate_charge_attempts": 21877,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 21877,
+        "feasibility_calls": 21877,
+        "feasibility_instances_considered": 361277,
+        "feasibility_option_checks": 24158348,
+        "feasibility_overlap_rejects": 10309031,
+        "feasibility_legal_placements": 13849317,
+        "feasibility_dead_returns": 0,
+        "candidate_canonical": {
+          "calls": 21877,
+          "rejects": 0,
+          "existing_scanned": 273156,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 21877,
+          "placement_key_bytes": 485548
+        },
+        "feasibility_canonical": {
+          "calls": 13849317,
+          "rejects": 0,
+          "existing_scanned": 129250114,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 13849317,
+          "placement_key_bytes": 324282476
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 25.203917050691246,
+        "feasibility_instances_per_call": 16.514010147643646,
+        "feasibility_option_checks_per_call": 1104.280660053938,
+        "feasibility_option_checks_per_candidate_expansion": 1104.280660053938,
+        "feasibility_canonical_calls_per_option_check": 0.5732725184685642,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 14845.180966311651,
+        "feasibility_dead_return_rate": 0,
+        "feasibility_overlap_reject_rate": 0.42672748153143586,
+        "feasibility_canonical_reject_rate": 0
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 4,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "budget_exhausted",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 4097,
+        "reservation_turnover": 4097,
+        "consumed_total": 4097,
+        "returned_capacity_total": 0,
+        "returned_fraction_bps": 0,
+        "consumed_per_family": {
+          "min": 1024,
+          "p50": 1024,
+          "p90": 1024,
+          "max": 1025
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 4,
+          "p50": 4,
+          "p90": 4,
+          "max": 4
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-025",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 13,
+        "depths_started": 34,
+        "states_prepared": 1472,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1472,
+        "mrv_instances_considered": 25592,
+        "mrv_option_checks": 1253286,
+        "mrv_legal_placements": 578974,
+        "ledger_charge_attempts": 32222,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 32222,
+        "complete_candidates": 0,
+        "placement_copy_calls": 32222,
+        "placement_elements_copied": 404414,
+        "feasibility_calls": 32222,
+        "feasibility_instances_considered": 530024,
+        "feasibility_option_checks": 25970606,
+        "fragmentation_evaluations": 32226,
+        "partial_score_evaluations": 32222,
+        "state_key_constructions": 32222,
+        "state_key_bytes": 22068630,
+        "dedup_lookups": 32222,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 34,
+        "precut_states": 32222,
+        "states_sorted": 32222
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 38.8953510024207,
+        "feasibility_option_checks": 805.9898826888461,
+        "placement_elements_copied": 12.55086586804047,
+        "state_key_bytes": 684.8932406430389
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1823,
+        "candidate_option_checks": 106786,
+        "candidate_overlap_rejects": 61575,
+        "candidate_charge_attempts": 45211,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 45211,
+        "feasibility_calls": 45211,
+        "feasibility_instances_considered": 702700,
+        "feasibility_option_checks": 47256784,
+        "feasibility_overlap_rejects": 20607093,
+        "feasibility_legal_placements": 26649691,
+        "feasibility_dead_returns": 0,
+        "candidate_canonical": {
+          "calls": 45211,
+          "rejects": 0,
+          "existing_scanned": 608419,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 45211,
+          "placement_key_bytes": 999892
+        },
+        "feasibility_canonical": {
+          "calls": 26649691,
+          "rejects": 0,
+          "existing_scanned": 256331454,
+          "same_item_comparisons": 0,
+          "placement_key_calls": 26649691,
+          "placement_key_bytes": 624396116
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 24.8003291278113,
+        "feasibility_instances_per_call": 15.542677666939461,
+        "feasibility_option_checks_per_call": 1045.249695870474,
+        "feasibility_option_checks_per_candidate_expansion": 1045.249695870474,
+        "feasibility_canonical_calls_per_option_check": 0.5639336565941516,
+        "feasibility_same_item_comparisons_per_canonical_call": 0,
+        "feasibility_placement_key_calls_per_canonical_call": 1,
+        "placement_key_bytes_per_candidate_expansion": 13832.828470947336,
+        "feasibility_dead_return_rate": 0,
+        "feasibility_overlap_reject_rate": 0.4360663434058484,
+        "feasibility_canonical_reject_rate": 0
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 0,
+        "families_budget_exhausted": 4,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "budget_exhausted",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 32222,
+        "reservation_turnover": 32222,
+        "consumed_total": 32222,
+        "returned_capacity_total": 0,
+        "returned_fraction_bps": 0,
+        "consumed_per_family": {
+          "min": 8054,
+          "p50": 8054,
+          "p90": 8054,
+          "max": 8060
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 8,
+          "p50": 8,
+          "p90": 9,
+          "max": 9
+        },
+        "first_complete_family_count": 0,
+        "first_complete_nodes": {
+          "min": 0,
+          "p50": 0,
+          "p90": 0,
+          "max": 0
+        }
+      }
+    },
+    {
+      "scenario": "gsv2-026",
+      "budget": 250000,
+      "runs": 1,
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 477,
+        "candidate_option_checks": 47810,
+        "candidate_overlap_rejects": 25925,
+        "candidate_charge_attempts": 21875,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 21875,
+        "feasibility_calls": 21875,
+        "feasibility_instances_considered": 184334,
+        "feasibility_option_checks": 23924961,
+        "feasibility_overlap_rejects": 10235250,
+        "feasibility_legal_placements": 13506127,
+        "feasibility_dead_returns": 218,
+        "candidate_canonical": {
+          "calls": 21885,
+          "rejects": 10,
+          "existing_scanned": 164653,
+          "same_item_comparisons": 8036,
+          "placement_key_calls": 29921,
+          "placement_key_bytes": 931676
+        },
+        "feasibility_canonical": {
+          "calls": 13689711,
+          "rejects": 183584,
+          "existing_scanned": 76071435,
+          "same_item_comparisons": 439001,
+          "placement_key_calls": 14128712,
+          "placement_key_bytes": 353107024
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 45.859538784067084,
+        "feasibility_instances_per_call": 8.426697142857142,
+        "feasibility_option_checks_per_call": 1093.712502857143,
+        "feasibility_option_checks_per_candidate_expansion": 1093.712502857143,
+        "feasibility_canonical_calls_per_option_check": 0.5721936600022044,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.03206795234756964,
+        "feasibility_placement_key_calls_per_canonical_call": 1.0320679523475695,
+        "placement_key_bytes_per_candidate_expansion": 16184.626285714286,
+        "feasibility_dead_return_rate": 0.009965714285714286,
+        "feasibility_overlap_reject_rate": 0.4278063399977956,
+        "feasibility_canonical_reject_rate": 0.013410363447409517
+      }
+    },
+    {
+      "scenario": "gsv2-026",
+      "budget": 1000000,
+      "runs": 1,
+      "rooted_packing_operations": {
+        "version": "root-packing-ops-v1",
+        "sessions_started": 4,
+        "run_calls": 13,
+        "pause_returns": 9,
+        "depths_started": 32,
+        "states_prepared": 1580,
+        "area_prunes": 0,
+        "mrv_selection_calls": 1580,
+        "mrv_instances_considered": 5688,
+        "mrv_option_checks": 503200,
+        "mrv_legal_placements": 119686,
+        "ledger_charge_attempts": 25417,
+        "ledger_charge_denied": 0,
+        "candidate_expansions": 25417,
+        "complete_candidates": 3745,
+        "placement_copy_calls": 25417,
+        "placement_elements_copied": 340071,
+        "feasibility_calls": 25417,
+        "feasibility_instances_considered": 64230,
+        "feasibility_option_checks": 5745900,
+        "fragmentation_evaluations": 23987,
+        "partial_score_evaluations": 23983,
+        "state_key_constructions": 23983,
+        "state_key_bytes": 17287515,
+        "dedup_lookups": 23983,
+        "dedup_hits": 0,
+        "dedup_replacements": 0,
+        "depth_finish_calls": 32,
+        "precut_states": 23983,
+        "states_sorted": 23983
+      },
+      "per_candidate_expansion": {
+        "mrv_option_checks": 19.797773143958768,
+        "feasibility_option_checks": 226.06523193138452,
+        "placement_elements_copied": 13.379667151906204,
+        "state_key_bytes": 680.155604516662
+      },
+      "packing_seed_feasibility": {
+        "version": "packing-seed-feasibility-ops-v1",
+        "search_calls": 1,
+        "states_visited": 1024,
+        "candidate_option_checks": 111420,
+        "candidate_overlap_rejects": 64048,
+        "candidate_charge_attempts": 47348,
+        "candidate_charge_denied": 0,
+        "candidate_expansions": 47348,
+        "feasibility_calls": 47348,
+        "feasibility_instances_considered": 361518,
+        "feasibility_option_checks": 47090304,
+        "feasibility_overlap_rejects": 20447278,
+        "feasibility_legal_placements": 26279206,
+        "feasibility_dead_returns": 433,
+        "candidate_canonical": {
+          "calls": 47372,
+          "rejects": 24,
+          "existing_scanned": 394080,
+          "same_item_comparisons": 16536,
+          "placement_key_calls": 63908,
+          "placement_key_bytes": 1930928
+        },
+        "feasibility_canonical": {
+          "calls": 26643026,
+          "rejects": 363820,
+          "existing_scanned": 150535670,
+          "same_item_comparisons": 870000,
+          "placement_key_calls": 27513026,
+          "placement_key_bytes": 685666376
+        }
+      },
+      "packing_seed_feasibility_derived": {
+        "feasibility_calls_per_state": 46.23828125,
+        "feasibility_instances_per_call": 7.635338345864661,
+        "feasibility_option_checks_per_call": 994.5574047478246,
+        "feasibility_option_checks_per_candidate_expansion": 994.5574047478246,
+        "feasibility_canonical_calls_per_option_check": 0.5657858144215845,
+        "feasibility_same_item_comparisons_per_canonical_call": 0.03265394854173096,
+        "feasibility_placement_key_calls_per_canonical_call": 1.032653948541731,
+        "placement_key_bytes_per_candidate_expansion": 14522.203767846582,
+        "feasibility_dead_return_rate": 0.009145053645349328,
+        "feasibility_overlap_reject_rate": 0.43421418557841546,
+        "feasibility_canonical_reject_rate": 0.013655355814313284
+      },
+      "scheduler": {
+        "family_count": 4,
+        "families_completed": 4,
+        "families_budget_exhausted": 0,
+        "families_hard_dead": 0,
+        "families_no_states": 0,
+        "termination_reason_counts": [
+          {
+            "reason": "completed",
+            "count": 4
+          }
+        ],
+        "allocation_rounds": 9,
+        "reserved_total": 31518,
+        "reservation_turnover": 31518,
+        "consumed_total": 25417,
+        "returned_capacity_total": 6101,
+        "returned_fraction_bps": 1935,
+        "consumed_per_family": {
+          "min": 4994,
+          "p50": 6014,
+          "p90": 6470,
+          "max": 7939
+        },
+        "rounds_per_family": {
+          "min": 2,
+          "p50": 2,
+          "p90": 2,
+          "max": 3
+        },
+        "final_depth": {
+          "min": 8,
+          "p50": 8,
+          "p90": 8,
+          "max": 8
+        },
+        "first_complete_family_count": 4,
+        "first_complete_nodes": {
+          "min": 4188,
+          "p50": 5148,
+          "p90": 5506,
+          "max": 6834
+        }
+      }
+    }
+  ],
+  "aggregate": {
+    "runs": 28,
+    "rooted_packing_operations": {
+      "version": "root-packing-ops-v1",
+      "sessions_started": 48,
+      "run_calls": 150,
+      "pause_returns": 130,
+      "depths_started": 338,
+      "states_prepared": 14362,
+      "area_prunes": 0,
+      "mrv_selection_calls": 14362,
+      "mrv_instances_considered": 122217,
+      "mrv_option_checks": 8901822,
+      "mrv_legal_placements": 2578913,
+      "ledger_charge_attempts": 226952,
+      "ledger_charge_denied": 0,
+      "candidate_expansions": 226952,
+      "complete_candidates": 4873,
+      "placement_copy_calls": 226952,
+      "placement_elements_copied": 2742779,
+      "feasibility_calls": 226952,
+      "feasibility_instances_considered": 1927534,
+      "feasibility_option_checks": 132133299,
+      "fragmentation_evaluations": 218023,
+      "partial_score_evaluations": 217975,
+      "state_key_constructions": 217975,
+      "state_key_bytes": 146328450,
+      "dedup_lookups": 217975,
+      "dedup_hits": 0,
+      "dedup_replacements": 0,
+      "depth_finish_calls": 338,
+      "precut_states": 217975,
+      "states_sorted": 217975
+    },
+    "per_candidate_expansion": {
+      "mrv_option_checks": 39.22336881807607,
+      "feasibility_option_checks": 582.2081277098241,
+      "placement_elements_copied": 12.085282350452959,
+      "state_key_bytes": 644.7550583383271
+    },
+    "packing_seed_feasibility": {
+      "version": "packing-seed-feasibility-ops-v1",
+      "search_calls": 27,
+      "states_visited": 23043,
+      "candidate_option_checks": 1911828,
+      "candidate_overlap_rejects": 1081775,
+      "candidate_charge_attempts": 826013,
+      "candidate_charge_denied": 0,
+      "candidate_expansions": 826013,
+      "feasibility_calls": 826013,
+      "feasibility_instances_considered": 7942463,
+      "feasibility_option_checks": 818778902,
+      "feasibility_overlap_rejects": 354286270,
+      "feasibility_legal_placements": 460959093,
+      "feasibility_dead_returns": 7681,
+      "candidate_canonical": {
+        "calls": 830053,
+        "rejects": 4040,
+        "existing_scanned": 7161225,
+        "same_item_comparisons": 152828,
+        "placement_key_calls": 982881,
+        "placement_key_bytes": 29707220
+      },
+      "feasibility_canonical": {
+        "calls": 464492632,
+        "rejects": 3533539,
+        "existing_scanned": 3048660586,
+        "same_item_comparisons": 8189686,
+        "placement_key_calls": 472682318,
+        "placement_key_bytes": 13772087008
+      }
+    },
+    "packing_seed_feasibility_derived": {
+      "feasibility_calls_per_state": 35.84659115566549,
+      "feasibility_instances_per_call": 9.615421306928583,
+      "feasibility_option_checks_per_call": 991.2421499419501,
+      "feasibility_option_checks_per_candidate_expansion": 991.2421499419501,
+      "feasibility_canonical_calls_per_option_check": 0.5672992194417829,
+      "feasibility_same_item_comparisons_per_canonical_call": 0.017631465895889605,
+      "feasibility_placement_key_calls_per_canonical_call": 1.0176314658958896,
+      "placement_key_bytes_per_candidate_expansion": 16708.931007139112,
+      "feasibility_dead_return_rate": 0.009298885126505273,
+      "feasibility_overlap_reject_rate": 0.43270078055821715,
+      "feasibility_canonical_reject_rate": 0.007607309043386505
+    },
+    "scheduler": {
+      "family_count": 48,
+      "families_completed": 9,
+      "families_budget_exhausted": 28,
+      "families_hard_dead": 0,
+      "families_no_states": 11,
+      "termination_reason_counts": [
+        {
+          "reason": "budget_exhausted",
+          "count": 28
+        },
+        {
+          "reason": "completed",
+          "count": 9
+        },
+        {
+          "reason": "no_states",
+          "count": 11
+        }
+      ],
+      "allocation_rounds": 102,
+      "reserved_total": 261938,
+      "reservation_turnover": 261938,
+      "consumed_total": 226952,
+      "returned_capacity_total": 34986,
+      "returned_fraction_bps": 1335,
+      "consumed_per_family": {
+        "min": 936,
+        "p50": 5812,
+        "p90": 8054,
+        "max": 10835
+      },
+      "rounds_per_family": {
+        "min": 1,
+        "p50": 2,
+        "p90": 3,
+        "max": 3
+      },
+      "final_depth": {
+        "min": 4,
+        "p50": 8,
+        "p90": 9,
+        "max": 10
+      },
+      "first_complete_family_count": 9,
+      "first_complete_nodes": {
+        "min": 1881,
+        "p50": 5148,
+        "p90": 9602,
+        "max": 10218
+      }
+    }
+  }
+}
