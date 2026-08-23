@@ -58,7 +58,11 @@ func TestSummarizeOperationProfileCommand(t *testing.T) {
 	reportContent, err := json.Marshal(benchmark.Report{Runs: []benchmark.Run{{
 		Scenario: "fixture",
 		Budget:   100,
-		Search: benchmark.SearchSummary{ConstellationSeedDiagnostics: &model.ConstellationSeedDiagnostics{
+		Search: benchmark.SearchSummary{PackingSeedOperationProfile: &model.PackingSeedFeasibilityOperationProfile{
+			Version:             "packing-seed-feasibility-ops-v1",
+			SearchCalls:         1,
+			CandidateExpansions: 1,
+		}, ConstellationSeedDiagnostics: &model.ConstellationSeedDiagnostics{
 			RootPackingOperationProfile: &model.ConstellationRootPackingOperationProfile{Version: "root-packing-ops-v1", CandidateExpansions: 2},
 		}},
 	}}})
@@ -72,11 +76,18 @@ func TestSummarizeOperationProfileCommand(t *testing.T) {
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	code := Run([]string{"summarize-operation-profile", "--out", summaryPath, reportPath}, &stdout, &stderr)
-	if code != 0 || !strings.Contains(stdout.String(), "Rooted packing operations — fixture @ 100") {
+	if code != 0 || !strings.Contains(stdout.String(), "Rooted packing operations — fixture @ 100") || !strings.Contains(stdout.String(), "Packing-seed feasibility — fixture @ 100") {
 		t.Fatalf("code=%d stdout=%s stderr=%s", code, stdout.String(), stderr.String())
 	}
-	if _, err := os.Stat(summaryPath); err != nil {
+	summaryContent, err := os.ReadFile(summaryPath)
+	if err != nil {
 		t.Fatalf("summary file: %v", err)
+	}
+	var summary struct {
+		Version string `json:"version"`
+	}
+	if err := json.Unmarshal(summaryContent, &summary); err != nil || summary.Version != "operation-profile-summary-v2" {
+		t.Fatalf("summary version=%q err=%v", summary.Version, err)
 	}
 }
 

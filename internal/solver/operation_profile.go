@@ -6,6 +6,10 @@ import "backpack-brawl-solver/internal/model"
 // counter contract serialized in benchmark reports.
 const SearchOperationProfileVersion = "root-packing-ops-v1"
 
+// PackingSeedFeasibilityProfileVersion identifies the deterministic
+// packing-seed feasibility counter contract serialized in benchmark reports.
+const PackingSeedFeasibilityProfileVersion = "packing-seed-feasibility-ops-v1"
+
 // OperationProfilingAvailable reports whether this binary contains the
 // benchmark-only counter implementation.
 func OperationProfilingAvailable() bool {

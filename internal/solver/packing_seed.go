@@ -34,8 +34,13 @@ func packingSeedSearch(
 	nodeBudget int64,
 	progress *progressTracker,
 ) coverageSeedResult {
+	var operationCounters *packingSeedFeasibilityOperationCounters
+	if searchOperationProfilingAvailable && config.OperationProfiling {
+		operationCounters = newPackingSeedFeasibilityOperationCounters(config)
+		operationCounters.searchCall()
+	}
 	if nodeBudget <= 0 || len(ordered) == 0 {
-		return coverageSeedResult{}
+		return coverageSeedResult{PackingSeedOperationProfile: operationCounters.snapshot()}
 	}
 
 	beamWidth := policyForConfig(config).PackingSeedBeamWidth
@@ -86,24 +91,52 @@ func packingSeedSearch(
 				exhausted = true
 				break
 			}
+			if searchOperationProfilingAvailable && config.OperationProfiling {
+				operationCounters.stateVisited()
+			}
 			if remainingCells[index] > bits.OnesCount64(gridMask&^state.occupied) {
 				hardPruned++
 				continue
 			}
 			for _, option := range optionsByInstance[instance.InstanceID] {
+				if searchOperationProfilingAvailable && config.OperationProfiling {
+					operationCounters.candidateOption()
+				}
 				if option.Mask&state.occupied != 0 {
+					if searchOperationProfilingAvailable && config.OperationProfiling {
+						operationCounters.candidateOverlapReject()
+					}
 					continue
 				}
-				if !placementRespectsCanonicalCopyOrder(option, state.placed) {
+				canonical := false
+				if searchOperationProfilingAvailable && config.OperationProfiling {
+					canonical = operationCounters.candidateCanonical(option, state.placed)
+				} else {
+					canonical = placementRespectsCanonicalCopyOrder(option, state.placed)
+				}
+				if !canonical {
 					symmetryPruned++
 					continue
 				}
+				if searchOperationProfilingAvailable && config.OperationProfiling {
+					operationCounters.candidateChargeAttempt()
+				}
 				if !reportNode() {
+					if searchOperationProfilingAvailable && config.OperationProfiling {
+						operationCounters.candidateChargeDenied()
+					}
 					break
 				}
 				nextPlaced, _ := insertPlacementSorted(append([]model.Placement(nil), state.placed...), option)
 				nextOccupied := state.occupied | option.Mask
-				restricted, flexibility, feasible := packingFeasibility(ordered[index+1:], optionsByInstance, nextOccupied, nextPlaced)
+				var restricted, flexibility int
+				var feasible bool
+				if searchOperationProfilingAvailable && config.OperationProfiling {
+					operationCounters.candidateExpansion()
+					restricted, flexibility, feasible = packingSeedFeasibilityProfiled(ordered[index+1:], optionsByInstance, nextOccupied, nextPlaced, operationCounters)
+				} else {
+					restricted, flexibility, feasible = packingFeasibility(ordered[index+1:], optionsByInstance, nextOccupied, nextPlaced)
+				}
 				if !feasible {
 					hardPruned++
 					if nodes >= nodeBudget {
@@ -172,12 +205,13 @@ func packingSeedSearch(
 	}
 	flushProgress()
 	return coverageSeedResult{
-		Solutions:              results,
-		NodesExplored:          nodes,
-		CandidateCount:         candidateCount,
-		SymmetryPrunedBranches: symmetryPruned,
-		StatesDeduplicated:     deduplicated,
-		HardPrunedNodes:        hardPruned,
+		Solutions:                   results,
+		NodesExplored:               nodes,
+		CandidateCount:              candidateCount,
+		SymmetryPrunedBranches:      symmetryPruned,
+		StatesDeduplicated:          deduplicated,
+		HardPrunedNodes:             hardPruned,
+		PackingSeedOperationProfile: operationCounters.snapshot(),
 		PackingDiagnostics: model.PackingSeedDiagnostics{
 			MaxDepth: packingDiagnostics.MaxDepth,
 			StatesByItemCount: []model.PackingSeedItemCount{

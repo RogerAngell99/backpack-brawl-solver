@@ -8,6 +8,73 @@ import (
 	"backpack-brawl-solver/internal/model"
 )
 
+func BenchmarkPlacementKey(b *testing.B) {
+	for _, cells := range []int{1, 4, 8} {
+		b.Run(fmt.Sprintf("cells=%d", cells), func(b *testing.B) {
+			placement := packingProfilePlacementKeyFixture(cells)
+			b.ReportAllocs()
+			b.ResetTimer()
+			for index := 0; index < b.N; index++ {
+				if key := placementKey(placement); key == "" {
+					b.Fatal("empty placement key")
+				}
+			}
+		})
+	}
+}
+
+func BenchmarkCanonicalCopyOrder(b *testing.B) {
+	for _, existingCopies := range []int{0, 1, 2, 4} {
+		outcomes := []struct {
+			name     string
+			accepted bool
+		}{
+			{name: "accepted", accepted: true},
+		}
+		if existingCopies > 0 {
+			outcomes = append(outcomes, struct {
+				name     string
+				accepted bool
+			}{name: "rejected", accepted: false})
+		}
+		for _, outcome := range outcomes {
+			outcome := outcome
+			b.Run(fmt.Sprintf("same_item_copies=%d/%s", existingCopies, outcome.name), func(b *testing.B) {
+				candidate, existing := packingProfileCanonicalOrderFixture(existingCopies, outcome.accepted)
+				b.ReportAllocs()
+				b.ResetTimer()
+				for index := 0; index < b.N; index++ {
+					if placementRespectsCanonicalCopyOrder(candidate, existing) != outcome.accepted {
+						b.Fatalf("canonical order did not %s", outcome.name)
+					}
+				}
+			})
+		}
+	}
+}
+
+func BenchmarkPackingFeasibility(b *testing.B) {
+	for _, remainingCount := range []int{8, 16, 24} {
+		for _, duplicated := range []bool{false, true} {
+			name := "all_unique"
+			if duplicated {
+				name = "duplicated"
+			}
+			b.Run(fmt.Sprintf("remaining=%d/%s", remainingCount, name), func(b *testing.B) {
+				remaining, options, occupied, placements := packingProfileFeasibilityFixture(remainingCount, duplicated)
+				b.ReportAllocs()
+				b.ResetTimer()
+				for index := 0; index < b.N; index++ {
+					_, _, feasible := packingFeasibility(remaining, options, occupied, placements)
+					if !feasible {
+						b.Fatal("expected feasible packing state")
+					}
+				}
+			})
+		}
+	}
+}
+
 func BenchmarkPlacementOptions(b *testing.B) {
 	catalog, instance := packingProfilePlacementOptionsFixture(b)
 	gridMask := geometry.FullGridMask()
@@ -18,6 +85,78 @@ func BenchmarkPlacementOptions(b *testing.B) {
 		if err != nil || len(options) == 0 {
 			b.Fatalf("PlacementOptions options=%d err=%v", len(options), err)
 		}
+	}
+}
+
+func packingProfilePlacementKeyFixture(cellCount int) model.Placement {
+	cells := make([]model.Coord, cellCount)
+	for index := range cells {
+		cells[index] = model.Coord{Row: index / geometry.GridCols, Col: index % geometry.GridCols}
+	}
+	return model.Placement{
+		InstanceID:    "shape#0",
+		ItemID:        "shape",
+		OriginalIndex: 0,
+		Rotation:      90,
+		Origin:        model.Coord{Row: 2, Col: 3},
+		Cells:         cells,
+	}
+}
+
+func packingProfileCanonicalOrderFixture(existingCopies int, accepted bool) (model.Placement, []model.Placement) {
+	if existingCopies == 0 {
+		return packingProfileBenchmarkPlacement("copy#0", "copy", 0, 0), nil
+	}
+	candidateColumn := existingCopies
+	if !accepted {
+		candidateColumn = existingCopies - 1
+	}
+	candidate := packingProfileBenchmarkPlacement(fmt.Sprintf("copy#%d", existingCopies), "copy", existingCopies, candidateColumn)
+	existing := make([]model.Placement, 0, existingCopies)
+	for index := 0; index < existingCopies; index++ {
+		column := index
+		if !accepted && index == existingCopies-1 {
+			column = existingCopies
+		}
+		existing = append(existing, packingProfileBenchmarkPlacement(fmt.Sprintf("copy#%d", index), "copy", index, column))
+	}
+	return candidate, existing
+}
+
+func packingProfileFeasibilityFixture(remainingCount int, duplicated bool) ([]model.InventoryInstance, map[string][]model.Placement, uint64, []model.Placement) {
+	remaining := make([]model.InventoryInstance, 0, remainingCount)
+	options := make(map[string][]model.Placement, remainingCount)
+	placements := []model.Placement{packingProfileBenchmarkPlacement("anchor#0", "anchor", 0, 0)}
+	if duplicated {
+		placements[0] = packingProfileBenchmarkPlacement("copy#0", "copy", 0, 0)
+	}
+	for index := 0; index < remainingCount; index++ {
+		itemID := fmt.Sprintf("unique-%02d", index)
+		instanceID := itemID + "#0"
+		originalIndex := index
+		if duplicated {
+			itemID = "copy"
+			instanceID = fmt.Sprintf("copy#%d", index+1)
+			originalIndex = index + 1
+		}
+		instance := model.InventoryInstance{InstanceID: instanceID, ItemID: itemID, OriginalIndex: originalIndex}
+		remaining = append(remaining, instance)
+		for column := 1; column <= 8; column++ {
+			options[instanceID] = append(options[instanceID], packingProfileBenchmarkPlacement(instanceID, itemID, originalIndex, column))
+		}
+	}
+	return remaining, options, uint64(1), placements
+}
+
+func packingProfileBenchmarkPlacement(instanceID string, itemID string, originalIndex int, column int) model.Placement {
+	cell := model.Coord{Col: column}
+	return model.Placement{
+		InstanceID:    instanceID,
+		ItemID:        itemID,
+		OriginalIndex: originalIndex,
+		Origin:        cell,
+		Cells:         []model.Coord{cell},
+		Mask:          uint64(1) << uint(column),
 	}
 }
 

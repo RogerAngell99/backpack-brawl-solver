@@ -108,6 +108,11 @@ func TestOperationProfilingPreservesFullGeneralSearchPipeline(t *testing.T) {
 	if withProfile[0].Search.ConstellationSeedDiagnostics.RootPackingOperationProfile == nil {
 		t.Fatal("profiled full pipeline did not retain aggregate operation profile")
 	}
+	packingProfile := withProfile[0].Search.PackingSeedOperationProfile
+	if packingProfile == nil || packingProfile.Version != PackingSeedFeasibilityProfileVersion || packingProfile.SearchCalls != 1 {
+		t.Fatalf("packing-seed operation profile=%+v", packingProfile)
+	}
+	assertPackingSeedFeasibilityOperationProfileIdentities(t, packingProfile)
 }
 
 func TestOperationProfilingRequiresSingleWorker(t *testing.T) {
@@ -126,6 +131,153 @@ func TestRootPackingOperationProfilesAggregateWithoutDoubleCounting(t *testing.T
 	aggregate := aggregateRootPackingOperationProfiles(profiles)
 	if aggregate == nil || aggregate.CandidateExpansions != 8 || aggregate.MRVOptionChecks != 18 {
 		t.Fatalf("aggregate=%+v", aggregate)
+	}
+}
+
+func TestProfiledCanonicalCopyOrderMatchesNormalAndAccountsPlacementKeys(t *testing.T) {
+	tests := []struct {
+		name      string
+		placement model.Placement
+		existing  []model.Placement
+	}{
+		{
+			name:      "unique item",
+			placement: operationProfilePlacement("unique#0", "unique", 0, 0),
+		},
+		{
+			name:      "two copies canonical",
+			placement: operationProfilePlacement("copy#1", "copy", 1, 1),
+			existing:  []model.Placement{operationProfilePlacement("copy#0", "copy", 0, 0)},
+		},
+		{
+			name:      "two copies noncanonical",
+			placement: operationProfilePlacement("copy#1", "copy", 1, 0),
+			existing:  []model.Placement{operationProfilePlacement("copy#0", "copy", 0, 1)},
+		},
+		{
+			name:      "three copies canonical",
+			placement: operationProfilePlacement("copy#2", "copy", 2, 2),
+			existing: []model.Placement{
+				operationProfilePlacement("copy#0", "copy", 0, 0),
+				operationProfilePlacement("copy#1", "copy", 1, 1),
+			},
+		},
+		{
+			name:      "other item is ignored",
+			placement: operationProfilePlacement("copy#1", "copy", 1, 0),
+			existing:  []model.Placement{operationProfilePlacement("other#0", "other", 0, 1)},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			want := placementRespectsCanonicalCopyOrder(test.placement, test.existing)
+			var profile model.PackingSeedCanonicalCopyOrderOperationProfile
+			got := placementRespectsCanonicalCopyOrderProfiled(test.placement, test.existing, &profile)
+			if got != want {
+				t.Fatalf("profiled canonical=%t, normal=%t", got, want)
+			}
+			if profile.Calls != 1 {
+				t.Fatalf("canonical calls=%d, want 1", profile.Calls)
+			}
+			if profile.PlacementKeyCalls != profile.Calls+profile.SameItemComparisons {
+				t.Fatalf("placement key identity failed: %+v", profile)
+			}
+			wantRejects := int64(0)
+			if !want {
+				wantRejects = 1
+			}
+			if profile.Rejects != wantRejects {
+				t.Fatalf("canonical rejects=%d, want %d: %+v", profile.Rejects, wantRejects, profile)
+			}
+		})
+	}
+}
+
+func TestProfiledPackingFeasibilityMatchesNormalAndAccountsChecks(t *testing.T) {
+	for _, test := range []struct {
+		name       string
+		remaining  []model.InventoryInstance
+		options    map[string][]model.Placement
+		occupied   uint64
+		placements []model.Placement
+	}{
+		{
+			name: "feasible with overlap and canonical rejection",
+			remaining: []model.InventoryInstance{
+				{InstanceID: "copy#1", ItemID: "copy", OriginalIndex: 1},
+				{InstanceID: "unique#0", ItemID: "unique", OriginalIndex: 2},
+			},
+			options: map[string][]model.Placement{
+				"copy#1": {
+					operationProfilePlacement("copy#1", "copy", 1, 0),
+					operationProfilePlacement("copy#1", "copy", 1, 2),
+				},
+				"unique#0": {operationProfilePlacement("unique#0", "unique", 2, 3)},
+			},
+			occupied:   uint64(1) << 1,
+			placements: []model.Placement{operationProfilePlacement("copy#0", "copy", 0, 1)},
+		},
+		{
+			name: "dead remaining instance",
+			remaining: []model.InventoryInstance{
+				{InstanceID: "copy#1", ItemID: "copy", OriginalIndex: 1},
+				{InstanceID: "unique#0", ItemID: "unique", OriginalIndex: 2},
+			},
+			options: map[string][]model.Placement{
+				"copy#1":   {operationProfilePlacement("copy#1", "copy", 1, 2)},
+				"unique#0": {operationProfilePlacement("unique#0", "unique", 2, 1)},
+			},
+			occupied:   uint64(1) << 1,
+			placements: []model.Placement{operationProfilePlacement("copy#0", "copy", 0, 1)},
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			wantRestricted, wantFlexibility, wantFeasible := packingFeasibility(test.remaining, test.options, test.occupied, test.placements)
+			counters := newPackingSeedFeasibilityOperationCounters(Config{OperationProfiling: true})
+			gotRestricted, gotFlexibility, gotFeasible := packingSeedFeasibilityProfiled(test.remaining, test.options, test.occupied, test.placements, counters)
+			if gotRestricted != wantRestricted || gotFlexibility != wantFlexibility || gotFeasible != wantFeasible {
+				t.Fatalf("profiled feasibility=(%d, %d, %t), normal=(%d, %d, %t)", gotRestricted, gotFlexibility, gotFeasible, wantRestricted, wantFlexibility, wantFeasible)
+			}
+			profile := counters.snapshot()
+			if profile.FeasibilityCalls != 1 {
+				t.Fatalf("feasibility calls=%d, want 1", profile.FeasibilityCalls)
+			}
+			assertPackingSeedFeasibilityOperationProfileIdentities(t, profile)
+		})
+	}
+}
+
+func operationProfilePlacement(instanceID string, itemID string, originalIndex int, column int) model.Placement {
+	cell := model.Coord{Col: column}
+	return model.Placement{
+		InstanceID:    instanceID,
+		ItemID:        itemID,
+		OriginalIndex: originalIndex,
+		Origin:        cell,
+		Cells:         []model.Coord{cell},
+		Mask:          uint64(1) << uint(column),
+	}
+}
+
+func assertPackingSeedFeasibilityOperationProfileIdentities(t testing.TB, profile *model.PackingSeedFeasibilityOperationProfile) {
+	t.Helper()
+	if profile == nil {
+		t.Fatal("missing packing-seed feasibility profile")
+	}
+	if profile.CandidateOptionChecks != profile.CandidateOverlapRejects+profile.CandidateCanonical.Calls {
+		t.Fatalf("candidate option identity failed: %+v", profile)
+	}
+	if profile.FeasibilityOptionChecks != profile.FeasibilityOverlapRejects+profile.FeasibilityCanonical.Calls {
+		t.Fatalf("feasibility option identity failed: %+v", profile)
+	}
+	if profile.CandidateCanonical.PlacementKeyCalls != profile.CandidateCanonical.Calls+profile.CandidateCanonical.SameItemComparisons {
+		t.Fatalf("candidate key identity failed: %+v", profile.CandidateCanonical)
+	}
+	if profile.FeasibilityCanonical.PlacementKeyCalls != profile.FeasibilityCanonical.Calls+profile.FeasibilityCanonical.SameItemComparisons {
+		t.Fatalf("feasibility key identity failed: %+v", profile.FeasibilityCanonical)
+	}
+	if profile.CandidateChargeAttempts != profile.CandidateChargeDenied+profile.CandidateExpansions {
+		t.Fatalf("candidate charge identity failed: %+v", profile)
 	}
 }
 

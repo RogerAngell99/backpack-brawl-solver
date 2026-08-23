@@ -19,11 +19,33 @@ func TestSummarizeOperationProfileGroupsAndDerivesSchedulerTelemetry(t *testing.
 		PlacementElementsCopied: 30,
 		StateKeyBytes:           120,
 	}
+	packingSeedProfile := &model.PackingSeedFeasibilityOperationProfile{
+		Version:                        "packing-seed-feasibility-ops-v1",
+		SearchCalls:                    1,
+		StatesVisited:                  10,
+		CandidateOptionChecks:          40,
+		CandidateOverlapRejects:        10,
+		CandidateChargeAttempts:        21,
+		CandidateChargeDenied:          1,
+		CandidateExpansions:            20,
+		FeasibilityCalls:               30,
+		FeasibilityInstancesConsidered: 60,
+		FeasibilityOptionChecks:        90,
+		FeasibilityOverlapRejects:      20,
+		FeasibilityLegalPlacements:     65,
+		FeasibilityDeadReturns:         5,
+		CandidateCanonical: model.PackingSeedCanonicalCopyOrderOperationProfile{
+			Calls: 30, PlacementKeyCalls: 35, SameItemComparisons: 5, PlacementKeyBytes: 200,
+		},
+		FeasibilityCanonical: model.PackingSeedCanonicalCopyOrderOperationProfile{
+			Calls: 70, Rejects: 5, PlacementKeyCalls: 95, SameItemComparisons: 25, PlacementKeyBytes: 1_000,
+		},
+	}
 	report := Report{Runs: []Run{
 		{
 			Scenario: "alpha",
 			Budget:   1_000,
-			Search: SearchSummary{ConstellationSeedDiagnostics: &model.ConstellationSeedDiagnostics{
+			Search: SearchSummary{PackingSeedOperationProfile: packingSeedProfile, ConstellationSeedDiagnostics: &model.ConstellationSeedDiagnostics{
 				RootPackingOperationProfile: profile,
 				Roots: []model.ConstellationRootDiagnostic{{
 					FamilyID:                "single/root-a",
@@ -53,6 +75,9 @@ func TestSummarizeOperationProfileGroupsAndDerivesSchedulerTelemetry(t *testing.
 	if alpha.RootedPacking == nil || alpha.RootedPacking.CandidateExpansions != 10 || alpha.PerCandidateExpansion == nil || alpha.PerCandidateExpansion.FeasibilityOptionChecks != 7 {
 		t.Fatalf("alpha operation summary=%+v", alpha)
 	}
+	if summary.Version != "operation-profile-summary-v2" || alpha.PackingSeedFeasibility == nil || alpha.PackingSeedFeasibility.FeasibilityOptionChecks != 90 || alpha.PackingSeedFeasibilityDerived == nil || alpha.PackingSeedFeasibilityDerived.FeasibilityCallsPerState != 3 || alpha.PackingSeedFeasibilityDerived.PlacementKeyBytesPerCandidateExpansion != 60 || alpha.PackingSeedFeasibilityDerived.FeasibilityCanonicalCallsPerOptionCheck != float64(7)/9 {
+		t.Fatalf("packing-seed summary=%+v", alpha)
+	}
 	if alpha.Scheduler == nil || alpha.Scheduler.FamilyCount != 1 || alpha.Scheduler.FamiliesCompleted != 1 || alpha.Scheduler.ReturnedCapacityTotal != 2 || alpha.Scheduler.ReturnedFractionBPS != 2_000 || alpha.Scheduler.FinalDepth.P50 != 3 {
 		t.Fatalf("alpha scheduler summary=%+v", alpha.Scheduler)
 	}
@@ -61,8 +86,22 @@ func TestSummarizeOperationProfileGroupsAndDerivesSchedulerTelemetry(t *testing.
 	}
 	var formatted strings.Builder
 	FormatOperationProfileSummary(&formatted, summary)
-	if !strings.Contains(formatted.String(), "returned capacity") || !strings.Contains(formatted.String(), "Rooted packing operations") {
+	if !strings.Contains(formatted.String(), "returned capacity") || !strings.Contains(formatted.String(), "Rooted packing operations") || !strings.Contains(formatted.String(), "Packing-seed feasibility") {
 		t.Fatalf("formatted summary=%q", formatted.String())
+	}
+}
+
+func TestSummarizeOperationProfileV2ReadsP0V1StyleReports(t *testing.T) {
+	report := Report{Runs: []Run{{
+		Scenario: "p0-fixture",
+		Budget:   1_000,
+		Search: SearchSummary{ConstellationSeedDiagnostics: &model.ConstellationSeedDiagnostics{
+			RootPackingOperationProfile: &model.ConstellationRootPackingOperationProfile{Version: "root-packing-ops-v1", CandidateExpansions: 1},
+		}},
+	}}}
+	summary := SummarizeOperationProfile(report)
+	if summary.Version != "operation-profile-summary-v2" || summary.Scenarios[0].RootedPacking == nil || summary.Scenarios[0].PackingSeedFeasibility != nil || summary.Scenarios[0].PackingSeedFeasibilityDerived != nil {
+		t.Fatalf("v1 compatibility summary=%+v", summary)
 	}
 }
 

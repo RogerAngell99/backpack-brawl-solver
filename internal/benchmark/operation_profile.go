@@ -18,12 +18,14 @@ type OperationProfileSummaryReport struct {
 }
 
 type OperationProfileScenarioSummary struct {
-	Scenario              string                                          `json:"scenario,omitempty"`
-	Budget                int64                                           `json:"budget,omitempty"`
-	Runs                  int                                             `json:"runs"`
-	RootedPacking         *model.ConstellationRootPackingOperationProfile `json:"rooted_packing_operations,omitempty"`
-	PerCandidateExpansion *OperationProfilePerCandidateExpansion          `json:"per_candidate_expansion,omitempty"`
-	Scheduler             *SchedulerOpportunitySummary                    `json:"scheduler,omitempty"`
+	Scenario                      string                                          `json:"scenario,omitempty"`
+	Budget                        int64                                           `json:"budget,omitempty"`
+	Runs                          int                                             `json:"runs"`
+	RootedPacking                 *model.ConstellationRootPackingOperationProfile `json:"rooted_packing_operations,omitempty"`
+	PerCandidateExpansion         *OperationProfilePerCandidateExpansion          `json:"per_candidate_expansion,omitempty"`
+	PackingSeedFeasibility        *model.PackingSeedFeasibilityOperationProfile   `json:"packing_seed_feasibility,omitempty"`
+	PackingSeedFeasibilityDerived *PackingSeedFeasibilityDerivedSummary           `json:"packing_seed_feasibility_derived,omitempty"`
+	Scheduler                     *SchedulerOpportunitySummary                    `json:"scheduler,omitempty"`
 }
 
 type OperationProfilePerCandidateExpansion struct {
@@ -31,6 +33,24 @@ type OperationProfilePerCandidateExpansion struct {
 	FeasibilityOptionChecks float64 `json:"feasibility_option_checks"`
 	PlacementElementsCopied float64 `json:"placement_elements_copied"`
 	StateKeyBytes           float64 `json:"state_key_bytes"`
+}
+
+// PackingSeedFeasibilityDerivedSummary keeps the ratios used to distinguish
+// repeated feasibility scans from canonical-copy-order representation cost.
+// All values are derived from deterministic aggregate counts rather than
+// elapsed time.
+type PackingSeedFeasibilityDerivedSummary struct {
+	FeasibilityCallsPerState                       float64 `json:"feasibility_calls_per_state"`
+	FeasibilityInstancesPerCall                    float64 `json:"feasibility_instances_per_call"`
+	FeasibilityOptionChecksPerCall                 float64 `json:"feasibility_option_checks_per_call"`
+	FeasibilityOptionChecksPerCandidateExpansion   float64 `json:"feasibility_option_checks_per_candidate_expansion"`
+	FeasibilityCanonicalCallsPerOptionCheck        float64 `json:"feasibility_canonical_calls_per_option_check"`
+	FeasibilitySameItemComparisonsPerCanonicalCall float64 `json:"feasibility_same_item_comparisons_per_canonical_call"`
+	FeasibilityPlacementKeyCallsPerCanonicalCall   float64 `json:"feasibility_placement_key_calls_per_canonical_call"`
+	PlacementKeyBytesPerCandidateExpansion         float64 `json:"placement_key_bytes_per_candidate_expansion"`
+	FeasibilityDeadReturnRate                      float64 `json:"feasibility_dead_return_rate"`
+	FeasibilityOverlapRejectRate                   float64 `json:"feasibility_overlap_reject_rate"`
+	FeasibilityCanonicalRejectRate                 float64 `json:"feasibility_canonical_reject_rate"`
 }
 
 // SchedulerOpportunitySummary intentionally calls returned nodes "returned
@@ -89,7 +109,7 @@ func SummarizeOperationProfile(report Report) OperationProfileSummaryReport {
 		return keys[i].budget < keys[j].budget
 	})
 
-	summary := OperationProfileSummaryReport{Version: "operation-profile-summary-v1", Scenarios: make([]OperationProfileScenarioSummary, 0, len(keys))}
+	summary := OperationProfileSummaryReport{Version: "operation-profile-summary-v2", Scenarios: make([]OperationProfileScenarioSummary, 0, len(keys))}
 	for _, key := range keys {
 		entry := summarizeOperationProfileRuns(groups[key])
 		entry.Scenario = key.scenario
@@ -109,6 +129,9 @@ func summarizeOperationProfileRuns(runs []Run) OperationProfileScenarioSummary {
 	summary := OperationProfileScenarioSummary{Runs: len(runs)}
 	var roots []model.ConstellationRootDiagnostic
 	for _, run := range runs {
+		if run.Search.PackingSeedOperationProfile != nil {
+			summary.PackingSeedFeasibility = mergePackingSeedFeasibilityOperationProfiles(summary.PackingSeedFeasibility, run.Search.PackingSeedOperationProfile)
+		}
 		if run.Search.ConstellationSeedDiagnostics == nil {
 			continue
 		}
@@ -131,8 +154,76 @@ func summarizeOperationProfileRuns(runs []Run) OperationProfileScenarioSummary {
 			StateKeyBytes:           float64(summary.RootedPacking.StateKeyBytes) / candidateExpansions,
 		}
 	}
+	if summary.PackingSeedFeasibility != nil {
+		summary.PackingSeedFeasibilityDerived = derivePackingSeedFeasibilitySummary(summary.PackingSeedFeasibility)
+	}
 	summary.Scheduler = summarizeSchedulerOpportunity(roots)
 	return summary
+}
+
+func mergePackingSeedFeasibilityOperationProfiles(total *model.PackingSeedFeasibilityOperationProfile, next *model.PackingSeedFeasibilityOperationProfile) *model.PackingSeedFeasibilityOperationProfile {
+	if next == nil {
+		return total
+	}
+	if total == nil {
+		copy := *next
+		return &copy
+	}
+	total.SearchCalls += next.SearchCalls
+	total.StatesVisited += next.StatesVisited
+	total.CandidateOptionChecks += next.CandidateOptionChecks
+	total.CandidateOverlapRejects += next.CandidateOverlapRejects
+	total.CandidateChargeAttempts += next.CandidateChargeAttempts
+	total.CandidateChargeDenied += next.CandidateChargeDenied
+	total.CandidateExpansions += next.CandidateExpansions
+	total.FeasibilityCalls += next.FeasibilityCalls
+	total.FeasibilityInstancesConsidered += next.FeasibilityInstancesConsidered
+	total.FeasibilityOptionChecks += next.FeasibilityOptionChecks
+	total.FeasibilityOverlapRejects += next.FeasibilityOverlapRejects
+	total.FeasibilityLegalPlacements += next.FeasibilityLegalPlacements
+	total.FeasibilityDeadReturns += next.FeasibilityDeadReturns
+	addPackingSeedCanonicalCopyOrderProfile(&total.CandidateCanonical, next.CandidateCanonical)
+	addPackingSeedCanonicalCopyOrderProfile(&total.FeasibilityCanonical, next.FeasibilityCanonical)
+	return total
+}
+
+func addPackingSeedCanonicalCopyOrderProfile(total *model.PackingSeedCanonicalCopyOrderOperationProfile, next model.PackingSeedCanonicalCopyOrderOperationProfile) {
+	total.Calls += next.Calls
+	total.Rejects += next.Rejects
+	total.ExistingScanned += next.ExistingScanned
+	total.SameItemComparisons += next.SameItemComparisons
+	total.PlacementKeyCalls += next.PlacementKeyCalls
+	total.PlacementKeyBytes += next.PlacementKeyBytes
+}
+
+func derivePackingSeedFeasibilitySummary(profile *model.PackingSeedFeasibilityOperationProfile) *PackingSeedFeasibilityDerivedSummary {
+	if profile == nil {
+		return nil
+	}
+	canonical := profile.FeasibilityCanonical
+	return &PackingSeedFeasibilityDerivedSummary{
+		FeasibilityCallsPerState:                       operationProfileRatio(profile.FeasibilityCalls, profile.StatesVisited),
+		FeasibilityInstancesPerCall:                    operationProfileRatio(profile.FeasibilityInstancesConsidered, profile.FeasibilityCalls),
+		FeasibilityOptionChecksPerCall:                 operationProfileRatio(profile.FeasibilityOptionChecks, profile.FeasibilityCalls),
+		FeasibilityOptionChecksPerCandidateExpansion:   operationProfileRatio(profile.FeasibilityOptionChecks, profile.CandidateExpansions),
+		FeasibilityCanonicalCallsPerOptionCheck:        operationProfileRatio(canonical.Calls, profile.FeasibilityOptionChecks),
+		FeasibilitySameItemComparisonsPerCanonicalCall: operationProfileRatio(canonical.SameItemComparisons, canonical.Calls),
+		FeasibilityPlacementKeyCallsPerCanonicalCall:   operationProfileRatio(canonical.PlacementKeyCalls, canonical.Calls),
+		PlacementKeyBytesPerCandidateExpansion: operationProfileRatio(
+			profile.CandidateCanonical.PlacementKeyBytes+canonical.PlacementKeyBytes,
+			profile.CandidateExpansions,
+		),
+		FeasibilityDeadReturnRate:      operationProfileRatio(profile.FeasibilityDeadReturns, profile.FeasibilityCalls),
+		FeasibilityOverlapRejectRate:   operationProfileRatio(profile.FeasibilityOverlapRejects, profile.FeasibilityOptionChecks),
+		FeasibilityCanonicalRejectRate: operationProfileRatio(canonical.Rejects, canonical.Calls),
+	}
+}
+
+func operationProfileRatio(numerator int64, denominator int64) float64 {
+	if denominator == 0 {
+		return 0
+	}
+	return float64(numerator) / float64(denominator)
 }
 
 func mergeOperationProfiles(total *model.ConstellationRootPackingOperationProfile, next *model.ConstellationRootPackingOperationProfile) *model.ConstellationRootPackingOperationProfile {
@@ -286,6 +377,18 @@ func FormatOperationProfileSummary(writer io.Writer, summary OperationProfileSum
 			if entry.PerCandidateExpansion != nil {
 				per := entry.PerCandidateExpansion
 				fmt.Fprintf(writer, "  per expansion — MRV: %.1f, feasibility: %.1f, placement elements: %.1f, key bytes: %.1f\n", per.MRVOptionChecks, per.FeasibilityOptionChecks, per.PlacementElementsCopied, per.StateKeyBytes)
+			}
+		}
+		fmt.Fprintf(writer, "Packing-seed feasibility — %s\n", label)
+		if entry.PackingSeedFeasibility == nil {
+			fmt.Fprintln(writer, "  no operation profile present")
+		} else {
+			profile := entry.PackingSeedFeasibility
+			fmt.Fprintf(writer, "  states: %d\n  candidate options: %d\n  candidate expansions: %d\n  feasibility calls: %d\n  feasibility options: %d\n  feasibility legal placements: %d\n", profile.StatesVisited, profile.CandidateOptionChecks, profile.CandidateExpansions, profile.FeasibilityCalls, profile.FeasibilityOptionChecks, profile.FeasibilityLegalPlacements)
+			fmt.Fprintf(writer, "  candidate canonical — calls: %d, rejects: %d, same-item comparisons: %d, placement keys: %d (%d bytes)\n", profile.CandidateCanonical.Calls, profile.CandidateCanonical.Rejects, profile.CandidateCanonical.SameItemComparisons, profile.CandidateCanonical.PlacementKeyCalls, profile.CandidateCanonical.PlacementKeyBytes)
+			fmt.Fprintf(writer, "  feasibility canonical — calls: %d, rejects: %d, same-item comparisons: %d, placement keys: %d (%d bytes)\n", profile.FeasibilityCanonical.Calls, profile.FeasibilityCanonical.Rejects, profile.FeasibilityCanonical.SameItemComparisons, profile.FeasibilityCanonical.PlacementKeyCalls, profile.FeasibilityCanonical.PlacementKeyBytes)
+			if derived := entry.PackingSeedFeasibilityDerived; derived != nil {
+				fmt.Fprintf(writer, "  rates — calls/state: %.2f, options/call: %.1f, options/expansion: %.1f, canonical/options: %.2f, key bytes/expansion: %.1f, dead returns: %.2f%%\n", derived.FeasibilityCallsPerState, derived.FeasibilityOptionChecksPerCall, derived.FeasibilityOptionChecksPerCandidateExpansion, derived.FeasibilityCanonicalCallsPerOptionCheck, derived.PlacementKeyBytesPerCandidateExpansion, 100*derived.FeasibilityDeadReturnRate)
 			}
 		}
 		if entry.Scheduler != nil {
