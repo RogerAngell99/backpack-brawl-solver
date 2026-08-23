@@ -1,0 +1,39 @@
+File: backpack-brawl-solver.exe
+Build ID: C:\Users\roger\AppData\Local\go-build\d5\d5343d8ccef129b431d610ad11b57618b09985eabe3bb8dffea6d51a6ac6c463-d\backpack-brawl-solver.exe2026-08-22 19:22:05.6959988 -0300 -03
+Type: cpu
+Time: 2026-08-22 21:02:58 -03
+Duration: 225.35s, Total samples = 375.38s (166.58%)
+Showing nodes accounting for 74.72s, 19.91% of 375.38s total
+Dropped 728 nodes (cum <= 1.88s)
+Showing top 30 nodes out of 212
+      flat  flat%   sum%        cum   cum%
+         0     0%     0%    211.25s 56.28%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%     0%    211.25s 56.28%  backpack-brawl-solver/internal/solver.SolveLayout
+         0     0%     0%    211.25s 56.28%  backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%     0%    211.23s 56.27%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%     0%    211.16s 56.25%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%     0%    211.07s 56.23%  backpack-brawl-solver/internal/cli.Run
+         0     0%     0%    210.96s 56.20%  main.main
+         0     0%     0%    210.86s 56.17%  runtime.main
+     0.38s   0.1%   0.1%    163.30s 43.50%  runtime.systemstack
+         0     0%   0.1%    130.51s 34.77%  runtime.gcBgMarkWorker.func2
+     1.69s  0.45%  0.55%    130.48s 34.76%  runtime.gcDrain
+     0.09s 0.024%  0.58%    126.63s 33.73%  runtime.gcBgMarkWorker
+    44.27s 11.79% 12.37%    114.49s 30.50%  runtime.scanobject
+         0     0% 12.37%     90.41s 24.08%  backpack-brawl-solver/internal/solver.runTasks
+         0     0% 12.37%     90.36s 24.07%  backpack-brawl-solver/internal/solver.runTask
+     1.28s  0.34% 12.71%     90.35s 24.07%  backpack-brawl-solver/internal/solver.runTask.func3
+     1.84s  0.49% 13.20%     79.63s 21.21%  backpack-brawl-solver/internal/solver.placementKey
+         0     0% 13.20%     76.57s 20.40%  runtime.gcDrainMarkWorkerIdle (inline)
+     0.86s  0.23% 13.43%     73.74s 19.64%  backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+     1.81s  0.48% 13.91%     70.75s 18.85%  fmt.Fprintf
+     0.03s 0.008% 13.92%     66.25s 17.65%  backpack-brawl-solver/internal/solver.packingSeedSearch
+     0.07s 0.019% 13.94%     63.95s 17.04%  backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+     0.91s  0.24% 14.18%     62.85s 16.74%  backpack-brawl-solver/internal/solver.packingFeasibility
+     0.08s 0.021% 14.20%     59.95s 15.97%  backpack-brawl-solver/internal/solver.observeSearchCandidate
+         0     0% 14.20%     53.91s 14.36%  runtime.gcDrainMarkWorkerDedicated (inline)
+     0.88s  0.23% 14.44%     52.09s 13.88%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+    13.98s  3.72% 18.16%     46.51s 12.39%  fmt.(*pp).doPrintf
+     1.62s  0.43% 18.59%     45.39s 12.09%  runtime.mallocgc
+     3.29s  0.88% 19.47%     41.28s 11.00%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+     1.64s  0.44% 19.91%     35.68s  9.51%  runtime.growslice

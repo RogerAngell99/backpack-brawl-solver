@@ -1,0 +1,378 @@
+{
+  "version": "p0-timing-summary-v1",
+  "measured_commit": "5015875f589feb5217802e673c9b00cb5c2fcecb",
+  "workers": 1,
+  "budget": 1000000,
+  "repetitions_per_scenario": 7,
+  "series": [
+    {
+      "name": "gsv1_discarded",
+      "policy": "general-search-v1",
+      "disposition": "discarded_warmup",
+      "source_artifact": "timing-gsv1-1m.raw.json",
+      "source_sha256": "ae75f07fd0a64b13ab5d0cfee19eefdc8035c373875a3b7606fb09721356ab71",
+      "runs": [
+        {
+          "scenario": "gsv2-013",
+          "budget": 1000000,
+          "elapsed_ms": [
+            19135,
+            19419,
+            19097,
+            19222,
+            19414,
+            19085,
+            19048
+          ],
+          "nodes_explored": [
+            885097
+          ],
+          "canonical_layout_hash": [
+            "49d5df655b74a90c1606731aa4c825b6c86980d3f9c57d24725b1252a9d71206"
+          ]
+        },
+        {
+          "scenario": "gsv2-015",
+          "budget": 1000000,
+          "elapsed_ms": [
+            14746,
+            14991,
+            14899,
+            14968,
+            14685,
+            14980,
+            14628
+          ],
+          "nodes_explored": [
+            1000000
+          ],
+          "canonical_layout_hash": [
+            "40b7df66dfab73e85675a732cf5dd8e2c55f0cb8b37a0dfdb56e3b6d42010cd4"
+          ]
+        },
+        {
+          "scenario": "gsv2-016",
+          "budget": 1000000,
+          "elapsed_ms": [
+            28657,
+            28580,
+            28756,
+            28769,
+            28613,
+            28217,
+            28377
+          ],
+          "nodes_explored": [
+            995235
+          ],
+          "canonical_layout_hash": [
+            "7a18bf1093ecbffb6c11db9c1027a7f8b35db3fb67fd67499d272cbf9d782029"
+          ]
+        },
+        {
+          "scenario": "gsv2-018",
+          "budget": 1000000,
+          "elapsed_ms": [
+            68149,
+            65847,
+            65341,
+            63821,
+            62504,
+            61679,
+            61079
+          ],
+          "nodes_explored": [
+            800292
+          ],
+          "canonical_layout_hash": [
+            "88b4d4cbfa55eb9f75bade825cf10a21cc9753a3e7d3b92aad1db50856263742"
+          ]
+        },
+        {
+          "scenario": "gsv2-021",
+          "budget": 1000000,
+          "elapsed_ms": [
+            24918,
+            26635,
+            25827,
+            24976,
+            25004,
+            24874,
+            25078
+          ],
+          "nodes_explored": [
+            888176
+          ],
+          "canonical_layout_hash": [
+            "5b03a1982ead8008efef7c98c89bb775a21263f8c9ca28137d33471dc668b7e3"
+          ]
+        },
+        {
+          "scenario": "gsv2-024",
+          "budget": 1000000,
+          "elapsed_ms": [
+            70800,
+            69060,
+            67400,
+            67248,
+            67169,
+            66885,
+            66305
+          ],
+          "nodes_explored": [
+            883481
+          ],
+          "canonical_layout_hash": [
+            "658cfc01c1ecd1ed7595cd0cf168c4f91193619dddb95a449ff1345c28a24cba"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gsv1_official_rerun",
+      "policy": "general-search-v1",
+      "disposition": "official",
+      "source_artifact": "timing-gsv1-1m-rerun.raw.json",
+      "source_sha256": "fc2c38b36746ca89c7ca8d62a306a3da845543e318ffe5d7f686c22799232a43",
+      "runs": [
+        {
+          "scenario": "gsv2-013",
+          "budget": 1000000,
+          "elapsed_ms": [
+            19122,
+            19358,
+            19240,
+            19110,
+            19248,
+            18985,
+            19192
+          ],
+          "nodes_explored": [
+            885097
+          ],
+          "canonical_layout_hash": [
+            "49d5df655b74a90c1606731aa4c825b6c86980d3f9c57d24725b1252a9d71206"
+          ]
+        },
+        {
+          "scenario": "gsv2-015",
+          "budget": 1000000,
+          "elapsed_ms": [
+            14916,
+            14817,
+            14890,
+            14803,
+            15032,
+            14674,
+            15115
+          ],
+          "nodes_explored": [
+            1000000
+          ],
+          "canonical_layout_hash": [
+            "40b7df66dfab73e85675a732cf5dd8e2c55f0cb8b37a0dfdb56e3b6d42010cd4"
+          ]
+        },
+        {
+          "scenario": "gsv2-016",
+          "budget": 1000000,
+          "elapsed_ms": [
+            28122,
+            28367,
+            28131,
+            28273,
+            28570,
+            28183,
+            28254
+          ],
+          "nodes_explored": [
+            995235
+          ],
+          "canonical_layout_hash": [
+            "7a18bf1093ecbffb6c11db9c1027a7f8b35db3fb67fd67499d272cbf9d782029"
+          ]
+        },
+        {
+          "scenario": "gsv2-018",
+          "budget": 1000000,
+          "elapsed_ms": [
+            67838,
+            65666,
+            64049,
+            63594,
+            63794,
+            62890,
+            62478
+          ],
+          "nodes_explored": [
+            800292
+          ],
+          "canonical_layout_hash": [
+            "88b4d4cbfa55eb9f75bade825cf10a21cc9753a3e7d3b92aad1db50856263742"
+          ]
+        },
+        {
+          "scenario": "gsv2-021",
+          "budget": 1000000,
+          "elapsed_ms": [
+            24903,
+            25014,
+            24816,
+            24916,
+            24812,
+            24976,
+            25214
+          ],
+          "nodes_explored": [
+            888176
+          ],
+          "canonical_layout_hash": [
+            "5b03a1982ead8008efef7c98c89bb775a21263f8c9ca28137d33471dc668b7e3"
+          ]
+        },
+        {
+          "scenario": "gsv2-024",
+          "budget": 1000000,
+          "elapsed_ms": [
+            70279,
+            68760,
+            67728,
+            67042,
+            66849,
+            66906,
+            66551
+          ],
+          "nodes_explored": [
+            883481
+          ],
+          "canonical_layout_hash": [
+            "658cfc01c1ecd1ed7595cd0cf168c4f91193619dddb95a449ff1345c28a24cba"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "v4",
+      "policy": "v4",
+      "disposition": "official",
+      "source_artifact": "timing-v4-1m.raw.json",
+      "source_sha256": "7e417824921f1f44962409b95b408a6d009b0bf9bce2df51ce594fdd8f0eb62e",
+      "runs": [
+        {
+          "scenario": "gsv2-013",
+          "budget": 1000000,
+          "elapsed_ms": [
+            19417,
+            19027,
+            19494,
+            19373,
+            19131,
+            19041,
+            19271
+          ],
+          "nodes_explored": [
+            885097
+          ],
+          "canonical_layout_hash": [
+            "49d5df655b74a90c1606731aa4c825b6c86980d3f9c57d24725b1252a9d71206"
+          ]
+        },
+        {
+          "scenario": "gsv2-015",
+          "budget": 1000000,
+          "elapsed_ms": [
+            14746,
+            15192,
+            14671,
+            15255,
+            14765,
+            15068,
+            14661
+          ],
+          "nodes_explored": [
+            1000000
+          ],
+          "canonical_layout_hash": [
+            "40b7df66dfab73e85675a732cf5dd8e2c55f0cb8b37a0dfdb56e3b6d42010cd4"
+          ]
+        },
+        {
+          "scenario": "gsv2-016",
+          "budget": 1000000,
+          "elapsed_ms": [
+            28140,
+            28389,
+            28159,
+            28209,
+            28098,
+            28101,
+            29478
+          ],
+          "nodes_explored": [
+            995235
+          ],
+          "canonical_layout_hash": [
+            "7a18bf1093ecbffb6c11db9c1027a7f8b35db3fb67fd67499d272cbf9d782029"
+          ]
+        },
+        {
+          "scenario": "gsv2-018",
+          "budget": 1000000,
+          "elapsed_ms": [
+            68964,
+            69930,
+            70035,
+            68991,
+            69217,
+            69506,
+            70057
+          ],
+          "nodes_explored": [
+            800292
+          ],
+          "canonical_layout_hash": [
+            "88b4d4cbfa55eb9f75bade825cf10a21cc9753a3e7d3b92aad1db50856263742"
+          ]
+        },
+        {
+          "scenario": "gsv2-021",
+          "budget": 1000000,
+          "elapsed_ms": [
+            26722,
+            26045,
+            26324,
+            26005,
+            26297,
+            26227,
+            26025
+          ],
+          "nodes_explored": [
+            888176
+          ],
+          "canonical_layout_hash": [
+            "5b03a1982ead8008efef7c98c89bb775a21263f8c9ca28137d33471dc668b7e3"
+          ]
+        },
+        {
+          "scenario": "gsv2-024",
+          "budget": 1000000,
+          "elapsed_ms": [
+            82519,
+            82825,
+            82042,
+            81801,
+            82251,
+            81768,
+            81873
+          ],
+          "nodes_explored": [
+            883481
+          ],
+          "canonical_layout_hash": [
+            "658cfc01c1ecd1ed7595cd0cf168c4f91193619dddb95a449ff1345c28a24cba"
+          ]
+        }
+      ]
+    }
+  ]
+}
