@@ -6,7 +6,8 @@
 - Go: `go1.25.6 windows/amd64`.
 - Host: Windows 11 Home `10.0.26200`, Intel i5-11300H (4 cores / 8 logical processors), balanced power plan.
 - Collection date: 2026-08-22.
-- Artifact directory: `C:\p0-artifacts\5015875f589f`; `SHA256SUMS.txt` hashes its collected files.
+- Raw artifact directory: `C:\p0-artifacts\5015875f589f`; `SHA256SUMS.txt` hashes its collected files.
+- The compact evidence needed to audit this record is versioned in [`p0-evidence/`](p0-evidence/README.md): the operation/scheduler summaries, CPU and allocation text reports, and compact timing CSV/JSON. Raw `.pprof` files and multi-megabyte raw reports remain outside Git.
 - Both correctness gates passed: `go test ./...` and `go test -tags searchprofile ./...`.
 - The `general-search-v2` lock verified and only its fourteen development cases (`gsv2-013`–`gsv2-026`) were materialized. Validation and holdouts were not used.
 - Preflight (`gsv2-013`, 250k) matched normal and `searchprofile` builds for score, canonical-layout hash, nodes explored (237,135), budget consumption, and termination.
@@ -43,12 +44,12 @@ Flat top five:
 
 The important call-stack grouping is more useful than those flat frames:
 
-- **Feasibility / canonical-copy ordering:** `packingFeasibility` is 16.74% cumulative CPU. Its main descendant, `placementRespectsCanonicalCopyOrder`, is 19.64% cumulative and receives 81.92% of its samples from `packingFeasibility`; do not add these overlapping percentages. `placementKey` is 21.21% cumulative, with 88.85% of its samples in `fmt.Fprintf`; 87.17% of `placementKey` callers are canonical-copy-order checks.
+- **Generic packing-seed feasibility / canonical-copy ordering:** `packingFeasibility` is 16.74% cumulative CPU and sits on the `packingSeedSearch` path. Its main descendant, `placementRespectsCanonicalCopyOrder`, is 19.64% cumulative and receives 81.92% of its samples from `packingFeasibility`; do not add these overlapping percentages. `placementKey` is 21.21% cumulative, with 88.85% of its samples in `fmt.Fprintf`; 87.17% of `placementKey` callers are canonical-copy-order checks.
 - **Runtime / GC:** `runtime.gcDrain` is 34.76% cumulative, consistent with the allocation profile. The feasibility path's repeated string construction is an important contributor.
 - **Plateau archive selection:** `selectPlateauEntries` is 11.00% cumulative CPU, but it is archive selection rather than the rooted-packing frontier finish targeted by P1e.
-- **Rooted-packing-specific mechanisms are small in this whole-program profile:** `constellationRootMRVFeasibilityWithOperations` is 1.74%, `constellationRootPackingFinishMRVDepthWithOperations` is 0.14%, and `constellationRootMRVStateKey` is 0.14% cumulative CPU.
+- **Rooted-packing-specific mechanisms are small in this whole-program profile:** `constellationRootMRVFeasibilityWithOperations` is 1.74%, `constellationRootPackingFinishMRVDepthWithOperations` is 0.14%, and `constellationRootMRVStateKey` is 0.14% cumulative CPU. The root-MRV function is the function measured by the rooted-packing operation counters; the generic `packingFeasibility` function is used only for rooted-session initialization there, while it is repeatedly called for packing-seed children.
 
-Using only the non-overlapping `packingFeasibility` region as a conservative whole-program bound, removing 25–50% of that work predicts roughly `1 / (1 - 0.1674 × r) = 1.04–1.09×` speedup. This is deliberately not inflated by adding overlapping canonical-order or GC frames.
+The `1 / (1 - 0.1674 × r) = 1.04–1.09×` Amdahl range applies only to an experiment that removes 25–50% of the **generic `packingFeasibility` region**. It is not a bound for a rooted-packing-only domain cache; the directly profiled rooted-MRV region is 1.74% cumulative CPU. This record therefore does not use 16.74% to promote a rooted-only change.
 
 ## Allocation profile
 
@@ -90,19 +91,23 @@ Timing used the six CPU-profile cases at 1M, normal build, `workers=1`, GSV1 and
 
 Timing confirms that the policy remains competitive or faster in the two more expensive measured cases, but it is not used to attribute the underlying mechanism.
 
-## Hypotheses supported
+## Attribution and follow-up hypotheses
 
-### P2 — incremental domains
+P0 does **not** establish that one optimization is supported by three measurements of the same mechanism. The whole-program signal and the operation/microbenchmark signals are split across two routes:
 
-P2 is supported by all three required signals:
+| Route | Whole-program evidence | Operation and microbenchmark evidence | Scope implication |
+| --- | --- | --- | --- |
+| Generic packing seed | `packingFeasibility`: 16.74% cumulative CPU; `placementKey` formatting/canonical ordering is allocation-heavy | None in this rooted-only counter set | Any domain optimization that claims the 4–9% Amdahl range must change this route. |
+| Rooted packing | `constellationRootMRVFeasibilityWithOperations`: 1.74% cumulative CPU | 539 feasibility option checks/expansion at 1M median; linear MRV-feasibility microbenchmark | A rooted-only cache has a much smaller directly observed whole-program ceiling and reaches only 8/14 development cases at 1M. |
 
-1. **Whole program:** the feasibility/canonical-copy-order path is a 16.74% cumulative CPU region, with repeated allocation and GC pressure from `placementKey` string formatting.
-2. **Operation multiplicity:** feasibility option checks have a 1M median of 539 per candidate expansion (P25/P75 286/746), versus 37 MRV option checks; this occurs in all eight rooted-packing development scenarios that reach the mechanism at 1M.
-3. **Microbenchmark:** MRV feasibility cost and allocations scale approximately linearly with remaining inventory.
+This leaves two distinct, unselected planning hypotheses:
 
-The proposed P2 experiment is limited to maintaining and updating legal domains after each placement, so it avoids rescanning every remaining instance's options. It must preserve canonical-copy-order semantics, beam/ranking policy, quotas, and solver outputs; it is not a scheduler or tuning change.
+1. **P2-root — rooted-packing incremental domains.** Maintain legal domains in `constellationRootPackingSession` and avoid the root-MRV rescan. Its evaluation corpus must be limited to cases that reach rooted packing, and it must not cite the generic 16.74% Amdahl bound.
+2. **P2-global — a shared feasibility/domain engine.** Change both `packingSeedSearch` and rooted packing. This may address the generic hotspot, but requires separate equivalence gates for each phase and evidence that its domain maintenance removes enough of `packingFeasibility` to justify the broader scope.
 
-## Hypotheses rejected for the first follow-up
+There is also a competing, smaller hypothesis: **H2 — canonical-order representation.** The `placementKey`/`fmt.Fprintf` allocation and CPU evidence shows that making canonical-copy-order checks cheaper (for example, with a precomputed canonical rank/key) may be more direct than reducing scan count. H2 is not implemented or selected here; it must be compared with P2-global/P2-root during planning rather than silently folded into either one.
+
+## Hypotheses not promoted by the current evidence
 
 - **P1a option template + retag:** `PlacementOptions` is expensive in isolation, but no corresponding whole-program CPU/allocation hotspot was observed.
 - **P1b fragmentation cache:** frequent but allocation-free and cheap in microbenchmarks; no visible CPU hotspot.
@@ -111,8 +116,12 @@ The proposed P2 experiment is limited to maintaining and updating legal domains 
 - **P1e top-K:** frontiers are much larger than the beam in multiple cases, but the specific finish/sort path is only 0.14% CPU. The 11% plateau-archive selection path is a different mechanism.
 - **X1 ledger batching:** neither whole-program profile nor the with/without-ledger microbenchmarks support it.
 
-## Recommended next experiment
+## Required P0.1 before an implementation PR
 
-**Choose P2 — incremental domains — as the single next optimization experiment.**
+No P1/P2 implementation is selected by this record. Before planning or implementing one, collect a narrow caller-path breakdown that attributes feasibility work separately to `packingSeedSearch` and rooted packing, then choose one of P2-root, P2-global, H2, or no change.
 
-Success should be judged on the same development corpus first: preserve deterministic output/counters, then reduce feasibility scans and demonstrate a consistent whole-program time/allocation improvement. Do not make any scheduler change, policy tuning, beam change, ranking change, or dedup-key redesign in the same PR.
+The implementation plan must state its scope and gates in advance:
+
+- **Semantic invariants that must remain equal:** deterministic score, canonical layout key/hash, nodes explored where the selected algorithm does not intentionally alter search work, root-node budget consumption, scheduler allocations/termination reasons, beam evictions, depths, and ranking/policy behavior.
+- **Work counters expected to change for a feasibility optimization:** `FeasibilityOptionChecks`, `FeasibilityInstancesConsidered`, and potentially `MRVOptionChecks` and allocations. A successful optimization should reduce its intended work; equality is not a valid success criterion for these counters.
+- **Scope-specific evaluation:** P2-root uses only rooted-reaching cases; P2-global proves equivalence independently in generic packing seed and rooted packing. Do not combine this work with scheduler changes, policy tuning, beam changes, ranking changes, or dedup-key redesign.

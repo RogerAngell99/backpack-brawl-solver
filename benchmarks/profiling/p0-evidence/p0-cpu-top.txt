@@ -1,0 +1,39 @@
+File: backpack-brawl-solver.exe
+Build ID: C:\Users\roger\AppData\Local\go-build\d5\d5343d8ccef129b431d610ad11b57618b09985eabe3bb8dffea6d51a6ac6c463-d\backpack-brawl-solver.exe2026-08-22 19:22:05.6959988 -0300 -03
+Type: cpu
+Time: 2026-08-22 21:02:58 -03
+Duration: 225.35s, Total samples = 375.38s (166.58%)
+Showing nodes accounting for 234.41s, 62.45% of 375.38s total
+Dropped 728 nodes (cum <= 1.88s)
+Showing top 30 nodes out of 212
+      flat  flat%   sum%        cum   cum%
+    44.27s 11.79% 11.79%    114.49s 30.50%  runtime.scanobject
+    23.71s  6.32% 18.11%     33.94s  9.04%  runtime.findObject
+    15.31s  4.08% 22.19%     15.31s  4.08%  runtime.duffcopy
+    13.98s  3.72% 25.91%     46.51s 12.39%  fmt.(*pp).doPrintf
+    13.03s  3.47% 29.38%     13.03s  3.47%  runtime.(*mspan).base (inline)
+    10.72s  2.86% 32.24%     10.72s  2.86%  runtime.memmove
+    10.45s  2.78% 35.02%     10.45s  2.78%  runtime.memclrNoHeapPointers
+    10.17s  2.71% 37.73%     10.17s  2.71%  runtime.stdcall2
+     7.79s  2.08% 39.81%     17.21s  4.58%  fmt.(*fmt).fmtInteger
+     6.97s  1.86% 41.66%      7.19s  1.92%  runtime.spanOf (inline)
+     6.25s  1.66% 43.33%     27.66s  7.37%  runtime.greyobject
+     5.71s  1.52% 44.85%      6.65s  1.77%  runtime.typePointers.next
+     5.68s  1.51% 46.36%      5.68s  1.51%  runtime.stdcall1
+     5.61s  1.49% 47.86%      5.61s  1.49%  aeshashbody
+     5.38s  1.43% 49.29%      5.44s  1.45%  runtime.(*gcBits).bitp (inline)
+     4.12s  1.10% 50.39%      4.12s  1.10%  runtime.nextFreeFast
+     3.93s  1.05% 51.44%     22.74s  6.06%  fmt.(*pp).printArg
+     3.83s  1.02% 52.46%      3.83s  1.02%  memeqbody
+     3.73s  0.99% 53.45%      3.75s     1%  fmt.(*pp).argNumber
+     3.54s  0.94% 54.39%      3.75s     1%  runtime.(*mspan).heapBitsSmallForAddr
+     3.50s  0.93% 55.33%      3.50s  0.93%  internal/bytealg.LastIndexByteString
+     3.43s  0.91% 56.24%      3.43s  0.91%  runtime.typePointers.nextFast (inline)
+     3.29s  0.88% 57.12%     41.28s 11.00%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+     3.15s  0.84% 57.95%      3.15s  0.84%  runtime.procyield
+        3s   0.8% 58.75%      4.34s  1.16%  runtime.scanblock
+     2.91s  0.78% 59.53%      9.40s  2.50%  fmt.(*fmt).pad
+     2.84s  0.76% 60.29%     10.18s  2.71%  runtime.sweepone
+     2.78s  0.74% 61.03%      2.78s  0.74%  runtime.stdcall3
+     2.67s  0.71% 61.74%      4.53s  1.21%  fmt.(*buffer).writeString (inline)
+     2.66s  0.71% 62.45%      4.19s  1.12%  fmt.(*buffer).write (inline)

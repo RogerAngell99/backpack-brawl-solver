@@ -1,0 +1,38 @@
+File: backpack-brawl-solver.exe
+Build ID: C:\Users\roger\AppData\Local\go-build\d5\d5343d8ccef129b431d610ad11b57618b09985eabe3bb8dffea6d51a6ac6c463-d\backpack-brawl-solver.exe2026-08-22 19:22:05.6959988 -0300 -03
+Type: alloc_objects
+Time: 2026-08-22 21:06:43 -03
+Showing nodes accounting for 678058892, 97.68% of 694147459 total
+Dropped 176 nodes (cum <= 3470737)
+Showing top 30 nodes out of 67
+      flat  flat%   sum%        cum   cum%
+ 358303147 51.62% 51.62%  358303147 51.62%  strings.(*Builder).Write
+ 168432438 24.26% 75.88%  526938267 75.91%  backpack-brawl-solver/internal/solver.placementKey
+  26457324  3.81% 79.69%   26457324  3.81%  backpack-brawl-solver/internal/solver.physicalInstanceIDs
+  22853519  3.29% 82.99%   38924379  5.61%  backpack-brawl-solver/internal/solver.canonicalPlacementKey
+  14648571  2.11% 85.10%   63054192  9.08%  backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+  14341771  2.07% 87.16%   26612723  3.83%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+  11875594  1.71% 88.87%   11875594  1.71%  backpack-brawl-solver/internal/solver.placementByInstanceID (inline)
+  11140099  1.60% 90.48%   11140099  1.60%  internal/reflectlite.Swapper
+  10867672  1.57% 92.04%   10867672  1.57%  strings.(*Builder).grow
+   9197089  1.32% 93.37%   12270952  1.77%  backpack-brawl-solver/internal/solver.sortPlateauEntries (inline)
+   8364098  1.20% 94.57%    8364098  1.20%  backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents
+   4456507  0.64% 95.22%   70356000 10.14%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+   3996675  0.58% 95.79%    3996675  0.58%  backpack-brawl-solver/internal/scoring.evaluateLooseStarPriority
+   3245268  0.47% 96.26%    6440216  0.93%  backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly
+   2523171  0.36% 96.62%    8963387  1.29%  backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+   2120202  0.31% 96.93%   31353544  4.52%  backpack-brawl-solver/internal/solver.runRepairTask.func1
+   1139054  0.16% 97.09%    4595880  0.66%  backpack-brawl-solver/internal/solver.constellationExactKey
+   1062671  0.15% 97.25%    5059346  0.73%  backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics
+    670023 0.097% 97.34%   16090570  2.32%  backpack-brawl-solver/internal/solver.starSeedSearch
+    631320 0.091% 97.43%   39836558  5.74%  backpack-brawl-solver/internal/solver.canonicalLayoutDigest
+    365928 0.053% 97.49%   27915561  4.02%  backpack-brawl-solver/internal/solver.canonicalLinkTokens
+    361703 0.052% 97.54%  397630912 57.28%  backpack-brawl-solver/internal/solver.packingSeedSearch
+    343489 0.049% 97.59%  103899880 14.97%  backpack-brawl-solver/internal/solver.observeSearchCandidate
+    339556 0.049% 97.64%   56220353  8.10%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+    181961 0.026% 97.66%   50424599  7.26%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+     68970 0.0099% 97.67%    4216615  0.61%  backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+     37032 0.0053% 97.68%    6060026  0.87%  backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+     24637 0.0035% 97.68%    4039137  0.58%  backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+      8043 0.0012% 97.68%   64882895  9.35%  backpack-brawl-solver/internal/solver.constellationSeedSearch
+      1360 0.0002% 97.68%   31368897  4.52%  backpack-brawl-solver/internal/solver.runRepairNeighborhood
