@@ -386,42 +386,6 @@ func operationProfilePipelineSnapshotForTest(solution model.Solution) operationP
 	return snapshot
 }
 
-func operationProfileSemanticSolutionForTest(solution model.Solution) model.Solution {
-	copy := solution
-	search := solution.Search
-	search.NodesPerSecond = 0
-	search.SetupMS = 0
-	search.SeedMS = 0
-	search.RepairMS = 0
-	search.SearchMS = 0
-	search.RefineMS = 0
-	search.ServerElapsedMS = 0
-	search.FirstCompleteMS = 0
-	search.FirstFullyPackedMS = 0
-	search.PackingSeedOperationProfile = nil
-	search.BoundOperationProfile = nil
-	search.IncumbentTrace = append([]model.IncumbentEvent(nil), search.IncumbentTrace...)
-	for index := range search.IncumbentTrace {
-		search.IncumbentTrace[index].ElapsedMS = 0
-	}
-	search.Stages = append([]model.SearchStageStats(nil), search.Stages...)
-	for stageIndex := range search.Stages {
-		search.Stages[stageIndex].IncumbentTrace = append([]model.IncumbentEvent(nil), search.Stages[stageIndex].IncumbentTrace...)
-		for eventIndex := range search.Stages[stageIndex].IncumbentTrace {
-			search.Stages[stageIndex].IncumbentTrace[eventIndex].ElapsedMS = 0
-		}
-	}
-	diagnostics := search.ConstellationSeedDiagnostics
-	diagnostics.RootPackingOperationProfile = nil
-	diagnostics.Roots = append([]model.ConstellationRootDiagnostic(nil), diagnostics.Roots...)
-	for index := range diagnostics.Roots {
-		diagnostics.Roots[index].OperationProfile = nil
-	}
-	search.ConstellationSeedDiagnostics = diagnostics
-	copy.Search = search
-	return copy
-}
-
 func firstOperationProfileDifference(left reflect.Value, right reflect.Value, path string) string {
 	if !left.IsValid() || !right.IsValid() {
 		if left.IsValid() == right.IsValid() {

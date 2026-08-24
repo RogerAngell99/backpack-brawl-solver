@@ -35,6 +35,14 @@ jobs:
       - name: Test Go search profiling
         run: go test -tags searchprofile ./...
 
+      - name: Verify R1I normal and tagged-off equivalence
+        shell: bash
+        run: |
+          snapshot_dir="$(mktemp -d)"
+          R1I_SEMANTIC_SNAPSHOT="$snapshot_dir/normal.json" go test ./internal/solver -run '^TestR1ICrossBuildSemanticSnapshot$' -count=1
+          R1I_SEMANTIC_SNAPSHOT="$snapshot_dir/tagged-off.json" go test -tags searchprofile ./internal/solver -run '^TestR1ICrossBuildSemanticSnapshot$' -count=1
+          cmp "$snapshot_dir/normal.json" "$snapshot_dir/tagged-off.json"
+
       - name: Verify pinned search suites
         run: |
           go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v1.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v1.lock

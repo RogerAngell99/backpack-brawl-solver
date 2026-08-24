@@ -1202,6 +1202,27 @@ func TestStopOnCoverageCeilingStopsAndReports(t *testing.T) {
 	}
 }
 
+func TestCoverageCeilingRepairProjectionPreservesOutgoingStats(t *testing.T) {
+	stats := model.SearchStats{}
+	repair := repairResult{
+		OutgoingBoundChecks:      17,
+		OutgoingBoundPrunedNodes: 6,
+		CoverageBoundChecks:      23,
+		CoveragePrunedNodes:      9,
+		ExactBoundChecks:         11,
+		ExactBoundPrunedNodes:    4,
+	}
+
+	applyRepairResultStats(&stats, repair)
+
+	if stats.OutgoingBoundChecks != repair.OutgoingBoundChecks || stats.OutgoingBoundPrunedNodes != repair.OutgoingBoundPrunedNodes {
+		t.Fatalf("coverage-ceiling projection lost authoritative outgoing stats: stats=%+v repair=%+v", stats, repair)
+	}
+	if stats.CoverageBoundChecks != repair.CoverageBoundChecks || stats.CoveragePrunedNodes != repair.CoveragePrunedNodes || stats.ExactBoundChecks != repair.ExactBoundChecks || stats.ExactBoundPrunedNodes != repair.ExactBoundPrunedNodes {
+		t.Fatalf("coverage-ceiling projection lost bound stats: stats=%+v repair=%+v", stats, repair)
+	}
+}
+
 func TestStopOnCoverageCeilingRequiresTopOne(t *testing.T) {
 	cat := coverageCeilingTestCatalog()
 
