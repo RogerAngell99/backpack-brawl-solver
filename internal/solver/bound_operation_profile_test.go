@@ -13,9 +13,9 @@ import (
 
 func TestProfiledPriorityUpperBoundMatchesNormalAndAccountsGeometryRegimes(t *testing.T) {
 	catalog, instances, optionsByInstance, state, priorities, _ := boundAttributionFixture(t)
-	want := partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, priorities)
+	want := partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, priorities, nil)
 	var profile model.PriorityUpperBoundSiteProfile
-	got := partialRepairV3PriorityUpperBoundProfiled(catalog, state, optionsByInstance, priorities, &profile)
+	got := partialRepairV3PriorityUpperBoundProfiled(catalog, state, optionsByInstance, priorities, nil, &profile)
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("profiled priority upper=%v, normal=%v", got, want)
 	}
@@ -41,7 +41,7 @@ func TestProfiledPriorityUpperBoundMatchesNormalAndAccountsGeometryRegimes(t *te
 func TestProfiledPriorityUpperBoundAccountsInvalidAndZeroStarSources(t *testing.T) {
 	catalog, _, optionsByInstance, state, _, _ := boundAttributionFixture(t)
 	var invalid model.PriorityUpperBoundSiteProfile
-	got := partialRepairV3PriorityUpperBoundProfiled(catalog, state, optionsByInstance, []string{"craft:missing"}, &invalid)
+	got := partialRepairV3PriorityUpperBoundProfiled(catalog, state, optionsByInstance, []string{"craft:missing"}, nil, &invalid)
 	if got != nil {
 		t.Fatalf("invalid priority upper=%v, want nil", got)
 	}
@@ -58,7 +58,7 @@ func TestProfiledPriorityUpperBoundAccountsInvalidAndZeroStarSources(t *testing.
 	zeroOptions := testOptionsByInstance(t, zeroCatalog, zeroInstances)
 	zeroState := partialRepairState{RemovedInstances: zeroInstances, FreeCells: 1}
 	var zero model.PriorityUpperBoundSiteProfile
-	zeroUpper := partialRepairV3PriorityUpperBoundProfiled(zeroCatalog, zeroState, zeroOptions, []string{"star_source:zero"}, &zero)
+	zeroUpper := partialRepairV3PriorityUpperBoundProfiled(zeroCatalog, zeroState, zeroOptions, []string{"star_source:zero"}, nil, &zero)
 	recordPriorityUpperBoundResult(&zero, partialRepairTargetVectorFeasible(zeroUpper, []int{0}))
 	assertPriorityUpperBoundSiteProfileIdentities(t, zero)
 	if !reflect.DeepEqual(zeroUpper, []int{0}) || zero.RemovedSourceInstances != 1 || zero.StarSlots != 0 || zero.MatchingCalls != 0 {

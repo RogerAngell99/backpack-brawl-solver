@@ -191,6 +191,17 @@ func starPositionHitsTarget(catalog model.Catalog, source model.Placement, targe
 	return target.Mask&(uint64(1)<<uint(geometry.CellIndex(star.Position))) != 0
 }
 
+func starPositionGeometryHitsTarget(source model.Placement, target model.Placement, starIndex int) bool {
+	if starIndex < 0 || starIndex >= len(source.StarPositions) {
+		return false
+	}
+	star := source.StarPositions[starIndex]
+	if !geometry.InBounds(star.Position) {
+		return false
+	}
+	return target.Mask&(uint64(1)<<uint(geometry.CellIndex(star.Position))) != 0
+}
+
 func maximumSlotMatching(slotTargets []uint64) int {
 	matchedSlots := [64]int{}
 	for index := range matchedSlots {

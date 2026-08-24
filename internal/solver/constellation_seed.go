@@ -845,10 +845,11 @@ func filterConstellationPriorityFeasibleStates(
 			FreeCells:        gridMask &^ state.occupied,
 		}
 		var upper []int
+		compatibility := config.priorityBounds.staticStarCompatibility()
 		if searchOperationProfilingAvailable && config.OperationProfiling {
-			upper = partialRepairV3PriorityUpperBoundProfiled(catalog, partial, optionsByInstance, config.Priorities, operationCounters.prioritySite(boundPriorityConstellationFilter))
+			upper = partialRepairV3PriorityUpperBoundProfiled(catalog, partial, optionsByInstance, config.Priorities, compatibility, operationCounters.prioritySite(boundPriorityConstellationFilter))
 		} else {
-			upper = partialRepairV3PriorityUpperBound(catalog, partial, optionsByInstance, config.Priorities)
+			upper = partialRepairV3PriorityUpperBound(catalog, partial, optionsByInstance, config.Priorities, compatibility)
 		}
 		feasible := partialRepairTargetVectorFeasible(upper, config.priorityBounds.ceiling)
 		if searchOperationProfilingAvailable && config.OperationProfiling {

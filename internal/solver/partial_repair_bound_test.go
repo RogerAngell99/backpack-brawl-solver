@@ -37,7 +37,7 @@ func TestPartialRepairBoundsAreOptimisticForAllCompletions(t *testing.T) {
 		FreeCells:         grid &^ (fixedSource.Mask | currentFood.Mask),
 	}
 	priorities := []string{"star_source:source"}
-	priorityUpper := partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, priorities)
+	priorityUpper := partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, priorities, nil)
 	starUpper := partialRelaxedStarUpperBound(catalog, state, optionsByInstance)
 	if got := len(partialRepairFixedStars(catalog, state)); got != 1 {
 		t.Fatalf("fixed stars=%d want 1", got)

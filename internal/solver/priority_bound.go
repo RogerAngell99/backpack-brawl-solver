@@ -9,7 +9,8 @@ import (
 // priority vector. Reaching this ceiling proves no later search can improve a
 // priority, but it deliberately says nothing about star-count tie breakers.
 type priorityBoundContext struct {
-	ceiling []int
+	ceiling           []int
+	starCompatibility *priorityStarCompatibility
 }
 
 func newPriorityBoundContext(
@@ -22,6 +23,7 @@ func newPriorityBoundContext(
 		return nil
 	}
 	ceiling := make([]int, 0, len(priorities))
+	sourceItemIDs := make([]string, 0, len(priorities))
 	for _, priority := range priorities {
 		kind, sourceItemID, ok := parsePriorityForSolver(priority)
 		if !ok || kind != "star_source" {
@@ -57,8 +59,19 @@ func newPriorityBoundContext(
 			}
 		}
 		ceiling = append(ceiling, maxForSource)
+		sourceItemIDs = append(sourceItemIDs, sourceItemID)
 	}
-	return &priorityBoundContext{ceiling: ceiling}
+	return &priorityBoundContext{
+		ceiling:           ceiling,
+		starCompatibility: newPriorityStarCompatibility(catalog, instances, sourceItemIDs),
+	}
+}
+
+func (ctx *priorityBoundContext) staticStarCompatibility() *priorityStarCompatibility {
+	if ctx == nil {
+		return nil
+	}
+	return ctx.starCompatibility
 }
 
 func (ctx *priorityBoundContext) reached(score model.Score) bool {

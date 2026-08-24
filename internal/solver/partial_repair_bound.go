@@ -28,6 +28,7 @@ func partialRepairV3PriorityUpperBound(
 	state partialRepairState,
 	optionsByInstance map[string][]model.Placement,
 	priorities []string,
+	compatibility *priorityStarCompatibility,
 ) []int {
 	for _, priority := range priorities {
 		kind, sourceItemID, ok := parsePriorityForSolver(priority)
@@ -48,7 +49,7 @@ func partialRepairV3PriorityUpperBound(
 		_, sourceItemID, _ := parsePriorityForSolver(priority)
 		count, exists := upperBySourceItem[sourceItemID]
 		if !exists {
-			count = partialRepairStarUpperForItem(catalog, sourceItemID, anchored, removed, removedOptions)
+			count = partialRepairStarUpperForItem(catalog, sourceItemID, anchored, removed, removedOptions, compatibility)
 			upperBySourceItem[sourceItemID] = count
 		}
 		upper[priorityIndex] = count
@@ -76,10 +77,10 @@ func partialRelaxedStarUpperBound(
 	removedOptions := state.filteredRemovedOptions(removed, optionsByInstance)
 	upper := 0
 	for sourceIndex := range anchored {
-		upper += partialRepairSourceStarUpper(catalog, &anchored[sourceIndex], model.InventoryInstance{}, anchored, removed, removedOptions)
+		upper += partialRepairSourceStarUpper(catalog, &anchored[sourceIndex], model.InventoryInstance{}, anchored, removed, removedOptions, nil)
 	}
 	for sourceIndex := range removed {
-		upper += partialRepairSourceStarUpper(catalog, nil, removed[sourceIndex], anchored, removed, removedOptions)
+		upper += partialRepairSourceStarUpper(catalog, nil, removed[sourceIndex], anchored, removed, removedOptions, nil)
 	}
 	return upper
 }
@@ -182,19 +183,20 @@ func partialRepairStarUpperForItem(
 	anchored []model.Placement,
 	removed []model.InventoryInstance,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 ) int {
 	upper := 0
 	for sourceIndex := range anchored {
 		if anchored[sourceIndex].ItemID != sourceItemID {
 			continue
 		}
-		upper += partialRepairSourceStarUpper(catalog, &anchored[sourceIndex], model.InventoryInstance{}, anchored, removed, removedOptions)
+		upper += partialRepairSourceStarUpper(catalog, &anchored[sourceIndex], model.InventoryInstance{}, anchored, removed, removedOptions, compatibility)
 	}
 	for sourceIndex := range removed {
 		if removed[sourceIndex].ItemID != sourceItemID {
 			continue
 		}
-		upper += partialRepairSourceStarUpper(catalog, nil, removed[sourceIndex], anchored, removed, removedOptions)
+		upper += partialRepairSourceStarUpper(catalog, nil, removed[sourceIndex], anchored, removed, removedOptions, compatibility)
 	}
 	return upper
 }
@@ -206,6 +208,7 @@ func partialRepairSourceStarUpper(
 	anchored []model.Placement,
 	removed []model.InventoryInstance,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 ) int {
 	sourceItemID := removedSource.ItemID
 	if fixedSource != nil {
@@ -220,12 +223,12 @@ func partialRepairSourceStarUpper(
 	slots := make([][]int, len(item.Stars))
 	for starIndex := range slots {
 		for targetIndex := range anchored {
-			if partialRepairSlotCanHitFixedTarget(catalog, fixedSource, removedSource, anchored[targetIndex], starIndex, removedOptions) {
+			if partialRepairSlotCanHitFixedTarget(catalog, fixedSource, removedSource, anchored[targetIndex], starIndex, removedOptions, compatibility) {
 				slots[starIndex] = append(slots[starIndex], targetIndex)
 			}
 		}
 		for targetIndex := range removed {
-			if partialRepairSlotCanHitRemovedTarget(catalog, fixedSource, removedSource, removed[targetIndex], starIndex, removedOptions) {
+			if partialRepairSlotCanHitRemovedTarget(catalog, fixedSource, removedSource, removed[targetIndex], starIndex, removedOptions, compatibility) {
 				slots[starIndex] = append(slots[starIndex], len(anchored)+targetIndex)
 			}
 		}
@@ -240,18 +243,21 @@ func partialRepairSlotCanHitFixedTarget(
 	fixedTarget model.Placement,
 	starIndex int,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 ) bool {
 	if fixedSource != nil {
-		if fixedSource.InstanceID == fixedTarget.InstanceID || fixedSource.Mask&fixedTarget.Mask != 0 {
+		if fixedSource.InstanceID == fixedTarget.InstanceID {
 			return false
 		}
-		return starPositionHitsTarget(catalog, *fixedSource, fixedTarget, starIndex)
+		staticCompatible, cached := compatibility.match(fixedSource.OriginalIndex, starIndex, fixedTarget.OriginalIndex)
+		return priorityGeometryCandidateHits(catalog, *fixedSource, fixedTarget, starIndex, staticCompatible, cached)
 	}
 	if removedSource.InstanceID == fixedTarget.InstanceID {
 		return false
 	}
+	staticCompatible, cached := compatibility.match(removedSource.OriginalIndex, starIndex, fixedTarget.OriginalIndex)
 	for _, sourceOption := range removedOptions[removedSource.InstanceID] {
-		if sourceOption.Mask&fixedTarget.Mask == 0 && starPositionHitsTarget(catalog, sourceOption, fixedTarget, starIndex) {
+		if priorityGeometryCandidateHits(catalog, sourceOption, fixedTarget, starIndex, staticCompatible, cached) {
 			return true
 		}
 	}
@@ -265,13 +271,15 @@ func partialRepairSlotCanHitRemovedTarget(
 	removedTarget model.InventoryInstance,
 	starIndex int,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 ) bool {
 	if fixedSource != nil {
 		if fixedSource.InstanceID == removedTarget.InstanceID {
 			return false
 		}
+		staticCompatible, cached := compatibility.match(fixedSource.OriginalIndex, starIndex, removedTarget.OriginalIndex)
 		for _, targetOption := range removedOptions[removedTarget.InstanceID] {
-			if fixedSource.Mask&targetOption.Mask == 0 && starPositionHitsTarget(catalog, *fixedSource, targetOption, starIndex) {
+			if priorityGeometryCandidateHits(catalog, *fixedSource, targetOption, starIndex, staticCompatible, cached) {
 				return true
 			}
 		}
@@ -280,14 +288,32 @@ func partialRepairSlotCanHitRemovedTarget(
 	if removedSource.InstanceID == removedTarget.InstanceID {
 		return false
 	}
+	staticCompatible, cached := compatibility.match(removedSource.OriginalIndex, starIndex, removedTarget.OriginalIndex)
 	for _, sourceOption := range removedOptions[removedSource.InstanceID] {
 		for _, targetOption := range removedOptions[removedTarget.InstanceID] {
-			if sourceOption.Mask&targetOption.Mask == 0 && starPositionHitsTarget(catalog, sourceOption, targetOption, starIndex) {
+			if priorityGeometryCandidateHits(catalog, sourceOption, targetOption, starIndex, staticCompatible, cached) {
 				return true
 			}
 		}
 	}
 	return false
+}
+
+func priorityGeometryCandidateHits(
+	catalog model.Catalog,
+	source model.Placement,
+	target model.Placement,
+	starIndex int,
+	staticCompatible bool,
+	compatibilityCached bool,
+) bool {
+	if source.Mask&target.Mask != 0 {
+		return false
+	}
+	if !compatibilityCached {
+		return starPositionHitsTarget(catalog, source, target, starIndex)
+	}
+	return source.InstanceID != target.InstanceID && staticCompatible && starPositionGeometryHitsTarget(source, target, starIndex)
 }
 
 func partialRepairMaximumSlotMatching(slotTargets [][]int, targetCount int) int {

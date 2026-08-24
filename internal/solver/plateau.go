@@ -1015,10 +1015,11 @@ func prioritizePlateauNeighborhoods(
 		}
 		state := partialRepairState{FixedPlacements: fixed, RemovedInstances: removed, FreeCells: gridMask &^ fixedOccupied}
 		var upper []int
+		compatibility := config.priorityBounds.staticStarCompatibility()
 		if searchOperationProfilingAvailable && config.OperationProfiling {
-			upper = partialRepairV3PriorityUpperBoundProfiled(catalog, state, optionsByInstance, config.Priorities, operationCounters.prioritySite(boundPriorityPlateauPrefilter))
+			upper = partialRepairV3PriorityUpperBoundProfiled(catalog, state, optionsByInstance, config.Priorities, compatibility, operationCounters.prioritySite(boundPriorityPlateauPrefilter))
 		} else {
-			upper = partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, config.Priorities)
+			upper = partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, config.Priorities, compatibility)
 		}
 		feasible := partialRepairTargetVectorFeasible(upper, incumbent.PriorityCounts)
 		if searchOperationProfilingAvailable && config.OperationProfiling {

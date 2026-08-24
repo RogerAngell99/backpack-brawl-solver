@@ -115,6 +115,7 @@ func partialRepairV3PriorityUpperBoundProfiled(
 	state partialRepairState,
 	optionsByInstance map[string][]model.Placement,
 	priorities []string,
+	compatibility *priorityStarCompatibility,
 	profile *model.PriorityUpperBoundSiteProfile,
 ) []int {
 	profile.Calls++
@@ -146,7 +147,7 @@ func partialRepairV3PriorityUpperBoundProfiled(
 		count, exists := upperBySourceItem[sourceItemID]
 		if !exists {
 			profile.UniquePrioritySourceItems++
-			count = partialRepairStarUpperForItemProfiled(catalog, sourceItemID, anchored, removed, removedOptions, profile)
+			count = partialRepairStarUpperForItemProfiled(catalog, sourceItemID, anchored, removed, removedOptions, compatibility, profile)
 			upperBySourceItem[sourceItemID] = count
 		}
 		upper[priorityIndex] = count
@@ -187,6 +188,7 @@ func partialRepairStarUpperForItemProfiled(
 	anchored []model.Placement,
 	removed []model.InventoryInstance,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 	profile *model.PriorityUpperBoundSiteProfile,
 ) int {
 	upper := 0
@@ -195,14 +197,14 @@ func partialRepairStarUpperForItemProfiled(
 			continue
 		}
 		profile.AnchoredSourceInstances++
-		upper += partialRepairSourceStarUpperProfiled(catalog, &anchored[sourceIndex], model.InventoryInstance{}, anchored, removed, removedOptions, profile)
+		upper += partialRepairSourceStarUpperProfiled(catalog, &anchored[sourceIndex], model.InventoryInstance{}, anchored, removed, removedOptions, compatibility, profile)
 	}
 	for sourceIndex := range removed {
 		if removed[sourceIndex].ItemID != sourceItemID {
 			continue
 		}
 		profile.RemovedSourceInstances++
-		upper += partialRepairSourceStarUpperProfiled(catalog, nil, removed[sourceIndex], anchored, removed, removedOptions, profile)
+		upper += partialRepairSourceStarUpperProfiled(catalog, nil, removed[sourceIndex], anchored, removed, removedOptions, compatibility, profile)
 	}
 	return upper
 }
@@ -214,6 +216,7 @@ func partialRepairSourceStarUpperProfiled(
 	anchored []model.Placement,
 	removed []model.InventoryInstance,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 	profile *model.PriorityUpperBoundSiteProfile,
 ) int {
 	sourceItemID := removedSource.ItemID
@@ -231,13 +234,13 @@ func partialRepairSourceStarUpperProfiled(
 	for starIndex := range slots {
 		for targetIndex := range anchored {
 			profile.FixedTargetChecks++
-			if partialRepairSlotCanHitFixedTargetProfiled(catalog, fixedSource, removedSource, anchored[targetIndex], starIndex, removedOptions, profile) {
+			if partialRepairSlotCanHitFixedTargetProfiled(catalog, fixedSource, removedSource, anchored[targetIndex], starIndex, removedOptions, compatibility, profile) {
 				slots[starIndex] = append(slots[starIndex], targetIndex)
 			}
 		}
 		for targetIndex := range removed {
 			profile.RemovedTargetChecks++
-			if partialRepairSlotCanHitRemovedTargetProfiled(catalog, fixedSource, removedSource, removed[targetIndex], starIndex, removedOptions, profile) {
+			if partialRepairSlotCanHitRemovedTargetProfiled(catalog, fixedSource, removedSource, removed[targetIndex], starIndex, removedOptions, compatibility, profile) {
 				slots[starIndex] = append(slots[starIndex], len(anchored)+targetIndex)
 			}
 		}
@@ -253,6 +256,7 @@ func partialRepairSlotCanHitFixedTargetProfiled(
 	fixedTarget model.Placement,
 	starIndex int,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 	profile *model.PriorityUpperBoundSiteProfile,
 ) bool {
 	if fixedSource != nil {
@@ -261,15 +265,17 @@ func partialRepairSlotCanHitFixedTargetProfiled(
 			return false
 		}
 		profile.FixedFixedGeometryChecks++
-		return priorityGeometryCandidateHitsProfiled(catalog, *fixedSource, fixedTarget, starIndex, profile)
+		staticCompatible, cached := compatibility.match(fixedSource.OriginalIndex, starIndex, fixedTarget.OriginalIndex)
+		return priorityGeometryCandidateHitsProfiled(catalog, *fixedSource, fixedTarget, starIndex, staticCompatible, cached, profile)
 	}
 	if removedSource.InstanceID == fixedTarget.InstanceID {
 		profile.SelfTargetSkips++
 		return false
 	}
+	staticCompatible, cached := compatibility.match(removedSource.OriginalIndex, starIndex, fixedTarget.OriginalIndex)
 	for _, sourceOption := range removedOptions[removedSource.InstanceID] {
 		profile.RemovedSourceOptionChecksFixedTarget++
-		if priorityGeometryCandidateHitsProfiled(catalog, sourceOption, fixedTarget, starIndex, profile) {
+		if priorityGeometryCandidateHitsProfiled(catalog, sourceOption, fixedTarget, starIndex, staticCompatible, cached, profile) {
 			return true
 		}
 	}
@@ -283,6 +289,7 @@ func partialRepairSlotCanHitRemovedTargetProfiled(
 	removedTarget model.InventoryInstance,
 	starIndex int,
 	removedOptions map[string][]model.Placement,
+	compatibility *priorityStarCompatibility,
 	profile *model.PriorityUpperBoundSiteProfile,
 ) bool {
 	if fixedSource != nil {
@@ -290,9 +297,10 @@ func partialRepairSlotCanHitRemovedTargetProfiled(
 			profile.SelfTargetSkips++
 			return false
 		}
+		staticCompatible, cached := compatibility.match(fixedSource.OriginalIndex, starIndex, removedTarget.OriginalIndex)
 		for _, targetOption := range removedOptions[removedTarget.InstanceID] {
 			profile.FixedSourceTargetOptionChecks++
-			if priorityGeometryCandidateHitsProfiled(catalog, *fixedSource, targetOption, starIndex, profile) {
+			if priorityGeometryCandidateHitsProfiled(catalog, *fixedSource, targetOption, starIndex, staticCompatible, cached, profile) {
 				return true
 			}
 		}
@@ -302,10 +310,11 @@ func partialRepairSlotCanHitRemovedTargetProfiled(
 		profile.SelfTargetSkips++
 		return false
 	}
+	staticCompatible, cached := compatibility.match(removedSource.OriginalIndex, starIndex, removedTarget.OriginalIndex)
 	for _, sourceOption := range removedOptions[removedSource.InstanceID] {
 		for _, targetOption := range removedOptions[removedTarget.InstanceID] {
 			profile.RemovedSourceTargetOptionPairs++
-			if priorityGeometryCandidateHitsProfiled(catalog, sourceOption, targetOption, starIndex, profile) {
+			if priorityGeometryCandidateHitsProfiled(catalog, sourceOption, targetOption, starIndex, staticCompatible, cached, profile) {
 				return true
 			}
 		}
@@ -318,6 +327,8 @@ func priorityGeometryCandidateHitsProfiled(
 	source model.Placement,
 	target model.Placement,
 	starIndex int,
+	staticCompatible bool,
+	compatibilityCached bool,
 	profile *model.PriorityUpperBoundSiteProfile,
 ) bool {
 	profile.GeometryCandidateChecks++
@@ -326,7 +337,13 @@ func priorityGeometryCandidateHitsProfiled(
 		return false
 	}
 	profile.StarPositionHitCalls++
-	if !starPositionHitsTarget(catalog, source, target, starIndex) {
+	var hit bool
+	if compatibilityCached {
+		hit = source.InstanceID != target.InstanceID && staticCompatible && starPositionGeometryHitsTarget(source, target, starIndex)
+	} else {
+		hit = starPositionHitsTarget(catalog, source, target, starIndex)
+	}
+	if !hit {
 		return false
 	}
 	profile.StarPositionHitTrue++
