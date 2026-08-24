@@ -91,3 +91,11 @@ Normal-build CPU/heap profiles used the same frozen six-case 1M slice:
 
 These profiles support the intended causal chain. They are diagnostic; the
 paired wall-clock result is the keep criterion.
+
+## Decision
+
+**KEEP H2a.** The implementation preserves the exact lexical canonical-order
+contract and all measured search/output invariants while providing a repeatable
+whole-program speedup. Reprofile before considering any H2b representation
+change; do not add a rank, cache, or `Placement` field merely because those
+ideas remain available.
