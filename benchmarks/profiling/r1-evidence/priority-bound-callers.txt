@@ -1,0 +1,338 @@
+### priority-bound focus
+
+File: solver.exe
+Build ID: C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver.exe2026-08-23 22:04:00.6207248 -0300 -03
+Type: cpu
+Time: 2026-08-23 22:27:36 -03
+Duration: 154.84s, Total samples = 292.13s (188.67%)
+Active filters:
+   focus=filterConstellationPriorityFeasibleStates|partialRepairV3PriorityUpperBoun…
+Showing nodes accounting for 22.31s, 7.64% of 292.13s total
+Dropped 129 nodes (cum <= 1.46s)
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context 	 	 
+----------------------------------------------------------+-------------
+                                             2.55s 47.22% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+                                             2.07s 38.33% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             0.42s  7.78% |   backpack-brawl-solver/internal/solver.starPositionHitsTarget
+                                             0.34s  6.30% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+     5.40s  1.85%  1.85%      5.40s  1.85%                | runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             2.64s   100% |   strings.LastIndex (inline)
+     2.64s   0.9%  2.75%      2.64s   0.9%                | internal/bytealg.LastIndexByteString
+----------------------------------------------------------+-------------
+                                             0.84s 53.16% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             0.74s 46.84% |   runtime.strequal
+     1.58s  0.54%  3.29%      1.58s  0.54%                | memeqbody
+----------------------------------------------------------+-------------
+                                             6.83s   100% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             3.75s 54.90% |   backpack-brawl-solver/internal/scoring.evaluateCompound
+     1.56s  0.53%  3.83%      6.83s  2.34%                | backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             4.38s 64.13% |   backpack-brawl-solver/internal/scoring.evaluateCompound
+                                             3.47s 50.81% |   backpack-brawl-solver/internal/scoring.conditionClass (inline)
+                                             0.84s 12.30% |   memeqbody
+                                             0.14s  2.05% |   runtime.memequal
+                                             0.12s  1.76% |   backpack-brawl-solver/internal/scoring.canonicalStatType
+----------------------------------------------------------+-------------
+                                             1.31s 94.24% |   runtime.mapaccess2
+                                             0.04s  2.88% |   runtime.mapassign_faststr
+                                             0.03s  2.16% |   runtime.mapaccess1_faststr
+     1.39s  0.48%  4.30%      1.39s  0.48%                | aeshashbody
+----------------------------------------------------------+-------------
+                                            16.72s   100% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems
+     1.08s  0.37%  4.67%     16.72s  5.72%                | backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             6.83s 40.85% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             6.28s 37.56% |   runtime.mapaccess2
+                                             2.07s 12.38% |   runtime.duffcopy
+                                             0.46s  2.75% |   runtime.duffzero
+----------------------------------------------------------+-------------
+                                             6.28s   100% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+     1.05s  0.36%  5.03%      6.28s  2.15%                | runtime.mapaccess2
+                                             1.31s 20.86% |   aeshashbody
+                                             1.29s 20.54% |   runtime.strequal
+                                             0.75s 11.94% |   internal/runtime/maps.ctrlGroup.matchH2 (inline)
+                                             0.51s  8.12% |   internal/runtime/maps.(*groupReference).key (inline)
+                                             0.33s  5.25% |   internal/runtime/maps.(*Map).directoryAt (inline)
+                                             0.18s  2.87% |   internal/runtime/maps.(*Map).Used (inline)
+                                             0.15s  2.39% |   internal/abi.(*SwissMapType).IndirectKey (inline)
+                                             0.15s  2.39% |   runtime.strhash
+                                             0.13s  2.07% |   internal/runtime/maps.h2 (inline)
+                                             0.12s  1.91% |   internal/abi.(*SwissMapType).IndirectElem (inline)
+                                             0.12s  1.91% |   internal/runtime/maps.h1 (inline)
+----------------------------------------------------------+-------------
+                                            17.99s 99.01% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+                                             0.18s  0.99% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitFixedTarget
+     0.87s   0.3%  5.33%     18.17s  6.22%                | backpack-brawl-solver/internal/solver.starPositionHitsTarget
+                                            16.87s 92.85% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+                                             0.42s  2.31% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.75s 98.68% |   runtime.mapaccess2 (inline)
+     0.76s  0.26%  5.59%      0.76s  0.26%                | internal/runtime/maps.ctrlGroup.matchH2
+----------------------------------------------------------+-------------
+                                             4.38s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     0.69s  0.24%  5.83%      4.38s  1.50%                | backpack-brawl-solver/internal/scoring.evaluateCompound
+                                             3.75s 85.62% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+----------------------------------------------------------+-------------
+                                             0.51s 89.47% |   runtime.mapaccess2 (inline)
+                                             0.03s  5.26% |   runtime.mapassign_faststr (inline)
+     0.57s   0.2%  6.02%      0.57s   0.2%                | internal/runtime/maps.(*groupReference).key
+----------------------------------------------------------+-------------
+                                            21.17s   100% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+     0.51s  0.17%  6.20%     21.17s  7.25%                | backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+                                            17.99s 84.98% |   backpack-brawl-solver/internal/solver.starPositionHitsTarget
+                                             2.55s 12.05% |   runtime.duffcopy
+                                             0.12s  0.57% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             0.46s   100% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+     0.46s  0.16%  6.35%      0.46s  0.16%                | runtime.duffzero
+----------------------------------------------------------+-------------
+                                             3.47s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition (inline)
+     0.45s  0.15%  6.51%      3.47s  1.19%                | backpack-brawl-solver/internal/scoring.conditionClass
+                                             3.02s 87.03% |   strings.LastIndex
+----------------------------------------------------------+-------------
+                                             3.02s 98.69% |   backpack-brawl-solver/internal/scoring.conditionClass
+                                             0.04s  1.31% |   backpack-brawl-solver/internal/scoring.canonicalStatType
+     0.42s  0.14%  6.65%      3.06s  1.05%                | strings.LastIndex
+                                             2.64s 86.27% |   internal/bytealg.LastIndexByteString (inline)
+----------------------------------------------------------+-------------
+                                             1.29s   100% |   runtime.mapaccess2
+     0.37s  0.13%  6.78%      1.29s  0.44%                | runtime.strequal
+                                             0.74s 57.36% |   memeqbody
+                                             0.17s 13.18% |   runtime.memequal
+----------------------------------------------------------+-------------
+                                             0.33s   100% |   runtime.mapaccess2 (inline)
+     0.33s  0.11%  6.89%      0.33s  0.11%                | internal/runtime/maps.(*Map).directoryAt
+----------------------------------------------------------+-------------
+                                             0.17s 51.52% |   runtime.strequal
+                                             0.14s 42.42% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     0.33s  0.11%  7.00%      0.33s  0.11%                | runtime.memequal
+----------------------------------------------------------+-------------
+                                             0.21s 87.50% |   runtime.mallocgcSmallScanHeader
+     0.24s 0.082%  7.09%      0.24s 0.082%                | runtime.memclrNoHeapPointers
+----------------------------------------------------------+-------------
+                                             0.18s   100% |   runtime.mapaccess2 (inline)
+     0.18s 0.062%  7.15%      0.18s 0.062%                | internal/runtime/maps.(*Map).Used
+----------------------------------------------------------+-------------
+                                             0.15s 93.75% |   runtime.mapaccess2
+     0.16s 0.055%  7.20%      0.16s 0.055%                | runtime.strhash
+----------------------------------------------------------+-------------
+                                            16.87s   100% |   backpack-brawl-solver/internal/solver.starPositionHitsTarget (inline)
+     0.15s 0.051%  7.25%     16.87s  5.77%                | backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems
+                                            16.72s 99.11% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+----------------------------------------------------------+-------------
+                                             0.15s   100% |   runtime.mapaccess2 (inline)
+     0.15s 0.051%  7.30%      0.15s 0.051%                | internal/abi.(*SwissMapType).IndirectKey
+----------------------------------------------------------+-------------
+                                             0.13s 92.86% |   runtime.mapaccess2 (inline)
+     0.14s 0.048%  7.35%      0.14s 0.048%                | internal/runtime/maps.h2
+----------------------------------------------------------+-------------
+                                             2.02s   100% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+     0.12s 0.041%  7.39%      2.02s  0.69%                | backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+                                             1.25s 61.88% |   runtime.growslice
+                                             0.34s 16.83% |   runtime.duffcopy
+                                             0.24s 11.88% |   runtime.mapassign_faststr
+                                             0.05s  2.48% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             0.12s   100% |   runtime.mapaccess2 (inline)
+     0.12s 0.041%  7.44%      0.12s 0.041%                | internal/abi.(*SwissMapType).IndirectElem
+----------------------------------------------------------+-------------
+                                             0.12s   100% |   runtime.mapaccess2 (inline)
+     0.12s 0.041%  7.48%      0.12s 0.041%                | internal/runtime/maps.h1
+----------------------------------------------------------+-------------
+                                             0.12s   100% |   runtime.growslice
+     0.12s 0.041%  7.52%      0.12s 0.041%                | runtime.memmove
+----------------------------------------------------------+-------------
+                                             0.24s 92.31% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+     0.09s 0.031%  7.55%      0.26s 0.089%                | runtime.mapassign_faststr
+                                             0.04s 15.38% |   aeshashbody
+                                             0.03s 11.54% |   internal/runtime/maps.(*groupReference).key (inline)
+----------------------------------------------------------+-------------
+                                            21.53s   100% |   backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+     0.06s 0.021%  7.57%     21.53s  7.37%                | backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+                                            21.17s 98.33% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+                                             0.19s  0.88% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitFixedTarget
+                                             0.07s  0.33% |   runtime.makeslice
+----------------------------------------------------------+-------------
+                                             0.12s   100% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+     0.05s 0.017%  7.59%      0.12s 0.041%                | runtime.mapaccess1_faststr
+                                             0.03s 25.00% |   aeshashbody
+----------------------------------------------------------+-------------
+                                            17.74s 74.57% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+                                             6.05s 25.43% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+     0.03s  0.01%  7.60%     23.79s  8.14%                | backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+                                            23.71s 99.66% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+----------------------------------------------------------+-------------
+                                             1.25s   100% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+     0.03s  0.01%  7.61%      1.25s  0.43%                | runtime.growslice
+                                             1.10s 88.00% |   runtime.mallocgc
+                                             0.12s  9.60% |   runtime.memmove
+----------------------------------------------------------+-------------
+                                             0.12s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     0.02s 0.0068%  7.61%      0.12s 0.041%                | backpack-brawl-solver/internal/scoring.canonicalStatType
+                                             0.04s 33.33% |   strings.LastIndex
+----------------------------------------------------------+-------------
+                                             0.24s   100% |   runtime.mallocgc
+     0.02s 0.0068%  7.62%      0.24s 0.082%                | runtime.mallocgcSmallScanNoHeader
+                                             0.09s 37.50% |   runtime.(*mcache).nextFree
+                                             0.04s 16.67% |   runtime.profilealloc
+----------------------------------------------------------+-------------
+                                            21.54s   100% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+     0.01s 0.0034%  7.62%     21.54s  7.37%                | backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+                                            21.53s   100% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+----------------------------------------------------------+-------------
+                                             0.36s 80.00% |   runtime.mallocgcSmallScanHeader
+                                             0.09s 20.00% |   runtime.mallocgcSmallScanNoHeader
+     0.01s 0.0034%  7.63%      0.45s  0.15%                | runtime.(*mcache).nextFree
+                                             0.44s 97.78% |   runtime.(*mcache).refill
+----------------------------------------------------------+-------------
+                                             0.44s   100% |   runtime.(*mcache).nextFree
+     0.01s 0.0034%  7.63%      0.44s  0.15%                | runtime.(*mcache).refill
+                                             0.34s 77.27% |   runtime.(*mcentral).cacheSpan
+----------------------------------------------------------+-------------
+                                             0.34s   100% |   runtime.(*mcache).refill
+     0.01s 0.0034%  7.63%      0.34s  0.12%                | runtime.(*mcentral).cacheSpan
+                                             0.29s 85.29% |   runtime.(*mcentral).grow
+----------------------------------------------------------+-------------
+                                             0.18s   100% |   runtime.deductAssistCredit
+     0.01s 0.0034%  7.64%      0.18s 0.062%                | runtime.gcAssistAlloc
+                                             0.17s 94.44% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%  7.64%     23.79s  8.14%                | backpack-brawl-solver/internal/benchmark.RunScenarios
+                                            23.79s   100% |   backpack-brawl-solver/internal/benchmark.runScenario
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%  7.64%     23.79s  8.14%                | backpack-brawl-solver/internal/benchmark.runScenario
+                                            23.79s   100% |   backpack-brawl-solver/internal/solver.SolveLayout
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   main.main
+         0     0%  7.64%     23.79s  8.14%                | backpack-brawl-solver/internal/cli.Run
+                                            23.79s   100% |   backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   backpack-brawl-solver/internal/cli.Run
+         0     0%  7.64%     23.79s  8.14%                | backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+                                            23.79s   100% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+----------------------------------------------------------+-------------
+                                             0.13s   100% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+         0     0%  7.64%      0.13s 0.045%                | backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+                                             0.04s 30.77% |   runtime.makeslice
+                                             0.03s 23.08% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%  7.64%     23.79s  8.14%                | backpack-brawl-solver/internal/solver.SolveLayout
+                                            23.79s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  7.64%     23.79s  8.14%                | backpack-brawl-solver/internal/solver.constellationSeedSearch
+                                            17.74s 74.57% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+                                             6.05s 25.43% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+----------------------------------------------------------+-------------
+                                            17.74s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch (inline)
+         0     0%  7.64%     17.74s  6.07%                | backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+                                            17.74s   100% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+----------------------------------------------------------+-------------
+                                             0.19s   100% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+         0     0%  7.64%      0.19s 0.065%                | backpack-brawl-solver/internal/solver.partialRepairSlotCanHitFixedTarget
+                                             0.18s 94.74% |   backpack-brawl-solver/internal/solver.starPositionHitsTarget
+----------------------------------------------------------+-------------
+                                            23.71s   100% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+         0     0%  7.64%     23.71s  8.12%                | backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+                                            21.54s 90.85% |   backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+                                             2.02s  8.52% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+                                             0.13s  0.55% |   backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   backpack-brawl-solver/internal/solver.SolveLayout
+         0     0%  7.64%     23.79s  8.14%                | backpack-brawl-solver/internal/solver.solveLayoutStage
+                                            23.79s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+----------------------------------------------------------+-------------
+                                            23.79s   100% |   runtime.main
+         0     0%  7.64%     23.79s  8.14%                | main.main
+                                            23.79s   100% |   backpack-brawl-solver/internal/cli.Run
+----------------------------------------------------------+-------------
+                                             0.29s   100% |   runtime.(*mcentral).cacheSpan
+         0     0%  7.64%      0.29s 0.099%                | runtime.(*mcentral).grow
+                                             0.28s 96.55% |   runtime.(*mheap).alloc
+----------------------------------------------------------+-------------
+                                             0.28s   100% |   runtime.(*mcentral).grow
+         0     0%  7.64%      0.28s 0.096%                | runtime.(*mheap).alloc
+                                             0.28s   100% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             0.28s   100% |   runtime.systemstack
+         0     0%  7.64%      0.28s 0.096%                | runtime.(*mheap).alloc.func1
+                                             0.28s   100% |   runtime.(*mheap).allocSpan
+----------------------------------------------------------+-------------
+                                             0.28s   100% |   runtime.(*mheap).alloc.func1
+         0     0%  7.64%      0.28s 0.096%                | runtime.(*mheap).allocSpan
+----------------------------------------------------------+-------------
+                                             0.12s   100% |   runtime.tracebackPCs
+         0     0%  7.64%      0.12s 0.041%                | runtime.(*unwinder).next
+----------------------------------------------------------+-------------
+                                             0.15s   100% |   runtime.mProf_Malloc
+         0     0%  7.64%      0.15s 0.051%                | runtime.callers
+                                             0.15s   100% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             0.15s   100% |   runtime.systemstack
+         0     0%  7.64%      0.15s 0.051%                | runtime.callers.func1
+                                             0.15s   100% |   runtime.tracebackPCs
+----------------------------------------------------------+-------------
+                                             0.18s   100% |   runtime.mallocgc
+         0     0%  7.64%      0.18s 0.062%                | runtime.deductAssistCredit
+                                             0.18s   100% |   runtime.gcAssistAlloc
+----------------------------------------------------------+-------------
+                                             0.17s   100% |   runtime.systemstack
+         0     0%  7.64%      0.17s 0.058%                | runtime.gcAssistAlloc.func2
+                                             0.17s   100% |   runtime.gcAssistAlloc1
+----------------------------------------------------------+-------------
+                                             0.17s   100% |   runtime.gcAssistAlloc.func2
+         0     0%  7.64%      0.17s 0.058%                | runtime.gcAssistAlloc1
+                                             0.14s 82.35% |   runtime.gcDrainN
+----------------------------------------------------------+-------------
+                                             0.14s   100% |   runtime.gcAssistAlloc1
+         0     0%  7.64%      0.14s 0.048%                | runtime.gcDrainN
+----------------------------------------------------------+-------------
+                                             0.16s   100% |   runtime.profilealloc
+         0     0%  7.64%      0.16s 0.055%                | runtime.mProf_Malloc
+                                             0.15s 93.75% |   runtime.callers
+----------------------------------------------------------+-------------
+         0     0%  7.64%     23.79s  8.14%                | runtime.main
+                                            23.79s   100% |   main.main
+----------------------------------------------------------+-------------
+                                             0.07s 58.33% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+                                             0.04s 33.33% |   backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+         0     0%  7.64%      0.12s 0.041%                | runtime.makeslice
+                                             0.12s   100% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             1.10s 86.61% |   runtime.growslice
+                                             0.12s  9.45% |   runtime.makeslice
+                                             0.03s  2.36% |   backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+         0     0%  7.64%      1.27s  0.43%                | runtime.mallocgc
+                                             0.81s 63.78% |   runtime.mallocgcSmallScanHeader
+                                             0.24s 18.90% |   runtime.mallocgcSmallScanNoHeader
+                                             0.18s 14.17% |   runtime.deductAssistCredit
+----------------------------------------------------------+-------------
+                                             0.81s   100% |   runtime.mallocgc
+         0     0%  7.64%      0.81s  0.28%                | runtime.mallocgcSmallScanHeader
+                                             0.36s 44.44% |   runtime.(*mcache).nextFree
+                                             0.21s 25.93% |   runtime.memclrNoHeapPointers
+                                             0.13s 16.05% |   runtime.profilealloc
+                                             0.05s  6.17% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             0.13s 76.47% |   runtime.mallocgcSmallScanHeader
+                                             0.04s 23.53% |   runtime.mallocgcSmallScanNoHeader
+         0     0%  7.64%      0.17s 0.058%                | runtime.profilealloc
+                                             0.16s 94.12% |   runtime.mProf_Malloc
+----------------------------------------------------------+-------------
+                                             0.28s 39.44% |   runtime.(*mheap).alloc
+                                             0.17s 23.94% |   runtime.gcAssistAlloc
+                                             0.15s 21.13% |   runtime.callers
+                                             0.05s  7.04% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+                                             0.05s  7.04% |   runtime.mallocgcSmallScanHeader
+         0     0%  7.64%      0.71s  0.24%                | runtime.systemstack
+                                             0.28s 39.44% |   runtime.(*mheap).alloc.func1
+                                             0.17s 23.94% |   runtime.gcAssistAlloc.func2
+                                             0.15s 21.13% |   runtime.callers.func1
+----------------------------------------------------------+-------------
+                                             0.15s   100% |   runtime.callers.func1
+         0     0%  7.64%      0.15s 0.051%                | runtime.tracebackPCs
+                                             0.12s 80.00% |   runtime.(*unwinder).next
+----------------------------------------------------------+-------------

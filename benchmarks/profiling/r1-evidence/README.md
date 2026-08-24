@@ -31,6 +31,13 @@ before this evidence was copied. [`SHA256SUMS.txt`](SHA256SUMS.txt) is the
 recursive artifact manifest. Raw binaries, materialized scenarios, raw JSON,
 and `.pprof` files remain outside Git.
 
+The post-collection `review-01` derivations below read those frozen artifacts;
+they did not rerun the solver or modify `C:\r1-artifacts`. Their source is the
+aggregate `r1.cpu.pprof` (SHA-256
+`B6E9E38B55673FD85CB74E804EC34D19511B2804D6B90BC9835DB460C1938097`), the
+six individual CPU profiles recorded in the manifest, and the two raw
+operation reports listed below.
+
 ## Versioned compact artifacts
 
 | Versioned file | Original artifact | SHA-256 of original artifact |
@@ -45,7 +52,10 @@ and `.pprof` files remain outside Git.
 | `cpu-callers.txt` | `r1-cpu-callers.txt` | `C82D0B75E38D13A928D45971635730C9981849607520471B8A66587498383A27` |
 | `heap-alloc-objects.txt` | `r1-heap-alloc-objects.txt` | `F439338C9504E9203EBE458C2E167D650B4263924C1CFCE2887F80816CC92407` |
 | `heap-alloc-space.txt` | `r1-heap-alloc-space.txt` | `0438D51576792684EE8C7EDC5C429B5E859C8874AC18D383496870FCC514ACBA` |
-| `scenario-attribution.csv` | `r1-scenario-attribution.csv` | `8F375C2A3B040DCC6F31E0341CB6A8D347955D8E6AB940D8724DEB3E876A7ABE` |
+| `scenario-attribution.csv` | `review-01/scenario-attribution.csv`, derived from frozen individual CPU profiles | `425436CF98562912BBC43912B25D5FE4FF91213A0F7BF9551371699B0773369E` |
+| `priority-bound-targeted.txt` | `review-01/priority-bound-targeted.txt`, derived from frozen aggregate CPU profile | `FDF59EF5A1F5846DD6DB294FD7EAFD1A90B3EDA681EA92D0CBB4DE2B6D7EC46B` |
+| `priority-bound-callers.txt` | `review-01/priority-bound-callers.txt`, derived from frozen aggregate CPU profile | `7FD05EC5E622DB3C70139696B6DB589578DAE33B3B496CA2A1358517A58A8B6A` |
+| `outgoing-bound-effectiveness.csv` | `review-01/outgoing-bound-effectiveness.csv`, derived from frozen raw benchmark reports | `62DB6706C9C27E37D726D85948BE8B1CC889A8DA7DE186D06A57AF559FF77040` |
 
 The unversioned operation reports are `r1-operations-gsv1.json`
 (`1AB3DA673D80C0AD596E9A93469612FD86B4DB6AD0777D6139E972623DF52107`)
@@ -69,13 +79,18 @@ The six individual CPU profiles and their hashes are recorded in the manifest.
 - Scenario spread: one normal-build CPU profile per case in that six-case
   slice. [`scenario-attribution.csv`](scenario-attribution.csv) is generated
   directly from those raw profiles.
+- Review completion, with no new collection: priority-bound targeted/caller
+  extracts from the frozen aggregate profile, expanded per-scenario CPU
+  attribution, and outgoing-bound check/prune effectiveness from frozen raw
+  reports.
 
 ## Review guide
 
 1. Confirm the binary/source provenance above.
 2. Read the CPU/heap views and caller/source extracts before the conclusion.
-3. Check the GSV1/V4 deterministic operation equivalence.
-4. Check scenario spread before treating a hotspot as general.
-5. Confirm the resulting R1 decision requests instrumentation only; it does
-   not include an optimization.
-
+3. Check the GSV1/V4 deterministic operation equivalence and
+   [`outgoing-bound-effectiveness.csv`](outgoing-bound-effectiveness.csv).
+4. Check both plateau and priority-bound scenario spread before treating a
+   hotspot as general.
+5. Confirm the resulting R1 decision requests comparative bound-internal
+   instrumentation only; it does not include an optimization.
