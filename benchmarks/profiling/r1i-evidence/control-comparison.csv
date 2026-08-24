@@ -1,0 +1,13 @@
+metric,gsv1_1m,v4_1m,delta,delta_fraction
+priority_calls,234300,234300,0,0
+geometry_candidate_checks,569592092,569592092,0,0
+fixed_source_target_option_checks,506804547,506804547,0,0
+star_position_hit_calls,567835319,567835319,0,0
+matching_calls,612353,612353,0,0
+outgoing_checks,10190290,10190505,215,0.000021099
+outgoing_prunes,6275226,6275302,76,0.000012111
+placed_map_insertions,139985795,139988048,2253,0.000016094
+coverage_placement_key_calls,27072721,27073072,351,0.000012965
+placed_source_target_iterations,498858546,498863811,5265,0.000010554
+source_hits_target_calls,344287241,344291007,3766,0.000010939
+popcount_calls,30142272,30142702,430,0.000014266

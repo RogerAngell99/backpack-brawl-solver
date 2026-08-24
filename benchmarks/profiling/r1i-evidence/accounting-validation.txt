@@ -1,0 +1,17 @@
+R1I-B accounting validation
+frozen_sha=ba1bc16d9b3ea904746f7833caa63579731c9c47
+profile_version=bound-attribution-ops-v1
+summary_version=operation-profile-summary-v3
+gsv1_matrix=PASS runs=28
+v4_matrix=PASS runs=14
+profiled_runs=41
+missing_zero_work_runs=1
+missing_zero_work_run=gsv2-017/250000/general-search-v1
+all_priority_site_identities=PASS
+all_outgoing_site_identities=PASS
+all_outgoing_authoritative_reconciliations=PASS
+ordinary_repair_priority_reconciliation=NOT_INDEPENDENTLY_SERIALIZED; repair_dfs calls/rejects are zero in this matrix; contract is regression-tested in the tagged solver suite
+smoke_off_on_semantics=PASS
+smoke_ignored_fields=bound_operation_profile,elapsed_ms,first_complete_ms,first_fully_packed_ms,generated_at,nodes_per_second,operation_profile,operation_profiling,packing_seed_operation_profile,refine_ms,repair_ms,root_packing_operation_profile,search_ms,seed_ms,server_elapsed_ms,setup_ms
+normal_cpu_heap_matrix=PASS runs=6 operation_profile=false
+validation_and_holdouts=NOT_MATERIALIZED
