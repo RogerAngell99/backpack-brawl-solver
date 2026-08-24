@@ -1022,7 +1022,7 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 	seedBestScore := bestScore(seed.Solutions)
 	if config.StopOnPriorityCeiling && priorityBounds.reached(bestScore(seed.Solutions)) {
 		markDownstreamPhasesStopped(config, "stopped_after_priority_ceiling")
-		return finishPriorityCeilingResult(seed.Solutions, requestedTopN, limitedMode, setupMS, seed, priorityBounds, config)
+		return finishPriorityCeilingResult(seed.Solutions, requestedTopN, limitedMode, setupMS, seed, repairResult{}, searchResult{}, priorityBounds, config)
 	}
 	if err := config.Context.Err(); err != nil {
 		return nil, err
@@ -1131,22 +1131,11 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 				CoverageSeedNodes:           seed.NodesExplored,
 				CoverageSeedCandidates:      seed.CandidateCount,
 				CoverageSeedBest:            seed.BestSummary,
-				CoverageBoundChecks:         repair.CoverageBoundChecks,
-				CoveragePrunedNodes:         repair.CoveragePrunedNodes,
-				ExactBoundChecks:            repair.ExactBoundChecks,
-				ExactBoundPrunedNodes:       repair.ExactBoundPrunedNodes,
-				OutgoingBoundChecks:         repair.OutgoingBoundChecks,
-				OutgoingBoundPrunedNodes:    repair.OutgoingBoundPrunedNodes,
-				RepairNodes:                 repair.NodesExplored,
-				RepairIterations:            repair.Iterations,
-				RepairImprovements:          repair.Improvements,
-				RepairCandidates:            repair.CandidateCount,
-				RepairBest:                  repair.BestSummary,
-				RepairParallelTasks:         repair.ParallelTasks,
-				RepairParallelWorkersUsed:   repair.ParallelWorkersUsed,
 				StoppedAfterCoverageCeiling: true,
-				BoundOperationProfile:       mergeBoundAttributionOperationProfiles(nil, repair.BoundOperationProfile),
 			}
+			// This projection is also responsible for preserving the authoritative
+			// outgoing counters that predate R1I on the coverage-ceiling return.
+			applyRepairResultStats(&searchStats, repair)
 			if genericStarSeed {
 				searchStats.CoverageSeedNodes = 0
 				searchStats.CoverageSeedCandidates = 0
@@ -1224,7 +1213,7 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 	searchBestScore := bestScore(results)
 	if config.StopOnPriorityCeiling && priorityBounds.reached(bestScore(results)) {
 		markDownstreamPhasesStopped(config, "stopped_after_priority_ceiling")
-		return finishPriorityCeilingResult(results, requestedTopN, limitedMode, setupMS, seed, priorityBounds, config)
+		return finishPriorityCeilingResult(results, requestedTopN, limitedMode, setupMS, seed, repair, search, priorityBounds, config)
 	}
 	postRepairEligible := postRepairBudget > 0 && len(results) > 0
 	postRepairSkipReason := phaseSkipReason(postRepairEligible, "no_results")
@@ -1770,12 +1759,52 @@ func priorityCountsForSolutions(solutions []model.Solution) []int {
 	return append([]int(nil), solutions[0].Evaluation.Score.PriorityCounts...)
 }
 
+func applyRepairResultStats(stats *model.SearchStats, repair repairResult) {
+	if stats == nil {
+		return
+	}
+	stats.CoverageBoundChecks += repair.CoverageBoundChecks
+	stats.CoveragePrunedNodes += repair.CoveragePrunedNodes
+	stats.ExactBoundChecks += repair.ExactBoundChecks
+	stats.ExactBoundPrunedNodes += repair.ExactBoundPrunedNodes
+	stats.OutgoingBoundChecks += repair.OutgoingBoundChecks
+	stats.OutgoingBoundPrunedNodes += repair.OutgoingBoundPrunedNodes
+	stats.RepairNodes += repair.NodesExplored
+	stats.RepairIterations += repair.Iterations
+	stats.RepairImprovements += repair.Improvements
+	stats.RepairCandidates += repair.CandidateCount
+	stats.RepairBest = repair.BestSummary
+	stats.RepairParallelTasks += repair.ParallelTasks
+	stats.RepairParallelWorkersUsed = repair.ParallelWorkersUsed
+	stats.BoundOperationProfile = mergeBoundAttributionOperationProfiles(stats.BoundOperationProfile, repair.BoundOperationProfile)
+}
+
+func applySearchResultStats(stats *model.SearchStats, search searchResult) {
+	if stats == nil {
+		return
+	}
+	stats.CoverageBoundChecks += search.CoverageBoundChecks
+	stats.CoveragePrunedNodes += search.CoveragePrunedNodes
+	stats.ExactBoundChecks += search.ExactBoundChecks
+	stats.ExactBoundPrunedNodes += search.ExactBoundPrunedNodes
+	stats.OutgoingBoundChecks += search.OutgoingBoundChecks
+	stats.OutgoingBoundPrunedNodes += search.OutgoingBoundPrunedNodes
+	stats.ParallelTasks += search.ParallelTasks
+	stats.ParallelWorkersUsed = search.ParallelWorkersUsed
+	stats.StoppedAfterCoverageCeiling = stats.StoppedAfterCoverageCeiling || search.StoppedAfterCoverageCeiling
+	stats.StoppedAfterPriorityCeiling = stats.StoppedAfterPriorityCeiling || search.StoppedAfterPriorityCeiling
+	stats.TaskAllocation = search.TaskAllocation
+	stats.BoundOperationProfile = mergeBoundAttributionOperationProfiles(stats.BoundOperationProfile, search.BoundOperationProfile)
+}
+
 func finishPriorityCeilingResult(
 	solutions []model.Solution,
 	requestedTopN int,
 	limitedMode bool,
 	setupMS int64,
 	seed coverageSeedResult,
+	repair repairResult,
+	search searchResult,
 	priorityBounds *priorityBoundContext,
 	config Config,
 ) ([]model.Solution, error) {
@@ -1784,12 +1813,13 @@ func finishPriorityCeilingResult(
 		results = results[:requestedTopN]
 	}
 	stats := model.SearchStats{
-		NodesExplored:               seed.NodesExplored,
+		NodesExplored:               seed.NodesExplored + repair.NodesExplored + search.NodesExplored,
 		SetupMS:                     setupMS,
 		Limited:                     limitedMode,
 		CoverageSeedNodes:           seed.NodesExplored,
 		CoverageSeedCandidates:      seed.CandidateCount,
 		CoverageSeedBest:            seed.BestSummary,
+		SymmetryPrunedBranches:      seed.SymmetryPrunedBranches + repair.SymmetryPrunedBranches + search.SymmetryPrunedBranches,
 		StoppedAfterPriorityCeiling: priorityBounds != nil,
 	}
 	if priorityBounds != nil {
@@ -1797,6 +1827,8 @@ func finishPriorityCeilingResult(
 		stats.PriorityCeilingReached = priorityBounds.reached(bestScore(results))
 	}
 	applyPackingSeedStats(&stats, seed)
+	applyRepairResultStats(&stats, repair)
+	applySearchResultStats(&stats, search)
 	config.trace.apply(&stats)
 	applyPlateauSearchStats(&stats, config)
 	for index := range results {
