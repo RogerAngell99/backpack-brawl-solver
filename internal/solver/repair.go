@@ -141,6 +141,7 @@ func repairSearch(
 	var exactBoundPrunedNodes int64
 	var outgoingBoundChecks int64
 	var outgoingBoundPrunedNodes int64
+	var boundOperationProfile *model.BoundAttributionOperationProfile
 	var symmetryPruned int64
 	var parallelTasks int
 	var parallelWorkersUsed int
@@ -195,6 +196,7 @@ func repairSearch(
 			exactBoundPrunedNodes += partial.ExactBoundPrunedNodes
 			outgoingBoundChecks += partial.OutgoingBoundChecks
 			outgoingBoundPrunedNodes += partial.OutgoingBoundPrunedNodes
+			boundOperationProfile = mergeBoundAttributionOperationProfiles(boundOperationProfile, partial.BoundOperationProfile)
 			symmetryPruned += partial.SymmetryPrunedBranches
 			parallelTasks += partial.ParallelTasks
 			if partial.ParallelWorkersUsed > parallelWorkersUsed {
@@ -240,6 +242,7 @@ func repairSearch(
 		NeighborhoodsGenerated:   neighborhoodsGenerated,
 		NeighborhoodsAttempted:   neighborhoodsAttempted,
 		TerminationReason:        terminationReason,
+		BoundOperationProfile:    boundOperationProfile,
 	}
 }
 
@@ -1225,6 +1228,7 @@ func mergeRepairTaskResult(left repairResult, right repairResult, topN int) repa
 	left.ExactBoundPrunedNodes += right.ExactBoundPrunedNodes
 	left.OutgoingBoundChecks += right.OutgoingBoundChecks
 	left.OutgoingBoundPrunedNodes += right.OutgoingBoundPrunedNodes
+	left.BoundOperationProfile = mergeBoundAttributionOperationProfiles(left.BoundOperationProfile, right.BoundOperationProfile)
 	left.SymmetryPrunedBranches += right.SymmetryPrunedBranches
 	return left
 }

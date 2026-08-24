@@ -584,6 +584,99 @@ type PackingSeedFeasibilityOperationProfile struct {
 	FeasibilityCanonical           PackingSeedCanonicalCopyOrderOperationProfile `json:"feasibility_canonical"`
 }
 
+const BoundAttributionProfileVersion = "bound-attribution-ops-v1"
+
+// PriorityUpperBoundSiteProfile attributes deterministic work and outcomes to
+// one physical priority-upper-bound call site. It is measurement-only and does
+// not participate in bound results or search policy.
+type PriorityUpperBoundSiteProfile struct {
+	Calls                                int64 `json:"calls"`
+	FeasibleResults                      int64 `json:"feasible_results"`
+	RejectedResults                      int64 `json:"rejected_results"`
+	InvalidPriorityReturns               int64 `json:"invalid_priority_returns"`
+	PriorityEntriesValidated             int64 `json:"priority_entries_validated"`
+	FixedPlacementInputs                 int64 `json:"fixed_placement_inputs"`
+	CurrentPlacementInputs               int64 `json:"current_placement_inputs"`
+	AnchoredPlacements                   int64 `json:"anchored_placements"`
+	RemovedInstanceInputs                int64 `json:"removed_instance_inputs"`
+	RemovedInstances                     int64 `json:"removed_instances"`
+	RemovedOptionCandidates              int64 `json:"removed_option_candidates"`
+	RemovedOptionRejectedFixedOverlap    int64 `json:"removed_option_rejected_fixed_overlap"`
+	RemovedOptionRejectedOutsideFree     int64 `json:"removed_option_rejected_outside_free"`
+	RemovedOptionsRetained               int64 `json:"removed_options_retained"`
+	UniquePrioritySourceItems            int64 `json:"unique_priority_source_items"`
+	AnchoredSourceInstances              int64 `json:"anchored_source_instances"`
+	RemovedSourceInstances               int64 `json:"removed_source_instances"`
+	StarSlots                            int64 `json:"star_slots"`
+	FixedTargetChecks                    int64 `json:"fixed_target_checks"`
+	RemovedTargetChecks                  int64 `json:"removed_target_checks"`
+	SelfTargetSkips                      int64 `json:"self_target_skips"`
+	FixedFixedGeometryChecks             int64 `json:"fixed_fixed_geometry_checks"`
+	RemovedSourceOptionChecksFixedTarget int64 `json:"removed_source_option_checks_fixed_target"`
+	FixedSourceTargetOptionChecks        int64 `json:"fixed_source_target_option_checks"`
+	RemovedSourceTargetOptionPairs       int64 `json:"removed_source_target_option_pairs"`
+	GeometryCandidateChecks              int64 `json:"geometry_candidate_checks"`
+	GeometryOverlapRejects               int64 `json:"geometry_overlap_rejects"`
+	StarPositionHitCalls                 int64 `json:"star_position_hit_calls"`
+	StarPositionHitTrue                  int64 `json:"star_position_hit_true"`
+	SlotTargetHits                       int64 `json:"slot_target_hits"`
+	MatchingCalls                        int64 `json:"matching_calls"`
+}
+
+// PriorityUpperBoundOperationProfile keeps the four physical callers fixed so
+// profiles cannot acquire accidental high-cardinality site labels.
+type PriorityUpperBoundOperationProfile struct {
+	ConstellationFilterInvocations int64                         `json:"constellation_filter_invocations"`
+	ConstellationStatesInput       int64                         `json:"constellation_states_input"`
+	ConstellationStatesRetained    int64                         `json:"constellation_states_retained"`
+	ConstellationStatesRejected    int64                         `json:"constellation_states_rejected"`
+	ConstellationFilter            PriorityUpperBoundSiteProfile `json:"constellation_filter"`
+	RepairDFS                      PriorityUpperBoundSiteProfile `json:"repair_dfs"`
+	PlateauPrefilter               PriorityUpperBoundSiteProfile `json:"plateau_prefilter"`
+	PlateauDFS                     PriorityUpperBoundSiteProfile `json:"plateau_dfs"`
+}
+
+// OutgoingBoundSiteProfile attributes the existing outgoing check/prune totals
+// and the deterministic work inside upperPriorityCounts to one physical flow.
+type OutgoingBoundSiteProfile struct {
+	Checks                       int64 `json:"checks"`
+	PrunedNodes                  int64 `json:"pruned_nodes"`
+	PlacedMapBuilds              int64 `json:"placed_map_builds"`
+	PlacedMapInsertions          int64 `json:"placed_map_insertions"`
+	PlacedMaskInstanceChecks     int64 `json:"placed_mask_instance_checks"`
+	PriorityIterations           int64 `json:"priority_iterations"`
+	SourceInstanceIterations     int64 `json:"source_instance_iterations"`
+	PrioritySourceMatches        int64 `json:"priority_source_matches"`
+	ZeroStarSourceSkips          int64 `json:"zero_star_source_skips"`
+	PlacedSourceIterations       int64 `json:"placed_source_iterations"`
+	FreeSourceIterations         int64 `json:"free_source_iterations"`
+	PlacedSourceTargetIterations int64 `json:"placed_source_target_iterations"`
+	SelfTargetSkips              int64 `json:"self_target_skips"`
+	TargetPlacementLookups       int64 `json:"target_placement_lookups"`
+	PlacedTargetsFound           int64 `json:"placed_targets_found"`
+	UnplacedTargets              int64 `json:"unplaced_targets"`
+	SourceHitsTargetCalls        int64 `json:"source_hits_target_calls"`
+	SourceHitsTargetTrue         int64 `json:"source_hits_target_true"`
+	CoveragePlacementKeyCalls    int64 `json:"coverage_placement_key_calls"`
+	PlacedPotentialLookups       int64 `json:"placed_potential_lookups"`
+	FreePotentialLookups         int64 `json:"free_potential_lookups"`
+	PopcountCalls                int64 `json:"popcount_calls"`
+	StarCountClamps              int64 `json:"star_count_clamps"`
+}
+
+type OutgoingBoundOperationProfile struct {
+	Search OutgoingBoundSiteProfile `json:"search"`
+	Repair OutgoingBoundSiteProfile `json:"repair"`
+}
+
+// BoundAttributionOperationProfile is the independent, versioned R1I contract
+// for comparative priority and outgoing bound attribution.
+type BoundAttributionOperationProfile struct {
+	Version       string                             `json:"version"`
+	PriorityUpper PriorityUpperBoundOperationProfile `json:"priority_upper"`
+	Outgoing      OutgoingBoundOperationProfile      `json:"outgoing"`
+}
+
 // ConstellationRootPackingOperationProfile is a deterministic count of work
 // performed by one rooted dynamic-MRV packing session. It is measurement-only:
 // none of these fields participate in ranking, pruning, allocation, or search
@@ -1220,6 +1313,7 @@ type SearchStats struct {
 	PackingSeedHardPruned         int64
 	PackingSeedStatesDeduplicated int64
 	PackingSeedOperationProfile   *PackingSeedFeasibilityOperationProfile
+	BoundOperationProfile         *BoundAttributionOperationProfile
 	SymmetryPrunedBranches        int64
 	FirstCompletePhase            string
 	FirstCompleteNodes            int64

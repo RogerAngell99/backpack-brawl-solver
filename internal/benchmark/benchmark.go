@@ -238,6 +238,7 @@ type SearchSummary struct {
 	FirstFullyPackedMS            int64                                         `json:"first_fully_packed_ms,omitempty"`
 	PackingSeedDiagnostics        model.PackingSeedDiagnostics                  `json:"packing_seed_diagnostics,omitempty"`
 	PackingSeedOperationProfile   *model.PackingSeedFeasibilityOperationProfile `json:"packing_seed_operation_profile,omitempty"`
+	BoundOperationProfile         *model.BoundAttributionOperationProfile       `json:"bound_operation_profile,omitempty"`
 	ConstellationSeedNodes        int64                                         `json:"constellation_seed_nodes,omitempty"`
 	ConstellationSeedCandidates   int                                           `json:"constellation_seed_candidates,omitempty"`
 	ConstellationSeedDiagnostics  *model.ConstellationSeedDiagnostics           `json:"constellation_seed_diagnostics,omitempty"`
@@ -878,6 +879,7 @@ func searchSummary(search model.SearchStats) SearchSummary {
 		FirstFullyPackedMS:            search.FirstFullyPackedMS,
 		PackingSeedDiagnostics:        search.PackingSeedDiagnostics,
 		PackingSeedOperationProfile:   search.PackingSeedOperationProfile,
+		BoundOperationProfile:         search.BoundOperationProfile,
 		ConstellationSeedNodes:        search.ConstellationSeedNodes,
 		ConstellationSeedCandidates:   search.ConstellationSeedCandidates,
 		ConstellationSeedDiagnostics:  constellationSeedDiagnostics(search),
