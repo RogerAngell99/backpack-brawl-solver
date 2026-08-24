@@ -26,6 +26,9 @@ type OperationProfileScenarioSummary struct {
 	PackingSeedFeasibility          *model.PackingSeedFeasibilityOperationProfile   `json:"packing_seed_feasibility,omitempty"`
 	PackingSeedFeasibilityDerived   *PackingSeedFeasibilityDerivedSummary           `json:"packing_seed_feasibility_derived,omitempty"`
 	PackingSeedFeasibilityByVersion []PackingSeedFeasibilityVersionSummary          `json:"packing_seed_feasibility_by_version,omitempty"`
+	BoundAttribution                *model.BoundAttributionOperationProfile         `json:"bound_attribution,omitempty"`
+	BoundAttributionDerived         *BoundAttributionDerivedSummary                 `json:"bound_attribution_derived,omitempty"`
+	BoundAttributionByVersion       []BoundAttributionVersionSummary                `json:"bound_attribution_by_version,omitempty"`
 	Scheduler                       *SchedulerOpportunitySummary                    `json:"scheduler,omitempty"`
 }
 
@@ -37,6 +40,15 @@ type PackingSeedFeasibilityVersionSummary struct {
 	Runs    int                                           `json:"runs"`
 	Profile *model.PackingSeedFeasibilityOperationProfile `json:"profile"`
 	Derived *PackingSeedFeasibilityDerivedSummary         `json:"derived"`
+}
+
+// BoundAttributionVersionSummary retains incompatible R1I contracts
+// separately so no raw count or derived ratio crosses a schema boundary.
+type BoundAttributionVersionSummary struct {
+	Version string                                  `json:"version"`
+	Runs    int                                     `json:"runs"`
+	Profile *model.BoundAttributionOperationProfile `json:"profile"`
+	Derived *BoundAttributionDerivedSummary         `json:"derived"`
 }
 
 type OperationProfilePerCandidateExpansion struct {
@@ -63,6 +75,55 @@ type PackingSeedFeasibilityDerivedSummary struct {
 	FeasibilityDeadReturnRate                             float64 `json:"feasibility_dead_return_rate"`
 	FeasibilityOverlapRejectRate                          float64 `json:"feasibility_overlap_reject_rate"`
 	FeasibilityCanonicalRejectRate                        float64 `json:"feasibility_canonical_reject_rate"`
+}
+
+type BoundAttributionDerivedSummary struct {
+	PriorityUpper PriorityUpperBoundDerivedSummary `json:"priority_upper"`
+	Outgoing      OutgoingBoundDerivedSummary      `json:"outgoing"`
+}
+
+type PriorityUpperBoundDerivedSummary struct {
+	ConstellationFilter PriorityUpperBoundSiteDerivedSummary `json:"constellation_filter"`
+	RepairDFS           PriorityUpperBoundSiteDerivedSummary `json:"repair_dfs"`
+	PlateauPrefilter    PriorityUpperBoundSiteDerivedSummary `json:"plateau_prefilter"`
+	PlateauDFS          PriorityUpperBoundSiteDerivedSummary `json:"plateau_dfs"`
+	Plateau             PriorityUpperBoundSiteDerivedSummary `json:"plateau"`
+	Aggregate           PriorityUpperBoundSiteDerivedSummary `json:"aggregate"`
+}
+
+type PriorityUpperBoundSiteDerivedSummary struct {
+	RejectionRate              float64 `json:"rejection_rate"`
+	AnchoredPerCall            float64 `json:"anchored_per_call"`
+	RemovedPerCall             float64 `json:"removed_per_call"`
+	RemovedOptionsPerCall      float64 `json:"removed_options_per_call"`
+	RemovedOptionRetentionRate float64 `json:"removed_option_retention_rate"`
+	UniqueSourceItemsPerCall   float64 `json:"unique_source_items_per_call"`
+	SourceInstancesPerCall     float64 `json:"source_instances_per_call"`
+	StarSlotsPerCall           float64 `json:"star_slots_per_call"`
+	FixedTargetChecksPerCall   float64 `json:"fixed_target_checks_per_call"`
+	RemovedTargetChecksPerCall float64 `json:"removed_target_checks_per_call"`
+	GeometryCandidatesPerCall  float64 `json:"geometry_candidates_per_call"`
+	StarHitCallsPerCall        float64 `json:"star_hit_calls_per_call"`
+	GeometryOverlapRejectRate  float64 `json:"geometry_overlap_reject_rate"`
+	StarHitTrueRate            float64 `json:"star_hit_true_rate"`
+}
+
+type OutgoingBoundDerivedSummary struct {
+	Search    OutgoingBoundSiteDerivedSummary `json:"search"`
+	Repair    OutgoingBoundSiteDerivedSummary `json:"repair"`
+	Aggregate OutgoingBoundSiteDerivedSummary `json:"aggregate"`
+}
+
+type OutgoingBoundSiteDerivedSummary struct {
+	PruneRate                float64 `json:"prune_rate"`
+	MapInsertionsPerCheck    float64 `json:"map_insertions_per_check"`
+	SourceMatchesPerCheck    float64 `json:"source_matches_per_check"`
+	PlacedSourceFraction     float64 `json:"placed_source_fraction"`
+	TargetsPerPlacedSource   float64 `json:"targets_per_placed_source"`
+	PlacedTargetFraction     float64 `json:"placed_target_fraction"`
+	SourceHitCallsPerCheck   float64 `json:"source_hit_calls_per_check"`
+	CoverageKeyCallsPerCheck float64 `json:"coverage_key_calls_per_check"`
+	PotentialLookupsPerCheck float64 `json:"potential_lookups_per_check"`
 }
 
 // SchedulerOpportunitySummary intentionally calls returned nodes "returned
@@ -121,7 +182,7 @@ func SummarizeOperationProfile(report Report) OperationProfileSummaryReport {
 		return keys[i].budget < keys[j].budget
 	})
 
-	summary := OperationProfileSummaryReport{Version: "operation-profile-summary-v2", Scenarios: make([]OperationProfileScenarioSummary, 0, len(keys))}
+	summary := OperationProfileSummaryReport{Version: "operation-profile-summary-v3", Scenarios: make([]OperationProfileScenarioSummary, 0, len(keys))}
 	for _, key := range keys {
 		entry := summarizeOperationProfileRuns(groups[key])
 		entry.Scenario = key.scenario
@@ -142,12 +203,20 @@ func summarizeOperationProfileRuns(runs []Run) OperationProfileScenarioSummary {
 	var roots []model.ConstellationRootDiagnostic
 	packingProfilesByVersion := make(map[string]*model.PackingSeedFeasibilityOperationProfile)
 	packingProfileRunsByVersion := make(map[string]int)
+	boundProfilesByVersion := make(map[string]*model.BoundAttributionOperationProfile)
+	boundProfileRunsByVersion := make(map[string]int)
 	for _, run := range runs {
 		if run.Search.PackingSeedOperationProfile != nil {
 			profile := run.Search.PackingSeedOperationProfile
 			version := profile.Version
 			packingProfilesByVersion[version] = mergePackingSeedFeasibilityOperationProfiles(packingProfilesByVersion[version], profile)
 			packingProfileRunsByVersion[version]++
+		}
+		if run.Search.BoundOperationProfile != nil {
+			profile := run.Search.BoundOperationProfile
+			version := profile.Version
+			boundProfilesByVersion[version] = mergeBoundAttributionOperationProfiles(boundProfilesByVersion[version], profile)
+			boundProfileRunsByVersion[version]++
 		}
 		if run.Search.ConstellationSeedDiagnostics == nil {
 			continue
@@ -190,6 +259,28 @@ func summarizeOperationProfileRuns(runs []Run) OperationProfileScenarioSummary {
 				Runs:    packingProfileRunsByVersion[version],
 				Profile: profile,
 				Derived: derivePackingSeedFeasibilitySummary(profile),
+			})
+		}
+	}
+	if len(boundProfilesByVersion) == 1 {
+		for _, profile := range boundProfilesByVersion {
+			summary.BoundAttribution = profile
+			summary.BoundAttributionDerived = deriveBoundAttributionSummary(profile)
+		}
+	} else if len(boundProfilesByVersion) > 1 {
+		versions := make([]string, 0, len(boundProfilesByVersion))
+		for version := range boundProfilesByVersion {
+			versions = append(versions, version)
+		}
+		sort.Strings(versions)
+		summary.BoundAttributionByVersion = make([]BoundAttributionVersionSummary, 0, len(versions))
+		for _, version := range versions {
+			profile := boundProfilesByVersion[version]
+			summary.BoundAttributionByVersion = append(summary.BoundAttributionByVersion, BoundAttributionVersionSummary{
+				Version: version,
+				Runs:    boundProfileRunsByVersion[version],
+				Profile: profile,
+				Derived: deriveBoundAttributionSummary(profile),
 			})
 		}
 	}
@@ -257,6 +348,154 @@ func derivePackingSeedFeasibilitySummary(profile *model.PackingSeedFeasibilityOp
 		FeasibilityDeadReturnRate:      operationProfileRatio(profile.FeasibilityDeadReturns, profile.FeasibilityCalls),
 		FeasibilityOverlapRejectRate:   operationProfileRatio(profile.FeasibilityOverlapRejects, profile.FeasibilityOptionChecks),
 		FeasibilityCanonicalRejectRate: operationProfileRatio(canonical.Rejects, canonical.Calls),
+	}
+}
+
+func mergeBoundAttributionOperationProfiles(total *model.BoundAttributionOperationProfile, next *model.BoundAttributionOperationProfile) *model.BoundAttributionOperationProfile {
+	if next == nil {
+		return total
+	}
+	if total == nil {
+		copy := *next
+		return &copy
+	}
+	total.PriorityUpper.ConstellationFilterInvocations += next.PriorityUpper.ConstellationFilterInvocations
+	total.PriorityUpper.ConstellationStatesInput += next.PriorityUpper.ConstellationStatesInput
+	total.PriorityUpper.ConstellationStatesRetained += next.PriorityUpper.ConstellationStatesRetained
+	total.PriorityUpper.ConstellationStatesRejected += next.PriorityUpper.ConstellationStatesRejected
+	addBoundPriorityUpperSiteProfile(&total.PriorityUpper.ConstellationFilter, next.PriorityUpper.ConstellationFilter)
+	addBoundPriorityUpperSiteProfile(&total.PriorityUpper.RepairDFS, next.PriorityUpper.RepairDFS)
+	addBoundPriorityUpperSiteProfile(&total.PriorityUpper.PlateauPrefilter, next.PriorityUpper.PlateauPrefilter)
+	addBoundPriorityUpperSiteProfile(&total.PriorityUpper.PlateauDFS, next.PriorityUpper.PlateauDFS)
+	addBoundOutgoingSiteProfile(&total.Outgoing.Search, next.Outgoing.Search)
+	addBoundOutgoingSiteProfile(&total.Outgoing.Repair, next.Outgoing.Repair)
+	return total
+}
+
+func addBoundPriorityUpperSiteProfile(total *model.PriorityUpperBoundSiteProfile, next model.PriorityUpperBoundSiteProfile) {
+	total.Calls += next.Calls
+	total.FeasibleResults += next.FeasibleResults
+	total.RejectedResults += next.RejectedResults
+	total.InvalidPriorityReturns += next.InvalidPriorityReturns
+	total.PriorityEntriesValidated += next.PriorityEntriesValidated
+	total.FixedPlacementInputs += next.FixedPlacementInputs
+	total.CurrentPlacementInputs += next.CurrentPlacementInputs
+	total.AnchoredPlacements += next.AnchoredPlacements
+	total.RemovedInstanceInputs += next.RemovedInstanceInputs
+	total.RemovedInstances += next.RemovedInstances
+	total.RemovedOptionCandidates += next.RemovedOptionCandidates
+	total.RemovedOptionRejectedFixedOverlap += next.RemovedOptionRejectedFixedOverlap
+	total.RemovedOptionRejectedOutsideFree += next.RemovedOptionRejectedOutsideFree
+	total.RemovedOptionsRetained += next.RemovedOptionsRetained
+	total.UniquePrioritySourceItems += next.UniquePrioritySourceItems
+	total.AnchoredSourceInstances += next.AnchoredSourceInstances
+	total.RemovedSourceInstances += next.RemovedSourceInstances
+	total.StarSlots += next.StarSlots
+	total.FixedTargetChecks += next.FixedTargetChecks
+	total.RemovedTargetChecks += next.RemovedTargetChecks
+	total.SelfTargetSkips += next.SelfTargetSkips
+	total.FixedFixedGeometryChecks += next.FixedFixedGeometryChecks
+	total.RemovedSourceOptionChecksFixedTarget += next.RemovedSourceOptionChecksFixedTarget
+	total.FixedSourceTargetOptionChecks += next.FixedSourceTargetOptionChecks
+	total.RemovedSourceTargetOptionPairs += next.RemovedSourceTargetOptionPairs
+	total.GeometryCandidateChecks += next.GeometryCandidateChecks
+	total.GeometryOverlapRejects += next.GeometryOverlapRejects
+	total.StarPositionHitCalls += next.StarPositionHitCalls
+	total.StarPositionHitTrue += next.StarPositionHitTrue
+	total.SlotTargetHits += next.SlotTargetHits
+	total.MatchingCalls += next.MatchingCalls
+}
+
+func addBoundOutgoingSiteProfile(total *model.OutgoingBoundSiteProfile, next model.OutgoingBoundSiteProfile) {
+	total.Checks += next.Checks
+	total.PrunedNodes += next.PrunedNodes
+	total.PlacedMapBuilds += next.PlacedMapBuilds
+	total.PlacedMapInsertions += next.PlacedMapInsertions
+	total.PlacedMaskInstanceChecks += next.PlacedMaskInstanceChecks
+	total.PriorityIterations += next.PriorityIterations
+	total.SourceInstanceIterations += next.SourceInstanceIterations
+	total.PrioritySourceMatches += next.PrioritySourceMatches
+	total.ZeroStarSourceSkips += next.ZeroStarSourceSkips
+	total.PlacedSourceIterations += next.PlacedSourceIterations
+	total.FreeSourceIterations += next.FreeSourceIterations
+	total.PlacedSourceTargetIterations += next.PlacedSourceTargetIterations
+	total.SelfTargetSkips += next.SelfTargetSkips
+	total.TargetPlacementLookups += next.TargetPlacementLookups
+	total.PlacedTargetsFound += next.PlacedTargetsFound
+	total.UnplacedTargets += next.UnplacedTargets
+	total.SourceHitsTargetCalls += next.SourceHitsTargetCalls
+	total.SourceHitsTargetTrue += next.SourceHitsTargetTrue
+	total.CoveragePlacementKeyCalls += next.CoveragePlacementKeyCalls
+	total.PlacedPotentialLookups += next.PlacedPotentialLookups
+	total.FreePotentialLookups += next.FreePotentialLookups
+	total.PopcountCalls += next.PopcountCalls
+	total.StarCountClamps += next.StarCountClamps
+}
+
+func deriveBoundAttributionSummary(profile *model.BoundAttributionOperationProfile) *BoundAttributionDerivedSummary {
+	if profile == nil {
+		return nil
+	}
+	priority := profile.PriorityUpper
+	plateau := priority.PlateauPrefilter
+	addBoundPriorityUpperSiteProfile(&plateau, priority.PlateauDFS)
+	aggregatePriority := priority.ConstellationFilter
+	addBoundPriorityUpperSiteProfile(&aggregatePriority, priority.RepairDFS)
+	addBoundPriorityUpperSiteProfile(&aggregatePriority, priority.PlateauPrefilter)
+	addBoundPriorityUpperSiteProfile(&aggregatePriority, priority.PlateauDFS)
+	outgoing := profile.Outgoing
+	aggregateOutgoing := outgoing.Search
+	addBoundOutgoingSiteProfile(&aggregateOutgoing, outgoing.Repair)
+	return &BoundAttributionDerivedSummary{
+		PriorityUpper: PriorityUpperBoundDerivedSummary{
+			ConstellationFilter: derivePriorityUpperBoundSiteSummary(priority.ConstellationFilter),
+			RepairDFS:           derivePriorityUpperBoundSiteSummary(priority.RepairDFS),
+			PlateauPrefilter:    derivePriorityUpperBoundSiteSummary(priority.PlateauPrefilter),
+			PlateauDFS:          derivePriorityUpperBoundSiteSummary(priority.PlateauDFS),
+			Plateau:             derivePriorityUpperBoundSiteSummary(plateau),
+			Aggregate:           derivePriorityUpperBoundSiteSummary(aggregatePriority),
+		},
+		Outgoing: OutgoingBoundDerivedSummary{
+			Search:    deriveOutgoingBoundSiteSummary(outgoing.Search),
+			Repair:    deriveOutgoingBoundSiteSummary(outgoing.Repair),
+			Aggregate: deriveOutgoingBoundSiteSummary(aggregateOutgoing),
+		},
+	}
+}
+
+func derivePriorityUpperBoundSiteSummary(profile model.PriorityUpperBoundSiteProfile) PriorityUpperBoundSiteDerivedSummary {
+	return PriorityUpperBoundSiteDerivedSummary{
+		RejectionRate:              operationProfileRatio(profile.RejectedResults, profile.Calls),
+		AnchoredPerCall:            operationProfileRatio(profile.AnchoredPlacements, profile.Calls),
+		RemovedPerCall:             operationProfileRatio(profile.RemovedInstances, profile.Calls),
+		RemovedOptionsPerCall:      operationProfileRatio(profile.RemovedOptionCandidates, profile.Calls),
+		RemovedOptionRetentionRate: operationProfileRatio(profile.RemovedOptionsRetained, profile.RemovedOptionCandidates),
+		UniqueSourceItemsPerCall:   operationProfileRatio(profile.UniquePrioritySourceItems, profile.Calls),
+		SourceInstancesPerCall: operationProfileRatio(
+			profile.AnchoredSourceInstances+profile.RemovedSourceInstances,
+			profile.Calls,
+		),
+		StarSlotsPerCall:           operationProfileRatio(profile.StarSlots, profile.Calls),
+		FixedTargetChecksPerCall:   operationProfileRatio(profile.FixedTargetChecks, profile.Calls),
+		RemovedTargetChecksPerCall: operationProfileRatio(profile.RemovedTargetChecks, profile.Calls),
+		GeometryCandidatesPerCall:  operationProfileRatio(profile.GeometryCandidateChecks, profile.Calls),
+		StarHitCallsPerCall:        operationProfileRatio(profile.StarPositionHitCalls, profile.Calls),
+		GeometryOverlapRejectRate:  operationProfileRatio(profile.GeometryOverlapRejects, profile.GeometryCandidateChecks),
+		StarHitTrueRate:            operationProfileRatio(profile.StarPositionHitTrue, profile.StarPositionHitCalls),
+	}
+}
+
+func deriveOutgoingBoundSiteSummary(profile model.OutgoingBoundSiteProfile) OutgoingBoundSiteDerivedSummary {
+	return OutgoingBoundSiteDerivedSummary{
+		PruneRate:                operationProfileRatio(profile.PrunedNodes, profile.Checks),
+		MapInsertionsPerCheck:    operationProfileRatio(profile.PlacedMapInsertions, profile.Checks),
+		SourceMatchesPerCheck:    operationProfileRatio(profile.PrioritySourceMatches, profile.Checks),
+		PlacedSourceFraction:     operationProfileRatio(profile.PlacedSourceIterations, profile.PlacedSourceIterations+profile.FreeSourceIterations),
+		TargetsPerPlacedSource:   operationProfileRatio(profile.PlacedSourceTargetIterations, profile.PlacedSourceIterations),
+		PlacedTargetFraction:     operationProfileRatio(profile.PlacedTargetsFound, profile.TargetPlacementLookups),
+		SourceHitCallsPerCheck:   operationProfileRatio(profile.SourceHitsTargetCalls, profile.Checks),
+		CoverageKeyCallsPerCheck: operationProfileRatio(profile.CoveragePlacementKeyCalls, profile.Checks),
+		PotentialLookupsPerCheck: operationProfileRatio(profile.PlacedPotentialLookups+profile.FreePotentialLookups, profile.Checks),
 	}
 }
 
@@ -442,6 +681,25 @@ func FormatOperationProfileSummary(writer io.Writer, summary OperationProfileSum
 			fmt.Fprintln(writer, "  incompatible packing-seed profile versions retained separately; no aggregate was produced")
 			for _, versioned := range entry.PackingSeedFeasibilityByVersion {
 				fmt.Fprintf(writer, "  %s — %d run(s), candidate expansions: %d, feasibility options: %d\n", versioned.Version, versioned.Runs, versioned.Profile.CandidateExpansions, versioned.Profile.FeasibilityOptionChecks)
+			}
+		}
+		fmt.Fprintf(writer, "Bound attribution — %s\n", label)
+		if entry.BoundAttribution == nil && len(entry.BoundAttributionByVersion) == 0 {
+			fmt.Fprintln(writer, "  no operation profile present")
+		} else if entry.BoundAttribution != nil {
+			profile := entry.BoundAttribution
+			priority := profile.PriorityUpper
+			fmt.Fprintf(writer, "  version: %s\n", profile.Version)
+			fmt.Fprintf(writer, "  priority calls/rejects — constellation: %d/%d, repair: %d/%d, plateau prefilter: %d/%d, plateau DFS: %d/%d\n", priority.ConstellationFilter.Calls, priority.ConstellationFilter.RejectedResults, priority.RepairDFS.Calls, priority.RepairDFS.RejectedResults, priority.PlateauPrefilter.Calls, priority.PlateauPrefilter.RejectedResults, priority.PlateauDFS.Calls, priority.PlateauDFS.RejectedResults)
+			fmt.Fprintf(writer, "  outgoing checks/prunes — search: %d/%d, repair: %d/%d\n", profile.Outgoing.Search.Checks, profile.Outgoing.Search.PrunedNodes, profile.Outgoing.Repair.Checks, profile.Outgoing.Repair.PrunedNodes)
+			if derived := entry.BoundAttributionDerived; derived != nil {
+				fmt.Fprintf(writer, "  aggregate rates — priority rejects: %.2f%%, geometry candidates/call: %.1f, outgoing prunes: %.2f%%, target scans/placed source: %.1f\n", 100*derived.PriorityUpper.Aggregate.RejectionRate, derived.PriorityUpper.Aggregate.GeometryCandidatesPerCall, 100*derived.Outgoing.Aggregate.PruneRate, derived.Outgoing.Aggregate.TargetsPerPlacedSource)
+			}
+		} else {
+			fmt.Fprintln(writer, "  incompatible bound-attribution profile versions retained separately; no aggregate was produced")
+			for _, versioned := range entry.BoundAttributionByVersion {
+				checks := versioned.Profile.Outgoing.Search.Checks + versioned.Profile.Outgoing.Repair.Checks
+				fmt.Fprintf(writer, "  %s — %d run(s), outgoing checks: %d, priority constellation calls: %d\n", versioned.Version, versioned.Runs, checks, versioned.Profile.PriorityUpper.ConstellationFilter.Calls)
 			}
 		}
 		if entry.Scheduler != nil {
