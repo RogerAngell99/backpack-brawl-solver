@@ -26,6 +26,12 @@ vector, or any other bound/search-policy optimization. Official decision
 evidence is collected only after this instrumentation has been reviewed,
 merged, and rebuilt from a newly frozen clean `main` revision.
 
+R1I-A also fixes a pre-existing omission of the authoritative outgoing checks
+and prunes from the coverage-ceiling early-return projection. Search behavior
+is unchanged, but those pre-existing telemetry fields may therefore differ
+from historical output on that path. The correction is regression-tested in
+the normal build and recorded explicitly rather than treated as new R1I work.
+
 ## Question
 
 R1 found two broad, general post-H2a hotspots:
@@ -280,12 +286,17 @@ R1I-A requires:
    plateau DFS, outgoing search, and outgoing repair remain separate.
 3. Aggregation tests for equal versions and rejection/separation of
    incompatible versions.
-4. Three-way semantic equivalence across normal, searchprofile OFF, and
-   searchprofile ON behavior.
-5. `gofmt`, `git diff --check`, `go test ./...`,
+4. Early-return tests proving coverage-ceiling and priority-ceiling exits
+   retain every bound counter and operation profile produced before the stop.
+5. Three-way semantic equivalence is automated in two linked gates: CI emits
+   the same timing/profile-normalized snapshot from the normal and
+   searchprofile-OFF builds, while the tagged solver test compares
+   searchprofile OFF and ON in-process. Only elapsed timing and operation
+   profiles may be removed before comparison.
+6. `gofmt`, `git diff --check`, `go test ./...`,
    `go test -tags searchprofile ./...`, solver race tests, the
    `general-search-v2` suite lock, and the same Web/WASM build performed by CI.
-6. No diff to the catalog, suite generator, or
+7. No diff to the catalog, suite generator, or
    `benchmarks/suites/general-search-v2.lock`.
 
 ## Post-merge collection (R1I-B input)

@@ -7,6 +7,7 @@ import (
 	"sync/atomic"
 	"testing"
 
+	"backpack-brawl-solver/internal/geometry"
 	"backpack-brawl-solver/internal/model"
 )
 
@@ -186,6 +187,60 @@ func TestBoundAttributionPhysicalCallSitesRemainSeparate(t *testing.T) {
 	searchProfile := search.BoundOperationProfile
 	if searchProfile == nil || searchProfile.Outgoing.Search.Checks == 0 || searchProfile.Outgoing.Search.Checks != search.OutgoingBoundChecks || searchProfile.Outgoing.Search.PrunedNodes != search.OutgoingBoundPrunedNodes || searchProfile.Outgoing.Repair.Checks != 0 {
 		t.Fatalf("search outgoing attribution=%+v result=%+v", searchProfile, search)
+	}
+}
+
+func TestPriorityCeilingExitPreservesSearchBoundAttribution(t *testing.T) {
+	catalog := repairTestCatalog()
+	items := []string{"source", "weapon", "blocker"}
+	instances := ExpandInventory(items)
+	optionsByInstance := testOptionsByInstance(t, catalog, instances)
+	config := Config{
+		TopN:                  1,
+		AllowSkips:            false,
+		MaxNodes:              500,
+		Workers:               1,
+		PrioritySemantics:     model.PrioritySemanticsOutgoingPerInstanceV3,
+		Priorities:            []string{"star_source:source"},
+		StopOnPriorityCeiling: true,
+		OperationProfiling:    true,
+	}
+	initialPlacements := []model.Placement{
+		testPlacement(t, optionsByInstance[instances[0].InstanceID], model.Coord{Row: 0, Col: 0}, 0),
+		testPlacement(t, optionsByInstance[instances[1].InstanceID], model.Coord{Row: 2, Col: 2}, 0),
+		testPlacement(t, optionsByInstance[instances[2].InstanceID], model.Coord{Row: 0, Col: 1}, 0),
+	}
+	initial := buildSolution(catalog, initialPlacements, instances, config.Priorities)
+	initial.Evaluation = evaluateLayoutForConfig(catalog, initialPlacements, config)
+	config.stageIncumbents = []model.Solution{initial}
+	policy := resolveSearchPolicy(config, config.MaxNodes)
+	policy.CoverageSeedNodeBudget = 0
+	policy.StarSeedNodeBudget = 0
+	policy.PackingSeedNodeBudget = 0
+	policy.CandidateLimit = 1
+	config.policy = &policy
+
+	solutions, err := solveLayoutStage(catalog, items, geometry.FullGridMask(), config)
+	if err != nil {
+		t.Fatalf("SolveLayout: %v", err)
+	}
+	if len(solutions) != 1 {
+		t.Fatalf("solutions=%d want 1", len(solutions))
+	}
+	stats := solutions[0].Search
+	if !stats.PriorityCeilingReached || !stats.StoppedAfterPriorityCeiling {
+		t.Fatalf("search stats=%+v want priority-ceiling exit", stats)
+	}
+	if stats.NodesExplored <= 0 || stats.CoverageSeedNodes != 0 {
+		t.Fatalf("fixture did not execute DFS after the seed: %+v", stats)
+	}
+	profile := stats.BoundOperationProfile
+	assertBoundAttributionOperationProfileIdentities(t, profile)
+	if stats.OutgoingBoundChecks == 0 || profile.Outgoing.Search.Checks != stats.OutgoingBoundChecks {
+		t.Fatalf("priority-ceiling exit lost DFS outgoing checks: profile=%+v stats=%+v", profile.Outgoing, stats)
+	}
+	if profile.Outgoing.Search.PrunedNodes != stats.OutgoingBoundPrunedNodes || profile.Outgoing.Repair.Checks != 0 || profile.Outgoing.Repair.PrunedNodes != 0 {
+		t.Fatalf("priority-ceiling outgoing reconciliation failed: profile=%+v stats=%+v", profile.Outgoing, stats)
 	}
 }
 
