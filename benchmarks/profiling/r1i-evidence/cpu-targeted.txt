@@ -1,0 +1,20 @@
+File: solver.exe
+Build ID: C:\r1i-artifacts\ba1bc16d9b3ea904746f7833caa63579731c9c47\binaries\solver.exe2026-08-24 13:50:31.8785155 -0300 -03
+Type: cpu
+Time: 2026-08-24 14:14:13 -03
+Duration: 153.80s, Total samples = 289.08s (187.96%)
+Active filters:
+   show=partialRepairV3PriorityUpperBound|filterConstellationPriorityFeasibleStates…
+Showing nodes accounting for 56.76s, 19.63% of 289.08s total
+      flat  flat%   sum%        cum   cum%
+    19.12s  6.61%  6.61%     19.12s  6.61%  backpack-brawl-solver/internal/solver.starPositionHitsTarget
+    10.42s  3.60% 10.22%     10.42s  3.60%  backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+     8.94s  3.09% 13.31%     30.31s 10.48%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+     6.62s  2.29% 15.60%      6.62s  2.29%  backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+     6.34s  2.19% 17.79%      6.34s  2.19%  backpack-brawl-solver/internal/solver.placementByInstanceID (inline)
+     2.77s  0.96% 18.75%     21.76s  7.53%  backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+     2.12s  0.73% 19.49%      2.12s  0.73%  backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+     0.27s 0.093% 19.58%     22.14s  7.66%  backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+     0.08s 0.028% 19.61%     24.35s  8.42%  backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+     0.07s 0.024% 19.63%     24.44s  8.45%  backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+     0.01s 0.0035% 19.63%     22.15s  7.66%  backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem

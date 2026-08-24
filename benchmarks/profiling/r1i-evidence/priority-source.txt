@@ -1,0 +1,114 @@
+Total: 289.08s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget in C:\r1i-measure\internal\solver\partial_repair_bound.go
+     500ms     21.76s (flat, cum)  7.53% of Total
+      10ms       10ms    261:func partialRepairSlotCanHitRemovedTarget(
+         .          .    262:	catalog model.Catalog,
+         .          .    263:	fixedSource *model.Placement,
+         .          .    264:	removedSource model.InventoryInstance,
+         .          .    265:	removedTarget model.InventoryInstance,
+         .          .    266:	starIndex int,
+         .          .    267:	removedOptions map[string][]model.Placement,
+         .          .    268:) bool {
+         .          .    269:	if fixedSource != nil {
+      10ms       10ms    270:		if fixedSource.InstanceID == removedTarget.InstanceID {
+         .          .    271:			return false
+         .          .    272:		}
+     190ms      1.68s    273:		for _, targetOption := range removedOptions[removedTarget.InstanceID] {
+     250ms     20.02s    274:			if fixedSource.Mask&targetOption.Mask == 0 && starPositionHitsTarget(catalog, *fixedSource, targetOption, starIndex) {
+         .          .    275:				return true
+         .          .    276:			}
+         .          .    277:		}
+      40ms       40ms    278:		return false
+         .          .    279:	}
+         .          .    280:	if removedSource.InstanceID == removedTarget.InstanceID {
+         .          .    281:		return false
+         .          .    282:	}
+         .          .    283:	for _, sourceOption := range removedOptions[removedSource.InstanceID] {
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper in C:\r1i-measure\internal\solver\partial_repair_bound.go
+      60ms     22.14s (flat, cum)  7.66% of Total
+         .          .    202:func partialRepairSourceStarUpper(
+         .          .    203:	catalog model.Catalog,
+         .          .    204:	fixedSource *model.Placement,
+         .          .    205:	removedSource model.InventoryInstance,
+         .          .    206:	anchored []model.Placement,
+         .          .    207:	removed []model.InventoryInstance,
+         .          .    208:	removedOptions map[string][]model.Placement,
+         .          .    209:) int {
+         .          .    210:	sourceItemID := removedSource.ItemID
+         .          .    211:	if fixedSource != nil {
+         .          .    212:		sourceItemID = fixedSource.ItemID
+         .          .    213:	}
+         .       10ms    214:	item, exists := catalog.Items[sourceItemID]
+         .          .    215:	if !exists || len(item.Stars) == 0 {
+         .          .    216:		return 0
+         .          .    217:	}
+         .          .    218:
+         .          .    219:	targetCount := len(anchored) + len(removed)
+         .       10ms    220:	slots := make([][]int, len(item.Stars))
+         .          .    221:	for starIndex := range slots {
+         .          .    222:		for targetIndex := range anchored {
+         .      150ms    223:			if partialRepairSlotCanHitFixedTarget(catalog, fixedSource, removedSource, anchored[targetIndex], starIndex, removedOptions) {
+         .          .    224:				slots[starIndex] = append(slots[starIndex], targetIndex)
+         .          .    225:			}
+         .          .    226:		}
+         .          .    227:		for targetIndex := range removed {
+      40ms     21.80s    228:			if partialRepairSlotCanHitRemovedTarget(catalog, fixedSource, removedSource, removed[targetIndex], starIndex, removedOptions) {
+      10ms      110ms    229:				slots[starIndex] = append(slots[starIndex], len(anchored)+targetIndex)
+         .          .    230:			}
+         .          .    231:		}
+         .          .    232:	}
+      10ms       60ms    233:	return partialRepairMaximumSlotMatching(slots, targetCount)
+         .          .    234:}
+         .          .    235:
+         .          .    236:func partialRepairSlotCanHitFixedTarget(
+         .          .    237:	catalog model.Catalog,
+         .          .    238:	fixedSource *model.Placement,
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound in C:\r1i-measure\internal\solver\partial_repair_bound.go
+         0     24.35s (flat, cum)  8.42% of Total
+         .          .     26:func partialRepairV3PriorityUpperBound(
+         .          .     27:	catalog model.Catalog,
+         .          .     28:	state partialRepairState,
+         .          .     29:	optionsByInstance map[string][]model.Placement,
+         .          .     30:	priorities []string,
+         .          .     31:) []int {
+         .          .     32:	for _, priority := range priorities {
+         .          .     33:		kind, sourceItemID, ok := parsePriorityForSolver(priority)
+         .          .     34:		if !ok || kind != "star_source" {
+         .          .     35:			return nil
+         .          .     36:		}
+         .          .     37:		if _, exists := catalog.Items[sourceItemID]; !exists {
+         .          .     38:			return nil
+         .          .     39:		}
+         .          .     40:	}
+         .          .     41:
+         .       30ms     42:	anchored := state.anchoredPlacements()
+         .       40ms     43:	removed := state.unplacedRemoved(anchored)
+         .      2.12s     44:	removedOptions := state.filteredRemovedOptions(removed, optionsByInstance)
+         .          .     45:	upperBySourceItem := map[string]int{}
+         .          .     46:	upper := make([]int, len(priorities))
+         .          .     47:	for priorityIndex, priority := range priorities {
+         .       10ms     48:		_, sourceItemID, _ := parsePriorityForSolver(priority)
+         .          .     49:		count, exists := upperBySourceItem[sourceItemID]
+         .          .     50:		if !exists {
+         .     22.15s     51:			count = partialRepairStarUpperForItem(catalog, sourceItemID, anchored, removed, removedOptions)
+         .          .     52:			upperBySourceItem[sourceItemID] = count
+         .          .     53:		}
+         .          .     54:		upper[priorityIndex] = count
+         .          .     55:	}
+         .          .     56:	return upper
+ROUTINE ======================== backpack-brawl-solver/internal/solver.starPositionHitsTarget in C:\r1i-measure\internal\solver\star_upper_bound.go
+     930ms     19.12s (flat, cum)  6.61% of Total
+     200ms      210ms    183:func starPositionHitsTarget(catalog model.Catalog, source model.Placement, target model.Placement, starIndex int) bool {
+     150ms      180ms    184:	if starIndex < 0 || starIndex >= len(source.StarPositions) || source.InstanceID == target.InstanceID {
+         .          .    185:		return false
+         .          .    186:	}
+     140ms      410ms    187:	star := source.StarPositions[starIndex]
+     360ms     18.24s    188:	if !geometry.InBounds(star.Position) || !scoring.StarMatchesCatalogItems(catalog, source.ItemID, target.ItemID, &star.Star) {
+      40ms       40ms    189:		return false
+         .          .    190:	}
+      40ms       40ms    191:	return target.Mask&(uint64(1)<<uint(geometry.CellIndex(star.Position))) != 0
+         .          .    192:}
+         .          .    193:
+         .          .    194:func maximumSlotMatching(slotTargets []uint64) int {
+         .          .    195:	matchedSlots := [64]int{}
+         .          .    196:	for index := range matchedSlots {

@@ -1,0 +1,94 @@
+Total: 289.08s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts in C:\r1i-measure\internal\solver\outgoing_bound.go
+     1.89s     30.31s (flat, cum) 10.48% of Total
+      10ms       10ms     58:func (ctx *outgoingBoundContext) upperPriorityCounts(placements []model.Placement) []int {
+      10ms      6.32s     59:	placedByID := placementByInstanceID(placements)
+         .          .     60:	placedMask := uint64(0)
+     100ms      100ms     61:	for _, instance := range ctx.instances {
+      40ms      1.08s     62:		if _, placed := placedByID[instance.InstanceID]; placed {
+      40ms       40ms     63:			placedMask |= uint64(1) << uint(instance.OriginalIndex)
+         .          .     64:		}
+         .          .     65:	}
+         .      210ms     66:	upper := make([]int, len(ctx.priorityItems))
+      60ms       60ms     67:	for priorityIndex, sourceItemID := range ctx.priorityItems {
+     200ms      200ms     68:		for _, sourceInstance := range ctx.instances {
+      30ms      110ms     69:			if sourceInstance.ItemID != sourceItemID {
+         .          .     70:				continue
+         .          .     71:			}
+         .      410ms     72:			starCount := len(ctx.catalog.Items[sourceItemID].Stars)
+      30ms       30ms     73:			if starCount == 0 {
+         .          .     74:				continue
+         .          .     75:			}
+         .          .     76:			var targets uint64
+         .      160ms     77:			if sourcePlacement, placed := placedByID[sourceInstance.InstanceID]; placed {
+     310ms      310ms     78:				for _, targetInstance := range ctx.instances {
+     190ms      240ms     79:					if targetInstance.InstanceID == sourceInstance.InstanceID {
+         .          .     80:						continue
+         .          .     81:					}
+     330ms      4.27s     82:					targetPlacement, targetPlaced := placedByID[targetInstance.InstanceID]
+     260ms      6.92s     83:					if targetPlaced && sourceHitsTargetWithCatalog(ctx.catalog, sourcePlacement, targetPlacement) {
+      20ms       20ms     84:						targets |= uint64(1) << uint(targetInstance.OriginalIndex)
+         .          .     85:					}
+         .          .     86:				}
+         .          .     87:				// Only targets that are still movable get geometric potential.
+     240ms      9.74s     88:				targets |= ctx.potential.outgoingTargets[coveragePlacementKey(sourcePlacement)] &^ placedMask
+         .          .     89:			} else {
+         .          .     90:				// A free source may choose any option from the precomputed geometric
+         .          .     91:				// relaxation. Fixed-item conflicts are intentionally ignored here.
+         .       60ms     92:				targets = ctx.potential.instanceOutgoingTargets[sourceInstance.InstanceID]
+         .          .     93:			}
+         .          .     94:			targets &^= uint64(1) << uint(sourceInstance.OriginalIndex)
+         .          .     95:			count := bits.OnesCount64(targets)
+         .          .     96:			if count > starCount {
+         .          .     97:				count = starCount
+         .          .     98:			}
+      10ms       10ms     99:			upper[priorityIndex] += count
+         .          .    100:		}
+         .          .    101:	}
+      10ms       10ms    102:	return upper
+         .          .    103:}
+ROUTINE ======================== backpack-brawl-solver/internal/solver.coveragePlacementKey in C:\r1i-measure\internal\solver\coverage.go
+      10ms     10.42s (flat, cum)  3.60% of Total
+         .          .    547:func coveragePlacementKey(placement model.Placement) string {
+      10ms     10.42s    548:	return placement.InstanceID + "\x00" + placementKey(placement)
+         .          .    549:}
+         .          .    550:
+         .          .    551:func containsString(values []string, needle string) bool {
+         .          .    552:	for _, value := range values {
+         .          .    553:		if value == needle {
+ROUTINE ======================== backpack-brawl-solver/internal/solver.placementByInstanceID in C:\r1i-measure\internal\solver\repair.go
+     140ms      6.34s (flat, cum)  2.19% of Total
+         .          .   1339:func placementByInstanceID(placements []model.Placement) map[string]model.Placement {
+      40ms      160ms   1340:	out := map[string]model.Placement{}
+      60ms      240ms   1341:	for _, placement := range placements {
+      40ms      5.94s   1342:		out[placement.InstanceID] = placement
+         .          .   1343:	}
+         .          .   1344:	return out
+         .          .   1345:}
+         .          .   1346:
+         .          .   1347:func skippedInstances(instances []model.InventoryInstance, placementByID map[string]model.Placement) []model.InventoryInstance {
+ROUTINE ======================== backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog in C:\r1i-measure\internal\solver\coverage.go
+     1.52s      6.62s (flat, cum)  2.29% of Total
+     140ms      140ms    527:func sourceHitsTargetWithCatalog(catalog model.Catalog, source model.Placement, target model.Placement) bool {
+      40ms       60ms    528:	if source.InstanceID == target.InstanceID {
+         .          .    529:		return false
+         .          .    530:	}
+     250ms      250ms    531:	for starPositionIndex := range source.StarPositions {
+     180ms      180ms    532:		starPosition := &source.StarPositions[starPositionIndex]
+     520ms      570ms    533:		if !geometry.InBounds(starPosition.Position) {
+         .          .    534:			continue
+         .          .    535:		}
+      40ms       90ms    536:		cellBit := uint64(1) << uint(geometry.CellIndex(starPosition.Position))
+     130ms      130ms    537:		if target.Mask&cellBit == 0 {
+         .          .    538:			continue
+         .          .    539:		}
+     140ms      5.12s    540:		if scoring.StarMatchesCatalogItems(catalog, source.ItemID, target.ItemID, &starPosition.Star) {
+      10ms       10ms    541:			return true
+         .          .    542:		}
+         .          .    543:	}
+      70ms       70ms    544:	return false
+         .          .    545:}
+         .          .    546:
+         .          .    547:func coveragePlacementKey(placement model.Placement) string {
+         .          .    548:	return placement.InstanceID + "\x00" + placementKey(placement)
+         .          .    549:}

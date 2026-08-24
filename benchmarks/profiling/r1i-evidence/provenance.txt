@@ -1,0 +1,131 @@
+R1I-B official collection provenance
+
+frozen_revision=ba1bc16d9b3ea904746f7833caa63579731c9c47
+clone_path=C:\r1i-measure
+artifact_path=C:\r1i-artifacts\ba1bc16d9b3ea904746f7833caa63579731c9c47
+checkout=detached
+git_status_porcelain=<empty>
+remote_origin=https://github.com/RogerAngell99/backpack-brawl-solver.git
+artifact_start_local=2026-08-24T13:50:05-03:00
+collection_end_local=2026-08-24T14:17:17.5815550-03:00
+
+suite=general-search-v2
+suite_role_materialized=development
+materialized_cases=gsv2-013..gsv2-026
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false
+suite_catalog_semantic_sha256=0ab356afc52fa8479b627d4a917bc7f31d4cad1b6e021fd618ec17ef773c57c6
+catalog_file_sha256=173A43CD20AED017BE5836A870EA2D249B30D3A07294BE7FD08AFEA50C925EBE
+suite_manifest_file_sha256=6B8BEF8D2EEF6A6359C77B7F901F9096A41266ABBA20A8F6229C29C4B3053127
+suite_lock_file_sha256=B65771885C98D6A2FC93CFCA64E013FDCC94485F92ED935D1426A304CD37E775
+
+normal_binary_sha256=8575676DE1A00E731781A39255C8787CF4D2A777A2F05B49F3B378DB3ABFDFB2
+searchprofile_binary_sha256=03D5914EAE9D27459D54C40F74BC6FFA9FA38B80570D59D75E9C0489A11A0626
+
+host_os=Microsoft Windows 11 Home
+host_version=10.0.26200
+host_build=26200
+host_architecture=64-bit
+cpu=11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
+physical_cores=4
+logical_processors=8
+max_clock_mhz=3110
+visible_memory_kib=8166712
+
+go_version=go version go1.25.6 windows/amd64
+
+go_env:
+set AR=ar
+set CC=gcc
+set CGO_CFLAGS=-O2 -g
+set CGO_CPPFLAGS=
+set CGO_CXXFLAGS=-O2 -g
+set CGO_ENABLED=1
+set CGO_FFLAGS=-O2 -g
+set CGO_LDFLAGS=-O2 -g
+set CXX=g++
+set GCCGO=gccgo
+set GO111MODULE=
+set GOAMD64=v1
+set GOARCH=amd64
+set GOAUTH=netrc
+set GOBIN=
+set GOCACHE=C:\Users\roger\AppData\Local\go-build
+set GOCACHEPROG=
+set GODEBUG=
+set GOENV=C:\Users\roger\AppData\Roaming\go\env
+set GOEXE=.exe
+set GOEXPERIMENT=
+set GOFIPS140=off
+set GOFLAGS=
+set GOGCCFLAGS=-m64 -mthreads -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=C:\Users\roger\AppData\Local\Temp\go-build2344640902=/tmp/go-build -gno-record-gcc-switches
+set GOHOSTARCH=amd64
+set GOHOSTOS=windows
+set GOINSECURE=
+set GOMOD=C:\r1i-measure\go.mod
+set GOMODCACHE=C:\Users\roger\go\pkg\mod
+set GONOPROXY=
+set GONOSUMDB=
+set GOOS=windows
+set GOPATH=C:\Users\roger\go
+set GOPRIVATE=
+set GOPROXY=https://proxy.golang.org,direct
+set GOROOT=C:\Program Files\Go
+set GOSUMDB=sum.golang.org
+set GOTELEMETRY=local
+set GOTELEMETRYDIR=C:\Users\roger\AppData\Roaming\go\telemetry
+set GOTMPDIR=
+set GOTOOLCHAIN=auto
+set GOTOOLDIR=C:\Program Files\Go\pkg\tool\windows_amd64
+set GOVCS=
+set GOVERSION=go1.25.6
+set GOWORK=
+set PKG_CONFIG=pkg-config
+
+normal_binary_metadata:
+C:\r1i-artifacts\ba1bc16d9b3ea904746f7833caa63579731c9c47\binaries\solver.exe: go1.25.6
+	path	backpack-brawl-solver/cmd/backpack-brawl-solver
+	mod	backpack-brawl-solver	v0.0.0-20260824163230-ba1bc16d9b3e
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=ba1bc16d9b3ea904746f7833caa63579731c9c47
+	build	vcs.time=2026-08-24T16:32:30Z
+	build	vcs.modified=false
+
+searchprofile_binary_metadata:
+C:\r1i-artifacts\ba1bc16d9b3ea904746f7833caa63579731c9c47\binaries\solver-searchprofile.exe: go1.25.6
+	path	backpack-brawl-solver/cmd/backpack-brawl-solver
+	mod	backpack-brawl-solver	v0.0.0-20260824163230-ba1bc16d9b3e
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	-tags=searchprofile
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=ba1bc16d9b3ea904746f7833caa63579731c9c47
+	build	vcs.time=2026-08-24T16:32:30Z
+	build	vcs.modified=false
+
+collection_matrix:
+GSV1 operations: gsv2-013..026, budgets=250000,1000000, repeat=1, workers=1, searchprofile, operation_profile=true
+V4 operations: gsv2-013..026, budget=1000000, repeat=1, workers=1, searchprofile, operation_profile=true
+CPU/heap: gsv2-013,015,016,018,021,024, budget=1000000, repeat=1, workers=1, normal build
+
+raw_freeze=26 files marked read-only after recursive SHA-256 collection
+post_freeze_solver_runs=0
