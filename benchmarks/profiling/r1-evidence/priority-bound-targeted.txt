@@ -1,0 +1,236 @@
+### filterConstellationPriorityFeasibleStates
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates in C:\r1-measure\internal\solver\constellation_seed.go
+      30ms     23.79s (flat, cum)  8.14% of Total
+         .          .    816:func filterConstellationPriorityFeasibleStates(
+         .          .    817:	catalog model.Catalog,
+         .          .    818:	instances []model.InventoryInstance,
+         .          .    819:	optionsByInstance map[string][]model.Placement,
+         .          .    820:	gridMask uint64,
+         .          .    821:	config Config,
+         .          .    822:	states []constellationSeedState,
+         .          .    823:) []constellationSeedState {
+         .          .    824:	if config.priorityBounds == nil {
+         .          .    825:		return states
+         .          .    826:	}
+         .          .    827:	filtered := states[:0]
+         .          .    828:	for _, state := range states {
+         .       10ms    829:		placed := placementByInstanceID(state.placed)
+         .          .    830:		remaining := make([]model.InventoryInstance, 0, len(instances)-len(state.placed))
+      10ms       10ms    831:		for _, instance := range instances {
+         .       40ms    832:			if _, exists := placed[instance.InstanceID]; !exists {
+         .          .    833:				remaining = append(remaining, instance)
+         .          .    834:			}
+         .          .    835:		}
+      10ms       10ms    836:		partial := partialRepairState{
+         .          .    837:			FixedPlacements:  state.placed,
+         .          .    838:			RemovedInstances: remaining,
+         .          .    839:			FreeCells:        gridMask &^ state.occupied,
+         .          .    840:		}
+         .     23.71s    841:		upper := partialRepairV3PriorityUpperBound(catalog, partial, optionsByInstance, config.Priorities)
+      10ms       10ms    842:		if partialRepairTargetVectorFeasible(upper, config.priorityBounds.ceiling) {
+         .          .    843:			filtered = append(filtered, state)
+         .          .    844:		}
+         .          .    845:	}
+         .          .    846:	return filtered
+         .          .    847:}
+
+### partialRepairV3PriorityUpperBound
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound in C:\r1-measure\internal\solver\partial_repair_bound.go
+         0     23.71s (flat, cum)  8.12% of Total
+         .          .     26:func partialRepairV3PriorityUpperBound(
+         .          .     27:	catalog model.Catalog,
+         .          .     28:	state partialRepairState,
+         .          .     29:	optionsByInstance map[string][]model.Placement,
+         .          .     30:	priorities []string,
+         .          .     31:) []int {
+         .          .     32:	for _, priority := range priorities {
+         .          .     33:		kind, sourceItemID, ok := parsePriorityForSolver(priority)
+         .          .     34:		if !ok || kind != "star_source" {
+         .          .     35:			return nil
+         .          .     36:		}
+         .          .     37:		if _, exists := catalog.Items[sourceItemID]; !exists {
+         .          .     38:			return nil
+         .          .     39:		}
+         .          .     40:	}
+         .          .     41:
+         .       10ms     42:	anchored := state.anchoredPlacements()
+         .      130ms     43:	removed := state.unplacedRemoved(anchored)
+         .      2.02s     44:	removedOptions := state.filteredRemovedOptions(removed, optionsByInstance)
+         .          .     45:	upperBySourceItem := map[string]int{}
+         .          .     46:	upper := make([]int, len(priorities))
+         .          .     47:	for priorityIndex, priority := range priorities {
+         .       10ms     48:		_, sourceItemID, _ := parsePriorityForSolver(priority)
+         .          .     49:		count, exists := upperBySourceItem[sourceItemID]
+         .          .     50:		if !exists {
+         .     21.54s     51:			count = partialRepairStarUpperForItem(catalog, sourceItemID, anchored, removed, removedOptions)
+         .          .     52:			upperBySourceItem[sourceItemID] = count
+         .          .     53:		}
+         .          .     54:		upper[priorityIndex] = count
+         .          .     55:	}
+         .          .     56:	return upper
+
+### partialRepairStarUpperForItem
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem in C:\r1-measure\internal\solver\partial_repair_bound.go
+      10ms     21.54s (flat, cum)  7.37% of Total
+         .          .    179:func partialRepairStarUpperForItem(
+         .          .    180:	catalog model.Catalog,
+         .          .    181:	sourceItemID string,
+         .          .    182:	anchored []model.Placement,
+         .          .    183:	removed []model.InventoryInstance,
+         .          .    184:	removedOptions map[string][]model.Placement,
+         .          .    185:) int {
+         .          .    186:	upper := 0
+         .          .    187:	for sourceIndex := range anchored {
+      10ms       10ms    188:		if anchored[sourceIndex].ItemID != sourceItemID {
+         .          .    189:			continue
+         .          .    190:		}
+         .     21.53s    191:		upper += partialRepairSourceStarUpper(catalog, &anchored[sourceIndex], model.InventoryInstance{}, anchored, removed, removedOptions)
+         .          .    192:	}
+         .          .    193:	for sourceIndex := range removed {
+         .          .    194:		if removed[sourceIndex].ItemID != sourceItemID {
+         .          .    195:			continue
+         .          .    196:		}
+
+### partialRepairSourceStarUpper
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper in C:\r1-measure\internal\solver\partial_repair_bound.go
+      60ms     21.53s (flat, cum)  7.37% of Total
+         .          .    202:func partialRepairSourceStarUpper(
+         .          .    203:	catalog model.Catalog,
+         .          .    204:	fixedSource *model.Placement,
+         .          .    205:	removedSource model.InventoryInstance,
+         .          .    206:	anchored []model.Placement,
+         .          .    207:	removed []model.InventoryInstance,
+         .          .    208:	removedOptions map[string][]model.Placement,
+         .          .    209:) int {
+         .          .    210:	sourceItemID := removedSource.ItemID
+         .          .    211:	if fixedSource != nil {
+         .          .    212:		sourceItemID = fixedSource.ItemID
+         .          .    213:	}
+         .          .    214:	item, exists := catalog.Items[sourceItemID]
+         .          .    215:	if !exists || len(item.Stars) == 0 {
+         .          .    216:		return 0
+         .          .    217:	}
+         .          .    218:
+         .          .    219:	targetCount := len(anchored) + len(removed)
+         .       30ms    220:	slots := make([][]int, len(item.Stars))
+         .          .    221:	for starIndex := range slots {
+         .          .    222:		for targetIndex := range anchored {
+         .      200ms    223:			if partialRepairSlotCanHitFixedTarget(catalog, fixedSource, removedSource, anchored[targetIndex], starIndex, removedOptions) {
+         .          .    224:				slots[starIndex] = append(slots[starIndex], targetIndex)
+         .          .    225:			}
+         .          .    226:		}
+         .          .    227:		for targetIndex := range removed {
+      50ms     21.22s    228:			if partialRepairSlotCanHitRemovedTarget(catalog, fixedSource, removedSource, removed[targetIndex], starIndex, removedOptions) {
+      10ms       10ms    229:				slots[starIndex] = append(slots[starIndex], len(anchored)+targetIndex)
+         .          .    230:			}
+         .          .    231:		}
+         .          .    232:	}
+         .       70ms    233:	return partialRepairMaximumSlotMatching(slots, targetCount)
+         .          .    234:}
+         .          .    235:
+         .          .    236:func partialRepairSlotCanHitFixedTarget(
+         .          .    237:	catalog model.Catalog,
+         .          .    238:	fixedSource *model.Placement,
+
+### partialRepairSlotCanHitRemovedTarget
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget in C:\r1-measure\internal\solver\partial_repair_bound.go
+     510ms     21.17s (flat, cum)  7.25% of Total
+         .          .    261:func partialRepairSlotCanHitRemovedTarget(
+         .          .    262:	catalog model.Catalog,
+         .          .    263:	fixedSource *model.Placement,
+         .          .    264:	removedSource model.InventoryInstance,
+         .          .    265:	removedTarget model.InventoryInstance,
+         .          .    266:	starIndex int,
+         .          .    267:	removedOptions map[string][]model.Placement,
+         .          .    268:) bool {
+         .          .    269:	if fixedSource != nil {
+         .          .    270:		if fixedSource.InstanceID == removedTarget.InstanceID {
+         .          .    271:			return false
+         .          .    272:		}
+     170ms      2.01s    273:		for _, targetOption := range removedOptions[removedTarget.InstanceID] {
+     300ms     19.12s    274:			if fixedSource.Mask&targetOption.Mask == 0 && starPositionHitsTarget(catalog, *fixedSource, targetOption, starIndex) {
+         .          .    275:				return true
+         .          .    276:			}
+         .          .    277:		}
+      40ms       40ms    278:		return false
+         .          .    279:	}
+         .          .    280:	if removedSource.InstanceID == removedTarget.InstanceID {
+         .          .    281:		return false
+         .          .    282:	}
+         .          .    283:	for _, sourceOption := range removedOptions[removedSource.InstanceID] {
+
+### partialRepairMaximumSlotMatching
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching in C:\r1-measure\internal\solver\partial_repair_bound.go
+         0       70ms (flat, cum) 0.024% of Total
+         .          .    293:func partialRepairMaximumSlotMatching(slotTargets [][]int, targetCount int) int {
+         .       10ms    294:	matchedSlots := make([]int, targetCount)
+         .          .    295:	for targetIndex := range matchedSlots {
+         .          .    296:		matchedSlots[targetIndex] = -1
+         .          .    297:	}
+         .          .    298:	var tryMatch func(int, []bool) bool
+         .          .    299:	tryMatch = func(slot int, seen []bool) bool {
+         .          .    300:		for _, target := range slotTargets[slot] {
+         .          .    301:			if target < 0 || target >= len(matchedSlots) || seen[target] {
+         .          .    302:				continue
+         .          .    303:			}
+         .          .    304:			seen[target] = true
+         .          .    305:			if matchedSlots[target] < 0 || tryMatch(matchedSlots[target], seen) {
+         .          .    306:				matchedSlots[target] = slot
+         .          .    307:				return true
+         .          .    308:			}
+         .          .    309:		}
+         .          .    310:		return false
+         .          .    311:	}
+         .          .    312:
+         .          .    313:	matched := 0
+         .          .    314:	for slot := range slotTargets {
+         .       60ms    315:		if tryMatch(slot, make([]bool, targetCount)) {
+         .          .    316:			matched++
+         .          .    317:		}
+         .          .    318:	}
+         .          .    319:	return matched
+         .          .    320:}
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching.func1 in C:\r1-measure\internal\solver\partial_repair_bound.go
+      30ms       30ms (flat, cum)  0.01% of Total
+      10ms       10ms    299:	tryMatch = func(slot int, seen []bool) bool {
+         .          .    300:		for _, target := range slotTargets[slot] {
+      10ms       10ms    301:			if target < 0 || target >= len(matchedSlots) || seen[target] {
+         .          .    302:				continue
+         .          .    303:			}
+         .          .    304:			seen[target] = true
+      10ms       10ms    305:			if matchedSlots[target] < 0 || tryMatch(matchedSlots[target], seen) {
+         .          .    306:				matchedSlots[target] = slot
+         .          .    307:				return true
+         .          .    308:			}
+         .          .    309:		}
+         .          .    310:		return false
+
+### filteredRemovedOptions
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions in C:\r1-measure\internal\solver\partial_repair_bound.go
+     120ms      2.02s (flat, cum)  0.69% of Total
+         .          .    153:func (state partialRepairState) filteredRemovedOptions(
+         .          .    154:	removed []model.InventoryInstance,
+         .          .    155:	optionsByInstance map[string][]model.Placement,
+         .          .    156:) map[string][]model.Placement {
+         .       10ms    157:	fixedOccupied := partialRepairOccupied(state.anchoredPlacements())
+         .       10ms    158:	filtered := make(map[string][]model.Placement, len(removed))
+         .          .    159:	for _, instance := range removed {
+         .          .    160:		options := optionsByInstance[instance.InstanceID]
+      30ms      300ms    161:		for _, option := range options {
+      50ms       50ms    162:			if option.Mask&fixedOccupied != 0 || option.Mask&^state.FreeCells != 0 {
+         .          .    163:				continue
+         .          .    164:			}
+      40ms      1.65s    165:			filtered[instance.InstanceID] = append(filtered[instance.InstanceID], option)
+         .          .    166:		}
+         .          .    167:	}
+         .          .    168:	return filtered
+         .          .    169:}
+         .          .    170:
+
