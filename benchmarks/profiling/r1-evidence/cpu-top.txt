@@ -1,0 +1,59 @@
+File: solver.exe
+Build ID: C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver.exe2026-08-23 22:04:00.6207248 -0300 -03
+Type: cpu
+Time: 2026-08-23 22:27:36 -03
+Duration: 154.84s, Total samples = 292.13s (188.67%)
+Showing nodes accounting for 215.92s, 73.91% of 292.13s total
+Dropped 704 nodes (cum <= 1.46s)
+Showing top 50 nodes out of 208
+      flat  flat%   sum%        cum   cum%
+    39.95s 13.68% 13.68%    104.09s 35.63%  runtime.scanobject
+    21.03s  7.20% 20.87%     30.80s 10.54%  runtime.findObject
+    13.63s  4.67% 25.54%     13.63s  4.67%  runtime.duffcopy
+    11.77s  4.03% 29.57%     11.77s  4.03%  runtime.(*mspan).base (inline)
+     9.31s  3.19% 32.76%      9.31s  3.19%  runtime.stdcall2
+     8.93s  3.06% 35.81%      8.93s  3.06%  runtime.memclrNoHeapPointers
+     7.39s  2.53% 38.34%      7.39s  2.53%  runtime.memmove
+     6.63s  2.27% 40.61%      6.76s  2.31%  runtime.spanOf (inline)
+     5.81s  1.99% 42.60%      6.65s  2.28%  runtime.typePointers.next
+     5.78s  1.98% 44.58%     25.27s  8.65%  runtime.greyobject
+     5.05s  1.73% 46.31%      5.05s  1.73%  aeshashbody
+        5s  1.71% 48.02%      5.09s  1.74%  runtime.(*gcBits).bitp (inline)
+     4.81s  1.65% 49.67%      4.82s  1.65%  runtime.stdcall1
+     3.61s  1.24% 50.90%     40.59s 13.89%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+     3.47s  1.19% 52.09%      3.47s  1.19%  memeqbody
+     3.43s  1.17% 53.26%      3.43s  1.17%  internal/bytealg.LastIndexByteString (inline)
+     3.16s  1.08% 54.35%      3.16s  1.08%  runtime.typePointers.nextFast (inline)
+     3.02s  1.03% 55.38%      9.45s  3.23%  runtime.sweepone
+     2.79s  0.96% 56.33%      2.79s  0.96%  runtime.procyield
+     2.76s  0.94% 57.28%      4.09s  1.40%  runtime.scanblock
+     2.72s  0.93% 58.21%      2.89s  0.99%  runtime.(*mspan).heapBitsSmallForAddr
+     2.65s  0.91% 59.12%      9.28s  3.18%  fmt.(*pp).doPrintf
+     2.46s  0.84% 59.96%     10.29s  3.52%  runtime.bulkBarrierPreWrite
+     2.35s   0.8% 60.76%      9.22s  3.16%  backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     2.19s  0.75% 61.51%      4.52s  1.55%  backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly
+     2.18s  0.75% 62.26%      2.18s  0.75%  internal/runtime/maps.ctrlGroup.matchH2 (inline)
+     2.18s  0.75% 63.01%      2.63s   0.9%  runtime.step
+     2.15s  0.74% 63.74%      6.78s  2.32%  runtime.wbBufFlush1
+     2.13s  0.73% 64.47%      2.13s  0.73%  runtime.stdcall3
+     1.98s  0.68% 65.15%      1.98s  0.68%  runtime.nextFreeFast (inline)
+     1.72s  0.59% 65.74%     30.22s 10.34%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+     1.69s  0.58% 66.32%      1.75s   0.6%  runtime.pageIndexOf (inline)
+     1.57s  0.54% 66.85%      1.57s  0.54%  runtime.(*mspan).divideByElemSize (inline)
+     1.55s  0.53% 67.38%    119.41s 40.88%  runtime.gcDrain
+     1.48s  0.51% 67.89%     22.83s  7.82%  backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+     1.46s   0.5% 68.39%      8.71s  2.98%  runtime.mapaccess2
+     1.40s  0.48% 68.87%      4.56s  1.56%  runtime.(*sweepLocked).sweep
+     1.38s  0.47% 69.34%      3.47s  1.19%  fmt.(*fmt).fmtInteger
+     1.35s  0.46% 69.80%     88.48s 30.29%  backpack-brawl-solver/internal/solver.runTask.func3
+     1.30s  0.45% 70.25%      2.13s  0.73%  runtime.(*spanSet).push
+     1.27s  0.43% 70.68%      4.25s  1.45%  runtime.mapaccess2_faststr
+     1.24s  0.42% 71.11%      4.38s  1.50%  runtime.(*mspan).typePointersOfUnchecked
+     1.23s  0.42% 71.53%      6.08s  2.08%  runtime.(*wbBuf).get2 (inline)
+     1.14s  0.39% 71.92%      6.04s  2.07%  backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+     1.08s  0.37% 72.29%      7.98s  2.73%  backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+     1.07s  0.37% 72.66%      3.24s  1.11%  runtime.(*unwinder).resolveInternal
+     0.99s  0.34% 72.99%      2.35s   0.8%  runtime.mProf_FlushLocked
+     0.90s  0.31% 73.30%      7.72s  2.64%  runtime.lock2
+     0.90s  0.31% 73.61%     10.14s  3.47%  runtime.mapassign_faststr
+     0.88s   0.3% 73.91%     51.41s 17.60%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe

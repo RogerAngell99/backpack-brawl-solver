@@ -1,0 +1,568 @@
+### packingFeasibility
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.packingFeasibility in C:\r1-measure\internal\solver\packing_seed.go
+     630ms      5.20s (flat, cum)  1.78% of Total
+         .          .    248:func packingFeasibility(
+         .          .    249:	remaining []model.InventoryInstance,
+         .          .    250:	optionsByInstance map[string][]model.Placement,
+         .          .    251:	occupied uint64,
+         .          .    252:	placements []model.Placement,
+         .          .    253:) (restricted int, flexibility int, feasible bool) {
+         .          .    254:	if len(remaining) == 0 {
+         .          .    255:		return 0, 0, true
+         .          .    256:	}
+         .          .    257:	restricted = int(^uint(0) >> 1)
+      20ms       20ms    258:	for _, instance := range remaining {
+         .          .    259:		legal := 0
+     370ms      1.07s    260:		for _, option := range optionsByInstance[instance.InstanceID] {
+     210ms      4.08s    261:			if option.Mask&occupied == 0 && placementRespectsCanonicalCopyOrder(option, placements) {
+      10ms       10ms    262:				legal++
+         .          .    263:			}
+         .          .    264:		}
+      20ms       20ms    265:		if legal == 0 {
+         .          .    266:			return 0, 0, false
+         .          .    267:		}
+         .          .    268:		if legal < restricted {
+         .          .    269:			restricted = legal
+         .          .    270:		}
+
+### packingSeedSearch
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.packingSeedSearch in C:\r1-measure\internal\solver\packing_seed.go
+      10ms      7.77s (flat, cum)  2.66% of Total
+         .          .     27:func packingSeedSearch(
+         .          .     28:	catalog model.Catalog,
+         .          .     29:	instances []model.InventoryInstance,
+         .          .     30:	ordered []model.InventoryInstance,
+         .          .     31:	optionsByInstance map[string][]model.Placement,
+         .          .     32:	config Config,
+         .          .     33:	gridMask uint64,
+         .          .     34:	nodeBudget int64,
+         .          .     35:	progress *progressTracker,
+         .          .     36:) coverageSeedResult {
+         .          .     37:	var operationCounters *packingSeedFeasibilityOperationCounters
+         .          .     38:	if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .     39:		operationCounters = newPackingSeedFeasibilityOperationCounters(config)
+         .          .     40:		operationCounters.searchCall()
+         .          .     41:	}
+         .          .     42:	if nodeBudget <= 0 || len(ordered) == 0 {
+         .          .     43:		return coverageSeedResult{PackingSeedOperationProfile: operationCounters.snapshot()}
+         .          .     44:	}
+         .          .     45:
+         .          .     46:	beamWidth := policyForConfig(config).PackingSeedBeamWidth
+         .          .     47:	states := []packingSeedState{{
+         .          .     48:		restricted:    len(ordered),
+         .          .     49:		flexibility:   len(ordered),
+         .          .     50:		fragmentation: freeSpaceFragmentation(gridMask, 0),
+         .          .     51:	}}
+         .          .     52:	remainingCells := remainingCellCounts(catalog, ordered)
+         .          .     53:	var nodes int64
+         .          .     54:	var symmetryPruned int64
+         .          .     55:	var deduplicated int64
+         .          .     56:	var hardPruned int64
+         .          .     57:	var beamEvictions int64
+         .          .     58:	var packingDiagnostics model.PackingSeedDiagnostics
+         .          .     59:	var statesByItemCount [25]int64
+         .          .     60:	var progressBatch int64
+         .          .     61:	exhausted := false
+         .          .     62:	reportNode := func() bool {
+         .          .     63:		if !chargeNode(config, config.tracePhase) {
+         .          .     64:			exhausted = true
+         .          .     65:			return false
+         .          .     66:		}
+         .          .     67:		nodes++
+         .          .     68:		if progress == nil {
+         .          .     69:			return true
+         .          .     70:		}
+         .          .     71:		progressBatch++
+         .          .     72:		if progressBatch >= progressNodeInterval {
+         .          .     73:			progress.addNodes(ProgressPhaseSeed, progressBatch, false)
+         .          .     74:			progressBatch = 0
+         .          .     75:		}
+         .          .     76:		return true
+         .          .     77:	}
+         .          .     78:	flushProgress := func() {
+         .          .     79:		if progress != nil && progressBatch > 0 {
+         .          .     80:			progress.addNodes(ProgressPhaseSeed, progressBatch, false)
+         .          .     81:		}
+         .          .     82:	}
+         .          .     83:
+         .          .     84:	for index, instance := range ordered {
+         .          .     85:		if exhausted || len(states) == 0 || (config.Context != nil && config.Context.Err() != nil) {
+         .          .     86:			break
+         .          .     87:		}
+         .          .     88:		nextByClass := make(map[string]packingSeedState, beamWidth*4)
+         .          .     89:		for _, state := range states {
+         .          .     90:			if exhausted || nodes >= nodeBudget {
+         .          .     91:				exhausted = true
+         .          .     92:				break
+         .          .     93:			}
+         .          .     94:			if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .     95:				operationCounters.stateVisited()
+         .          .     96:			}
+         .          .     97:			if remainingCells[index] > bits.OnesCount64(gridMask&^state.occupied) {
+         .          .     98:				hardPruned++
+         .          .     99:				continue
+         .          .    100:			}
+         .          .    101:			for _, option := range optionsByInstance[instance.InstanceID] {
+         .          .    102:				if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .    103:					operationCounters.candidateOption()
+         .          .    104:				}
+         .          .    105:				if option.Mask&state.occupied != 0 {
+         .          .    106:					if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .    107:						operationCounters.candidateOverlapReject()
+         .          .    108:					}
+         .          .    109:					continue
+         .          .    110:				}
+         .          .    111:				canonical := false
+         .          .    112:				if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .    113:					canonical = operationCounters.candidateCanonical(option, state.placed)
+         .          .    114:				} else {
+      10ms       70ms    115:					canonical = placementRespectsCanonicalCopyOrder(option, state.placed)
+         .          .    116:				}
+         .          .    117:				if !canonical {
+         .          .    118:					symmetryPruned++
+         .          .    119:					continue
+         .          .    120:				}
+         .          .    121:				if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .    122:					operationCounters.candidateChargeAttempt()
+         .          .    123:				}
+         .       30ms    124:				if !reportNode() {
+         .          .    125:					if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .    126:						operationCounters.candidateChargeDenied()
+         .          .    127:					}
+         .          .    128:					break
+         .          .    129:				}
+         .      250ms    130:				nextPlaced, _ := insertPlacementSorted(append([]model.Placement(nil), state.placed...), option)
+         .          .    131:				nextOccupied := state.occupied | option.Mask
+         .          .    132:				var restricted, flexibility int
+         .          .    133:				var feasible bool
+         .          .    134:				if searchOperationProfilingAvailable && config.OperationProfiling {
+         .          .    135:					operationCounters.candidateExpansion()
+         .          .    136:					restricted, flexibility, feasible = packingSeedFeasibilityProfiled(ordered[index+1:], optionsByInstance, nextOccupied, nextPlaced, operationCounters)
+         .          .    137:				} else {
+         .      5.20s    138:					restricted, flexibility, feasible = packingFeasibility(ordered[index+1:], optionsByInstance, nextOccupied, nextPlaced)
+         .          .    139:				}
+         .          .    140:				if !feasible {
+         .          .    141:					hardPruned++
+         .          .    142:					if nodes >= nodeBudget {
+         .          .    143:						exhausted = true
+         .          .    144:					}
+         .          .    145:					continue
+         .          .    146:				}
+         .          .    147:				candidate := packingSeedState{
+         .          .    148:					occupied:      nextOccupied,
+         .          .    149:					placed:        nextPlaced,
+         .          .    150:					restricted:    restricted,
+         .          .    151:					flexibility:   flexibility,
+         .       70ms    152:					fragmentation: freeSpaceFragmentation(gridMask, nextOccupied),
+         .      340ms    153:					score:         evaluateScoreForConfig(catalog, nextPlaced, config),
+         .      250ms    154:					key:           coverageSeedAppendKey(state.key, option),
+         .          .    155:				}
+         .      320ms    156:				classKey := packingStateClassKey(candidate)
+         .          .    157:				if previous, exists := nextByClass[classKey]; exists {
+         .          .    158:					deduplicated++
+         .       10ms    159:					if !packingSeedStateLess(candidate, previous) {
+         .          .    160:						continue
+         .          .    161:					}
+         .          .    162:				}
+         .       90ms    163:				nextByClass[classKey] = candidate
+         .          .    164:				if nodes >= nodeBudget {
+         .          .    165:					exhausted = true
+         .          .    166:					break
+         .          .    167:				}
+         .          .    168:			}
+         .          .    169:		}
+         .          .    170:
+         .          .    171:		next := make([]packingSeedState, 0, len(nextByClass))
+         .          .    172:		for _, state := range nextByClass {
+         .          .    173:			next = append(next, state)
+         .          .    174:		}
+         .      1.12s    175:		sort.Slice(next, func(i, j int) bool { return packingSeedStateLess(next[i], next[j]) })
+         .          .    176:		if len(next) > beamWidth {
+         .          .    177:			beamEvictions += int64(len(next) - beamWidth)
+         .          .    178:			clear(next[beamWidth:])
+         .          .    179:			next = next[:beamWidth]
+         .          .    180:		}
+         .          .    181:		states = next
+         .          .    182:		packingDiagnostics.LayerWidths = append(packingDiagnostics.LayerWidths, model.PackingSeedLayerWidth{
+         .          .    183:			Depth:  index + 1,
+         .          .    184:			States: len(states),
+         .          .    185:		})
+         .          .    186:		for _, state := range states {
+         .          .    187:			depth := len(state.placed)
+         .          .    188:			if depth > packingDiagnostics.MaxDepth {
+         .          .    189:				packingDiagnostics.MaxDepth = depth
+         .          .    190:			}
+         .          .    191:			if depth >= 21 && depth <= 24 {
+         .          .    192:				statesByItemCount[depth]++
+         .          .    193:			}
+         .          .    194:		}
+         .          .    195:	}
+         .          .    196:
+         .          .    197:	results := make([]model.Solution, 0, config.TopN)
+         .          .    198:	candidateCount := 0
+         .          .    199:	for _, state := range states {
+         .          .    200:		if len(state.placed) != len(instances) {
+         .          .    201:			continue
+         .          .    202:		}
+         .          .    203:		candidateCount++
+         .       20ms    204:		results = insertCandidateWithScoreOnlyFilter(catalog, results, state.placed, instances, config)
+         .          .    205:	}
+         .          .    206:	flushProgress()
+         .          .    207:	return coverageSeedResult{
+         .          .    208:		Solutions:                   results,
+         .          .    209:		NodesExplored:               nodes,
+ROUTINE ======================== backpack-brawl-solver/internal/solver.packingSeedSearch.func1 in C:\r1-measure\internal\solver\packing_seed.go
+         0       30ms (flat, cum)  0.01% of Total
+         .          .     62:	reportNode := func() bool {
+         .       30ms     63:		if !chargeNode(config, config.tracePhase) {
+         .          .     64:			exhausted = true
+         .          .     65:			return false
+         .          .     66:		}
+         .          .     67:		nodes++
+         .          .     68:		if progress == nil {
+ROUTINE ======================== backpack-brawl-solver/internal/solver.packingSeedSearch.func3 in C:\r1-measure\internal\solver\packing_seed.go
+         0      1.10s (flat, cum)  0.38% of Total
+         .      1.10s    175:		sort.Slice(next, func(i, j int) bool { return packingSeedStateLess(next[i], next[j]) })
+         .          .    176:		if len(next) > beamWidth {
+         .          .    177:			beamEvictions += int64(len(next) - beamWidth)
+         .          .    178:			clear(next[beamWidth:])
+         .          .    179:			next = next[:beamWidth]
+         .          .    180:		}
+
+### selectPlateauEntries
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries in C:\r1-measure\internal\solver\plateau.go
+     3.61s     40.59s (flat, cum) 13.89% of Total
+         .          .    419:func selectPlateauEntries(entries []plateauArchiveEntry, capacity int) []plateauArchiveEntry {
+      10ms       10ms    420:	if len(entries) <= capacity {
+         .          .    421:		sortPlateauEntries(entries)
+         .          .    422:		return entries
+         .          .    423:	}
+         .       10ms    424:	bySignature := make(map[string][]plateauArchiveEntry)
+     720ms      720ms    425:	for _, entry := range entries {
+     1.34s     10.02s    426:		bySignature[entry.signature] = append(bySignature[entry.signature], entry)
+         .          .    427:	}
+         .          .    428:	var representatives []plateauArchiveEntry
+      20ms      240ms    429:	for _, group := range bySignature {
+      10ms      1.53s    430:		sortPlateauEntries(group)
+     830ms      6.82s    431:		representatives = append(representatives, group[0])
+         .          .    432:	}
+         .      6.98s    433:	sortPlateauEntries(representatives)
+      10ms      3.18s    434:	selected := make([]plateauArchiveEntry, 0, capacity)
+         .      500ms    435:	seenHash := make(map[string]struct{}, capacity)
+     260ms      260ms    436:	for _, entry := range representatives {
+      20ms       20ms    437:		if len(selected) >= capacity {
+         .          .    438:			break
+         .          .    439:		}
+     100ms      630ms    440:		selected = append(selected, entry)
+      30ms      300ms    441:		seenHash[entry.solution.CanonicalLayoutHash] = struct{}{}
+         .          .    442:	}
+         .         3s    443:	sortPlateauEntries(entries)
+     210ms      210ms    444:	for _, entry := range entries {
+         .          .    445:		if len(selected) >= capacity {
+         .          .    446:			break
+         .          .    447:		}
+         .       60ms    448:		if _, exists := seenHash[entry.solution.CanonicalLayoutHash]; exists {
+         .          .    449:			continue
+         .          .    450:		}
+      30ms      310ms    451:		selected = append(selected, entry)
+      10ms       60ms    452:		seenHash[entry.solution.CanonicalLayoutHash] = struct{}{}
+         .          .    453:	}
+      10ms      5.73s    454:	sortPlateauEntries(selected)
+         .          .    455:	return selected
+         .          .    456:}
+         .          .    457:
+         .          .    458:func sortPlateauEntries(entries []plateauArchiveEntry) {
+         .          .    459:	sort.Slice(entries, func(i, j int) bool {
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func2 in C:\r1-measure\internal\solver\plateau.go
+      50ms      210ms (flat, cum) 0.072% of Total
+         .          .    459:	sort.Slice(entries, func(i, j int) bool {
+      40ms      180ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      10ms       20ms    463:		if entries[i].signature != entries[j].signature {
+         .          .    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+         .       10ms    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3 in C:\r1-measure\internal\solver\plateau.go
+     370ms      1.44s (flat, cum)  0.49% of Total
+      40ms       50ms    459:	sort.Slice(entries, func(i, j int) bool {
+     240ms      790ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      40ms      320ms    463:		if entries[i].signature != entries[j].signature {
+      50ms      280ms    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+         .          .    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4 in C:\r1-measure\internal\solver\plateau.go
+     280ms      1.05s (flat, cum)  0.36% of Total
+      20ms       30ms    459:	sort.Slice(entries, func(i, j int) bool {
+     150ms      590ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      50ms      220ms    463:		if entries[i].signature != entries[j].signature {
+      20ms      140ms    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+      40ms       70ms    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5 in C:\r1-measure\internal\solver\plateau.go
+     350ms      930ms (flat, cum)  0.32% of Total
+         .          .    459:	sort.Slice(entries, func(i, j int) bool {
+     240ms      550ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      40ms      120ms    463:		if entries[i].signature != entries[j].signature {
+      40ms      140ms    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+      30ms      120ms    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+
+### plateauArchive\)\.observe
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.(*plateauArchive).observe in C:\r1-measure\internal\solver\plateau.go
+     880ms     51.41s (flat, cum) 17.60% of Total
+      10ms       10ms     70:func (archive *plateauArchive) observe(solution model.Solution, origin string) {
+         .          .     71:	if archive == nil || !archive.priorityBounds.reached(solution.Evaluation.Score) {
+         .          .     72:		return
+         .          .     73:	}
+         .          .     74:	entry := plateauArchiveEntry{
+      40ms      550ms     75:		solution:  clonePlateauSolution(solution),
+         .      3.20s     76:		signature: canonicalLinkSignature(solution.Placements, solution.Evaluation.Stars),
+         .          .     77:		origin:    origin,
+         .          .     78:	}
+         .       20ms     79:	archive.mu.Lock()
+         .          .     80:	defer archive.mu.Unlock()
+     470ms      470ms     81:	for _, existing := range archive.entries {
+      30ms      160ms     82:		if existing.solution.CanonicalLayoutHash == entry.solution.CanonicalLayoutHash {
+         .          .     83:			archive.rejections++
+         .          .     84:			return
+         .          .     85:		}
+         .          .     86:	}
+      20ms      6.02s     87:	archive.entries = append(archive.entries, entry)
+      50ms     40.64s     88:	archive.entries = selectPlateauEntries(archive.entries, archive.capacity)
+     250ms      250ms     89:	for _, retained := range archive.entries {
+      10ms       90ms     90:		if retained.solution.CanonicalLayoutHash == entry.solution.CanonicalLayoutHash {
+         .          .     91:			archive.admissions++
+         .          .     92:			return
+         .          .     93:		}
+         .          .     94:	}
+         .          .     95:	archive.rejections++
+
+### sortPlateauEntries
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func2 in C:\r1-measure\internal\solver\plateau.go
+      50ms      210ms (flat, cum) 0.072% of Total
+         .          .    459:	sort.Slice(entries, func(i, j int) bool {
+      40ms      180ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      10ms       20ms    463:		if entries[i].signature != entries[j].signature {
+         .          .    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+         .       10ms    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3 in C:\r1-measure\internal\solver\plateau.go
+     370ms      1.44s (flat, cum)  0.49% of Total
+      40ms       50ms    459:	sort.Slice(entries, func(i, j int) bool {
+     240ms      790ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      40ms      320ms    463:		if entries[i].signature != entries[j].signature {
+      50ms      280ms    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+         .          .    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4 in C:\r1-measure\internal\solver\plateau.go
+     280ms      1.05s (flat, cum)  0.36% of Total
+      20ms       30ms    459:	sort.Slice(entries, func(i, j int) bool {
+     150ms      590ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      50ms      220ms    463:		if entries[i].signature != entries[j].signature {
+      20ms      140ms    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+      40ms       70ms    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5 in C:\r1-measure\internal\solver\plateau.go
+     350ms      930ms (flat, cum)  0.32% of Total
+         .          .    459:	sort.Slice(entries, func(i, j int) bool {
+     240ms      550ms    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+      40ms      120ms    463:		if entries[i].signature != entries[j].signature {
+      40ms      140ms    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+      30ms      120ms    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+ROUTINE ======================== backpack-brawl-solver/internal/solver.sortPlateauEntries in C:\r1-measure\internal\solver\plateau.go
+      10ms     17.22s (flat, cum)  5.89% of Total
+         .          .    458:func sortPlateauEntries(entries []plateauArchiveEntry) {
+      10ms     17.22s    459:	sort.Slice(entries, func(i, j int) bool {
+         .          .    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+         .          .    463:		if entries[i].signature != entries[j].signature {
+         .          .    464:			return entries[i].signature < entries[j].signature
+
+### placementRespectsCanonicalCopyOrder
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder in C:\r1-measure\internal\solver\solver.go
+     1.08s      7.98s (flat, cum)  2.73% of Total
+      50ms       60ms   2767:func placementRespectsCanonicalCopyOrder(placement model.Placement, existing []model.Placement) bool {
+         .          .   2768:	var key string
+         .          .   2769:	keyReady := false
+     580ms      2.66s   2770:	for _, other := range existing {
+     260ms      300ms   2771:		if other.ItemID != placement.ItemID || other.InstanceID == placement.InstanceID {
+         .          .   2772:			continue
+         .          .   2773:		}
+         .          .   2774:		if !keyReady {
+         .      2.33s   2775:			key = placementKey(placement)
+         .          .   2776:			keyReady = true
+         .          .   2777:		}
+         .      2.44s   2778:		otherKey := placementKey(other)
+         .          .   2779:		if other.OriginalIndex < placement.OriginalIndex && otherKey > key {
+      10ms       10ms   2780:			return false
+         .          .   2781:		}
+     150ms      150ms   2782:		if other.OriginalIndex > placement.OriginalIndex && otherKey < key {
+         .          .   2783:			return false
+         .          .   2784:		}
+         .          .   2785:	}
+      30ms       30ms   2786:	return true
+         .          .   2787:}
+         .          .   2788:
+         .          .   2789:func removePlacementAt(placements []model.Placement, index int) []model.Placement {
+         .          .   2790:	copy(placements[index:], placements[index+1:])
+         .          .   2791:	placements[len(placements)-1] = model.Placement{}
+
+### placementKey
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.placementKey in C:\r1-measure\internal\solver\solver.go
+     350ms     15.93s (flat, cum)  5.45% of Total
+      20ms       20ms   2984:func placementKey(placement model.Placement) string {
+      10ms      880ms   2985:	var builder strings.Builder
+      60ms      6.44s   2986:	fmt.Fprintf(&builder, "%03d|%03d|%03d|", placement.Rotation, placement.Origin.Row, placement.Origin.Col)
+     200ms      200ms   2987:	for _, cell := range placement.Cells {
+      60ms      8.36s   2988:		fmt.Fprintf(&builder, "%03d,%03d;", cell.Row, cell.Col)
+         .          .   2989:	}
+         .       30ms   2990:	return builder.String()
+         .          .   2991:}
+         .          .   2992:
+         .          .   2993:func uniqueStrings(values []string) []string {
+         .          .   2994:	if len(values) == 0 {
+         .          .   2995:		return nil
+
+### constellationRootMRVFeasibilityWithOperations
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations in C:\r1-measure\internal\solver\constellation_seed.go
+     130ms      760ms (flat, cum)  0.26% of Total
+         .          .   2527:func constellationRootMRVFeasibilityWithOperations(
+         .          .   2528:	remaining []model.InventoryInstance,
+         .          .   2529:	remainingMask uint64,
+         .          .   2530:	optionsByInstance map[string][]model.Placement,
+         .          .   2531:	occupied uint64,
+         .          .   2532:	placements []model.Placement,
+         .          .   2533:	operations *rootPackingOperationCounters,
+         .          .   2534:) (restricted int, flexibility int, feasible bool) {
+         .          .   2535:	operations.feasibilityCall()
+         .          .   2536:	if remainingMask == 0 {
+         .          .   2537:		return 0, 0, true
+         .          .   2538:	}
+         .          .   2539:	restricted = int(^uint(0) >> 1)
+         .          .   2540:	for _, instance := range remaining {
+      10ms       10ms   2541:		if remainingMask&(uint64(1)<<uint(instance.OriginalIndex)) == 0 {
+         .          .   2542:			continue
+         .          .   2543:		}
+         .          .   2544:		operations.feasibilityInstance()
+         .          .   2545:		legal := 0
+      60ms      170ms   2546:		for _, option := range optionsByInstance[instance.InstanceID] {
+         .          .   2547:			operations.feasibilityOption()
+      60ms      580ms   2548:			if option.Mask&occupied == 0 && placementRespectsCanonicalCopyOrder(option, placements) {
+         .          .   2549:				legal++
+         .          .   2550:			}
+         .          .   2551:		}
+         .          .   2552:		if legal == 0 {
+         .          .   2553:			return 0, 0, false
+
+### outgoingBoundContext\)\.upperPriorityCounts
+Total: 292.13s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts in C:\r1-measure\internal\solver\outgoing_bound.go
+     1.72s     30.22s (flat, cum) 10.34% of Total
+      10ms       10ms     58:func (ctx *outgoingBoundContext) upperPriorityCounts(placements []model.Placement) []int {
+         .      6.79s     59:	placedByID := placementByInstanceID(placements)
+         .          .     60:	placedMask := uint64(0)
+     140ms      140ms     61:	for _, instance := range ctx.instances {
+     110ms      1.36s     62:		if _, placed := placedByID[instance.InstanceID]; placed {
+      20ms       20ms     63:			placedMask |= uint64(1) << uint(instance.OriginalIndex)
+         .          .     64:		}
+         .          .     65:	}
+         .      270ms     66:	upper := make([]int, len(ctx.priorityItems))
+      10ms       10ms     67:	for priorityIndex, sourceItemID := range ctx.priorityItems {
+      80ms       80ms     68:		for _, sourceInstance := range ctx.instances {
+      60ms      140ms     69:			if sourceInstance.ItemID != sourceItemID {
+         .          .     70:				continue
+         .          .     71:			}
+      10ms      490ms     72:			starCount := len(ctx.catalog.Items[sourceItemID].Stars)
+      10ms       10ms     73:			if starCount == 0 {
+         .          .     74:				continue
+         .          .     75:			}
+         .          .     76:			var targets uint64
+      30ms      240ms     77:			if sourcePlacement, placed := placedByID[sourceInstance.InstanceID]; placed {
+     240ms      240ms     78:				for _, targetInstance := range ctx.instances {
+     160ms      190ms     79:					if targetInstance.InstanceID == sourceInstance.InstanceID {
+         .          .     80:						continue
+         .          .     81:					}
+     310ms      4.21s     82:					targetPlacement, targetPlaced := placedByID[targetInstance.InstanceID]
+     310ms      6.25s     83:					if targetPlaced && sourceHitsTargetWithCatalog(ctx.catalog, sourcePlacement, targetPlacement) {
+      40ms       40ms     84:						targets |= uint64(1) << uint(targetInstance.OriginalIndex)
+         .          .     85:					}
+         .          .     86:				}
+         .          .     87:				// Only targets that are still movable get geometric potential.
+     170ms      9.65s     88:				targets |= ctx.potential.outgoingTargets[coveragePlacementKey(sourcePlacement)] &^ placedMask
+         .          .     89:			} else {
+         .          .     90:				// A free source may choose any option from the precomputed geometric
+         .          .     91:				// relaxation. Fixed-item conflicts are intentionally ignored here.
+         .       70ms     92:				targets = ctx.potential.instanceOutgoingTargets[sourceInstance.InstanceID]
+         .          .     93:			}
+         .          .     94:			targets &^= uint64(1) << uint(sourceInstance.OriginalIndex)
+         .          .     95:			count := bits.OnesCount64(targets)
+         .          .     96:			if count > starCount {
+         .          .     97:				count = starCount
+         .          .     98:			}
+      10ms       10ms     99:			upper[priorityIndex] += count
+         .          .    100:		}
+         .          .    101:	}
+         .          .    102:	return upper
+         .          .    103:}
+

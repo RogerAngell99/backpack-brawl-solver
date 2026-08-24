@@ -1,0 +1,58 @@
+File: solver.exe
+Build ID: C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver.exe2026-08-23 22:04:00.6207248 -0300 -03
+Type: alloc_space
+Time: 2026-08-23 22:30:10 -03
+Showing nodes accounting for 208247.28MB, 98.41% of 211619.35MB total
+Dropped 192 nodes (cum <= 1058.10MB)
+Showing top 50 nodes out of 62
+      flat  flat%   sum%        cum   cum%
+110232.20MB 52.09% 52.09% 114385.13MB 54.05%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+50429.71MB 23.83% 75.92% 168999.99MB 79.86%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+17658.48MB  8.34% 84.26% 17658.48MB  8.34%  backpack-brawl-solver/internal/solver.placementByInstanceID (inline)
+ 6582.12MB  3.11% 87.38%  6591.62MB  3.11%  backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+ 4194.93MB  1.98% 89.36%  4194.93MB  1.98%  internal/reflectlite.Swapper
+ 2939.22MB  1.39% 90.75%  2939.22MB  1.39%  backpack-brawl-solver/internal/solver.physicalInstanceIDs
+ 2264.09MB  1.07% 91.82% 14972.04MB  7.07%  backpack-brawl-solver/internal/solver.runRepairTask.func1
+ 1907.02MB   0.9% 92.72%  1907.02MB   0.9%  backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents
+ 1656.56MB  0.78% 93.50%  1656.56MB  0.78%  strings.(*Builder).Write
+ 1654.57MB  0.78% 94.28%  1654.57MB  0.78%  strings.(*Builder).grow
+ 1520.29MB  0.72% 95.00%  1520.29MB  0.72%  backpack-brawl-solver/internal/solver.insertPlacementSorted
+ 1252.90MB  0.59% 95.59%  1252.90MB  0.59%  backpack-brawl-solver/internal/scoring.evaluateLooseStarPriority
+ 1075.93MB  0.51% 96.10% 173888.24MB 82.17%  backpack-brawl-solver/internal/solver.observeSearchCandidate
+ 1056.91MB   0.5% 96.60%  1151.43MB  0.54%  backpack-brawl-solver/internal/solver.clonePlateauSolution (inline)
+  839.03MB   0.4% 97.00%  2521.61MB  1.19%  backpack-brawl-solver/internal/solver.placementKey
+  751.04MB  0.35% 97.35%  2195.11MB  1.04%  backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+  638.52MB   0.3% 97.65%  1215.55MB  0.57%  backpack-brawl-solver/internal/solver.canonicalPlacementKey
+  488.68MB  0.23% 97.88%  2349.32MB  1.11%  backpack-brawl-solver/internal/solver.starSeedSearch
+  365.74MB  0.17% 98.06%  1801.45MB  0.85%  backpack-brawl-solver/internal/solver.canonicalLayoutDigest
+  339.04MB  0.16% 98.22%  2825.67MB  1.34%  backpack-brawl-solver/internal/solver.packingSeedSearch
+     202MB 0.095% 98.31%  4152.92MB  1.96%  backpack-brawl-solver/internal/solver.sortPlateauEntries (inline)
+      65MB 0.031% 98.34% 19564.55MB  9.25%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+   64.01MB  0.03% 98.37%  1316.91MB  0.62%  backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics
+      21MB 0.0099% 98.38%  3006.73MB  1.42%  backpack-brawl-solver/internal/solver.canonicalLinkTokens
+   16.51MB 0.0078% 98.39%  6701.69MB  3.17%  backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+   14.63MB 0.0069% 98.40%  5247.81MB  2.48%  backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+   10.53MB 0.005% 98.40%  1207.21MB  0.57%  backpack-brawl-solver/internal/solver.refineSolution
+    4.06MB 0.0019% 98.41%  8537.74MB  4.03%  backpack-brawl-solver/internal/solver.constellationSeedSearch
+    1.04MB 0.00049% 98.41%  1208.25MB  0.57%  backpack-brawl-solver/internal/solver.refineSolutions
+    0.50MB 0.00024% 98.41% 14990.70MB  7.08%  backpack-brawl-solver/internal/solver.runRepairNeighborhood
+    0.50MB 0.00024% 98.41% 180935.50MB 85.50%  backpack-brawl-solver/internal/solver.runTask
+    0.50MB 0.00024% 98.41%  6685.17MB  3.16%  backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+         0     0% 98.41% 211603.72MB   100%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0% 98.41% 211593.64MB   100%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0% 98.41% 211604.87MB   100%  backpack-brawl-solver/internal/cli.Run
+         0     0% 98.41% 211604.87MB   100%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0% 98.41%  1931.05MB  0.91%  backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+         0     0% 98.41%  1595.27MB  0.75%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0% 98.41% 19564.55MB  9.25%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+         0     0% 98.41% 211593.14MB   100%  backpack-brawl-solver/internal/solver.SolveLayout
+         0     0% 98.41%  1836.45MB  0.87%  backpack-brawl-solver/internal/solver.canonicalLayoutHash
+         0     0% 98.41%  3044.73MB  1.44%  backpack-brawl-solver/internal/solver.canonicalLinkSignature
+         0     0% 98.41%  1615.30MB  0.76%  backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+         0     0% 98.41%  1931.05MB  0.91%  backpack-brawl-solver/internal/solver.evaluateLayoutForConfig (inline)
+         0     0% 98.41% 173589.28MB 82.03%  backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+         0     0% 98.41%  1192.11MB  0.56%  backpack-brawl-solver/internal/solver.layoutKey
+         0     0% 98.41%  1427.39MB  0.67%  backpack-brawl-solver/internal/solver.packingSeedSearch.func3
+         0     0% 98.41%  1444.90MB  0.68%  backpack-brawl-solver/internal/solver.packingSeedStateFirstDecisive
+         0     0% 98.41%  1444.90MB  0.68%  backpack-brawl-solver/internal/solver.packingSeedStateLess (inline)
+         0     0% 98.41% 15058.77MB  7.12%  backpack-brawl-solver/internal/solver.repairSearch

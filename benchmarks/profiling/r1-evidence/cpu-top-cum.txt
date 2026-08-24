@@ -1,0 +1,59 @@
+File: solver.exe
+Build ID: C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver.exe2026-08-23 22:04:00.6207248 -0300 -03
+Type: cpu
+Time: 2026-08-23 22:27:36 -03
+Duration: 154.84s, Total samples = 292.13s (188.67%)
+Showing nodes accounting for 96.84s, 33.15% of 292.13s total
+Dropped 704 nodes (cum <= 1.46s)
+Showing top 50 nodes out of 208
+      flat  flat%   sum%        cum   cum%
+     0.40s  0.14%  0.14%    147.39s 50.45%  runtime.systemstack
+         0     0%  0.14%    142.59s 48.81%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%  0.14%    142.59s 48.81%  backpack-brawl-solver/internal/solver.SolveLayout
+         0     0%  0.14%    142.58s 48.81%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%  0.14%    142.58s 48.81%  backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  0.14%    142.50s 48.78%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%  0.14%    142.41s 48.75%  backpack-brawl-solver/internal/cli.Run
+         0     0%  0.14%    142.29s 48.71%  main.main
+         0     0%  0.14%    142.20s 48.68%  runtime.main
+     0.04s 0.014%  0.15%    119.51s 40.91%  runtime.gcBgMarkWorker.func2
+     1.55s  0.53%  0.68%    119.41s 40.88%  runtime.gcDrain
+     0.06s 0.021%   0.7%    116.08s 39.74%  runtime.gcBgMarkWorker
+    39.95s 13.68% 14.38%    104.09s 35.63%  runtime.scanobject
+         0     0% 14.38%     88.49s 30.29%  backpack-brawl-solver/internal/solver.runTask
+         0     0% 14.38%     88.49s 30.29%  backpack-brawl-solver/internal/solver.runTasks
+     1.35s  0.46% 14.84%     88.48s 30.29%  backpack-brawl-solver/internal/solver.runTask.func3
+         0     0% 14.84%     69.72s 23.87%  runtime.gcDrainMarkWorkerIdle (inline)
+     0.07s 0.024% 14.86%     63.42s 21.71%  backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+     0.02s 0.0068% 14.87%     59.73s 20.45%  backpack-brawl-solver/internal/solver.observeSearchCandidate
+     0.88s   0.3% 15.17%     51.41s 17.60%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+         0     0% 15.17%     49.69s 17.01%  runtime.gcDrainMarkWorkerDedicated (inline)
+     3.61s  1.24% 16.41%     40.59s 13.89%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+     0.79s  0.27% 16.68%     34.05s 11.66%  runtime.mallocgc
+    21.03s  7.20% 23.88%     30.80s 10.54%  runtime.findObject
+     0.03s  0.01% 23.89%     30.25s 10.35%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+     1.72s  0.59% 24.48%     30.22s 10.34%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+         0     0% 24.48%     26.89s  9.20%  backpack-brawl-solver/internal/solver.constellationSeedSearch
+     5.78s  1.98% 26.45%     25.27s  8.65%  runtime.greyobject
+     0.70s  0.24% 26.69%     25.08s  8.59%  runtime.growslice
+     0.03s  0.01% 26.70%     23.79s  8.14%  backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+         0     0% 26.70%     23.71s  8.12%  backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+     1.48s  0.51% 27.21%     22.83s  7.82%  backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+     0.20s 0.068% 27.28%     21.74s  7.44%  backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+     0.01s 0.0034% 27.28%     21.54s  7.37%  backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+     0.06s 0.021% 27.30%     21.53s  7.37%  backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+     0.51s  0.17% 27.48%     21.17s  7.25%  backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+     0.19s 0.065% 27.54%        20s  6.85%  sort.Slice
+     0.87s   0.3% 27.84%     18.22s  6.24%  backpack-brawl-solver/internal/solver.starPositionHitsTarget
+         0     0% 27.84%     18.19s  6.23%  backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+     0.12s 0.041% 27.88%     17.79s  6.09%  sort.pdqsort_func
+     0.01s 0.0034% 27.88%     17.22s  5.89%  backpack-brawl-solver/internal/solver.sortPlateauEntries (inline)
+     0.35s  0.12% 28.00%     15.93s  5.45%  backpack-brawl-solver/internal/solver.placementKey
+     0.46s  0.16% 28.16%     14.47s  4.95%  fmt.Fprintf
+    13.63s  4.67% 32.83%     13.63s  4.67%  runtime.duffcopy
+         0     0% 32.83%     13.49s  4.62%  backpack-brawl-solver/internal/solver.repairSearch
+         0     0% 32.83%     12.92s  4.42%  backpack-brawl-solver/internal/solver.runRepairNeighborhood
+         0     0% 32.83%     12.92s  4.42%  backpack-brawl-solver/internal/solver.runRepairTask
+     0.43s  0.15% 32.98%     12.92s  4.42%  backpack-brawl-solver/internal/solver.runRepairTask.func1
+         0     0% 32.98%     12.92s  4.42%  backpack-brawl-solver/internal/solver.runRepairTasks
+     0.51s  0.17% 33.15%     11.81s  4.04%  runtime.typedmemmove
