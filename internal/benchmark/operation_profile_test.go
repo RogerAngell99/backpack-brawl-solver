@@ -75,7 +75,7 @@ func TestSummarizeOperationProfileGroupsAndDerivesSchedulerTelemetry(t *testing.
 	if alpha.RootedPacking == nil || alpha.RootedPacking.CandidateExpansions != 10 || alpha.PerCandidateExpansion == nil || alpha.PerCandidateExpansion.FeasibilityOptionChecks != 7 {
 		t.Fatalf("alpha operation summary=%+v", alpha)
 	}
-	if summary.Version != "operation-profile-summary-v2" || alpha.PackingSeedFeasibility == nil || alpha.PackingSeedFeasibility.FeasibilityOptionChecks != 90 || alpha.PackingSeedFeasibilityDerived == nil || alpha.PackingSeedFeasibilityDerived.FeasibilityCallsPerState != 3 || alpha.PackingSeedFeasibilityDerived.PlacementKeyBytesPerCandidateExpansion != 60 || alpha.PackingSeedFeasibilityDerived.FeasibilityCanonicalCallsPerOptionCheck != float64(7)/9 || alpha.PackingSeedFeasibilityDerived.FeasibilityCandidatePlacementKeyCallsPerCanonicalCall != 1 {
+	if summary.Version != "operation-profile-summary-v3" || alpha.PackingSeedFeasibility == nil || alpha.PackingSeedFeasibility.FeasibilityOptionChecks != 90 || alpha.PackingSeedFeasibilityDerived == nil || alpha.PackingSeedFeasibilityDerived.FeasibilityCallsPerState != 3 || alpha.PackingSeedFeasibilityDerived.PlacementKeyBytesPerCandidateExpansion != 60 || alpha.PackingSeedFeasibilityDerived.FeasibilityCanonicalCallsPerOptionCheck != float64(7)/9 || alpha.PackingSeedFeasibilityDerived.FeasibilityCandidatePlacementKeyCallsPerCanonicalCall != 1 {
 		t.Fatalf("packing-seed summary=%+v", alpha)
 	}
 	if alpha.Scheduler == nil || alpha.Scheduler.FamilyCount != 1 || alpha.Scheduler.FamiliesCompleted != 1 || alpha.Scheduler.ReturnedCapacityTotal != 2 || alpha.Scheduler.ReturnedFractionBPS != 2_000 || alpha.Scheduler.FinalDepth.P50 != 3 {
@@ -91,7 +91,7 @@ func TestSummarizeOperationProfileGroupsAndDerivesSchedulerTelemetry(t *testing.
 	}
 }
 
-func TestSummarizeOperationProfileV2ReadsP0V1StyleReports(t *testing.T) {
+func TestSummarizeOperationProfileV3ReadsP0V1StyleReports(t *testing.T) {
 	report := Report{Runs: []Run{{
 		Scenario: "p0-fixture",
 		Budget:   1_000,
@@ -100,7 +100,7 @@ func TestSummarizeOperationProfileV2ReadsP0V1StyleReports(t *testing.T) {
 		}},
 	}}}
 	summary := SummarizeOperationProfile(report)
-	if summary.Version != "operation-profile-summary-v2" || summary.Scenarios[0].RootedPacking == nil || summary.Scenarios[0].PackingSeedFeasibility != nil || summary.Scenarios[0].PackingSeedFeasibilityDerived != nil {
+	if summary.Version != "operation-profile-summary-v3" || summary.Scenarios[0].RootedPacking == nil || summary.Scenarios[0].PackingSeedFeasibility != nil || summary.Scenarios[0].PackingSeedFeasibilityDerived != nil {
 		t.Fatalf("v1 compatibility summary=%+v", summary)
 	}
 }
@@ -141,6 +141,70 @@ func TestSummarizeOperationProfileSeparatesPackingSeedSchemaVersions(t *testing.
 	FormatOperationProfileSummary(&formatted, summary)
 	if !strings.Contains(formatted.String(), "incompatible packing-seed profile versions retained separately") {
 		t.Fatalf("missing version-mismatch warning: %q", formatted.String())
+	}
+}
+
+func TestSummarizeOperationProfileAggregatesAndDerivesBoundAttribution(t *testing.T) {
+	first := &model.BoundAttributionOperationProfile{Version: model.BoundAttributionProfileVersion}
+	first.PriorityUpper.ConstellationFilter = model.PriorityUpperBoundSiteProfile{
+		Calls: 2, FeasibleResults: 1, RejectedResults: 1, AnchoredPlacements: 4,
+		RemovedInstances: 6, RemovedOptionCandidates: 10, RemovedOptionsRetained: 6,
+		UniquePrioritySourceItems: 2, AnchoredSourceInstances: 2, RemovedSourceInstances: 4,
+		StarSlots: 8, FixedTargetChecks: 12, RemovedTargetChecks: 18,
+		GeometryCandidateChecks: 10, GeometryOverlapRejects: 2,
+		StarPositionHitCalls: 8, StarPositionHitTrue: 4, SlotTargetHits: 4,
+	}
+	first.Outgoing.Search = model.OutgoingBoundSiteProfile{
+		Checks: 4, PrunedNodes: 2, PlacedMapInsertions: 12,
+		PrioritySourceMatches: 8, PlacedSourceIterations: 6, FreeSourceIterations: 2,
+		PlacedSourceTargetIterations: 24, TargetPlacementLookups: 18, PlacedTargetsFound: 9,
+		SourceHitsTargetCalls: 9, CoveragePlacementKeyCalls: 6,
+		PlacedPotentialLookups: 6, FreePotentialLookups: 2,
+	}
+	second := &model.BoundAttributionOperationProfile{Version: model.BoundAttributionProfileVersion}
+	second.PriorityUpper.RepairDFS = model.PriorityUpperBoundSiteProfile{Calls: 1, FeasibleResults: 1}
+	second.Outgoing.Repair = model.OutgoingBoundSiteProfile{Checks: 6, PrunedNodes: 3}
+	report := Report{Runs: []Run{
+		{Scenario: "bounds", Budget: 1_000, Search: SearchSummary{BoundOperationProfile: first}},
+		{Scenario: "bounds", Budget: 1_000, Search: SearchSummary{BoundOperationProfile: second}},
+	}}
+
+	entry := SummarizeOperationProfile(report).Scenarios[0]
+	if entry.BoundAttribution == nil || entry.BoundAttribution.PriorityUpper.ConstellationFilter.Calls != 2 || entry.BoundAttribution.PriorityUpper.RepairDFS.Calls != 1 || entry.BoundAttribution.Outgoing.Search.Checks != 4 || entry.BoundAttribution.Outgoing.Repair.Checks != 6 {
+		t.Fatalf("bound attribution aggregate=%+v", entry.BoundAttribution)
+	}
+	derived := entry.BoundAttributionDerived
+	if derived == nil || derived.PriorityUpper.ConstellationFilter.RejectionRate != 0.5 || derived.PriorityUpper.ConstellationFilter.RemovedOptionRetentionRate != 0.6 || derived.PriorityUpper.ConstellationFilter.GeometryOverlapRejectRate != 0.2 || derived.Outgoing.Search.PruneRate != 0.5 || derived.Outgoing.Aggregate.PruneRate != 0.5 || derived.Outgoing.Search.TargetsPerPlacedSource != 4 {
+		t.Fatalf("bound attribution derived=%+v", derived)
+	}
+	var formatted strings.Builder
+	FormatOperationProfileSummary(&formatted, OperationProfileSummaryReport{Aggregate: entry})
+	if !strings.Contains(formatted.String(), "Bound attribution") || !strings.Contains(formatted.String(), model.BoundAttributionProfileVersion) {
+		t.Fatalf("formatted bound summary=%q", formatted.String())
+	}
+}
+
+func TestSummarizeOperationProfileSeparatesBoundAttributionVersions(t *testing.T) {
+	v1 := &model.BoundAttributionOperationProfile{Version: model.BoundAttributionProfileVersion}
+	v1.Outgoing.Search.Checks = 3
+	v2 := &model.BoundAttributionOperationProfile{Version: "bound-attribution-ops-v2"}
+	v2.Outgoing.Search.Checks = 5
+	report := Report{Runs: []Run{
+		{Scenario: "mixed", Budget: 1_000, Search: SearchSummary{BoundOperationProfile: v2}},
+		{Scenario: "mixed", Budget: 1_000, Search: SearchSummary{BoundOperationProfile: v1}},
+	}}
+
+	entry := SummarizeOperationProfile(report).Scenarios[0]
+	if entry.BoundAttribution != nil || entry.BoundAttributionDerived != nil || len(entry.BoundAttributionByVersion) != 2 {
+		t.Fatalf("mixed bound schemas were aggregated: %+v", entry)
+	}
+	if entry.BoundAttributionByVersion[0].Version != model.BoundAttributionProfileVersion || entry.BoundAttributionByVersion[0].Profile.Outgoing.Search.Checks != 3 || entry.BoundAttributionByVersion[1].Version != "bound-attribution-ops-v2" || entry.BoundAttributionByVersion[1].Profile.Outgoing.Search.Checks != 5 {
+		t.Fatalf("version-separated bound profiles=%+v", entry.BoundAttributionByVersion)
+	}
+	var formatted strings.Builder
+	FormatOperationProfileSummary(&formatted, OperationProfileSummaryReport{Aggregate: entry})
+	if !strings.Contains(formatted.String(), "incompatible bound-attribution profile versions retained separately") {
+		t.Fatalf("missing bound version warning: %q", formatted.String())
 	}
 }
 

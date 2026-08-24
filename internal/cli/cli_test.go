@@ -86,7 +86,7 @@ func TestSummarizeOperationProfileCommand(t *testing.T) {
 	var summary struct {
 		Version string `json:"version"`
 	}
-	if err := json.Unmarshal(summaryContent, &summary); err != nil || summary.Version != "operation-profile-summary-v2" {
+	if err := json.Unmarshal(summaryContent, &summary); err != nil || summary.Version != "operation-profile-summary-v3" {
 		t.Fatalf("summary version=%q err=%v", summary.Version, err)
 	}
 }

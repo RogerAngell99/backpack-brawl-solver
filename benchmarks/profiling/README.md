@@ -77,7 +77,23 @@ With a `searchprofile` binary and `--operation-profile`, the packing-seed phase 
 - feasibility calls, remaining instances, options, overlap rejects, legal placements, dead returns, and internal canonical-copy-order work;
 - canonical calls/rejects, existing placements scanned, same-item comparisons, candidate key calls, and logical `placementKey` calls/bytes for each origin.
 
-The summary command now writes `operation-profile-summary-v2`. Its `packing_seed_feasibility` section contains raw counts, while `packing_seed_feasibility_derived` contains weighted ratios such as feasibility calls per state, options per call/expansion, canonical calls per option, key bytes per expansion, and rejection/dead-return rates. V2 continues to read P0 report JSON that has only the rooted profile.
+The summary command now writes `operation-profile-summary-v3`. Its `packing_seed_feasibility` section contains raw counts, while `packing_seed_feasibility_derived` contains weighted ratios such as feasibility calls per state, options per call/expansion, canonical calls per option, key bytes per expansion, and rejection/dead-return rates. V3 continues to read P0 report JSON that has only the rooted profile.
+
+## R1I-A — comparative bound-internal attribution
+
+R1I-A adds the independent `bound-attribution-ops-v1` contract. A
+`searchprofile` binary with `--operation-profile` emits
+`search.bound_operation_profile` with fixed call sites for priority
+constellation filtering, ordinary repair DFS, plateau prefiltering, plateau
+repair DFS, outgoing search, and outgoing repair. Counters are task/session
+local and aggregate only after results return.
+
+Summary v3 exposes raw `bound_attribution`, weighted
+`bound_attribution_derived` ratios, and `bound_attribution_by_version` when an
+input mixes incompatible contracts. Raw counts remain deterministic integers;
+the reducer does not consume elapsed time or recommend an optimization. The
+complete frozen schema, identities, semantic gates, and post-merge collection
+matrix are in [`r1i-protocol.md`](r1i-protocol.md).
 
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
