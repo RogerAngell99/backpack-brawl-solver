@@ -1,0 +1,28 @@
+Total: 279.41s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget in C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\candidate-clone\internal\solver\partial_repair_bound.go
+     250ms      2.97s (flat, cum)  1.06% of Total
+      20ms       20ms    267:func partialRepairSlotCanHitRemovedTarget(
+         .          .    268:	catalog model.Catalog,
+         .          .    269:	fixedSource *model.Placement,
+         .          .    270:	removedSource model.InventoryInstance,
+         .          .    271:	removedTarget model.InventoryInstance,
+         .          .    272:	starIndex int,
+         .          .    273:	removedOptions map[string][]model.Placement,
+         .          .    274:	compatibility *priorityStarCompatibility,
+         .          .    275:) bool {
+         .          .    276:	if fixedSource != nil {
+         .          .    277:		if fixedSource.InstanceID == removedTarget.InstanceID {
+         .          .    278:			return false
+         .          .    279:		}
+         .       10ms    280:		staticCompatible, cached := compatibility.match(fixedSource.OriginalIndex, starIndex, removedTarget.OriginalIndex)
+     100ms      1.37s    281:		for _, targetOption := range removedOptions[removedTarget.InstanceID] {
+     120ms      1.56s    282:			if priorityGeometryCandidateHits(catalog, *fixedSource, targetOption, starIndex, staticCompatible, cached) {
+         .          .    283:				return true
+         .          .    284:			}
+         .          .    285:		}
+      10ms       10ms    286:		return false
+         .          .    287:	}
+         .          .    288:	if removedSource.InstanceID == removedTarget.InstanceID {
+         .          .    289:		return false
+         .          .    290:	}
+         .          .    291:	staticCompatible, cached := compatibility.match(removedSource.OriginalIndex, starIndex, removedTarget.OriginalIndex)

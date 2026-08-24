@@ -103,6 +103,12 @@ priority upper bound. Its frozen representation, fallback behavior, semantic
 matrix, timing protocol, causal CPU check, exclusions, and decision thresholds
 are in [`r1ic-protocol.md`](r1ic-protocol.md).
 
+R1I-C is **KEEP**: 42/42 semantic A/B comparisons and all logical profiles are
+exact, the aggregate paired wall improvement is 14.90%, all six timing cases
+improve, and the old priority static-predicate caller edge is eliminated. See
+[`r1ic-findings.md`](r1ic-findings.md) and
+[`r1ic-evidence/`](r1ic-evidence/README.md).
+
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
 ### P0.1 collection protocol — only after P0.1A is merged

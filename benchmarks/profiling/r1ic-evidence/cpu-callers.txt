@@ -1,0 +1,63 @@
+File: solver-candidate.exe
+Build ID: C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\binaries\solver-candidate.exe2026-08-24 16:27:44.474494 -0300 -03
+Type: cpu
+Time: 2026-08-24 17:43:47 -03
+Duration: 135.99s, Total samples = 279.41s (205.47%)
+Showing nodes accounting for 279.41s, 100% of 279.41s total
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context
+----------------------------------------------------------+-------------
+                                             4.96s 99.20% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog (inline)
+                                             0.02s   0.4% |   backpack-brawl-solver/internal/solver.looseSourceCanTarget (inline)
+                                             0.02s   0.4% |   backpack-brawl-solver/internal/solver.starPositionHitsTarget (inline)
+     0.05s 0.018% 0.018%         5s  1.79%                | backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems
+                                             4.95s 99.00% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+----------------------------------------------------------+-------------
+File: solver-candidate.exe
+Build ID: C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\binaries\solver-candidate.exe2026-08-24 16:27:44.474494 -0300 -03
+Type: cpu
+Time: 2026-08-24 17:43:47 -03
+Duration: 135.99s, Total samples = 279.41s (205.47%)
+Showing nodes accounting for 279.41s, 100% of 279.41s total
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context
+----------------------------------------------------------+-------------
+                                             0.02s   100% |   backpack-brawl-solver/internal/solver.(*starUpperBoundContext).matchingForSource
+         0     0%     0%      0.02s 0.0072%                | backpack-brawl-solver/internal/solver.starPositionHitsTarget
+                                             0.02s   100% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+----------------------------------------------------------+-------------
+File: solver-candidate.exe
+Build ID: C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\binaries\solver-candidate.exe2026-08-24 16:27:44.474494 -0300 -03
+Type: cpu
+Time: 2026-08-24 17:43:47 -03
+Duration: 135.99s, Total samples = 279.41s (205.47%)
+Showing nodes accounting for 279.41s, 100% of 279.41s total
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context
+----------------------------------------------------------+-------------
+                                             0.58s 98.31% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+                                             0.01s  1.69% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitFixedTarget
+     0.38s  0.14%  0.14%      0.59s  0.21%                | backpack-brawl-solver/internal/solver.priorityGeometryCandidateHits
+                                             0.11s 18.64% |   runtime.duffcopy
+                                             0.09s 15.25% |   backpack-brawl-solver/internal/solver.starPositionGeometryHitsTarget (inline)
+                                             0.01s  1.69% |   runtime.newstack
+----------------------------------------------------------+-------------
+File: solver-candidate.exe
+Build ID: C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\binaries\solver-candidate.exe2026-08-24 16:27:44.474494 -0300 -03
+Type: cpu
+Time: 2026-08-24 17:43:47 -03
+Duration: 135.99s, Total samples = 279.41s (205.47%)
+Showing nodes accounting for 279.41s, 100% of 279.41s total
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context
+----------------------------------------------------------+-------------
+                                             5.37s   100% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+     0.01s 0.0036% 0.0036%      5.37s  1.92%                | backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+                                             3.10s 57.73% |   backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+                                             2.18s 40.60% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+                                             0.03s  0.56% |   backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+                                             0.02s  0.37% |   runtime.mapaccess2_faststr
+                                             0.01s  0.19% |   backpack-brawl-solver/internal/solver.PartialRepairState.anchoredPlacements
+                                             0.01s  0.19% |   runtime.makeslice
+                                             0.01s  0.19% |   runtime.mapassign_faststr
+----------------------------------------------------------+-------------

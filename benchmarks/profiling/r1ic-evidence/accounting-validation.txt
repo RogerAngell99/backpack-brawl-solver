@@ -1,0 +1,38 @@
+R1I-C semantic and accounting validation
+
+baseline_revision=19159d2e970e3457d730824983fc70fe649f9202
+candidate_revision=4ee1cf690a019ee28f5548d360c800ddec4007a3
+
+smoke_semantics=PASS comparisons=4
+smoke_profile_identity=PASS
+normal_vs_tagged_off_snapshot=PASS sha256=5885839CDCF66656F3EBF632421744F0DAB653C7C52EEA100FC5CA9C86CCDF2C
+
+matrix_semantics=PASS comparisons=42
+matrix_logical_profiles=PASS
+priority_profile_identities=PASS all populated sites
+outgoing_profile_identities=PASS all populated sites
+outgoing_authoritative_cross_checks=PASS
+
+gsv1_1m_priority_calls=234300
+gsv1_1m_fixed_source_target_option_checks=506804547
+gsv1_1m_geometry_candidate_checks=569592092
+gsv1_1m_star_position_hit_calls=567835319
+gsv1_1m_matching_calls=612353
+
+timing_pair_order=PASS alternating AB/BA
+timing_pair_revisions=PASS
+timing_pair_semantics=PASS comparisons=42
+timing_pairs=42
+timing_runs=84
+
+normal_tests=PASS
+searchprofile_tests=PASS
+normal_race=PASS
+searchprofile_race=PASS
+general_search_v2_lock=PASS
+web_wasm_build=PASS
+
+semantic_differences=0
+logical_counter_differences=0
+priority_prune_differences=0
+node_count_differences=0

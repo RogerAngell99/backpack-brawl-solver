@@ -1,0 +1,36 @@
+go: downloading golang.org/x/perf v0.0.0-20260819171926-ebcb4798430d
+go: golang.org/x/perf@v0.0.0-20260819171926-ebcb4798430d requires go >= 1.26.0; switching to go1.26.7
+go: downloading go1.26.7 (windows/amd64)
+go: downloading github.com/aclements/go-moremath v0.0.0-20210112150236-f10218a38794
+goos: windows
+goarch: amd64
+pkg: backpack-brawl-solver/internal/solver
+cpu: 11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
+                                   │ C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\microbench\priority-compatibility.txt │
+                                   │                                                 sec/op                                                  │
+PriorityStarCompatibilityDirect-8                                                                                                61.13n ± 6%
+PriorityStarCompatibilityCached-8                                                                                                12.59n ± 3%
+PartialRepairPriorityUpperLegacy-8                                                                                               60.38µ ± 2%
+PartialRepairPriorityUpperCached-8                                                                                               18.26µ ± 2%
+BuildPriorityStarCompatibility-8                                                                                                 1.872µ ± 2%
+geomean                                                                                                                          1.097µ
+
+                                   │ C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\microbench\priority-compatibility.txt │
+                                   │                                                  B/op                                                   │
+PriorityStarCompatibilityDirect-8                                                                                               0.000 ± 0%
+PriorityStarCompatibilityCached-8                                                                                               0.000 ± 0%
+PartialRepairPriorityUpperLegacy-8                                                                                            18.44Ki ± 0%
+PartialRepairPriorityUpperCached-8                                                                                            18.44Ki ± 0%
+BuildPriorityStarCompatibility-8                                                                                              1.773Ki ± 0%
+geomean                                                                                                                                    ¹
+¹ summaries must be >0 to compute geomean
+
+                                   │ C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\microbench\priority-compatibility.txt │
+                                   │                                                allocs/op                                                │
+PriorityStarCompatibilityDirect-8                                                                                               0.000 ± 0%
+PriorityStarCompatibilityCached-8                                                                                               0.000 ± 0%
+PartialRepairPriorityUpperLegacy-8                                                                                              43.00 ± 0%
+PartialRepairPriorityUpperCached-8                                                                                              43.00 ± 0%
+BuildPriorityStarCompatibility-8                                                                                                2.000 ± 0%
+geomean                                                                                                                                    ¹
+¹ summaries must be >0 to compute geomean
