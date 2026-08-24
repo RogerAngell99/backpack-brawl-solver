@@ -146,6 +146,7 @@ func constellationSeedSearch(
 	potential *starPotentialContext,
 	progress *progressTracker,
 ) (coverageSeedResult, model.ConstellationSeedDiagnostics) {
+	operationCounters := newBoundOperationCounters(config)
 	policy := policyForConfig(config)
 	diagnostics := model.ConstellationSeedDiagnostics{
 		Version:          policy.ConstellationSeedVersion,
@@ -153,12 +154,12 @@ func constellationSeedSearch(
 		PackingBeamWidth: policy.ConstellationSeedPackingBeamWidth,
 	}
 	if policy.ConstellationSeedVersion == "" || nodeBudget <= 0 || potential == nil || config.priorityBounds == nil || !constellationSeedRuntimeEligible(catalog, instances, config) {
-		return coverageSeedResult{}, diagnostics
+		return coverageSeedResult{BoundOperationProfile: operationCounters.snapshot()}, diagnostics
 	}
 
 	sources, sourceItems := constellationSources(catalog, instances, config.Priorities)
 	if len(sources) == 0 || len(sources) > 4 {
-		return coverageSeedResult{}, diagnostics
+		return coverageSeedResult{BoundOperationProfile: operationCounters.snapshot()}, diagnostics
 	}
 	targets := constellationTargets(instances, sources, potential, policy.ConstellationSeedTargetInstanceLimit)
 	constructionBudget := nodeBudget * policy.ConstellationSeedConstructionBps / 10_000
@@ -265,7 +266,7 @@ func constellationSeedSearch(
 			}
 		}
 		if constellationSeedUsesSourceGeometry(policy.ConstellationSeedVariant) && sourcesComplete {
-			next = filterConstellationPriorityFeasibleStates(catalog, instances, optionsByInstance, gridMask, config, next)
+			next = filterConstellationPriorityFeasibleStates(catalog, instances, optionsByInstance, gridMask, config, next, operationCounters)
 		}
 		states, deduplicated = selectConstellationStates(next, policy, sourceItems, len(sources), catalog, config, deduplicated)
 	}
@@ -276,7 +277,7 @@ func constellationSeedSearch(
 			diagnostics.StatesDeduplicated = deduplicated
 			diagnostics.SourceStatesRetained = len(states)
 			flushProgress()
-			return coverageSeedResult{NodesExplored: nodes, SymmetryPrunedBranches: symmetryPruned}, diagnostics
+			return coverageSeedResult{NodesExplored: nodes, SymmetryPrunedBranches: symmetryPruned, BoundOperationProfile: operationCounters.snapshot()}, diagnostics
 		}
 	}
 	diagnostics.SourceStatesRetained = len(states)
@@ -369,7 +370,7 @@ func constellationSeedSearch(
 			}
 		}
 		if constellationSeedUsesSourceGeometry(policy.ConstellationSeedVariant) {
-			next = filterConstellationPriorityFeasibleStates(catalog, instances, optionsByInstance, gridMask, config, next)
+			next = filterConstellationPriorityFeasibleStates(catalog, instances, optionsByInstance, gridMask, config, next, operationCounters)
 		}
 		states, deduplicated = selectConstellationStates(next, policy, sourceItems, len(sources), catalog, config, deduplicated)
 		collectSkeletons(states)
@@ -414,7 +415,7 @@ func constellationSeedSearch(
 	diagnostics.PriorityTargetAssignmentCount = len(targetAssignments)
 	if len(skeletons) == 0 {
 		flushProgress()
-		return coverageSeedResult{NodesExplored: nodes, SymmetryPrunedBranches: symmetryPruned}, diagnostics
+		return coverageSeedResult{NodesExplored: nodes, SymmetryPrunedBranches: symmetryPruned, BoundOperationProfile: operationCounters.snapshot()}, diagnostics
 	}
 
 	roots := make([]constellationSkeleton, 0, len(skeletons))
@@ -689,6 +690,7 @@ func constellationSeedSearch(
 		SymmetryPrunedBranches: symmetryPruned,
 		StatesDeduplicated:     statesDeduplicated,
 		HardPrunedNodes:        hardPruned,
+		BoundOperationProfile:  operationCounters.snapshot(),
 	}, diagnostics
 }
 
@@ -820,9 +822,13 @@ func filterConstellationPriorityFeasibleStates(
 	gridMask uint64,
 	config Config,
 	states []constellationSeedState,
+	operationCounters *boundOperationCounters,
 ) []constellationSeedState {
 	if config.priorityBounds == nil {
 		return states
+	}
+	if searchOperationProfilingAvailable && config.OperationProfiling {
+		operationCounters.constellationFilterInvocation(len(states))
 	}
 	filtered := states[:0]
 	for _, state := range states {
@@ -838,8 +844,18 @@ func filterConstellationPriorityFeasibleStates(
 			RemovedInstances: remaining,
 			FreeCells:        gridMask &^ state.occupied,
 		}
-		upper := partialRepairV3PriorityUpperBound(catalog, partial, optionsByInstance, config.Priorities)
-		if partialRepairTargetVectorFeasible(upper, config.priorityBounds.ceiling) {
+		var upper []int
+		if searchOperationProfilingAvailable && config.OperationProfiling {
+			upper = partialRepairV3PriorityUpperBoundProfiled(catalog, partial, optionsByInstance, config.Priorities, operationCounters.prioritySite(boundPriorityConstellationFilter))
+		} else {
+			upper = partialRepairV3PriorityUpperBound(catalog, partial, optionsByInstance, config.Priorities)
+		}
+		feasible := partialRepairTargetVectorFeasible(upper, config.priorityBounds.ceiling)
+		if searchOperationProfilingAvailable && config.OperationProfiling {
+			recordPriorityUpperBoundResult(operationCounters.prioritySite(boundPriorityConstellationFilter), feasible)
+			operationCounters.constellationFilterResult(feasible)
+		}
+		if feasible {
 			filtered = append(filtered, state)
 		}
 	}

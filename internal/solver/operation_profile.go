@@ -10,6 +10,22 @@ const SearchOperationProfileVersion = "root-packing-ops-v1"
 // packing-seed feasibility counter contract serialized in benchmark reports.
 const PackingSeedFeasibilityProfileVersion = model.PackingSeedFeasibilityProfileVersionV2
 
+type boundPriorityAttributionSite uint8
+
+const (
+	boundPriorityConstellationFilter boundPriorityAttributionSite = iota
+	boundPriorityRepairDFS
+	boundPriorityPlateauPrefilter
+	boundPriorityPlateauDFS
+)
+
+type boundOutgoingAttributionSite uint8
+
+const (
+	boundOutgoingSearch boundOutgoingAttributionSite = iota
+	boundOutgoingRepair
+)
+
 // OperationProfilingAvailable reports whether this binary contains the
 // benchmark-only counter implementation.
 func OperationProfilingAvailable() bool {

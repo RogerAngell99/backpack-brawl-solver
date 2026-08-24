@@ -2191,6 +2191,7 @@ func runTask(
 	stopFlag *atomic.Bool,
 	progress *progressTracker,
 ) searchResult {
+	operationCounters := newBoundOperationCounters(config)
 	results := mergeSolutions(nil, initialSolutions, config.TopN)
 	var nodes int64
 	var hitNodeBudget bool
@@ -2281,7 +2282,13 @@ func runTask(
 		}
 		if outgoingBounds != nil && len(results) >= config.TopN && config.TopN > 0 {
 			outgoingBoundChecks++
-			if outgoingBounds.shouldPrune(placements, results, config.TopN) {
+			pruned := false
+			if searchOperationProfilingAvailable && config.OperationProfiling {
+				pruned = outgoingBounds.shouldPruneProfiled(placements, results, config.TopN, operationCounters.outgoingSite(boundOutgoingSearch))
+			} else {
+				pruned = outgoingBounds.shouldPrune(placements, results, config.TopN)
+			}
+			if pruned {
 				outgoingBoundPrunedNodes++
 				return
 			}
@@ -2360,6 +2367,7 @@ func runTask(
 		SymmetryPrunedBranches:      symmetryPruned,
 		StoppedAfterCoverageCeiling: stoppedAfterCoverageCeiling,
 		StoppedAfterPriorityCeiling: stoppedAfterPriorityCeiling,
+		BoundOperationProfile:       operationCounters.snapshotSearch(outgoingBoundChecks, outgoingBoundPrunedNodes),
 	}
 }
 

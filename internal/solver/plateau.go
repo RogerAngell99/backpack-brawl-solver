@@ -668,6 +668,7 @@ func plateauTieBreakLNS(
 	if len(bases) == 0 {
 		return repairResult{}
 	}
+	operationCounters := newBoundOperationCounters(config)
 	instanceByID := make(map[string]model.InventoryInstance, len(instances))
 	for _, instance := range instances {
 		instanceByID[instance.InstanceID] = instance
@@ -692,7 +693,7 @@ func plateauTieBreakLNS(
 			maxNeighborhoods = 0
 		}
 		neighborhoods := buildPlateauStarOpportunityNeighborhoods(catalog, instances, optionsByInstance, bases, level, maxNeighborhoods, config.plateauArchive)
-		potentials := prioritizePlateauNeighborhoods(catalog, instanceByID, optionsByInstance, bases, neighborhoods, config, gridMask, incumbent.Evaluation.Score)
+		potentials := prioritizePlateauNeighborhoods(catalog, instanceByID, optionsByInstance, bases, neighborhoods, config, gridMask, incumbent.Evaluation.Score, operationCounters)
 		neighborhoods = filterPriorityFeasibleNeighborhoods(neighborhoods, potentials)
 		config.plateauArchive.recordPriorityFeasibleClosures(level.MaxNeighborhoodSize, len(neighborhoods))
 		var perBaseDrops int
@@ -800,6 +801,7 @@ func plateauTieBreakLNS(
 		}
 	}
 	result.BestSummary = repairBestSummary(result.Solutions)
+	result.BoundOperationProfile = mergeBoundAttributionOperationProfiles(result.BoundOperationProfile, operationCounters.snapshot())
 	return result
 }
 
@@ -983,6 +985,7 @@ func prioritizePlateauNeighborhoods(
 	config Config,
 	gridMask uint64,
 	incumbent model.Score,
+	operationCounters *boundOperationCounters,
 ) map[string]plateauNeighborhoodPotential {
 	baseByKey := make(map[string]model.Solution, len(bases))
 	for _, base := range bases {
@@ -1011,8 +1014,17 @@ func prioritizePlateauNeighborhoods(
 			fixedOccupied |= placement.Mask
 		}
 		state := partialRepairState{FixedPlacements: fixed, RemovedInstances: removed, FreeCells: gridMask &^ fixedOccupied}
-		upper := partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, config.Priorities)
-		if !partialRepairTargetVectorFeasible(upper, incumbent.PriorityCounts) {
+		var upper []int
+		if searchOperationProfilingAvailable && config.OperationProfiling {
+			upper = partialRepairV3PriorityUpperBoundProfiled(catalog, state, optionsByInstance, config.Priorities, operationCounters.prioritySite(boundPriorityPlateauPrefilter))
+		} else {
+			upper = partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, config.Priorities)
+		}
+		feasible := partialRepairTargetVectorFeasible(upper, incumbent.PriorityCounts)
+		if searchOperationProfilingAvailable && config.OperationProfiling {
+			recordPriorityUpperBoundResult(operationCounters.prioritySite(boundPriorityPlateauPrefilter), feasible)
+		}
+		if !feasible {
 			continue
 		}
 		upperStars := partialRelaxedStarUpperBound(catalog, state, optionsByInstance)
