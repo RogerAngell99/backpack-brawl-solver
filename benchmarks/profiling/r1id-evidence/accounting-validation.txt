@@ -1,0 +1,22 @@
+R1I-D accounting validation
+frozen_sha=6952a35ef62f84646a01a887310363450c833b83
+profile_version=bound-attribution-ops-v1
+summary_version=operation-profile-summary-v3
+smoke_normal_tagged_off_tagged_on_semantics=PASS
+smoke_ignored_fields=bound_operation_profile,build_revision,elapsed_ms,first_complete_ms,first_fully_packed_ms,generated_at,nodes_per_second,operation_profile,operation_profiling,packing_seed_operation_profile,refine_ms,repair_ms,root_packing_operation_profile,search_ms,seed_ms,server_elapsed_ms,setup_ms
+gsv1_matrix=PASS runs=28
+v4_matrix=PASS runs=14
+profiled_runs=41
+zero_work_runs_without_profile=1
+all_priority_site_identities=PASS
+all_outgoing_site_identities=PASS
+all_outgoing_authoritative_reconciliations=PASS
+combined_gsv1_cpu_heap_matrix=PASS runs=6 operation_profile=false
+per_case_gsv1_cpu_matrix=PASS runs=6 operation_profile=false
+combined_v4_cpu_control=PASS runs=6 operation_profile=false
+mechanical_inventory=PASS
+benefit_formula=PASS
+overlap_groups_recorded=PASS
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false
