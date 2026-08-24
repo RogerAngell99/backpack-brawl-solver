@@ -1,0 +1,7 @@
+"scenario","total_samples","plateau_archive_observe_cum","select_plateau_entries_cum","upper_priority_counts_cum","packing_feasibility_cum","placement_key_cum"
+"gsv2-013","16.53s","0s","0s","6.13s","0.75s","3.74s"
+"gsv2-015","12.52s","0s","0s","3.90s","0.48s","2.95s"
+"gsv2-016","14.88s","0s","0s","4.26s","1.30s","2.01s"
+"gsv2-018","121.97s","30.92s","24.78s","3.36s","0s","1.68s"
+"gsv2-021","26.49s","0s","0s","6.09s","0.95s","3.38s"
+"gsv2-024","93.23s","19.97s","15.07s","5.60s","1.24s","1.51s"

@@ -1,0 +1,55 @@
+R1 provenance
+
+Measured source: f94bb285c8e895696c76a1beacd4942b35a056d1
+Collected at: 2026-08-23T22:04:25.4752045-03:00
+
+Go version:
+go version go1.25.6 windows/amd64
+
+GOOS/GOARCH:
+windows/amd64
+
+CPU:
+11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
+
+OS:
+Microsoft Windows 11 Home 10.0.26200 build 26200
+
+Normal binary metadata:
+C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver.exe: go1.25.6
+	path	backpack-brawl-solver/cmd/backpack-brawl-solver
+	mod	backpack-brawl-solver	v0.0.0-20260824004940-f94bb285c8e8	
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=f94bb285c8e895696c76a1beacd4942b35a056d1
+	build	vcs.time=2026-08-24T00:49:40Z
+	build	vcs.modified=false
+
+Searchprofile binary metadata:
+C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver-searchprofile.exe: go1.25.6
+	path	backpack-brawl-solver/cmd/backpack-brawl-solver
+	mod	backpack-brawl-solver	v0.0.0-20260824004940-f94bb285c8e8	
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	-tags=searchprofile
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1
+	build	vcs=git
+	build	vcs.revision=f94bb285c8e895696c76a1beacd4942b35a056d1
+	build	vcs.time=2026-08-24T00:49:40Z
+	build	vcs.modified=false

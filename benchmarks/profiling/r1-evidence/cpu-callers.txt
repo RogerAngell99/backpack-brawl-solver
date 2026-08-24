@@ -1,0 +1,895 @@
+### outgoing-bound focus
+
+File: solver.exe
+Build ID: C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver.exe2026-08-23 22:04:00.6207248 -0300 -03
+Type: cpu
+Time: 2026-08-23 22:27:36 -03
+Duration: 154.84s, Total samples = 292.13s (188.67%)
+Active filters:
+   focus=upperPriorityCounts
+Showing nodes accounting for 25.71s, 8.80% of 292.13s total
+Dropped 167 nodes (cum <= 1.46s)
+Showing top 80 nodes out of 117
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context 	 	 
+----------------------------------------------------------+-------------
+                                             1.77s 66.54% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+                                             0.52s 19.55% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             0.33s 12.41% |   backpack-brawl-solver/internal/solver.placementByInstanceID
+                                             0.04s  1.50% |   backpack-brawl-solver/internal/solver.coveragePlacementKey
+     2.66s  0.91%  0.91%      2.66s  0.91%                | runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.75s 35.05% |   runtime.mapaccess2_faststr
+                                             0.36s 16.82% |   internal/runtime/maps.(*Map).getWithoutKeySmallFastStr
+                                             0.30s 14.02% |   internal/runtime/maps.(*table).grow
+                                             0.26s 12.15% |   runtime.mapaccess2
+                                             0.18s  8.41% |   runtime.mapassign_faststr
+                                             0.13s  6.07% |   internal/runtime/maps.(*Map).growToTable
+                                             0.09s  4.21% |   runtime.mapaccess1
+                                             0.07s  3.27% |   runtime.mapaccess1_faststr
+     2.14s  0.73%  1.64%      2.14s  0.73%                | aeshashbody
+----------------------------------------------------------+-------------
+     1.72s  0.59%  2.23%     30.22s 10.34%                | backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+                                                9s 29.78% |   backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+                                             6.79s 22.47% |   backpack-brawl-solver/internal/solver.placementByInstanceID (inline)
+                                             5.46s 18.07% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+                                             3.81s 12.61% |   runtime.mapaccess2_faststr
+                                             1.77s  5.86% |   runtime.duffcopy
+                                             0.54s  1.79% |   runtime.mapaccess1_faststr
+                                             0.48s  1.59% |   runtime.mapaccess1
+                                             0.27s  0.89% |   runtime.duffzero
+                                             0.27s  0.89% |   runtime.mallocgc
+                                             0.09s   0.3% |   memeqbody
+----------------------------------------------------------+-------------
+                                             4.90s   100% |   fmt.Fprintf
+     1.37s  0.47%  2.70%      4.90s  1.68%                | fmt.(*pp).doPrintf
+                                             2.70s 55.10% |   fmt.(*pp).printArg
+                                             0.42s  8.57% |   fmt.(*buffer).writeString (inline)
+                                             0.29s  5.92% |   fmt.(*pp).argNumber
+----------------------------------------------------------+-------------
+                                             3.81s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+     1.17s   0.4%  3.10%      3.81s  1.30%                | runtime.mapaccess2_faststr
+                                             0.84s 22.05% |   internal/runtime/maps.(*Map).getWithoutKeySmallFastStr
+                                             0.75s 19.69% |   aeshashbody
+                                             0.46s 12.07% |   internal/runtime/maps.ctrlGroup.matchH2 (inline)
+                                             0.19s  4.99% |   internal/runtime/maps.(*groupReference).key (inline)
+                                             0.09s  2.36% |   runtime.strhash
+----------------------------------------------------------+-------------
+                                             0.46s 43.40% |   runtime.mapaccess2_faststr (inline)
+                                             0.31s 29.25% |   runtime.mapaccess2 (inline)
+                                             0.12s 11.32% |   runtime.mapaccess1_faststr (inline)
+                                             0.09s  8.49% |   runtime.mapaccess1 (inline)
+                                             0.08s  7.55% |   runtime.mapassign_faststr (inline)
+     1.06s  0.36%  3.46%      1.06s  0.36%                | internal/runtime/maps.ctrlGroup.matchH2
+----------------------------------------------------------+-------------
+                                             5.46s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+     0.98s  0.34%  3.80%      5.46s  1.87%                | backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+                                             4.39s 80.40% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+----------------------------------------------------------+-------------
+                                             2.07s   100% |   fmt.(*pp).fmtInteger
+     0.86s  0.29%  4.09%      2.07s  0.71%                | fmt.(*fmt).fmtInteger
+                                             1.21s 58.45% |   fmt.(*fmt).pad
+----------------------------------------------------------+-------------
+                                             0.35s 42.68% |   runtime.strequal
+                                             0.26s 31.71% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             0.12s 14.63% |   runtime.mapaccess1_faststr
+                                             0.09s 10.98% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+     0.82s  0.28%  4.37%      0.82s  0.28%                | memeqbody
+----------------------------------------------------------+-------------
+                                             0.24s 30.38% |   runtime.typedmemmove
+                                             0.23s 29.11% |   fmt.(*buffer).write
+                                             0.14s 17.72% |   fmt.(*buffer).writeString
+                                             0.14s 17.72% |   runtime.concatstrings
+                                             0.04s  5.06% |   strings.(*Builder).Write
+     0.79s  0.27%  4.65%      0.79s  0.27%                | runtime.memmove
+----------------------------------------------------------+-------------
+                                             0.47s 70.15% |   runtime.mallocgcSmallScanHeader
+                                             0.13s 19.40% |   runtime.growslice
+                                             0.04s  5.97% |   runtime.mallocgcSmallScanNoHeader
+     0.67s  0.23%  4.87%      0.67s  0.23%                | runtime.memclrNoHeapPointers
+----------------------------------------------------------+-------------
+                                             1.75s   100% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             1.02s 58.29% |   backpack-brawl-solver/internal/scoring.evaluateCompound
+     0.56s  0.19%  5.07%      1.75s   0.6%                | backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             1.11s 63.43% |   backpack-brawl-solver/internal/scoring.evaluateCompound
+                                             0.69s 39.43% |   backpack-brawl-solver/internal/scoring.conditionClass (inline)
+                                             0.26s 14.86% |   memeqbody
+----------------------------------------------------------+-------------
+                                             0.52s   100% |   strings.LastIndex (inline)
+     0.52s  0.18%  5.24%      0.52s  0.18%                | internal/bytealg.LastIndexByteString
+----------------------------------------------------------+-------------
+                                             0.33s 64.71% |   runtime.mallocgcSmallNoscan (inline)
+                                             0.13s 25.49% |   runtime.mallocgcSmallScanNoHeader (inline)
+                                             0.05s  9.80% |   runtime.mallocgcSmallScanHeader (inline)
+     0.51s  0.17%  5.42%      0.51s  0.17%                | runtime.nextFreeFast
+----------------------------------------------------------+-------------
+                                             0.19s 38.00% |   runtime.mapaccess2_faststr (inline)
+                                             0.11s 22.00% |   runtime.mapaccess2 (inline)
+                                             0.07s 14.00% |   internal/runtime/maps.(*table).uncheckedPutSlot (inline)
+                                             0.04s  8.00% |   internal/runtime/maps.(*Map).getWithoutKeySmallFastStr (inline)
+                                             0.04s  8.00% |   runtime.mapaccess1 (inline)
+     0.50s  0.17%  5.59%      0.50s  0.17%                | internal/runtime/maps.(*groupReference).key
+----------------------------------------------------------+-------------
+                                             2.70s   100% |   fmt.(*pp).doPrintf
+     0.47s  0.16%  5.75%      2.70s  0.92%                | fmt.(*pp).printArg
+                                             2.14s 79.26% |   fmt.(*pp).fmtInteger
+                                             0.09s  3.33% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             0.84s   100% |   runtime.mapaccess2_faststr
+     0.43s  0.15%  5.90%      0.84s  0.29%                | internal/runtime/maps.(*Map).getWithoutKeySmallFastStr
+                                             0.36s 42.86% |   aeshashbody
+                                             0.04s  4.76% |   internal/runtime/maps.(*groupReference).key (inline)
+----------------------------------------------------------+-------------
+                                             0.74s 51.39% |   internal/runtime/maps.(*Map).growToTable
+                                             0.70s 48.61% |   internal/runtime/maps.(*table).grow
+     0.41s  0.14%  6.04%      1.44s  0.49%                | internal/runtime/maps.(*table).uncheckedPutSlot
+                                             0.78s 54.17% |   internal/runtime/maps.typedmemmove
+                                             0.07s  4.86% |   internal/runtime/maps.(*groupReference).key (inline)
+----------------------------------------------------------+-------------
+                                             0.27s 79.41% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+                                             0.07s 20.59% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+     0.34s  0.12%  6.15%      0.34s  0.12%                | runtime.duffzero
+----------------------------------------------------------+-------------
+                                             4.35s   100% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems
+     0.31s  0.11%  6.26%      4.35s  1.49%                | backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             1.75s 40.23% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             1.70s 39.08% |   runtime.mapaccess2
+                                             0.52s 11.95% |   runtime.duffcopy
+                                             0.07s  1.61% |   runtime.duffzero
+----------------------------------------------------------+-------------
+                                             0.65s   100% |   fmt.(*fmt).pad (inline)
+     0.30s   0.1%  6.36%      0.65s  0.22%                | fmt.(*buffer).write
+                                             0.23s 35.38% |   runtime.memmove
+                                             0.08s 12.31% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             0.35s 87.50% |   runtime.wbBufFlush1
+                                             0.05s 12.50% |   runtime.gcAssistAlloc
+     0.28s 0.096%  6.46%      0.40s  0.14%                | runtime.findObject
+----------------------------------------------------------+-------------
+                                             0.29s   100% |   fmt.(*pp).doPrintf
+     0.27s 0.092%  6.55%      0.29s 0.099%                | fmt.(*pp).argNumber
+----------------------------------------------------------+-------------
+                                             1.70s   100% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+     0.27s 0.092%  6.64%      1.70s  0.58%                | runtime.mapaccess2
+                                             0.47s 27.65% |   runtime.strequal
+                                             0.31s 18.24% |   internal/runtime/maps.ctrlGroup.matchH2 (inline)
+                                             0.26s 15.29% |   aeshashbody
+                                             0.11s  6.47% |   internal/runtime/maps.(*groupReference).key (inline)
+----------------------------------------------------------+-------------
+                                             0.69s   100% |   runtime.concatstring3
+     0.26s 0.089%  6.73%      0.69s  0.24%                | runtime.concatstrings
+                                             0.29s 42.03% |   runtime.rawstringtmp
+                                             0.14s 20.29% |   runtime.memmove
+----------------------------------------------------------+-------------
+                                             0.24s 96.00% |   runtime.(*mheap).allocSpan
+     0.25s 0.086%  6.82%      0.25s 0.086%                | runtime.(*fixalloc).alloc
+----------------------------------------------------------+-------------
+                                             8.24s   100% |   backpack-brawl-solver/internal/solver.coveragePlacementKey
+     0.23s 0.079%  6.90%      8.24s  2.82%                | backpack-brawl-solver/internal/solver.placementKey
+                                             7.46s 90.53% |   fmt.Fprintf
+                                             0.44s  5.34% |   runtime.newobject
+                                             0.04s  0.49% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             0.54s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+     0.23s 0.079%  6.98%      0.54s  0.18%                | runtime.mapaccess1_faststr
+                                             0.12s 22.22% |   internal/runtime/maps.ctrlGroup.matchH2 (inline)
+                                             0.12s 22.22% |   memeqbody
+                                             0.07s 12.96% |   aeshashbody
+----------------------------------------------------------+-------------
+                                             1.21s   100% |   fmt.(*fmt).fmtInteger
+     0.22s 0.075%  7.05%      1.21s  0.41%                | fmt.(*fmt).pad
+                                             0.65s 53.72% |   fmt.(*buffer).write (inline)
+                                             0.18s 14.88% |   fmt.(*fmt).writePadding
+----------------------------------------------------------+-------------
+                                             2.48s 54.03% |   runtime.newarray
+                                             0.78s 16.99% |   runtime.growslice
+                                             0.59s 12.85% |   runtime.newobject
+                                             0.27s  5.88% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+                                             0.27s  5.88% |   runtime.rawstringtmp
+                                             0.12s  2.61% |   internal/runtime/maps.(*Map).growToTable
+                                             0.04s  0.87% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.04s  0.87% |   sync.(*Pool).pin
+     0.22s 0.075%  7.13%      4.59s  1.57%                | runtime.mallocgc
+                                             2.44s 53.16% |   runtime.mallocgcSmallScanHeader
+                                             1.07s 23.31% |   runtime.mallocgcSmallNoscan
+                                             0.59s 12.85% |   runtime.mallocgcSmallScanNoHeader
+                                             0.23s  5.01% |   runtime.gcAssistAlloc
+----------------------------------------------------------+-------------
+                                             1.07s   100% |   runtime.mallocgc
+     0.22s 0.075%  7.20%      1.07s  0.37%                | runtime.mallocgcSmallNoscan
+                                             0.33s 30.84% |   runtime.nextFreeFast (inline)
+                                             0.15s 14.02% |   runtime.(*mcache).nextFree
+                                             0.04s  3.74% |   runtime.tracebackPCs
+----------------------------------------------------------+-------------
+                                             5.99s   100% |   backpack-brawl-solver/internal/solver.placementByInstanceID
+     0.22s 0.075%  7.28%      5.99s  2.05%                | runtime.mapassign_faststr
+                                             2.79s 46.58% |   internal/runtime/maps.(*table).rehash
+                                             2.44s 40.73% |   internal/runtime/maps.(*Map).growToTable
+                                             0.18s  3.01% |   aeshashbody
+                                             0.08s  1.34% |   internal/runtime/maps.ctrlGroup.matchH2 (inline)
+----------------------------------------------------------+-------------
+                                             0.47s 81.03% |   runtime.mapaccess2
+                                             0.11s 18.97% |   runtime.mapaccess1
+     0.22s 0.075%  7.35%      0.58s   0.2%                | runtime.strequal
+                                             0.35s 60.34% |   memeqbody
+----------------------------------------------------------+-------------
+                                             0.09s 45.00% |   runtime.mapaccess2_faststr
+     0.20s 0.068%  7.42%      0.20s 0.068%                | runtime.strhash
+----------------------------------------------------------+-------------
+                                             0.40s   100% |   fmt.(*pp).free
+     0.20s 0.068%  7.49%      0.40s  0.14%                | sync.(*Pool).Put
+                                             0.10s 25.00% |   sync.(*Pool).pin
+                                             0.04s 10.00% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             6.79s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts (inline)
+     0.19s 0.065%  7.55%      6.79s  2.32%                | backpack-brawl-solver/internal/solver.placementByInstanceID
+                                             5.99s 88.22% |   runtime.mapassign_faststr
+                                             0.33s  4.86% |   runtime.duffcopy
+                                             0.17s  2.50% |   runtime.bulkBarrierPreWrite
+----------------------------------------------------------+-------------
+                                             7.46s   100% |   backpack-brawl-solver/internal/solver.placementKey
+     0.19s 0.065%  7.62%      7.46s  2.55%                | fmt.Fprintf
+                                             4.90s 65.68% |   fmt.(*pp).doPrintf
+                                             1.35s 18.10% |   strings.(*Builder).Write
+                                             0.51s  6.84% |   fmt.(*pp).free
+                                             0.51s  6.84% |   fmt.newPrinter
+----------------------------------------------------------+-------------
+                                             1.35s   100% |   fmt.Fprintf
+     0.19s 0.065%  7.68%      1.35s  0.46%                | strings.(*Builder).Write
+                                             1.05s 77.78% |   runtime.growslice
+                                             0.04s  2.96% |   runtime.memmove
+----------------------------------------------------------+-------------
+                                             0.18s   100% |   fmt.(*fmt).pad
+     0.18s 0.062%  7.75%      0.18s 0.062%                | fmt.(*fmt).writePadding
+----------------------------------------------------------+-------------
+                                             0.63s   100% |   internal/runtime/maps.typedmemmove
+     0.18s 0.062%  7.81%      0.63s  0.22%                | runtime.typedmemmove
+                                             0.24s 38.10% |   runtime.memmove
+                                             0.21s 33.33% |   runtime.bulkBarrierPreWrite
+----------------------------------------------------------+-------------
+                                             0.42s   100% |   fmt.(*pp).doPrintf (inline)
+     0.17s 0.058%  7.87%      0.42s  0.14%                | fmt.(*buffer).writeString
+                                             0.14s 33.33% |   runtime.memmove
+                                             0.11s 26.19% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             0.78s   100% |   internal/runtime/maps.(*table).uncheckedPutSlot
+     0.15s 0.051%  7.92%      0.78s  0.27%                | internal/runtime/maps.typedmemmove
+                                             0.63s 80.77% |   runtime.typedmemmove
+----------------------------------------------------------+-------------
+                                             0.17s   100% |   runtime.pcvalue
+     0.13s 0.045%  7.96%      0.17s 0.058%                | runtime.step
+----------------------------------------------------------+-------------
+                                             0.36s   100% |   fmt.newPrinter
+     0.13s 0.045%  8.01%      0.36s  0.12%                | sync.(*Pool).Get
+                                             0.15s 41.67% |   sync.(*Pool).pin
+----------------------------------------------------------+-------------
+                                             2.44s   100% |   runtime.mapassign_faststr
+     0.12s 0.041%  8.05%      2.44s  0.84%                | internal/runtime/maps.(*Map).growToTable
+                                             1.28s 52.46% |   internal/runtime/maps.newTable
+                                             0.74s 30.33% |   internal/runtime/maps.(*table).uncheckedPutSlot
+                                             0.13s  5.33% |   aeshashbody
+                                             0.12s  4.92% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             0.21s 65.62% |   runtime.(*unwinder).resolveInternal
+                                             0.11s 34.38% |   runtime.tracebackPCs
+     0.12s 0.041%  8.09%      0.32s  0.11%                | runtime.pcvalue
+                                             0.17s 53.12% |   runtime.step
+----------------------------------------------------------+-------------
+                                             1.11s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     0.11s 0.038%  8.13%      1.11s  0.38%                | backpack-brawl-solver/internal/scoring.evaluateCompound
+                                             1.02s 91.89% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+----------------------------------------------------------+-------------
+                                             0.11s 26.83% |   fmt.(*buffer).writeString
+                                             0.09s 21.95% |   fmt.(*pp).printArg
+                                             0.08s 19.51% |   fmt.(*buffer).write
+                                             0.04s  9.76% |   sync.(*Pool).Put
+     0.11s 0.038%  8.16%      0.41s  0.14%                | gcWriteBarrier
+                                             0.29s 70.73% |   runtime.wbBufFlush1
+----------------------------------------------------------+-------------
+                                             0.32s   100% |   runtime.(*unwinder).next
+     0.11s 0.038%  8.20%      0.32s  0.11%                | runtime.(*unwinder).resolveInternal
+                                             0.21s 65.62% |   runtime.pcvalue
+----------------------------------------------------------+-------------
+                                             1.05s 97.22% |   strings.(*Builder).Write
+     0.11s 0.038%  8.24%      1.08s  0.37%                | runtime.growslice
+                                             0.78s 72.22% |   runtime.mallocgc
+                                             0.13s 12.04% |   runtime.memclrNoHeapPointers
+----------------------------------------------------------+-------------
+                                             0.69s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition (inline)
+     0.10s 0.034%  8.27%      0.69s  0.24%                | backpack-brawl-solver/internal/scoring.conditionClass
+                                             0.59s 85.51% |   strings.LastIndex
+----------------------------------------------------------+-------------
+                                             0.51s   100% |   fmt.Fprintf
+     0.10s 0.034%  8.31%      0.51s  0.17%                | fmt.newPrinter
+                                             0.36s 70.59% |   sync.(*Pool).Get
+----------------------------------------------------------+-------------
+                                             0.21s 55.26% |   runtime.typedmemmove
+                                             0.17s 44.74% |   backpack-brawl-solver/internal/solver.placementByInstanceID
+     0.10s 0.034%  8.34%      0.38s  0.13%                | runtime.bulkBarrierPreWrite
+                                             0.20s 52.63% |   runtime.wbBufFlush1
+----------------------------------------------------------+-------------
+                                             0.51s   100% |   fmt.Fprintf
+     0.09s 0.031%  8.37%      0.51s  0.17%                | fmt.(*pp).free
+                                             0.40s 78.43% |   sync.(*Pool).Put
+----------------------------------------------------------+-------------
+                                             2.64s   100% |   internal/runtime/maps.newTable
+     0.09s 0.031%  8.40%      2.64s   0.9%                | internal/runtime/maps.(*table).reset
+                                             2.52s 95.45% |   runtime.newarray
+----------------------------------------------------------+-------------
+                                             2.77s   100% |   internal/runtime/maps.(*table).rehash
+     0.08s 0.027%  8.43%      2.77s  0.95%                | internal/runtime/maps.(*table).grow
+                                             1.57s 56.68% |   internal/runtime/maps.newTable
+                                             0.70s 25.27% |   internal/runtime/maps.(*table).uncheckedPutSlot
+                                             0.30s 10.83% |   aeshashbody
+----------------------------------------------------------+-------------
+                                             0.48s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+     0.08s 0.027%  8.46%      0.48s  0.16%                | runtime.mapaccess1
+                                             0.11s 22.92% |   runtime.strequal
+                                             0.09s 18.75% |   aeshashbody
+                                             0.09s 18.75% |   internal/runtime/maps.ctrlGroup.matchH2 (inline)
+                                             0.04s  8.33% |   internal/runtime/maps.(*groupReference).key (inline)
+----------------------------------------------------------+-------------
+                                             2.14s   100% |   fmt.(*pp).printArg
+     0.07s 0.024%  8.48%      2.14s  0.73%                | fmt.(*pp).fmtInteger
+                                             2.07s 96.73% |   fmt.(*fmt).fmtInteger
+----------------------------------------------------------+-------------
+                                             0.59s   100% |   runtime.mallocgc
+     0.07s 0.024%  8.51%      0.59s   0.2%                | runtime.mallocgcSmallScanNoHeader
+                                             0.13s 22.03% |   runtime.nextFreeFast (inline)
+                                             0.08s 13.56% |   runtime.(*mcache).nextFree
+                                             0.04s  6.78% |   runtime.memclrNoHeapPointers
+----------------------------------------------------------+-------------
+                                             0.29s 55.77% |   gcWriteBarrier
+                                             0.20s 38.46% |   runtime.bulkBarrierPreWrite
+     0.07s 0.024%  8.53%      0.52s  0.18%                | runtime.wbBufFlush1
+                                             0.35s 67.31% |   runtime.findObject
+----------------------------------------------------------+-------------
+                                             0.59s   100% |   backpack-brawl-solver/internal/scoring.conditionClass
+     0.07s 0.024%  8.55%      0.59s   0.2%                | strings.LastIndex
+                                             0.52s 88.14% |   internal/bytealg.LastIndexByteString (inline)
+----------------------------------------------------------+-------------
+                                             0.15s 60.00% |   sync.(*Pool).Get
+                                             0.10s 40.00% |   sync.(*Pool).Put
+     0.07s 0.024%  8.58%      0.25s 0.086%                | sync.(*Pool).pin
+                                             0.04s 16.00% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             1.15s   100% |   runtime.(*mcache).nextFree
+     0.06s 0.021%  8.60%      1.15s  0.39%                | runtime.(*mcache).refill
+                                             0.88s 76.52% |   runtime.(*mcentral).cacheSpan
+----------------------------------------------------------+-------------
+                                             0.88s   100% |   runtime.(*mcache).refill
+     0.06s 0.021%  8.62%      0.88s   0.3%                | runtime.(*mcentral).cacheSpan
+                                             0.70s 79.55% |   runtime.(*mheap).alloc.func1
+----------------------------------------------------------+-------------
+                                             0.68s   100% |   runtime.(*mheap).alloc.func1
+     0.06s 0.021%  8.64%      0.68s  0.23%                | runtime.(*mheap).allocSpan
+                                             0.24s 35.29% |   runtime.(*fixalloc).alloc
+                                             0.21s 30.88% |   runtime.(*mheap).initSpan
+----------------------------------------------------------+-------------
+                                             2.44s   100% |   runtime.mallocgc
+     0.06s 0.021%  8.66%      2.44s  0.84%                | runtime.mallocgcSmallScanHeader
+                                             0.95s 38.93% |   runtime.(*mcache).nextFree
+                                             0.55s 22.54% |   runtime.tracebackPCs
+                                             0.47s 19.26% |   runtime.memclrNoHeapPointers
+                                             0.05s  2.05% |   runtime.nextFreeFast (inline)
+----------------------------------------------------------+-------------
+                                             0.44s 67.69% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.18s 27.69% |   internal/runtime/maps.newTable
+     0.06s 0.021%  8.68%      0.65s  0.22%                | runtime.newobject
+                                             0.59s 90.77% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             0.55s 91.67% |   runtime.mallocgcSmallScanHeader
+                                             0.04s  6.67% |   runtime.mallocgcSmallNoscan
+     0.05s 0.017%  8.70%      0.60s  0.21%                | runtime.tracebackPCs
+                                             0.42s 70.00% |   runtime.(*unwinder).next
+                                             0.11s 18.33% |   runtime.pcvalue
+----------------------------------------------------------+-------------
+                                             4.39s   100% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog (inline)
+     0.04s 0.014%  8.71%      4.39s  1.50%                | backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems
+                                             4.35s 99.09% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+----------------------------------------------------------+-------------
+                                             0.21s   100% |   runtime.(*mheap).allocSpan
+     0.04s 0.014%  8.73%      0.21s 0.072%                | runtime.(*mheap).initSpan
+----------------------------------------------------------+-------------
+                                             2.52s   100% |   internal/runtime/maps.(*table).reset
+     0.04s 0.014%  8.74%      2.52s  0.86%                | runtime.newarray
+                                             2.48s 98.41% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             1.57s 55.09% |   internal/runtime/maps.(*table).grow
+                                             1.28s 44.91% |   internal/runtime/maps.(*Map).growToTable
+     0.03s  0.01%  8.75%      2.85s  0.98%                | internal/runtime/maps.newTable
+                                             2.64s 92.63% |   internal/runtime/maps.(*table).reset
+                                             0.18s  6.32% |   runtime.newobject
+----------------------------------------------------------+-------------
+                                             0.95s 80.51% |   runtime.mallocgcSmallScanHeader
+                                             0.15s 12.71% |   runtime.mallocgcSmallNoscan
+                                             0.08s  6.78% |   runtime.mallocgcSmallScanNoHeader
+     0.03s  0.01%  8.76%      1.18s   0.4%                | runtime.(*mcache).nextFree
+                                             1.15s 97.46% |   runtime.(*mcache).refill
+----------------------------------------------------------+-------------
+                                                9s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts (inline)
+     0.02s 0.0068%  8.77%         9s  3.08%                | backpack-brawl-solver/internal/solver.coveragePlacementKey
+                                             8.24s 91.56% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.70s  7.78% |   runtime.concatstring3
+                                             0.04s  0.44% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             2.79s   100% |   runtime.mapassign_faststr
+     0.02s 0.0068%  8.77%      2.79s  0.96%                | internal/runtime/maps.(*table).rehash
+                                             2.77s 99.28% |   internal/runtime/maps.(*table).grow
+----------------------------------------------------------+-------------
+                                             0.70s   100% |   runtime.(*mcentral).cacheSpan
+     0.02s 0.0068%  8.78%      0.70s  0.24%                | runtime.(*mheap).alloc.func1
+                                             0.68s 97.14% |   runtime.(*mheap).allocSpan
+----------------------------------------------------------+-------------
+                                             0.23s   100% |   runtime.mallocgc
+     0.02s 0.0068%  8.79%      0.23s 0.079%                | runtime.gcAssistAlloc
+                                             0.05s 21.74% |   runtime.findObject
+----------------------------------------------------------+-------------
+                                             0.29s   100% |   runtime.concatstrings
+     0.02s 0.0068%  8.79%      0.29s 0.099%                | runtime.rawstringtmp
+                                             0.27s 93.10% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             0.42s   100% |   runtime.tracebackPCs
+     0.01s 0.0034%  8.80%      0.42s  0.14%                | runtime.(*unwinder).next
+                                             0.32s 76.19% |   runtime.(*unwinder).resolveInternal
+----------------------------------------------------------+-------------
+                                             0.70s   100% |   backpack-brawl-solver/internal/solver.coveragePlacementKey
+     0.01s 0.0034%  8.80%      0.70s  0.24%                | runtime.concatstring3
+                                             0.69s 98.57% |   runtime.concatstrings
+----------------------------------------------------------+-------------
+
+### plateau-archive focus
+
+File: solver.exe
+Build ID: C:\r1-artifacts\f94bb285c8e895696c76a1beacd4942b35a056d1\solver.exe2026-08-23 22:04:00.6207248 -0300 -03
+Type: cpu
+Time: 2026-08-23 22:27:36 -03
+Duration: 154.84s, Total samples = 292.13s (188.67%)
+Active filters:
+   focus=plateauArchive\)\.observe|selectPlateauEntries
+Showing nodes accounting for 44.78s, 15.33% of 292.13s total
+Dropped 261 nodes (cum <= 1.46s)
+Showing top 80 nodes out of 144
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context 	 	 
+----------------------------------------------------------+-------------
+                                             5.88s 79.89% |   runtime.memclrNoHeapPointersChunked
+                                             1.32s 17.93% |   runtime.mallocgcSmallScanHeader
+                                             0.16s  2.17% |   runtime.mallocgcSmallScanNoHeader
+     7.36s  2.52%  2.52%      7.36s  2.52%                | runtime.memclrNoHeapPointers
+----------------------------------------------------------+-------------
+                                             3.55s 72.01% |   runtime.typedmemmove
+                                             1.27s 25.76% |   runtime.growslice
+                                             0.06s  1.22% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+     4.93s  1.69%  4.21%      4.93s  1.69%                | runtime.memmove
+----------------------------------------------------------+-------------
+                                            40.59s   100% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+     3.61s  1.24%  5.44%     40.59s 13.89%                | backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                            16.58s 40.85% |   sort.Slice
+                                            11.98s 29.51% |   runtime.growslice
+                                             3.17s  7.81% |   runtime.mallocgc
+                                             2.13s  5.25% |   runtime.bulkBarrierPreWrite
+                                             1.66s  4.09% |   runtime.mapassign_faststr
+                                             0.63s  1.55% |   runtime.convTslice
+                                             0.50s  1.23% |   internal/runtime/maps.NewMap
+                                             0.22s  0.54% |   internal/runtime/maps.(*Iter).Next
+----------------------------------------------------------+-------------
+                                             2.78s 92.05% |   runtime.wbBufFlush1
+                                             0.22s  7.28% |   runtime.scanobject
+     2.29s  0.78%  6.23%      3.02s  1.03%                | runtime.findObject
+                                             0.37s 12.25% |   runtime.spanOf (inline)
+                                             0.24s  7.95% |   runtime.(*mspan).objIndex (inline)
+                                             0.11s  3.64% |   runtime.(*mspan).base (inline)
+----------------------------------------------------------+-------------
+                                             7.16s 75.93% |   runtime.typedmemmove
+                                             2.13s 22.59% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             0.07s  0.74% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                             0.07s  0.74% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     2.28s  0.78%  7.01%      9.43s  3.23%                | runtime.bulkBarrierPreWrite
+                                             5.59s 59.28% |   runtime.(*wbBuf).get2 (inline)
+                                             1.49s 15.80% |   runtime.typePointers.next
+----------------------------------------------------------+-------------
+                                             5.30s   100% |   runtime.systemstack
+     1.85s  0.63%  7.64%      5.30s  1.81%                | runtime.wbBufFlush1
+                                             2.78s 52.45% |   runtime.findObject
+                                             0.54s 10.19% |   runtime.(*gcBits).bitp (inline)
+----------------------------------------------------------+-------------
+                                             1.49s 84.66% |   runtime.bulkBarrierPreWrite
+                                             0.24s 13.64% |   runtime.bulkBarrierPreWriteSrcOnly
+     1.64s  0.56%  8.20%      1.76s   0.6%                | runtime.typePointers.next
+----------------------------------------------------------+-------------
+                                             1.63s   100% |   runtime.pcvalue
+     1.34s  0.46%  8.66%      1.63s  0.56%                | runtime.step
+                                             0.29s 17.79% |   runtime.readvarint (inline)
+----------------------------------------------------------+-------------
+                                             5.59s   100% |   runtime.bulkBarrierPreWrite (inline)
+     1.21s  0.41%  9.07%      5.59s  1.91%                | runtime.(*wbBuf).get2
+                                             4.36s 78.00% |   runtime.systemstack
+----------------------------------------------------------+-------------
+     0.88s   0.3%  9.38%     51.41s 17.60%                | backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                            40.59s 78.95% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             6.37s 12.39% |   runtime.growslice
+                                             2.97s  5.78% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+                                             0.20s  0.39% |   memeqbody
+                                             0.07s  0.14% |   runtime.bulkBarrierPreWrite
+                                             0.06s  0.12% |   runtime.memmove
+----------------------------------------------------------+-------------
+                                             0.66s 76.74% |   runtime.mapassign_faststr
+                                             0.19s 22.09% |   internal/runtime/maps.(*table).grow
+     0.86s  0.29%  9.67%      0.86s  0.29%                | aeshashbody
+----------------------------------------------------------+-------------
+                                             0.74s   100% |   backpack-brawl-solver/internal/model.CompareScores (inline)
+     0.74s  0.25%  9.92%      0.74s  0.25%                | backpack-brawl-solver/internal/model.ComparePriorityCounts
+----------------------------------------------------------+-------------
+                                             0.25s 34.25% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.20s 27.40% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                             0.16s 21.92% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.07s  9.59% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+     0.73s  0.25% 10.17%      0.73s  0.25%                | memeqbody
+----------------------------------------------------------+-------------
+                                             0.65s 91.55% |   runtime.(*mheap).allocMSpanLocked
+                                             0.06s  8.45% |   runtime.systemstack
+     0.71s  0.24% 10.42%      0.71s  0.24%                | runtime.(*fixalloc).alloc
+----------------------------------------------------------+-------------
+                                             0.64s   100% |   runtime.(*mheap).initSpan
+     0.64s  0.22% 10.64%      0.64s  0.22%                | runtime.(*mspan).init
+----------------------------------------------------------+-------------
+                                             1.84s 98.92% |   runtime.tracebackPCs
+     0.62s  0.21% 10.85%      1.86s  0.64%                | runtime.(*unwinder).resolveInternal
+                                             1.24s 66.67% |   runtime.pcvalue
+----------------------------------------------------------+-------------
+                                             0.22s 38.60% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.18s 31.58% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+                                             0.13s 22.81% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+     0.57s   0.2% 11.04%      0.57s   0.2%                | cmpbody
+----------------------------------------------------------+-------------
+                                             0.54s 93.10% |   runtime.wbBufFlush1 (inline)
+     0.56s  0.19% 11.23%      0.58s   0.2%                | runtime.(*gcBits).bitp
+----------------------------------------------------------+-------------
+                                             1.37s 52.29% |   runtime.tracebackPCs
+                                             1.24s 47.33% |   runtime.(*unwinder).resolveInternal
+     0.54s  0.18% 11.42%      2.62s   0.9%                | runtime.pcvalue
+                                             1.63s 62.21% |   runtime.step
+                                             0.37s 14.12% |   runtime.funcInfo.entry (inline)
+----------------------------------------------------------+-------------
+                                             0.47s 90.38% |   runtime.casgstatus
+     0.52s  0.18% 11.60%      0.52s  0.18%                | runtime.procyield
+----------------------------------------------------------+-------------
+                                             0.54s   100% |   runtime.systemstack
+     0.49s  0.17% 11.77%      0.54s  0.18%                | runtime.(*spanSet).reset
+----------------------------------------------------------+-------------
+                                             0.33s 71.74% |   runtime.mallocgcSmallScanNoHeader (inline)
+                                             0.10s 21.74% |   runtime.mallocgcSmallScanHeader (inline)
+     0.46s  0.16% 11.92%      0.46s  0.16%                | runtime.nextFreeFast
+----------------------------------------------------------+-------------
+                                             0.44s 91.67% |   runtime.tracebackPCs
+     0.45s  0.15% 12.08%      0.48s  0.16%                | runtime.findfunc
+----------------------------------------------------------+-------------
+                                            11.71s   100% |   runtime.mallocgc
+     0.42s  0.14% 12.22%     11.71s  4.01%                | runtime.mallocgcLarge
+                                             5.94s 50.73% |   runtime.memclrNoHeapPointersChunked
+                                             3.21s 27.41% |   runtime.systemstack
+                                             1.84s 15.71% |   runtime.(*mcache).allocLarge
+----------------------------------------------------------+-------------
+                                             0.16s 39.02% |   runtime.mallocgcSmallScanHeader (inline)
+                                             0.11s 26.83% |   runtime.findObject (inline)
+                                             0.06s 14.63% |   runtime.mallocgcSmallScanNoHeader (inline)
+     0.41s  0.14% 12.36%      0.41s  0.14%                | runtime.(*mspan).base
+----------------------------------------------------------+-------------
+                                             0.37s 88.10% |   runtime.findObject (inline)
+     0.41s  0.14% 12.50%      0.42s  0.14%                | runtime.spanOf
+----------------------------------------------------------+-------------
+                                             0.55s 38.19% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.44s 30.56% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.31s 21.53% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+                                             0.08s  5.56% |   sort.pdqsort_func
+     0.38s  0.13% 12.63%      1.44s  0.49%                | backpack-brawl-solver/internal/solver.compareScores
+                                             1.05s 72.92% |   backpack-brawl-solver/internal/model.CompareScores
+----------------------------------------------------------+-------------
+                                             0.35s 74.47% |   runtime.(*mcache).refill
+                                             0.12s 25.53% |   runtime.(*mcache).allocLarge
+     0.38s  0.13% 12.76%      0.47s  0.16%                | runtime.(*spanSet).push
+----------------------------------------------------------+-------------
+                                             0.66s 45.83% |   sort.partition_func
+                                             0.64s 44.44% |   sort.insertionSort_func
+                                             0.12s  8.33% |   sort.choosePivot_func
+     0.37s  0.13% 12.89%      1.44s  0.49%                | backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.55s 38.19% |   backpack-brawl-solver/internal/solver.compareScores
+                                             0.25s 17.36% |   memeqbody
+                                             0.22s 15.28% |   cmpbody
+----------------------------------------------------------+-------------
+                                             1.53s   100% |   runtime.growslice
+     0.36s  0.12% 13.01%      1.53s  0.52%                | runtime.bulkBarrierPreWriteSrcOnly
+                                             0.92s 60.13% |   runtime.(*wbBuf).get1 (inline)
+                                             0.24s 15.69% |   runtime.typePointers.next
+----------------------------------------------------------+-------------
+                                             0.29s 31.18% |   sort.partition_func
+                                             0.28s 30.11% |   sort.insertionSort_func
+                                             0.28s 30.11% |   sort.pdqsort_func
+                                             0.08s  8.60% |   sort.choosePivot_func
+     0.35s  0.12% 13.13%      0.93s  0.32%                | backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+                                             0.31s 33.33% |   backpack-brawl-solver/internal/solver.compareScores
+                                             0.18s 19.35% |   cmpbody
+                                             0.07s  7.53% |   memeqbody
+----------------------------------------------------------+-------------
+                                             1.66s 59.07% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             1.15s 40.93% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     0.32s  0.11% 13.24%      2.81s  0.96%                | runtime.mapassign_faststr
+                                             1.01s 35.94% |   internal/runtime/maps.(*table).grow
+                                             0.66s 23.49% |   aeshashbody
+                                             0.18s  6.41% |   internal/runtime/maps.(*table).uncheckedPutSlot
+                                             0.13s  4.63% |   internal/runtime/maps.(*table).reset
+----------------------------------------------------------+-------------
+                                             1.05s   100% |   backpack-brawl-solver/internal/solver.compareScores
+     0.31s  0.11% 13.35%      1.05s  0.36%                | backpack-brawl-solver/internal/model.CompareScores
+                                             0.74s 70.48% |   backpack-brawl-solver/internal/model.ComparePriorityCounts (inline)
+----------------------------------------------------------+-------------
+                                             6.86s   100% |   runtime.mallocgc
+     0.31s  0.11% 13.45%      6.86s  2.35%                | runtime.mallocgcSmallScanHeader
+                                                3s 43.73% |   runtime.(*mcache).nextFree
+                                             1.53s 22.30% |   runtime.systemstack
+                                             1.32s 19.24% |   runtime.memclrNoHeapPointers
+                                             0.16s  2.33% |   runtime.(*mspan).base (inline)
+                                             0.10s  1.46% |   runtime.nextFreeFast (inline)
+----------------------------------------------------------+-------------
+                                             0.75s   100% |   runtime.systemstack
+     0.30s   0.1% 13.56%      0.75s  0.26%                | runtime.scanobject
+                                             0.22s 29.33% |   runtime.findObject
+----------------------------------------------------------+-------------
+                                             0.29s   100% |   runtime.funcInfo.entry
+     0.29s 0.099% 13.65%      0.29s 0.099%                | runtime.(*moduledata).textAddr
+----------------------------------------------------------+-------------
+                                             0.29s   100% |   runtime.step (inline)
+     0.29s 0.099% 13.75%      0.29s 0.099%                | runtime.readvarint
+----------------------------------------------------------+-------------
+                                            10.73s 97.37% |   internal/reflectlite.typedmemmove
+                                             0.29s  2.63% |   internal/runtime/maps.typedmemmove
+     0.29s 0.099% 13.85%     11.02s  3.77%                | runtime.typedmemmove
+                                             7.16s 64.97% |   runtime.bulkBarrierPreWrite
+                                             3.55s 32.21% |   runtime.memmove
+----------------------------------------------------------+-------------
+                                             0.46s 43.81% |   sort.pdqsort_func
+                                             0.39s 37.14% |   sort.partition_func
+                                             0.12s 11.43% |   sort.insertionSort_func
+                                             0.08s  7.62% |   sort.choosePivot_func
+     0.28s 0.096% 13.95%      1.05s  0.36%                | backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.44s 41.90% |   backpack-brawl-solver/internal/solver.compareScores
+                                             0.16s 15.24% |   memeqbody
+                                             0.13s 12.38% |   cmpbody
+----------------------------------------------------------+-------------
+                                            11.98s 63.72% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             6.37s 33.88% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                             0.45s  2.39% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     0.25s 0.086% 14.03%     18.80s  6.44%                | runtime.growslice
+                                            15.70s 83.51% |   runtime.mallocgc
+                                             1.53s  8.14% |   runtime.bulkBarrierPreWriteSrcOnly
+                                             1.27s  6.76% |   runtime.memmove
+----------------------------------------------------------+-------------
+                                             9.16s   100% |   sort.pdqsort_func
+     0.24s 0.082% 14.12%      9.16s  3.14%                | sort.insertionSort_func
+                                             7.81s 85.26% |   internal/reflectlite.Swapper.func9
+                                             0.64s  6.99% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.28s  3.06% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+                                             0.12s  1.31% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+----------------------------------------------------------+-------------
+                                             0.22s 53.66% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             0.19s 46.34% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     0.23s 0.079% 14.20%      0.41s  0.14%                | internal/runtime/maps.(*Iter).Next
+                                             0.09s 21.95% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             0.39s   100% |   runtime.(*mheap).allocSpan
+     0.22s 0.075% 14.27%      0.39s  0.13%                | runtime.(*pageAlloc).find
+----------------------------------------------------------+-------------
+                                            15.70s 71.30% |   runtime.growslice
+                                             3.17s 14.40% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             0.75s  3.41% |   runtime.convTslice
+                                             0.73s  3.32% |   internal/reflectlite.Swapper
+                                             0.70s  3.18% |   internal/runtime/maps.(*table).reset
+                                             0.54s  2.45% |   runtime.newobject
+                                             0.20s  0.91% |   internal/runtime/maps.NewMap
+                                             0.15s  0.68% |   runtime.concatstrings
+     0.22s 0.075% 14.35%     22.02s  7.54%                | runtime.mallocgc
+                                            11.71s 53.18% |   runtime.mallocgcLarge
+                                             6.86s 31.15% |   runtime.mallocgcSmallScanHeader
+                                             1.66s  7.54% |   runtime.deductAssistCredit
+                                             1.44s  6.54% |   runtime.mallocgcSmallScanNoHeader
+----------------------------------------------------------+-------------
+                                             3.17s 99.37% |   runtime.systemstack
+     0.16s 0.055% 14.40%      3.19s  1.09%                | runtime.(*mheap).allocSpan
+                                             1.07s 33.54% |   runtime.(*mheap).initSpan
+                                             0.69s 21.63% |   runtime.(*mheap).allocMSpanLocked
+                                             0.39s 12.23% |   runtime.(*pageAlloc).find
+                                             0.29s  9.09% |   runtime.(*pageAlloc).update
+----------------------------------------------------------+-------------
+                                             1.07s   100% |   runtime.(*mheap).allocSpan
+     0.15s 0.051% 14.45%      1.07s  0.37%                | runtime.(*mheap).initSpan
+                                             0.64s 59.81% |   runtime.(*mspan).init
+----------------------------------------------------------+-------------
+                                             0.32s 88.89% |   runtime.concatstring3
+     0.15s 0.051% 14.50%      0.36s  0.12%                | runtime.concatstrings
+                                             0.15s 41.67% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             4.58s   100% |   sort.pdqsort_func
+     0.15s 0.051% 14.56%      4.58s  1.57%                | sort.partition_func
+                                             3.09s 67.47% |   internal/reflectlite.Swapper.func9
+                                             0.66s 14.41% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.39s  8.52% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.29s  6.33% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+----------------------------------------------------------+-------------
+                                             0.61s 98.39% |   runtime.systemstack
+     0.14s 0.048% 14.60%      0.62s  0.21%                | runtime.casgstatus
+                                             0.47s 75.81% |   runtime.procyield
+----------------------------------------------------------+-------------
+                                             1.44s   100% |   runtime.mallocgc
+     0.14s 0.048% 14.65%      1.44s  0.49%                | runtime.mallocgcSmallScanNoHeader
+                                             0.33s 22.92% |   runtime.nextFreeFast (inline)
+                                             0.28s 19.44% |   runtime.heapSetTypeNoHeader (inline)
+                                             0.23s 15.97% |   runtime.(*mcache).nextFree
+                                             0.16s 11.11% |   runtime.memclrNoHeapPointers
+                                             0.06s  4.17% |   runtime.(*mspan).base (inline)
+                                             0.06s  4.17% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             1.41s   100% |   sort.Slice
+     0.13s 0.045% 14.70%      1.41s  0.48%                | internal/reflectlite.Swapper
+                                             0.73s 51.77% |   runtime.mallocgc
+                                             0.44s 31.21% |   runtime.newobject
+----------------------------------------------------------+-------------
+                                             3.16s   100% |   runtime.(*mcache).nextFree
+     0.13s 0.045% 14.74%      3.16s  1.08%                | runtime.(*mcache).refill
+                                             2.43s 76.90% |   runtime.(*mcentral).cacheSpan
+                                             0.35s 11.08% |   runtime.(*spanSet).push
+----------------------------------------------------------+-------------
+                                             2.43s   100% |   runtime.(*mcache).refill
+     0.13s 0.045% 14.78%      2.43s  0.83%                | runtime.(*mcentral).cacheSpan
+                                             1.79s 73.66% |   runtime.(*mheap).alloc
+----------------------------------------------------------+-------------
+                                             0.92s   100% |   runtime.bulkBarrierPreWriteSrcOnly (inline)
+     0.12s 0.041% 14.83%      0.92s  0.31%                | runtime.(*wbBuf).get1
+                                             0.80s 86.96% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                            16.58s 99.22% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             0.13s  0.78% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     0.11s 0.038% 14.86%     16.71s  5.72%                | sort.Slice
+                                            15.11s 90.42% |   sort.pdqsort_func
+                                             1.41s  8.44% |   internal/reflectlite.Swapper
+----------------------------------------------------------+-------------
+                                            15.11s   100% |   sort.Slice
+     0.11s 0.038% 14.90%     15.11s  5.17%                | sort.pdqsort_func
+                                             9.16s 60.62% |   sort.insertionSort_func
+                                             4.58s 30.31% |   sort.partition_func
+                                             0.46s  3.04% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.38s  2.51% |   sort.choosePivot_func
+                                             0.28s  1.85% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+                                             0.08s  0.53% |   backpack-brawl-solver/internal/solver.compareScores
+----------------------------------------------------------+-------------
+                                             2.97s   100% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+     0.10s 0.034% 14.94%      2.97s  1.02%                | backpack-brawl-solver/internal/solver.physicalInstanceIDs
+                                             1.15s 38.72% |   runtime.mapassign_faststr
+                                             0.45s 15.15% |   runtime.growslice
+                                             0.36s 12.12% |   runtime.concatstring3
+                                             0.20s  6.73% |   internal/runtime/maps.NewMap
+                                             0.19s  6.40% |   internal/runtime/maps.(*Iter).Next
+                                             0.19s  6.40% |   runtime.convTslice
+                                             0.13s  4.38% |   sort.Slice
+                                             0.07s  2.36% |   runtime.bulkBarrierPreWrite
+----------------------------------------------------------+-------------
+                                             0.37s 97.37% |   runtime.pcvalue (inline)
+     0.09s 0.031% 14.97%      0.38s  0.13%                | runtime.funcInfo.entry
+                                             0.29s 76.32% |   runtime.(*moduledata).textAddr
+----------------------------------------------------------+-------------
+                                             0.43s 70.49% |   internal/runtime/maps.(*table).grow
+                                             0.18s 29.51% |   runtime.mapassign_faststr
+     0.08s 0.027% 14.99%      0.61s  0.21%                | internal/runtime/maps.(*table).uncheckedPutSlot
+                                             0.34s 55.74% |   internal/runtime/maps.typedmemmove
+----------------------------------------------------------+-------------
+                                             3.84s   100% |   runtime.systemstack
+     0.08s 0.027% 15.02%      3.84s  1.31%                | runtime.tracebackPCs
+                                             1.84s 47.92% |   runtime.(*unwinder).resolveInternal
+                                             1.37s 35.68% |   runtime.pcvalue
+                                             0.44s 11.46% |   runtime.findfunc
+----------------------------------------------------------+-------------
+                                            10.83s   100% |   internal/reflectlite.Swapper.func9
+     0.07s 0.024% 15.04%     10.83s  3.71%                | internal/reflectlite.typedmemmove
+                                            10.73s 99.08% |   runtime.typedmemmove
+----------------------------------------------------------+-------------
+                                             7.81s 71.65% |   sort.insertionSort_func
+                                             3.09s 28.35% |   sort.partition_func
+     0.06s 0.021% 15.07%     10.90s  3.73%                | internal/reflectlite.Swapper.func9
+                                            10.83s 99.36% |   internal/reflectlite.typedmemmove
+----------------------------------------------------------+-------------
+                                             0.24s 85.71% |   runtime.findObject (inline)
+     0.06s 0.021% 15.09%      0.28s 0.096%                | runtime.(*mspan).objIndex
+----------------------------------------------------------+-------------
+                                             0.29s 96.67% |   runtime.(*mheap).allocSpan
+     0.06s 0.021% 15.11%      0.30s   0.1%                | runtime.(*pageAlloc).update
+----------------------------------------------------------+-------------
+                                             5.94s   100% |   runtime.mallocgcLarge
+     0.06s 0.021% 15.13%      5.94s  2.03%                | runtime.memclrNoHeapPointersChunked
+                                             5.88s 98.99% |   runtime.memclrNoHeapPointers
+----------------------------------------------------------+-------------
+                                             0.44s 73.33% |   internal/reflectlite.Swapper
+                                             0.11s 18.33% |   internal/runtime/maps.NewMap
+     0.06s 0.021% 15.15%      0.60s  0.21%                | runtime.newobject
+                                             0.54s 90.00% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             0.34s   100% |   internal/runtime/maps.(*table).uncheckedPutSlot
+     0.05s 0.017% 15.16%      0.34s  0.12%                | internal/runtime/maps.typedmemmove
+                                             0.29s 85.29% |   runtime.typedmemmove
+----------------------------------------------------------+-------------
+                                                3s 92.31% |   runtime.mallocgcSmallScanHeader
+                                             0.23s  7.08% |   runtime.mallocgcSmallScanNoHeader
+     0.05s 0.017% 15.18%      3.25s  1.11%                | runtime.(*mcache).nextFree
+                                             3.16s 97.23% |   runtime.(*mcache).refill
+----------------------------------------------------------+-------------
+                                             0.38s   100% |   sort.pdqsort_func
+     0.05s 0.017% 15.20%      0.38s  0.13%                | sort.choosePivot_func
+                                             0.12s 31.58% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.08s 21.05% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.08s 21.05% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+----------------------------------------------------------+-------------
+                                             0.69s   100% |   runtime.(*mheap).allocSpan
+     0.04s 0.014% 15.21%      0.69s  0.24%                | runtime.(*mheap).allocMSpanLocked
+                                             0.65s 94.20% |   runtime.(*fixalloc).alloc
+----------------------------------------------------------+-------------
+                                             0.36s   100% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     0.04s 0.014% 15.23%      0.36s  0.12%                | runtime.concatstring3
+                                             0.32s 88.89% |   runtime.concatstrings
+----------------------------------------------------------+-------------
+                                             1.66s   100% |   runtime.mallocgc
+     0.04s 0.014% 15.24%      1.66s  0.57%                | runtime.deductAssistCredit
+                                             1.60s 96.39% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             0.28s   100% |   runtime.mallocgcSmallScanNoHeader (inline)
+     0.04s 0.014% 15.25%      0.28s 0.096%                | runtime.heapSetTypeNoHeader
+----------------------------------------------------------+-------------
+                                             4.36s 29.01% |   runtime.(*wbBuf).get2
+                                             3.32s 22.09% |   runtime.(*mheap).alloc
+                                             3.21s 21.36% |   runtime.mallocgcLarge
+                                             1.60s 10.65% |   runtime.deductAssistCredit
+                                             1.53s 10.18% |   runtime.mallocgcSmallScanHeader
+                                             0.80s  5.32% |   runtime.(*wbBuf).get1
+                                             0.09s   0.6% |   internal/runtime/maps.(*Iter).Next
+                                             0.06s   0.4% |   runtime.mallocgcSmallScanNoHeader
+     0.04s 0.014% 15.27%     15.03s  5.14%                | runtime.systemstack
+                                             5.30s 35.26% |   runtime.wbBufFlush1
+                                             3.84s 25.55% |   runtime.tracebackPCs
+                                             3.17s 21.09% |   runtime.(*mheap).allocSpan
+                                             0.75s  4.99% |   runtime.scanobject
+                                             0.61s  4.06% |   runtime.casgstatus
+                                             0.54s  3.59% |   runtime.(*spanSet).reset
+                                             0.06s   0.4% |   runtime.(*fixalloc).alloc
+----------------------------------------------------------+-------------
+                                             1.01s   100% |   runtime.mapassign_faststr
+     0.03s  0.01% 15.28%      1.01s  0.35%                | internal/runtime/maps.(*table).grow
+                                             0.43s 42.57% |   internal/runtime/maps.(*table).uncheckedPutSlot
+                                             0.32s 31.68% |   internal/runtime/maps.(*table).reset
+                                             0.19s 18.81% |   aeshashbody
+----------------------------------------------------------+-------------
+                                             0.32s 41.56% |   internal/runtime/maps.(*table).grow
+                                             0.32s 41.56% |   internal/runtime/maps.NewMap
+                                             0.13s 16.88% |   runtime.mapassign_faststr
+     0.03s  0.01% 15.29%      0.77s  0.26%                | internal/runtime/maps.(*table).reset
+                                             0.70s 90.91% |   runtime.mallocgc
+----------------------------------------------------------+-------------
+                                             0.50s 71.43% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             0.20s 28.57% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     0.03s  0.01% 15.30%      0.70s  0.24%                | internal/runtime/maps.NewMap
+                                             0.32s 45.71% |   internal/runtime/maps.(*table).reset
+                                             0.20s 28.57% |   runtime.mallocgc
+                                             0.11s 15.71% |   runtime.newobject
+----------------------------------------------------------+-------------
+                                             1.84s   100% |   runtime.mallocgcLarge
+     0.03s  0.01% 15.31%      1.84s  0.63%                | runtime.(*mcache).allocLarge
+                                             1.56s 84.78% |   runtime.(*mheap).alloc
+                                             0.12s  6.52% |   runtime.(*spanSet).push
+----------------------------------------------------------+-------------
+                                             1.79s 53.43% |   runtime.(*mcentral).cacheSpan
+                                             1.56s 46.57% |   runtime.(*mcache).allocLarge
+     0.03s  0.01% 15.32%      3.35s  1.15%                | runtime.(*mheap).alloc
+                                             3.32s 99.10% |   runtime.systemstack
+----------------------------------------------------------+-------------
+                                             0.63s 76.83% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             0.19s 23.17% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+     0.03s  0.01% 15.33%      0.82s  0.28%                | runtime.convTslice
+                                             0.75s 91.46% |   runtime.mallocgc
+----------------------------------------------------------+-------------
