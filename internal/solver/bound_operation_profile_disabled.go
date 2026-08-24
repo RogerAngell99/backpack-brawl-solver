@@ -34,9 +34,10 @@ func partialRepairV3PriorityUpperBoundProfiled(
 	state partialRepairState,
 	optionsByInstance map[string][]model.Placement,
 	priorities []string,
+	compatibility *priorityStarCompatibility,
 	_ *model.PriorityUpperBoundSiteProfile,
 ) []int {
-	return partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, priorities)
+	return partialRepairV3PriorityUpperBound(catalog, state, optionsByInstance, priorities, compatibility)
 }
 
 func (ctx *outgoingBoundContext) shouldPruneProfiled(

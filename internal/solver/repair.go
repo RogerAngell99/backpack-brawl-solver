@@ -1107,15 +1107,16 @@ func runRepairTask(
 		if len(config.repairPriorityTarget) > 0 {
 			var upper []int
 			var priorityProfile *model.PriorityUpperBoundSiteProfile
+			compatibility := config.priorityBounds.staticStarCompatibility()
 			if searchOperationProfilingAvailable && config.OperationProfiling {
 				site := boundPriorityRepairDFS
 				if config.tracePhase == tracePhasePlateauLNS {
 					site = boundPriorityPlateauDFS
 				}
 				priorityProfile = operationCounters.prioritySite(site)
-				upper = partialRepairV3PriorityUpperBoundProfiled(catalog, partialState, optionsByInstance, config.Priorities, priorityProfile)
+				upper = partialRepairV3PriorityUpperBoundProfiled(catalog, partialState, optionsByInstance, config.Priorities, compatibility, priorityProfile)
 			} else {
-				upper = partialRepairV3PriorityUpperBound(catalog, partialState, optionsByInstance, config.Priorities)
+				upper = partialRepairV3PriorityUpperBound(catalog, partialState, optionsByInstance, config.Priorities, compatibility)
 			}
 			feasible := partialRepairTargetVectorFeasible(upper, config.repairPriorityTarget)
 			if searchOperationProfilingAvailable && config.OperationProfiling {
