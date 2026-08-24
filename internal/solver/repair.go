@@ -1064,6 +1064,7 @@ func runRepairTask(
 	exactBounds *exactBoundContext,
 	outgoingBounds *outgoingBoundContext,
 ) repairResult {
+	operationCounters := newBoundOperationCounters(config)
 	results := mergeSolutions(nil, incumbents, config.TopN)
 	remainingCells := remainingCellCounts(catalog, repairInstances)
 	var nodes int64
@@ -1104,8 +1105,23 @@ func runRepairTask(
 			return
 		}
 		if len(config.repairPriorityTarget) > 0 {
-			upper := partialRepairV3PriorityUpperBound(catalog, partialState, optionsByInstance, config.Priorities)
-			if !partialRepairTargetVectorFeasible(upper, config.repairPriorityTarget) {
+			var upper []int
+			var priorityProfile *model.PriorityUpperBoundSiteProfile
+			if searchOperationProfilingAvailable && config.OperationProfiling {
+				site := boundPriorityRepairDFS
+				if config.tracePhase == tracePhasePlateauLNS {
+					site = boundPriorityPlateauDFS
+				}
+				priorityProfile = operationCounters.prioritySite(site)
+				upper = partialRepairV3PriorityUpperBoundProfiled(catalog, partialState, optionsByInstance, config.Priorities, priorityProfile)
+			} else {
+				upper = partialRepairV3PriorityUpperBound(catalog, partialState, optionsByInstance, config.Priorities)
+			}
+			feasible := partialRepairTargetVectorFeasible(upper, config.repairPriorityTarget)
+			if searchOperationProfilingAvailable && config.OperationProfiling {
+				recordPriorityUpperBoundResult(priorityProfile, feasible)
+			}
+			if !feasible {
 				priorityBoundPruned++
 				return
 			}
@@ -1126,7 +1142,13 @@ func runRepairTask(
 		}
 		if outgoingBounds != nil && len(results) >= config.TopN && config.TopN > 0 {
 			outgoingBoundChecks++
-			if outgoingBounds.shouldPrune(placements, results, config.TopN) {
+			pruned := false
+			if searchOperationProfilingAvailable && config.OperationProfiling {
+				pruned = outgoingBounds.shouldPruneProfiled(placements, results, config.TopN, operationCounters.outgoingSite(boundOutgoingRepair))
+			} else {
+				pruned = outgoingBounds.shouldPrune(placements, results, config.TopN)
+			}
+			if pruned {
 				outgoingBoundPrunedNodes++
 				return
 			}
@@ -1206,6 +1228,7 @@ func runRepairTask(
 		OutgoingBoundChecks:          outgoingBoundChecks,
 		OutgoingBoundPrunedNodes:     outgoingBoundPrunedNodes,
 		SymmetryPrunedBranches:       symmetryPruned,
+		BoundOperationProfile:        operationCounters.snapshotRepair(outgoingBoundChecks, outgoingBoundPrunedNodes),
 	}
 }
 
