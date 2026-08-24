@@ -3,6 +3,7 @@
 package solver
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 	"testing"
@@ -105,6 +106,11 @@ func TestOperationProfilingPreservesFullGeneralSearchPipeline(t *testing.T) {
 	if !reflect.DeepEqual(on, off) {
 		t.Fatalf("operation profiling changed full pipeline result:\n off=%+v\n  on=%+v", off, on)
 	}
+	semanticOff := operationProfileSemanticSolutionForTest(withoutProfile[0])
+	semanticOn := operationProfileSemanticSolutionForTest(withProfile[0])
+	if !reflect.DeepEqual(semanticOn, semanticOff) {
+		t.Fatalf("operation profiling changed semantic/search state at %s", firstOperationProfileDifference(reflect.ValueOf(semanticOff), reflect.ValueOf(semanticOn), "solution"))
+	}
 	if withProfile[0].Search.ConstellationSeedDiagnostics.RootPackingOperationProfile == nil {
 		t.Fatal("profiled full pipeline did not retain aggregate operation profile")
 	}
@@ -113,6 +119,17 @@ func TestOperationProfilingPreservesFullGeneralSearchPipeline(t *testing.T) {
 		t.Fatalf("packing-seed operation profile=%+v", packingProfile)
 	}
 	assertPackingSeedFeasibilityOperationProfileIdentities(t, packingProfile)
+	boundProfile := withProfile[0].Search.BoundOperationProfile
+	assertBoundAttributionOperationProfileIdentities(t, boundProfile)
+	if boundProfile.PriorityUpper.ConstellationFilter.Calls == 0 || boundProfile.Outgoing.Search.Checks == 0 {
+		t.Fatalf("full pipeline did not exercise comparative bound sites: %+v", boundProfile)
+	}
+	if boundProfile.Outgoing.Search.Checks+boundProfile.Outgoing.Repair.Checks != withProfile[0].Search.OutgoingBoundChecks {
+		t.Fatalf("outgoing check cross-check failed: profile=%+v stats=%+v", boundProfile.Outgoing, withProfile[0].Search)
+	}
+	if boundProfile.Outgoing.Search.PrunedNodes+boundProfile.Outgoing.Repair.PrunedNodes != withProfile[0].Search.OutgoingBoundPrunedNodes {
+		t.Fatalf("outgoing prune cross-check failed: profile=%+v stats=%+v", boundProfile.Outgoing, withProfile[0].Search)
+	}
 }
 
 func TestOperationProfilingRequiresSingleWorker(t *testing.T) {
@@ -367,4 +384,100 @@ func operationProfilePipelineSnapshotForTest(solution model.Solution) operationP
 		})
 	}
 	return snapshot
+}
+
+func operationProfileSemanticSolutionForTest(solution model.Solution) model.Solution {
+	copy := solution
+	search := solution.Search
+	search.NodesPerSecond = 0
+	search.SetupMS = 0
+	search.SeedMS = 0
+	search.RepairMS = 0
+	search.SearchMS = 0
+	search.RefineMS = 0
+	search.ServerElapsedMS = 0
+	search.FirstCompleteMS = 0
+	search.FirstFullyPackedMS = 0
+	search.PackingSeedOperationProfile = nil
+	search.BoundOperationProfile = nil
+	search.IncumbentTrace = append([]model.IncumbentEvent(nil), search.IncumbentTrace...)
+	for index := range search.IncumbentTrace {
+		search.IncumbentTrace[index].ElapsedMS = 0
+	}
+	search.Stages = append([]model.SearchStageStats(nil), search.Stages...)
+	for stageIndex := range search.Stages {
+		search.Stages[stageIndex].IncumbentTrace = append([]model.IncumbentEvent(nil), search.Stages[stageIndex].IncumbentTrace...)
+		for eventIndex := range search.Stages[stageIndex].IncumbentTrace {
+			search.Stages[stageIndex].IncumbentTrace[eventIndex].ElapsedMS = 0
+		}
+	}
+	diagnostics := search.ConstellationSeedDiagnostics
+	diagnostics.RootPackingOperationProfile = nil
+	diagnostics.Roots = append([]model.ConstellationRootDiagnostic(nil), diagnostics.Roots...)
+	for index := range diagnostics.Roots {
+		diagnostics.Roots[index].OperationProfile = nil
+	}
+	search.ConstellationSeedDiagnostics = diagnostics
+	copy.Search = search
+	return copy
+}
+
+func firstOperationProfileDifference(left reflect.Value, right reflect.Value, path string) string {
+	if !left.IsValid() || !right.IsValid() {
+		if left.IsValid() == right.IsValid() {
+			return ""
+		}
+		return path
+	}
+	if left.Type() != right.Type() {
+		return path + ".type"
+	}
+	switch left.Kind() {
+	case reflect.Interface, reflect.Pointer:
+		if left.IsNil() || right.IsNil() {
+			if left.IsNil() == right.IsNil() {
+				return ""
+			}
+			return path
+		}
+		return firstOperationProfileDifference(left.Elem(), right.Elem(), path)
+	case reflect.Struct:
+		for index := 0; index < left.NumField(); index++ {
+			fieldPath := path + "." + left.Type().Field(index).Name
+			if difference := firstOperationProfileDifference(left.Field(index), right.Field(index), fieldPath); difference != "" {
+				return difference
+			}
+		}
+		return ""
+	case reflect.Slice, reflect.Array:
+		if left.Len() != right.Len() {
+			return path + ".length"
+		}
+		for index := 0; index < left.Len(); index++ {
+			if difference := firstOperationProfileDifference(left.Index(index), right.Index(index), fmt.Sprintf("%s[%d]", path, index)); difference != "" {
+				return difference
+			}
+		}
+		return ""
+	case reflect.Map:
+		if left.Len() != right.Len() {
+			return path + ".length"
+		}
+		for _, key := range left.MapKeys() {
+			leftValue := left.MapIndex(key)
+			rightValue := right.MapIndex(key)
+			if !rightValue.IsValid() {
+				return path + ".missing-key"
+			}
+			if difference := firstOperationProfileDifference(leftValue, rightValue, path+"[map]"); difference != "" {
+				return difference
+			}
+		}
+		return ""
+	default:
+		if !reflect.DeepEqual(left.Interface(), right.Interface()) {
+			return path
+		}
+		return ""
+	}
 }

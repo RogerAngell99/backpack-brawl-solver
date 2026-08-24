@@ -635,6 +635,17 @@ func TestSearchSummarySerializesConstellationSeed(t *testing.T) {
 	assertSearchSummaryJSONMissingFields(t, summary, "constellation_seed_nodes", "constellation_seed_candidates", "constellation_seed_diagnostics")
 }
 
+func TestSearchSummarySerializesBoundOperationProfile(t *testing.T) {
+	profile := &model.BoundAttributionOperationProfile{Version: model.BoundAttributionProfileVersion}
+	profile.Outgoing.Search.Checks = 7
+	summary := searchSummary(model.SearchStats{BoundOperationProfile: profile})
+	if summary.BoundOperationProfile == nil || summary.BoundOperationProfile.Version != model.BoundAttributionProfileVersion || summary.BoundOperationProfile.Outgoing.Search.Checks != 7 {
+		t.Fatalf("bound operation profile=%+v", summary.BoundOperationProfile)
+	}
+	assertSearchSummaryJSONFields(t, summary, "bound_operation_profile")
+	assertSearchSummaryJSONMissingFields(t, searchSummary(model.SearchStats{}), "bound_operation_profile")
+}
+
 func assertSearchSummaryJSONFields(t *testing.T, summary SearchSummary, fields ...string) {
 	t.Helper()
 	payload := searchSummaryJSON(t, summary)
