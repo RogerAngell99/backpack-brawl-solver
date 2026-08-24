@@ -167,6 +167,23 @@ func TestAggregateStageSearchesMergesPackingSeedFeasibilityOperationProfiles(t *
 	}
 }
 
+func TestAggregateStageSearchesMergesBoundAttributionOperationProfiles(t *testing.T) {
+	first := &model.BoundAttributionOperationProfile{Version: model.BoundAttributionProfileVersion}
+	first.PriorityUpper.ConstellationFilter.Calls = 3
+	first.Outgoing.Search.Checks = 5
+	second := &model.BoundAttributionOperationProfile{Version: model.BoundAttributionProfileVersion}
+	second.PriorityUpper.ConstellationFilter.Calls = 7
+	second.Outgoing.Repair.Checks = 11
+	aggregated := aggregateStageSearches([]model.SearchStats{
+		{BoundOperationProfile: first},
+		{BoundOperationProfile: second},
+	}, 30)
+	profile := aggregated.BoundOperationProfile
+	if profile == nil || profile.PriorityUpper.ConstellationFilter.Calls != 10 || profile.Outgoing.Search.Checks != 5 || profile.Outgoing.Repair.Checks != 11 {
+		t.Fatalf("aggregated bound attribution profile=%+v", profile)
+	}
+}
+
 func TestConfiguredTwentyMillionRunPreservesEnabledConstellationPrefix(t *testing.T) {
 	cat := model.Catalog{Items: map[string]model.Item{
 		"left":  {ID: "left", Shape: []model.Coord{{}}, Stars: []model.Star{{Offset: model.Coord{Col: 1}, TargetTypes: []string{"Food"}}}, Rotations: []int{0}},
