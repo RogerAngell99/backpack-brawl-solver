@@ -133,6 +133,7 @@ type searchResult struct {
 	TasksExecuted               int
 	TasksPrunedBeforeExecution  int
 	TaskAllocation              model.TaskAllocationStats
+	BoundOperationProfile       *model.BoundAttributionOperationProfile
 }
 
 type coverageSeedResult struct {
@@ -146,6 +147,7 @@ type coverageSeedResult struct {
 	HardPrunedNodes             int64
 	FirstCompleteNode           int64
 	PackingSeedOperationProfile *model.PackingSeedFeasibilityOperationProfile
+	BoundOperationProfile       *model.BoundAttributionOperationProfile
 	PackingDiagnostics          model.PackingSeedDiagnostics
 }
 
@@ -172,6 +174,7 @@ type repairResult struct {
 	NeighborhoodsGenerated       int
 	NeighborhoodsAttempted       int
 	TerminationReason            string
+	BoundOperationProfile        *model.BoundAttributionOperationProfile
 }
 
 type taskRunResult struct {
@@ -706,6 +709,7 @@ func aggregateStageSearches(stages []model.SearchStats, charged int64) model.Sea
 	aggregated.PackingSeedHardPruned = 0
 	aggregated.PackingSeedStatesDeduplicated = 0
 	aggregated.PackingSeedOperationProfile = nil
+	aggregated.BoundOperationProfile = nil
 	aggregated.SymmetryPrunedBranches = 0
 	aggregated.ParallelTasks = 0
 	aggregated.RepairNodes = 0
@@ -737,6 +741,7 @@ func aggregateStageSearches(stages []model.SearchStats, charged int64) model.Sea
 		aggregated.PackingSeedHardPruned += stage.PackingSeedHardPruned
 		aggregated.PackingSeedStatesDeduplicated += stage.PackingSeedStatesDeduplicated
 		aggregated.PackingSeedOperationProfile = mergePackingSeedFeasibilityOperationProfiles(aggregated.PackingSeedOperationProfile, stage.PackingSeedOperationProfile)
+		aggregated.BoundOperationProfile = mergeBoundAttributionOperationProfiles(aggregated.BoundOperationProfile, stage.BoundOperationProfile)
 		aggregated.SymmetryPrunedBranches += stage.SymmetryPrunedBranches
 		aggregated.ParallelTasks += stage.ParallelTasks
 		aggregated.RepairNodes += stage.RepairNodes
@@ -1130,6 +1135,8 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 				CoveragePrunedNodes:         repair.CoveragePrunedNodes,
 				ExactBoundChecks:            repair.ExactBoundChecks,
 				ExactBoundPrunedNodes:       repair.ExactBoundPrunedNodes,
+				OutgoingBoundChecks:         repair.OutgoingBoundChecks,
+				OutgoingBoundPrunedNodes:    repair.OutgoingBoundPrunedNodes,
 				RepairNodes:                 repair.NodesExplored,
 				RepairIterations:            repair.Iterations,
 				RepairImprovements:          repair.Improvements,
@@ -1138,6 +1145,7 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 				RepairParallelTasks:         repair.ParallelTasks,
 				RepairParallelWorkersUsed:   repair.ParallelWorkersUsed,
 				StoppedAfterCoverageCeiling: true,
+				BoundOperationProfile:       mergeBoundAttributionOperationProfiles(nil, repair.BoundOperationProfile),
 			}
 			if genericStarSeed {
 				searchStats.CoverageSeedNodes = 0
@@ -1336,6 +1344,13 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 		SearchBestScore:              searchBestScore,
 		PostRepairBestScore:          postRepairBestScore,
 		TaskAllocation:               search.TaskAllocation,
+		BoundOperationProfile: mergeBoundAttributionOperationProfiles(
+			mergeBoundAttributionOperationProfiles(
+				mergeBoundAttributionOperationProfiles(nil, repair.BoundOperationProfile),
+				search.BoundOperationProfile,
+			),
+			plateauLNS.BoundOperationProfile,
+		),
 	}
 	if genericStarSeed {
 		searchStats.CoverageSeedNodes = 0
@@ -1349,7 +1364,7 @@ func solveLayoutStage(catalog model.Catalog, itemIDs []string, gridMask uint64, 
 		searchStats.PackingSeedStatesDeduplicated = packingSeed.StatesDeduplicated
 		applyConstellationSeedStats(&searchStats, constellationSeed, constellationDiagnostics)
 	}
-	applyPackingSeedStats(&searchStats, packingSeed)
+	applyPackingSeedStats(&searchStats, seed)
 	searchStats.SymmetryPrunedBranches = seed.SymmetryPrunedBranches + repair.SymmetryPrunedBranches + search.SymmetryPrunedBranches
 	searchStats.NodesExplored += repair.NodesExplored
 	if coverage != nil {
@@ -1569,6 +1584,7 @@ func applyPackingSeedStats(stats *model.SearchStats, seed coverageSeedResult) {
 		stats.PackingSeedDiagnostics = seed.PackingDiagnostics
 	}
 	stats.PackingSeedOperationProfile = seed.PackingSeedOperationProfile
+	stats.BoundOperationProfile = mergeBoundAttributionOperationProfiles(stats.BoundOperationProfile, seed.BoundOperationProfile)
 }
 
 func initializeDiagnosticPhasePlans(config Config) {
@@ -1882,6 +1898,8 @@ func mergeSeedResults(left coverageSeedResult, right coverageSeedResult, topN in
 	}
 	merged.PackingSeedOperationProfile = mergePackingSeedFeasibilityOperationProfiles(nil, left.PackingSeedOperationProfile)
 	merged.PackingSeedOperationProfile = mergePackingSeedFeasibilityOperationProfiles(merged.PackingSeedOperationProfile, right.PackingSeedOperationProfile)
+	merged.BoundOperationProfile = mergeBoundAttributionOperationProfiles(nil, left.BoundOperationProfile)
+	merged.BoundOperationProfile = mergeBoundAttributionOperationProfiles(merged.BoundOperationProfile, right.BoundOperationProfile)
 	if left.PackingDiagnostics.MaxDepth > 0 {
 		merged.PackingDiagnostics = left.PackingDiagnostics
 	} else {
@@ -2073,6 +2091,7 @@ func runTasks(
 			combined.ExactBoundPrunedNodes += partial.ExactBoundPrunedNodes
 			combined.OutgoingBoundChecks += partial.OutgoingBoundChecks
 			combined.OutgoingBoundPrunedNodes += partial.OutgoingBoundPrunedNodes
+			combined.BoundOperationProfile = mergeBoundAttributionOperationProfiles(combined.BoundOperationProfile, partial.BoundOperationProfile)
 			combined.SymmetryPrunedBranches += partial.SymmetryPrunedBranches
 			combined.StoppedAfterCoverageCeiling = combined.StoppedAfterCoverageCeiling || partial.StoppedAfterCoverageCeiling
 			combined.StoppedAfterPriorityCeiling = combined.StoppedAfterPriorityCeiling || partial.StoppedAfterPriorityCeiling
@@ -2144,6 +2163,7 @@ func runTasks(
 		combined.ExactBoundPrunedNodes += partial.ExactBoundPrunedNodes
 		combined.OutgoingBoundChecks += partial.OutgoingBoundChecks
 		combined.OutgoingBoundPrunedNodes += partial.OutgoingBoundPrunedNodes
+		combined.BoundOperationProfile = mergeBoundAttributionOperationProfiles(combined.BoundOperationProfile, partial.BoundOperationProfile)
 		combined.SymmetryPrunedBranches += partial.SymmetryPrunedBranches
 		combined.StoppedAfterCoverageCeiling = combined.StoppedAfterCoverageCeiling || partial.StoppedAfterCoverageCeiling
 		combined.StoppedAfterPriorityCeiling = combined.StoppedAfterPriorityCeiling || partial.StoppedAfterPriorityCeiling

@@ -52,6 +52,90 @@ func addPackingSeedCanonicalCopyOrderOperationProfile(total *model.PackingSeedCa
 	total.PlacementKeyBytes += next.PlacementKeyBytes
 }
 
+func mergeBoundAttributionOperationProfiles(total *model.BoundAttributionOperationProfile, next *model.BoundAttributionOperationProfile) *model.BoundAttributionOperationProfile {
+	if next == nil {
+		return total
+	}
+	if total == nil {
+		copy := *next
+		return &copy
+	}
+	if total.Version != next.Version {
+		panic("cannot merge incompatible bound attribution profile versions")
+	}
+	total.PriorityUpper.ConstellationFilterInvocations += next.PriorityUpper.ConstellationFilterInvocations
+	total.PriorityUpper.ConstellationStatesInput += next.PriorityUpper.ConstellationStatesInput
+	total.PriorityUpper.ConstellationStatesRetained += next.PriorityUpper.ConstellationStatesRetained
+	total.PriorityUpper.ConstellationStatesRejected += next.PriorityUpper.ConstellationStatesRejected
+	addPriorityUpperBoundSiteProfile(&total.PriorityUpper.ConstellationFilter, next.PriorityUpper.ConstellationFilter)
+	addPriorityUpperBoundSiteProfile(&total.PriorityUpper.RepairDFS, next.PriorityUpper.RepairDFS)
+	addPriorityUpperBoundSiteProfile(&total.PriorityUpper.PlateauPrefilter, next.PriorityUpper.PlateauPrefilter)
+	addPriorityUpperBoundSiteProfile(&total.PriorityUpper.PlateauDFS, next.PriorityUpper.PlateauDFS)
+	addOutgoingBoundSiteProfile(&total.Outgoing.Search, next.Outgoing.Search)
+	addOutgoingBoundSiteProfile(&total.Outgoing.Repair, next.Outgoing.Repair)
+	return total
+}
+
+func addPriorityUpperBoundSiteProfile(total *model.PriorityUpperBoundSiteProfile, next model.PriorityUpperBoundSiteProfile) {
+	total.Calls += next.Calls
+	total.FeasibleResults += next.FeasibleResults
+	total.RejectedResults += next.RejectedResults
+	total.InvalidPriorityReturns += next.InvalidPriorityReturns
+	total.PriorityEntriesValidated += next.PriorityEntriesValidated
+	total.FixedPlacementInputs += next.FixedPlacementInputs
+	total.CurrentPlacementInputs += next.CurrentPlacementInputs
+	total.AnchoredPlacements += next.AnchoredPlacements
+	total.RemovedInstanceInputs += next.RemovedInstanceInputs
+	total.RemovedInstances += next.RemovedInstances
+	total.RemovedOptionCandidates += next.RemovedOptionCandidates
+	total.RemovedOptionRejectedFixedOverlap += next.RemovedOptionRejectedFixedOverlap
+	total.RemovedOptionRejectedOutsideFree += next.RemovedOptionRejectedOutsideFree
+	total.RemovedOptionsRetained += next.RemovedOptionsRetained
+	total.UniquePrioritySourceItems += next.UniquePrioritySourceItems
+	total.AnchoredSourceInstances += next.AnchoredSourceInstances
+	total.RemovedSourceInstances += next.RemovedSourceInstances
+	total.StarSlots += next.StarSlots
+	total.FixedTargetChecks += next.FixedTargetChecks
+	total.RemovedTargetChecks += next.RemovedTargetChecks
+	total.SelfTargetSkips += next.SelfTargetSkips
+	total.FixedFixedGeometryChecks += next.FixedFixedGeometryChecks
+	total.RemovedSourceOptionChecksFixedTarget += next.RemovedSourceOptionChecksFixedTarget
+	total.FixedSourceTargetOptionChecks += next.FixedSourceTargetOptionChecks
+	total.RemovedSourceTargetOptionPairs += next.RemovedSourceTargetOptionPairs
+	total.GeometryCandidateChecks += next.GeometryCandidateChecks
+	total.GeometryOverlapRejects += next.GeometryOverlapRejects
+	total.StarPositionHitCalls += next.StarPositionHitCalls
+	total.StarPositionHitTrue += next.StarPositionHitTrue
+	total.SlotTargetHits += next.SlotTargetHits
+	total.MatchingCalls += next.MatchingCalls
+}
+
+func addOutgoingBoundSiteProfile(total *model.OutgoingBoundSiteProfile, next model.OutgoingBoundSiteProfile) {
+	total.Checks += next.Checks
+	total.PrunedNodes += next.PrunedNodes
+	total.PlacedMapBuilds += next.PlacedMapBuilds
+	total.PlacedMapInsertions += next.PlacedMapInsertions
+	total.PlacedMaskInstanceChecks += next.PlacedMaskInstanceChecks
+	total.PriorityIterations += next.PriorityIterations
+	total.SourceInstanceIterations += next.SourceInstanceIterations
+	total.PrioritySourceMatches += next.PrioritySourceMatches
+	total.ZeroStarSourceSkips += next.ZeroStarSourceSkips
+	total.PlacedSourceIterations += next.PlacedSourceIterations
+	total.FreeSourceIterations += next.FreeSourceIterations
+	total.PlacedSourceTargetIterations += next.PlacedSourceTargetIterations
+	total.SelfTargetSkips += next.SelfTargetSkips
+	total.TargetPlacementLookups += next.TargetPlacementLookups
+	total.PlacedTargetsFound += next.PlacedTargetsFound
+	total.UnplacedTargets += next.UnplacedTargets
+	total.SourceHitsTargetCalls += next.SourceHitsTargetCalls
+	total.SourceHitsTargetTrue += next.SourceHitsTargetTrue
+	total.CoveragePlacementKeyCalls += next.CoveragePlacementKeyCalls
+	total.PlacedPotentialLookups += next.PlacedPotentialLookups
+	total.FreePotentialLookups += next.FreePotentialLookups
+	total.PopcountCalls += next.PopcountCalls
+	total.StarCountClamps += next.StarCountClamps
+}
+
 func aggregateRootPackingOperationProfiles(roots []model.ConstellationRootDiagnostic) *model.ConstellationRootPackingOperationProfile {
 	var aggregate *model.ConstellationRootPackingOperationProfile
 	for _, root := range roots {

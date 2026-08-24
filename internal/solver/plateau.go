@@ -762,6 +762,7 @@ func plateauTieBreakLNS(
 			result.CandidateCount += partial.CandidateCount
 			result.Iterations++
 			result.SymmetryPrunedBranches += partial.SymmetryPrunedBranches
+			result.BoundOperationProfile = mergeBoundAttributionOperationProfiles(result.BoundOperationProfile, partial.BoundOperationProfile)
 			best := incumbent.Evaluation.Score
 			improved := false
 			improvementCount := 0
