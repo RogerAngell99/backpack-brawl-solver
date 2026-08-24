@@ -109,6 +109,18 @@ improve, and the old priority static-predicate caller edge is eliminated. See
 [`r1ic-findings.md`](r1ic-findings.md) and
 [`r1ic-evidence/`](r1ic-evidence/README.md).
 
+## R1I-D — post-R1I-C recalibration
+
+R1I-D rebuilt the CPU/heap and operation hierarchy on post-R1I-C `main`, with
+six separate GSV1 CPU profiles and a combined V4 control. It is evidence-only
+and changes no solver code. The exact decision is **PROMOTE** direct byte
+formatting inside `placementKey` while preserving the existing key string
+byte-for-byte. The targeted formatter edge is 15.25 of 287.12 sampled CPU
+seconds, appears in all six profiled cases, and reproduces at 14.42 seconds in
+V4. See [`r1id-protocol.md`](r1id-protocol.md),
+[`r1id-findings.md`](r1id-findings.md), and
+[`r1id-evidence/`](r1id-evidence/README.md).
+
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
 ### P0.1 collection protocol — only after P0.1A is merged
