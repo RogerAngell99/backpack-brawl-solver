@@ -95,6 +95,14 @@ the reducer does not consume elapsed time or recommend an optimization. The
 complete frozen schema, identities, semantic gates, and post-merge collection
 matrix are in [`r1i-protocol.md`](r1i-protocol.md).
 
+## R1I-C — static priority-star compatibility experiment
+
+R1I-C implements the single mechanism promoted by R1I-B: an immutable,
+per-stage source/star/target compatibility relation used only inside the
+priority upper bound. Its frozen representation, fallback behavior, semantic
+matrix, timing protocol, causal CPU check, exclusions, and decision thresholds
+are in [`r1ic-protocol.md`](r1ic-protocol.md).
+
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
 ### P0.1 collection protocol — only after P0.1A is merged
