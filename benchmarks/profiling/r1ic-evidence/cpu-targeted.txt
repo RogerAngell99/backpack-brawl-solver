@@ -1,0 +1,220 @@
+File: solver-candidate.exe
+Build ID: C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts\binaries\solver-candidate.exe2026-08-24 16:27:44.474494 -0300 -03
+Type: cpu
+Time: 2026-08-24 17:43:47 -03
+Duration: 135.99s, Total samples = 279.41s (205.47%)
+Active filters:
+   focus=partialRepairV3PriorityUpperBound|partialRepairSlotCanHitRemovedTarget|pri…
+Showing nodes accounting for 10.37s, 3.71% of 279.41s total
+      flat  flat%   sum%        cum   cum%
+     3.13s  1.12%  1.12%      3.13s  1.12%  runtime.duffcopy
+     0.78s  0.28%  1.40%      2.22s  0.79%  backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     0.61s  0.22%  1.62%      0.61s  0.22%  internal/bytealg.LastIndexByteString (inline)
+     0.60s  0.21%  1.83%      0.60s  0.21%  memeqbody
+     0.38s  0.14%  1.97%      0.59s  0.21%  backpack-brawl-solver/internal/solver.priorityGeometryCandidateHits
+     0.33s  0.12%  2.09%      0.33s  0.12%  internal/runtime/maps.ctrlGroup.matchH2 (inline)
+     0.31s  0.11%  2.20%      0.31s  0.11%  aeshashbody
+     0.30s  0.11%  2.30%      0.30s  0.11%  runtime.memclrNoHeapPointers
+     0.26s 0.093%  2.40%      4.95s  1.77%  backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+     0.25s 0.089%  2.49%      2.97s  1.06%  backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+     0.23s 0.082%  2.57%      0.51s  0.18%  runtime.strequal
+     0.21s 0.075%  2.64%      1.72s  0.62%  runtime.mapaccess2
+     0.20s 0.072%  2.72%      0.20s 0.072%  internal/runtime/maps.(*Map).directoryAt (inline)
+     0.19s 0.068%  2.78%      1.44s  0.52%  backpack-brawl-solver/internal/scoring.evaluateCompound
+     0.16s 0.057%  2.84%      0.16s 0.057%  runtime.memmove
+     0.14s  0.05%  2.89%      0.14s  0.05%  internal/runtime/maps.(*groupReference).key (inline)
+     0.13s 0.047%  2.94%      2.18s  0.78%  backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+     0.13s 0.047%  2.98%      0.23s 0.082%  runtime.mapassign_faststr
+     0.12s 0.043%  3.03%      0.17s 0.061%  runtime.findObject
+     0.10s 0.036%  3.06%      0.10s 0.036%  runtime.duffzero
+     0.09s 0.032%  3.10%      0.70s  0.25%  strings.LastIndex
+     0.08s 0.029%  3.12%      0.09s 0.032%  runtime.typePointers.next
+     0.07s 0.025%  3.15%      0.18s 0.064%  runtime.bulkBarrierPreWrite
+     0.06s 0.021%  3.17%      0.75s  0.27%  backpack-brawl-solver/internal/scoring.conditionClass (inline)
+     0.06s 0.021%  3.19%      0.06s 0.021%  indexbytebody
+     0.06s 0.021%  3.21%      0.06s 0.021%  runtime.memequal
+     0.05s 0.018%  3.23%         5s  1.79%  backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+     0.05s 0.018%  3.25%      0.05s 0.018%  runtime.(*mspan).init
+     0.05s 0.018%  3.27%      0.10s 0.036%  runtime.pcvalue
+     0.05s 0.018%  3.29%      0.05s 0.018%  runtime.strhash
+     0.04s 0.014%  3.30%      0.04s 0.014%  internal/runtime/maps.(*groupsReference).group (inline)
+     0.04s 0.014%  3.31%      0.04s 0.014%  runtime.(*gcBits).bitp (inline)
+     0.03s 0.011%  3.32%      3.09s  1.11%  backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+     0.03s 0.011%  3.34%      0.03s 0.011%  internal/abi.(*SwissMapType).IndirectKey (inline)
+     0.03s 0.011%  3.35%      0.03s 0.011%  internal/runtime/maps.(*Map).Used (inline)
+     0.03s 0.011%  3.36%      0.03s 0.011%  internal/runtime/maps.h1 (inline)
+     0.03s 0.011%  3.37%      0.03s 0.011%  internal/runtime/maps.h2 (inline)
+     0.03s 0.011%  3.38%      0.03s 0.011%  runtime.(*fixalloc).alloc
+     0.03s 0.011%  3.39%      0.06s 0.021%  runtime.(*mheap).allocMSpanLocked
+     0.03s 0.011%  3.40%      0.03s 0.011%  runtime.(*spanSet).push
+     0.03s 0.011%  3.41%      0.76s  0.27%  runtime.mallocgcSmallScanHeader
+     0.03s 0.011%  3.42%      0.03s 0.011%  runtime.roundupsize (inline)
+     0.03s 0.011%  3.43%      0.05s 0.018%  runtime.step
+     0.02s 0.0072%  3.44%      0.12s 0.043%  backpack-brawl-solver/internal/scoring.canonicalStatType
+     0.02s 0.0072%  3.45%      0.09s 0.032%  backpack-brawl-solver/internal/solver.starPositionGeometryHitsTarget (inline)
+     0.02s 0.0072%  3.45%      0.02s 0.0072%  internal/runtime/atomic.(*Uint64).Load (inline)
+     0.02s 0.0072%  3.46%      0.09s 0.032%  internal/stringslite.IndexByte (inline)
+     0.02s 0.0072%  3.47%      0.02s 0.0072%  runtime.(*mspan).base (inline)
+     0.02s 0.0072%  3.48%      0.02s 0.0072%  runtime.(*mspan).divideByElemSize (inline)
+     0.02s 0.0072%  3.48%      0.02s 0.0072%  runtime.(*mspan).writeHeapBitsSmall
+     0.02s 0.0072%  3.49%      0.02s 0.0072%  runtime.(*spanSet).reset
+     0.02s 0.0072%  3.50%      0.06s 0.021%  runtime.(*unwinder).resolveInternal
+     0.02s 0.0072%  3.50%      0.09s 0.032%  runtime.(*wbBuf).get1 (inline)
+     0.02s 0.0072%  3.51%      0.18s 0.064%  runtime.bulkBarrierPreWriteSrcOnly
+     0.02s 0.0072%  3.52%      0.02s 0.0072%  runtime.findfunc
+     0.02s 0.0072%  3.53%      0.02s 0.0072%  runtime.newstack
+     0.02s 0.0072%  3.53%      0.02s 0.0072%  runtime.nextFreeFast
+     0.02s 0.0072%  3.54%      0.02s 0.0072%  runtime.procyield
+     0.02s 0.0072%  3.55%      0.02s 0.0072%  runtime.readvarint (inline)
+     0.02s 0.0072%  3.55%      0.02s 0.0072%  runtime.scanblock
+     0.02s 0.0072%  3.56%      0.02s 0.0072%  runtime.spanOf (inline)
+     0.01s 0.0036%  3.56%      0.01s 0.0036%  backpack-brawl-solver/internal/solver.(*priorityStarCompatibility).match
+     0.01s 0.0036%  3.57%      0.02s 0.0072%  backpack-brawl-solver/internal/solver.PartialRepairState.anchoredPlacements
+     0.01s 0.0036%  3.57%      0.05s 0.018%  backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching
+     0.01s 0.0036%  3.58%      0.01s 0.0036%  backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching.func1
+     0.01s 0.0036%  3.58%      3.10s  1.11%  backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+     0.01s 0.0036%  3.58%      5.37s  1.92%  backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+     0.01s 0.0036%  3.59%      0.03s 0.011%  gcWriteBarrier
+     0.01s 0.0036%  3.59%      0.01s 0.0036%  internal/abi.(*SwissMapType).IndirectElem
+     0.01s 0.0036%  3.59%      0.01s 0.0036%  internal/bytealg.IndexByteString
+     0.01s 0.0036%  3.60%      0.01s 0.0036%  internal/runtime/maps.(*Map).directoryIndex
+     0.01s 0.0036%  3.60%      0.02s 0.0072%  internal/runtime/maps.(*Map).getWithoutKeySmallFastStr
+     0.01s 0.0036%  3.60%      0.01s 0.0036%  internal/runtime/maps.(*groupReference).ctrls
+     0.01s 0.0036%  3.61%      0.02s 0.0072%  internal/runtime/maps.NewMap
+     0.01s 0.0036%  3.61%      0.01s 0.0036%  internal/runtime/maps.ctrlGroup.matchEmpty
+     0.01s 0.0036%  3.61%      0.31s  0.11%  runtime.(*mcache).refill
+     0.01s 0.0036%  3.62%      0.25s 0.089%  runtime.(*mcentral).cacheSpan
+     0.01s 0.0036%  3.62%      0.20s 0.072%  runtime.(*mheap).allocSpan
+     0.01s 0.0036%  3.63%      0.01s 0.0036%  runtime.(*mspan).heapBitsSmallForAddr
+     0.01s 0.0036%  3.63%      0.03s 0.011%  runtime.(*mspan).objIndex (inline)
+     0.01s 0.0036%  3.63%      0.01s 0.0036%  runtime.(*mspan).refillAllocCache
+     0.01s 0.0036%  3.64%      0.04s 0.014%  runtime.(*pageAlloc).allocRange
+     0.01s 0.0036%  3.64%      0.01s 0.0036%  runtime.(*pageAlloc).chunkOf
+     0.01s 0.0036%  3.64%      0.01s 0.0036%  runtime.(*pageAlloc).find
+     0.01s 0.0036%  3.65%      0.01s 0.0036%  runtime.(*pageBits).clearRange
+     0.01s 0.0036%  3.65%      0.01s 0.0036%  runtime.(*pallocBits).summarize
+     0.01s 0.0036%  3.65%      0.01s 0.0036%  runtime.(*scavengeIndex).alloc
+     0.01s 0.0036%  3.66%      0.02s 0.0072%  runtime.(*spanSet).pop
+     0.01s 0.0036%  3.66%      0.01s 0.0036%  runtime.bool2int
+     0.01s 0.0036%  3.66%      0.11s 0.039%  runtime.deductAssistCredit
+     0.01s 0.0036%  3.67%      0.01s 0.0036%  runtime.deductSweepCredit
+     0.01s 0.0036%  3.67%      0.03s 0.011%  runtime.finishsweep_m
+     0.01s 0.0036%  3.68%      0.01s 0.0036%  runtime.headTailIndex.head
+     0.01s 0.0036%  3.68%      0.01s 0.0036%  runtime.isShrinkStackSafe
+     0.01s 0.0036%  3.68%      0.01s 0.0036%  runtime.lock2
+     0.01s 0.0036%  3.69%      0.15s 0.054%  runtime.mapaccess1_faststr
+     0.01s 0.0036%  3.69%      0.01s 0.0036%  runtime.newArenaMayUnlock
+     0.01s 0.0036%  3.69%      0.02s 0.0072%  runtime.newarray
+     0.01s 0.0036%  3.70%      0.01s 0.0036%  runtime.releasem
+     0.01s 0.0036%  3.70%      0.01s 0.0036%  runtime.spanOfHeap
+     0.01s 0.0036%  3.70%      0.15s 0.054%  runtime.tracebackPCs
+     0.01s 0.0036%  3.71%      0.01s 0.0036%  runtime.typePointers.nextFast
+     0.01s 0.0036%  3.71%      0.19s 0.068%  runtime.wbBufFlush1
+         0     0%  3.71%     10.37s  3.71%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%  3.71%     10.37s  3.71%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%  3.71%     10.37s  3.71%  backpack-brawl-solver/internal/cli.Run
+         0     0%  3.71%     10.37s  3.71%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%  3.71%      4.58s  1.64%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+         0     0%  3.71%      4.58s  1.64%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+         0     0%  3.71%      0.02s 0.0072%  backpack-brawl-solver/internal/solver.(*starUpperBoundContext).forPlacements
+         0     0%  3.71%      0.02s 0.0072%  backpack-brawl-solver/internal/solver.(*starUpperBoundContext).matchingForSource
+         0     0%  3.71%      0.03s 0.011%  backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+         0     0%  3.71%     10.37s  3.71%  backpack-brawl-solver/internal/solver.SolveLayout
+         0     0%  3.71%      0.23s 0.082%  backpack-brawl-solver/internal/solver.addLooseStarNeighborhoods
+         0     0%  3.71%      0.23s 0.082%  backpack-brawl-solver/internal/solver.addPerInstanceLooseStarNeighborhoods
+         0     0%  3.71%      0.16s 0.057%  backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+         0     0%  3.71%      0.23s 0.082%  backpack-brawl-solver/internal/solver.buildRepairNeighborhoods
+         0     0%  3.71%      5.37s  1.92%  backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0%  3.71%      4.10s  1.47%  backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+         0     0%  3.71%      0.37s  0.13%  backpack-brawl-solver/internal/solver.directedOptionCompatibility
+         0     0%  3.71%      5.37s  1.92%  backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+         0     0%  3.71%      0.02s 0.0072%  backpack-brawl-solver/internal/solver.looseSourceCanTarget
+         0     0%  3.71%      0.01s 0.0036%  backpack-brawl-solver/internal/solver.newStarPotentialContext
+         0     0%  3.71%      0.01s 0.0036%  backpack-brawl-solver/internal/solver.partialRepairSlotCanHitFixedTarget
+         0     0%  3.71%      0.02s 0.0072%  backpack-brawl-solver/internal/solver.plateauState
+         0     0%  3.71%      0.16s 0.057%  backpack-brawl-solver/internal/solver.plateauTieBreakLNS
+         0     0%  3.71%      0.16s 0.057%  backpack-brawl-solver/internal/solver.plateauTieBreakLNS.func1
+         0     0%  3.71%      0.23s 0.082%  backpack-brawl-solver/internal/solver.rankedPerInstanceTargets
+         0     0%  3.71%      0.02s 0.0072%  backpack-brawl-solver/internal/solver.refinePlateau
+         0     0%  3.71%      1.73s  0.62%  backpack-brawl-solver/internal/solver.repairSearch
+         0     0%  3.71%      1.50s  0.54%  backpack-brawl-solver/internal/solver.runRepairNeighborhood
+         0     0%  3.71%      1.50s  0.54%  backpack-brawl-solver/internal/solver.runRepairTask
+         0     0%  3.71%      1.50s  0.54%  backpack-brawl-solver/internal/solver.runRepairTask.func1
+         0     0%  3.71%      1.50s  0.54%  backpack-brawl-solver/internal/solver.runRepairTasks
+         0     0%  3.71%      3.08s  1.10%  backpack-brawl-solver/internal/solver.runTask
+         0     0%  3.71%      3.08s  1.10%  backpack-brawl-solver/internal/solver.runTask.func3
+         0     0%  3.71%      3.08s  1.10%  backpack-brawl-solver/internal/solver.runTasks
+         0     0%  3.71%     10.37s  3.71%  backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  3.71%      4.96s  1.78%  backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+         0     0%  3.71%      0.02s 0.0072%  backpack-brawl-solver/internal/solver.starPositionHitsTarget
+         0     0%  3.71%      0.01s 0.0036%  internal/runtime/maps.(*Map).growToSmall
+         0     0%  3.71%      0.01s 0.0036%  internal/runtime/maps.(*table).reset
+         0     0%  3.71%      0.02s 0.0072%  internal/runtime/maps.newGroups
+         0     0%  3.71%      0.01s 0.0036%  internal/runtime/maps.newTable
+         0     0%  3.71%      0.02s 0.0072%  internal/runtime/maps.newarray
+         0     0%  3.71%      0.09s 0.032%  internal/stringslite.Index
+         0     0%  3.71%     10.37s  3.71%  main.main
+         0     0%  3.71%      0.02s 0.0072%  runtime.(*gcControllerState).revise
+         0     0%  3.71%      0.02s 0.0072%  runtime.(*gcControllerState).update
+         0     0%  3.71%      0.01s 0.0036%  runtime.(*gcWork).balance
+         0     0%  3.71%      0.06s 0.021%  runtime.(*inlineUnwinder).resolveInternal (inline)
+         0     0%  3.71%      0.31s  0.11%  runtime.(*mcache).nextFree
+         0     0%  3.71%      0.20s 0.072%  runtime.(*mcentral).grow
+         0     0%  3.71%      0.03s 0.011%  runtime.(*mcentral).uncacheSpan
+         0     0%  3.71%      0.20s 0.072%  runtime.(*mheap).alloc
+         0     0%  3.71%      0.20s 0.072%  runtime.(*mheap).alloc.func1
+         0     0%  3.71%      0.06s 0.021%  runtime.(*mheap).initSpan
+         0     0%  3.71%      0.04s 0.014%  runtime.(*mspan).markBitsForIndex (inline)
+         0     0%  3.71%      0.01s 0.0036%  runtime.(*mspan).typePointersOfUnchecked
+         0     0%  3.71%      0.05s 0.018%  runtime.(*pageAlloc).alloc
+         0     0%  3.71%      0.01s 0.0036%  runtime.(*pageAlloc).allocToCache
+         0     0%  3.71%      0.01s 0.0036%  runtime.(*pageAlloc).update
+         0     0%  3.71%      0.01s 0.0036%  runtime.(*pallocData).allocRange
+         0     0%  3.71%      0.08s 0.029%  runtime.(*unwinder).next
+         0     0%  3.71%      0.10s 0.036%  runtime.(*wbBuf).get2 (inline)
+         0     0%  3.71%      0.01s 0.0036%  runtime.addspecial
+         0     0%  3.71%      0.15s 0.054%  runtime.callers
+         0     0%  3.71%      0.15s 0.054%  runtime.callers.func1
+         0     0%  3.71%      0.01s 0.0036%  runtime.casgstatus
+         0     0%  3.71%      0.04s 0.014%  runtime.funcspdelta (inline)
+         0     0%  3.71%      0.10s 0.036%  runtime.gcAssistAlloc
+         0     0%  3.71%      0.10s 0.036%  runtime.gcAssistAlloc.func2
+         0     0%  3.71%      0.10s 0.036%  runtime.gcAssistAlloc1
+         0     0%  3.71%      0.09s 0.032%  runtime.gcDrainN
+         0     0%  3.71%      0.01s 0.0036%  runtime.gcMarkTinyAllocs
+         0     0%  3.71%      0.04s 0.014%  runtime.gcStart
+         0     0%  3.71%      0.03s 0.011%  runtime.gcStart.func3
+         0     0%  3.71%      0.01s 0.0036%  runtime.gcTrigger.test
+         0     0%  3.71%      0.02s 0.0072%  runtime.gcmarknewobject
+         0     0%  3.71%      1.34s  0.48%  runtime.growslice
+         0     0%  3.71%      0.01s 0.0036%  runtime.handoff
+         0     0%  3.71%      0.01s 0.0036%  runtime.headTailIndex.split
+         0     0%  3.71%      0.02s 0.0072%  runtime.heapSetTypeNoHeader (inline)
+         0     0%  3.71%      0.01s 0.0036%  runtime.lock
+         0     0%  3.71%      0.01s 0.0036%  runtime.lockWithRank
+         0     0%  3.71%      0.16s 0.057%  runtime.mProf_Malloc
+         0     0%  3.71%      0.01s 0.0036%  runtime.mProf_Malloc.func1
+         0     0%  3.71%     10.37s  3.71%  runtime.main
+         0     0%  3.71%      0.01s 0.0036%  runtime.makeSpanClass
+         0     0%  3.71%      0.02s 0.0072%  runtime.makemap
+         0     0%  3.71%      0.05s 0.018%  runtime.makeslice
+         0     0%  3.71%      1.04s  0.37%  runtime.mallocgc
+         0     0%  3.71%      0.05s 0.018%  runtime.mallocgcSmallNoscan
+         0     0%  3.71%      0.12s 0.043%  runtime.mallocgcSmallScanNoHeader
+         0     0%  3.71%      0.03s 0.011%  runtime.mapaccess2_faststr
+         0     0%  3.71%      0.04s 0.014%  runtime.markroot
+         0     0%  3.71%      0.02s 0.0072%  runtime.markroot.func1
+         0     0%  3.71%      0.02s 0.0072%  runtime.markrootBlock
+         0     0%  3.71%      0.06s 0.021%  runtime.newInlineUnwinder
+         0     0%  3.71%      0.01s 0.0036%  runtime.newMarkBits
+         0     0%  3.71%      0.06s 0.021%  runtime.pcdatavalue1
+         0     0%  3.71%      0.16s 0.057%  runtime.profilealloc
+         0     0%  3.71%      0.04s 0.014%  runtime.scanobject
+         0     0%  3.71%      0.01s 0.0036%  runtime.scanstack
+         0     0%  3.71%      0.01s 0.0036%  runtime.setprofilebucket
+         0     0%  3.71%      0.01s 0.0036%  runtime.suspendG
+         0     0%  3.71%      0.68s  0.24%  runtime.systemstack
+         0     0%  3.71%      0.19s 0.068%  runtime.wbBufFlush
+         0     0%  3.71%      0.19s 0.068%  runtime.wbBufFlush.func1
+         0     0%  3.71%      0.18s 0.064%  runtime.wbMove
+         0     0%  3.71%      0.09s 0.032%  strings.Index (inline)

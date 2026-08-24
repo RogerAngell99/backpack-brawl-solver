@@ -1,0 +1,67 @@
+R1I-C official collection provenance
+
+baseline_revision=19159d2e970e3457d730824983fc70fe649f9202
+candidate_revision=4ee1cf690a019ee28f5548d360c800ddec4007a3
+implementation_commit=d6c0e001d1cd8ea6ce283ad99bb0484c35b0ff87
+test_commit=4ee1cf690a019ee28f5548d360c800ddec4007a3
+baseline_clone=C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\baseline-clone
+candidate_clone=C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\candidate-clone
+artifact_path=C:\Users\roger\AppData\Local\Temp\r1ic-evidence-4ee1cf6\artifacts
+checkout=detached independent local clones
+baseline_git_status_porcelain=<empty>
+candidate_git_status_porcelain=<empty>
+artifact_start_local=2026-08-24T16:26:23-03:00
+collection_end_local=2026-08-24T17:50:16.6116334-03:00
+
+suite=general-search-v2
+suite_role_materialized=development
+materialized_cases=gsv2-013..gsv2-026
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false
+suite_catalog_semantic_sha256=0ab356afc52fa8479b627d4a917bc7f31d4cad1b6e021fd618ec17ef773c57c6
+catalog_file_sha256=173A43CD20AED017BE5836A870EA2D249B30D3A07294BE7FD08AFEA50C925EBE
+suite_manifest_file_sha256=6B8BEF8D2EEF6A6359C77B7F901F9096A41266ABBA20A8F6229C29C4B3053127
+suite_lock_file_sha256=B65771885C98D6A2FC93CFCA64E013FDCC94485F92ED935D1426A304CD37E775
+
+baseline_normal_binary_sha256=6889E76234CF3F865300657E77509EE9BF93CD63194C94B023EDBB03AF1186B0
+baseline_searchprofile_binary_sha256=A84DF392B8AF0C6AB407D1F3D364191B86E30B9ABD930A76F4788E1E3E494A80
+candidate_normal_binary_sha256=35B11C7E82CB217A933C01161CF8CD6DB56037A6F424AB6D433A6169878FAA78
+candidate_searchprofile_binary_sha256=553F35154700D1B1CD6740F824D31E27EAB3B31DFE66A757E4DA0798275DA831
+all_binaries_buildvcs=true
+all_binaries_vcs_modified=false
+baseline_binaries_vcs_revision=19159d2e970e3457d730824983fc70fe649f9202
+candidate_binaries_vcs_revision=4ee1cf690a019ee28f5548d360c800ddec4007a3
+
+host_os=Microsoft Windows 11 Home
+host_version=10.0.26200
+host_build=26200
+host_architecture=64-bit
+cpu=11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
+physical_cores=4
+logical_processors=8
+max_clock_mhz=3110
+visible_memory_kib=8166712
+go_version=go version go1.25.6 windows/amd64
+benchstat_module=golang.org/x/perf@v0.0.0-20260819171926-ebcb4798430d
+benchstat_toolchain=go1.26.7
+
+smoke=base_normal,candidate_normal,candidate_tagged_off,base_searchprofile_on,candidate_searchprofile_on
+operation_matrix_gsv1=gsv2-013..026 budgets=250000,1000000 repeat=1 workers=1 operation_profile=true
+operation_matrix_v4=gsv2-013..026 budget=1000000 repeat=1 workers=1 operation_profile=true
+timing_matrix=gsv2-013,015,016,018,021,024 budget=1000000 repeat=1 workers=1 normal builds
+timing_pairs_per_scenario=7
+timing_order=AB,BA,AB,BA,AB,BA,AB
+cpu_heap_profile=gsv2-013,015,016,018,021,024 budget=1000000 repeat=1 workers=1 candidate normal
+
+candidate_cpu_profile_sha256=099F9188563C7FB5F953C08BBB266171268A4D1E9DABF06BCF6D5C8053C3DD3B
+candidate_heap_profile_sha256=07B9959A38B511025C0F9D9E5FA3863AC464F386900D7A50D4CAEDCF92E18688
+raw_microbench_sha256=CEF06B56E0699477ECFE0245F1FACB890C0D60D12A183675B6A91BC6336A46D6
+benchstat_sha256=3B34B8B7B21828FBE8FC0291907F418F4BA72C71BD524373ADEB4B6079313BE3
+
+raw_artifact_files=128
+raw_manifest_entries=127
+raw_manifest_sha256=AD6A48B7308F334B36DA56182C56D91F28F7DD0BFC0BB1CC11D7328C31A7334A
+raw_artifact_bytes=38011530
+raw_freeze=all 128 files marked read-only after recursive SHA-256 collection
+post_freeze_solver_runs=0
