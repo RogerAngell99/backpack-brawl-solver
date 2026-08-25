@@ -1,0 +1,313 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "case_id": "gsv2-013",
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d97",
+          "2/2",
+          "mostly-exclusive",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d97",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      }
+    },
+    {
+      "case_id": "gsv2-014",
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d97",
+          "1/1",
+          "mixed",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d97",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      }
+    },
+    {
+      "case_id": "gsv2-015",
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d60",
+          "2/1",
+          "mostly-shared",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d60",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      }
+    },
+    {
+      "case_id": "gsv2-016",
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d75",
+          "2/2",
+          "mostly-shared",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d75",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      }
+    },
+    {
+      "case_id": "gsv2-017",
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "2/1",
+          "mostly-exclusive",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d90",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      }
+    },
+    {
+      "case_id": "gsv2-018",
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d90",
+          "1/1",
+          "mixed",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d90",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      }
+    },
+    {
+      "case_id": "gsv2-019",
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d75",
+          "1/1",
+          "mostly-exclusive",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d75",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      }
+    },
+    {
+      "case_id": "gsv2-020",
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d97",
+          "2/1",
+          "mostly-shared",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d97",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      }
+    },
+    {
+      "case_id": "gsv2-021",
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d90",
+          "2/1",
+          "mostly-shared",
+          "high",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d90",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "high",
+        "rotation_entropy": "low"
+      }
+    },
+    {
+      "case_id": "gsv2-022",
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "2/2",
+          "mostly-shared",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d90",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      }
+    },
+    {
+      "case_id": "gsv2-023",
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d60",
+          "2/2",
+          "mixed",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d60",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      }
+    },
+    {
+      "case_id": "gsv2-024",
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d97",
+          "1/1",
+          "mostly-exclusive",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d97",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      }
+    },
+    {
+      "case_id": "gsv2-025",
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d90",
+          "1/1",
+          "mostly-exclusive",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d90",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      }
+    },
+    {
+      "case_id": "gsv2-026",
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d75",
+          "2/1",
+          "mostly-shared",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d75",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      }
+    }
+  ]
+}
