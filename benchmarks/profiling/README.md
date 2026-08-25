@@ -164,6 +164,17 @@ tested size. See [`r1ig-protocol.md`](r1ig-protocol.md),
 [`r1ig-findings.md`](r1ig-findings.md), and
 [`r1ig-evidence/`](r1ig-evidence/README.md).
 
+## R1I-H — post-R1I-G recalibration
+
+R1I-H is an evidence-only gate that rebuilds the current CPU, allocation, and
+operation hierarchy after R1I-G. It adds a formal zero-benchmark tooling
+preflight, candidate-independent mechanical hotspot extraction, explicit
+`E_min`, exact inventory classification, and post-analysis raw-hash
+revalidation. It changes no solver source and ends in exactly one of
+`PROMOTE`, `NEED MORE EVIDENCE`, or `DECLINE`. See
+[`r1ih-protocol.md`](r1ih-protocol.md); findings and the compact evidence bundle
+are added only after the protocol/tooling commit and frozen official collection.
+
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
 ### P0.1 collection protocol — only after P0.1A is merged
