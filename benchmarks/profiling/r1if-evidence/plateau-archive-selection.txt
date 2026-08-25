@@ -1,0 +1,102 @@
+Total: 219.39s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries in C:\Users\roger\AppData\Local\Temp\r1if-measure-9c804a5\internal\solver\plateau.go
+     2.79s     35.11s (flat, cum) 16.00% of Total
+         .          .    419:func selectPlateauEntries(entries []plateauArchiveEntry, capacity int) []plateauArchiveEntry {
+     0.01s      0.01s    420:	if len(entries) <= capacity {
+         .          .    421:		sortPlateauEntries(entries)
+         .          .    422:		return entries
+         .          .    423:	}
+         .      0.01s    424:	bySignature := make(map[string][]plateauArchiveEntry)
+     0.58s      0.58s    425:	for _, entry := range entries {
+     0.59s      7.45s    426:		bySignature[entry.signature] = append(bySignature[entry.signature], entry)
+         .          .    427:	}
+         .          .    428:	var representatives []plateauArchiveEntry
+     0.03s      0.24s    429:	for _, group := range bySignature {
+     0.02s      1.28s    430:		sortPlateauEntries(group)
+     0.75s      5.47s    431:		representatives = append(representatives, group[0])
+         .          .    432:	}
+         .      6.72s    433:	sortPlateauEntries(representatives)
+         .         2s    434:	selected := make([]plateauArchiveEntry, 0, capacity)
+     0.01s      0.34s    435:	seenHash := make(map[string]struct{}, capacity)
+     0.38s      0.38s    436:	for _, entry := range representatives {
+     0.02s      0.02s    437:		if len(selected) >= capacity {
+         .          .    438:			break
+         .          .    439:		}
+     0.15s      0.60s    440:		selected = append(selected, entry)
+     0.01s      0.25s    441:		seenHash[entry.solution.CanonicalLayoutHash] = struct{}{}
+         .          .    442:	}
+         .      3.49s    443:	sortPlateauEntries(entries)
+     0.21s      0.21s    444:	for _, entry := range entries {
+         .          .    445:		if len(selected) >= capacity {
+         .          .    446:			break
+         .          .    447:		}
+         .      0.04s    448:		if _, exists := seenHash[entry.solution.CanonicalLayoutHash]; exists {
+         .          .    449:			continue
+         .          .    450:		}
+     0.03s      0.28s    451:		selected = append(selected, entry)
+         .      0.08s    452:		seenHash[entry.solution.CanonicalLayoutHash] = struct{}{}
+         .          .    453:	}
+         .      5.66s    454:	sortPlateauEntries(selected)
+         .          .    455:	return selected
+         .          .    456:}
+         .          .    457:
+         .          .    458:func sortPlateauEntries(entries []plateauArchiveEntry) {
+         .          .    459:	sort.Slice(entries, func(i, j int) bool {
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func2 in C:\Users\roger\AppData\Local\Temp\r1if-measure-9c804a5\internal\solver\plateau.go
+     0.08s      0.23s (flat, cum)   0.1% of Total
+     0.03s      0.03s    459:	sort.Slice(entries, func(i, j int) bool {
+     0.02s      0.11s    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+     0.02s      0.05s    463:		if entries[i].signature != entries[j].signature {
+         .          .    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+     0.01s      0.04s    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3 in C:\Users\roger\AppData\Local\Temp\r1if-measure-9c804a5\internal\solver\plateau.go
+     0.50s      1.27s (flat, cum)  0.58% of Total
+     0.03s      0.03s    459:	sort.Slice(entries, func(i, j int) bool {
+     0.39s      0.84s    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+     0.03s      0.16s    463:		if entries[i].signature != entries[j].signature {
+     0.05s      0.24s    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+         .          .    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4 in C:\Users\roger\AppData\Local\Temp\r1if-measure-9c804a5\internal\solver\plateau.go
+     0.68s      1.47s (flat, cum)  0.67% of Total
+     0.01s      0.01s    459:	sort.Slice(entries, func(i, j int) bool {
+     0.48s      0.84s    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+     0.10s      0.29s    463:		if entries[i].signature != entries[j].signature {
+     0.05s      0.26s    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+     0.04s      0.07s    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution
+ROUTINE ======================== backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5 in C:\Users\roger\AppData\Local\Temp\r1if-measure-9c804a5\internal\solver\plateau.go
+     0.43s      1.15s (flat, cum)  0.52% of Total
+     0.02s      0.02s    459:	sort.Slice(entries, func(i, j int) bool {
+     0.30s      0.68s    460:		if compare := compareScores(entries[i].solution.Evaluation.Score, entries[j].solution.Evaluation.Score); compare != 0 {
+         .          .    461:			return compare > 0
+         .          .    462:		}
+     0.08s      0.25s    463:		if entries[i].signature != entries[j].signature {
+     0.03s      0.12s    464:			return entries[i].signature < entries[j].signature
+         .          .    465:		}
+         .      0.08s    466:		return entries[i].solution.CanonicalLayoutHash < entries[j].solution.CanonicalLayoutHash
+         .          .    467:	})
+         .          .    468:}
+         .          .    469:
+         .          .    470:func clonePlateauSolution(solution model.Solution) model.Solution {
+         .          .    471:	cloned := solution

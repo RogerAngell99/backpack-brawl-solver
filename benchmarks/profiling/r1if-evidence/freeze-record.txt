@@ -1,0 +1,8 @@
+R1I-F raw artifact freeze
+artifact_dir=C:\r1if-artifacts\9c804a566a166fd96cb7b385a0ca9dfc43bcbb9b-official-01
+raw_file_count=76
+raw_total_bytes=21284679
+raw_manifest_sha256=0ca77ccb8170a5cd865366207ea0e8d467a4f7c7f238461fe5acbcbbd52711a9
+raw_manifest_revalidation=PASS
+raw_read_only_revalidation=PASS
+post_freeze_solver_runs=0

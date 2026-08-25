@@ -1,0 +1,82 @@
+File: solver.exe
+Build ID: C:\r1if-artifacts\9c804a566a166fd96cb7b385a0ca9dfc43bcbb9b-official-01\binaries\solver.exe2026-08-25 06:05:39.7960551 -0300 -03
+Type: inuse_space
+Time: 2026-08-25 06:19:58 -03
+Showing nodes accounting for 38129303B, 100% of 38129303B total
+      flat  flat%   sum%        cum   cum%
+ 21572597B 56.58% 56.58%  27346296B 71.72%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+  5247361B 13.76% 70.34%   5247361B 13.76%  backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+  2101249B  5.51% 75.85%   2101249B  5.51%  runtime.allocm
+  1572888B  4.13% 79.98%   1572888B  4.13%  encoding/json.(*decodeState).literalStore
+  1294624B  3.40% 83.37%   1294624B  3.40%  backpack-brawl-solver/internal/solver.filterInventoryImpossibleRecipes
+  1051276B  2.76% 86.13%   1051276B  2.76%  encoding/json.typeFields
+  1048864B  2.75% 88.88%   4195184B 11.00%  backpack-brawl-solver/internal/catalog.Parse
+   566314B  1.49% 90.36%    566314B  1.49%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+   526338B  1.38% 91.74%    526338B  1.38%  backpack-brawl-solver/internal/solver.insertPlacementSorted
+   525312B  1.38% 93.12%    525312B  1.38%  backpack-brawl-solver/internal/solver.insertCandidate
+   524736B  1.38% 94.50%   1049048B  2.75%  backpack-brawl-solver/internal/solver.PlacementOptions
+   524544B  1.38% 95.87%    524544B  1.38%  reflect.growslice
+   524528B  1.38% 97.25%    524528B  1.38%  backpack-brawl-solver/internal/catalog.loadItem
+   524360B  1.38% 98.62%    524360B  1.38%  reflect.New
+   524312B  1.38%   100%    524312B  1.38%  backpack-brawl-solver/internal/geometry.TranslateCells (inline)
+         0     0%   100%  36028054B 94.49%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%   100%  31832870B 83.49%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%   100%   1051276B  2.76%  backpack-brawl-solver/internal/benchmark.solutionRawJSON
+         0     0%   100%   4195184B 11.00%  backpack-brawl-solver/internal/catalog.Load
+         0     0%   100%  36028054B 94.49%  backpack-brawl-solver/internal/cli.Run
+         0     0%   100%  36028054B 94.49%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%   100%   1051276B  2.76%  backpack-brawl-solver/internal/render.SolutionsJSON
+         0     0%   100%  27871608B 73.10%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0%   100%    525312B  1.38%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).finish
+         0     0%   100%    525312B  1.38%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).resultForFrontier
+         0     0%   100%    566314B  1.49%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+         0     0%   100%  30781594B 80.73%  backpack-brawl-solver/internal/solver.SolveLayout
+         0     0%   100%    525312B  1.38%  backpack-brawl-solver/internal/solver.collectConstellationRootPackingSolution
+         0     0%   100%  27871608B 73.10%  backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+         0     0%   100%  27871608B 73.10%  backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0%   100%    525312B  1.38%  backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+         0     0%   100%    566314B  1.49%  backpack-brawl-solver/internal/solver.observeSearchCandidate
+         0     0%   100%    566314B  1.49%  backpack-brawl-solver/internal/solver.refineSolution
+         0     0%   100%    566314B  1.49%  backpack-brawl-solver/internal/solver.refineSolutions
+         0     0%   100%  30781594B 80.73%  backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%   100%   2621792B  6.88%  encoding/json.(*decodeState).array
+         0     0%   100%   2621792B  6.88%  encoding/json.(*decodeState).object
+         0     0%   100%   2621792B  6.88%  encoding/json.(*decodeState).unmarshal
+         0     0%   100%   2621792B  6.88%  encoding/json.(*decodeState).value
+         0     0%   100%   1051276B  2.76%  encoding/json.(*encodeState).marshal
+         0     0%   100%   1051276B  2.76%  encoding/json.(*encodeState).reflectValue
+         0     0%   100%   1051276B  2.76%  encoding/json.Marshal
+         0     0%   100%   1051276B  2.76%  encoding/json.MarshalIndent
+         0     0%   100%   2621792B  6.88%  encoding/json.Unmarshal
+         0     0%   100%   1051276B  2.76%  encoding/json.cachedTypeFields
+         0     0%   100%    524360B  1.38%  encoding/json.indirect
+         0     0%   100%   1051276B  2.76%  encoding/json.newArrayEncoder
+         0     0%   100%    524296B  1.38%  encoding/json.newPtrEncoder
+         0     0%   100%   1051276B  2.76%  encoding/json.newSliceEncoder
+         0     0%   100%   1051276B  2.76%  encoding/json.newStructEncoder (inline)
+         0     0%   100%   1051276B  2.76%  encoding/json.newTypeEncoder
+         0     0%   100%   1051276B  2.76%  encoding/json.typeEncoder
+         0     0%   100%   1051276B  2.76%  encoding/json.typeEncoder.OnceValue[go.shape.func].func3 (inline)
+         0     0%   100%   1051276B  2.76%  encoding/json.typeEncoder.func1
+         0     0%   100%   1051276B  2.76%  encoding/json.typeEncoder.typeEncoder.OnceValue[go.shape.func].func3.func4
+         0     0%   100%   1051276B  2.76%  encoding/json.valueEncoder
+         0     0%   100%  36028054B 94.49%  main.main
+         0     0%   100%    524544B  1.38%  reflect.Value.Grow
+         0     0%   100%    524544B  1.38%  reflect.Value.grow
+         0     0%   100%    525312B  1.38%  runtime.gopreempt_m (inline)
+         0     0%   100%    525312B  1.38%  runtime.goschedImpl
+         0     0%   100%  36028054B 94.49%  runtime.main
+         0     0%   100%   1050625B  2.76%  runtime.mcall
+         0     0%   100%    525312B  1.38%  runtime.morestack
+         0     0%   100%    525312B  1.38%  runtime.mstart
+         0     0%   100%    525312B  1.38%  runtime.mstart0
+         0     0%   100%    525312B  1.38%  runtime.mstart1
+         0     0%   100%   2101249B  5.51%  runtime.newm
+         0     0%   100%    525312B  1.38%  runtime.newstack
+         0     0%   100%   1050625B  2.76%  runtime.park_m
+         0     0%   100%   2101249B  5.51%  runtime.resetspinning
+         0     0%   100%   2101249B  5.51%  runtime.schedule
+         0     0%   100%   2101249B  5.51%  runtime.startm
+         0     0%   100%   2101249B  5.51%  runtime.wakep
+         0     0%   100%   1051276B  2.76%  sync.(*Once).Do (inline)
+         0     0%   100%   1051276B  2.76%  sync.(*Once).doSlow

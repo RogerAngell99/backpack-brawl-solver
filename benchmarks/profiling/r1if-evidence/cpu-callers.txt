@@ -1,0 +1,1215 @@
+File: solver.exe
+Build ID: C:\r1if-artifacts\9c804a566a166fd96cb7b385a0ca9dfc43bcbb9b-official-01\binaries\solver.exe2026-08-25 06:05:39.7960551 -0300 -03
+Type: cpu
+Time: 2026-08-25 06:18:11 -03
+Duration: 106.56s, Total samples = 219.39s (205.88%)
+Showing nodes accounting for 219.39s, 100% of 219.39s total
+----------------------------------------------------------+-------------
+      flat  flat%   sum%        cum   cum%   calls calls% + context
+----------------------------------------------------------+-------------
+                                            35.11s   100% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+     2.79s  1.27%  1.27%     35.11s 16.00%                | backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                            17.13s 48.79% |   backpack-brawl-solver/internal/solver.sortPlateauEntries (inline)
+                                             9.36s 26.66% |   runtime.growslice
+                                                2s  5.70% |   runtime.makeslice
+                                             1.90s  5.41% |   runtime.wbMove
+                                             1.34s  3.82% |   runtime.mapassign_faststr
+                                             0.33s  0.94% |   runtime.makemap
+                                             0.15s  0.43% |   runtime.mapIterNext
+                                             0.06s  0.17% |   runtime.mapIterStart
+                                             0.04s  0.11% |   runtime.mapaccess2_faststr
+                                             0.01s 0.028% |   runtime.rand
+----------------------------------------------------------+-------------
+                                             4.28s   100% |   backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+     2.20s  1.00%  2.27%      4.28s  1.95%                | backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly
+                                             1.05s 24.53% |   backpack-brawl-solver/internal/scoring.itemMatchesStar (inline)
+                                             0.32s  7.48% |   backpack-brawl-solver/internal/scoring.priorityStarSources
+                                             0.20s  4.67% |   runtime.duffcopy
+                                             0.19s  4.44% |   runtime.mapassign_faststr
+                                             0.09s  2.10% |   runtime.makemap_small
+                                             0.07s  1.64% |   runtime.mapaccess2_faststr
+                                             0.06s  1.40% |   backpack-brawl-solver/internal/geometry.CellIndex (inline)
+                                             0.04s  0.93% |   memeqbody
+                                             0.02s  0.47% |   runtime.duffzero
+                                             0.02s  0.47% |   runtime.memequal
+                                             0.02s  0.47% |   runtime.rand
+----------------------------------------------------------+-------------
+                                            20.72s   100% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+     1.55s  0.71%  2.98%     20.72s  9.44%                | backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+                                             5.31s 25.63% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+                                             5.29s 25.53% |   backpack-brawl-solver/internal/solver.placementByInstanceID (inline)
+                                             3.57s 17.23% |   runtime.mapaccess2_faststr
+                                             2.20s 10.62% |   backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+                                             1.37s  6.61% |   runtime.duffcopy
+                                             0.51s  2.46% |   runtime.mapaccess1_faststr
+                                             0.34s  1.64% |   runtime.mapaccess1
+                                             0.30s  1.45% |   runtime.duffzero
+                                             0.16s  0.77% |   runtime.makeslice
+                                             0.08s  0.39% |   memeqbody
+                                             0.04s  0.19% |   runtime.memequal
+----------------------------------------------------------+-------------
+                                             5.31s 89.09% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+                                             0.57s  9.56% |   backpack-brawl-solver/internal/solver.directedOptionCompatibility
+                                             0.08s  1.34% |   backpack-brawl-solver/internal/solver.newStarPotentialContext
+     1.29s  0.59%  3.57%      5.96s  2.72%                | backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+                                             4.52s 75.84% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+                                             0.08s  1.34% |   backpack-brawl-solver/internal/geometry.InBounds (inline)
+                                             0.03s   0.5% |   backpack-brawl-solver/internal/geometry.CellIndex (inline)
+                                             0.02s  0.34% |   memeqbody
+                                             0.01s  0.17% |   runtime.memequal
+                                             0.01s  0.17% |   runtime.newstack
+----------------------------------------------------------+-------------
+                                            69.19s   100% |   backpack-brawl-solver/internal/solver.runTask
+     1.20s  0.55%  4.12%     69.19s 31.54%                | backpack-brawl-solver/internal/solver.runTask.func3
+                                            52.38s 75.70% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+                                            13.84s 20.00% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+                                             0.72s  1.04% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.42s  0.61% |   backpack-brawl-solver/internal/solver.runTask.func1
+                                             0.21s   0.3% |   runtime.duffcopy
+                                             0.19s  0.27% |   backpack-brawl-solver/internal/solver.removePlacementAt (inline)
+                                             0.16s  0.23% |   backpack-brawl-solver/internal/solver.insertPlacementSorted
+                                             0.04s 0.058% |   runtime.mapaccess1_faststr
+                                             0.03s 0.043% |   sync/atomic.(*Bool).Load (inline)
+----------------------------------------------------------+-------------
+                                             2.49s 61.33% |   backpack-brawl-solver/internal/solver.packingFeasibility
+                                             0.72s 17.73% |   backpack-brawl-solver/internal/solver.runTask.func3
+                                             0.68s 16.75% |   backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations
+                                             0.11s  2.71% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+                                             0.03s  0.74% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.02s  0.49% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+                                             0.01s  0.25% |   backpack-brawl-solver/internal/solver.constellationRootMRVSelectionWithOperations
+     1.03s  0.47%  4.59%      4.06s  1.85%                | backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             2.10s 51.72% |   runtime.duffcopy
+                                             0.88s 21.67% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.03s  0.74% |   memeqbody
+                                             0.01s  0.25% |   cmpbody
+                                             0.01s  0.25% |   runtime.newstack
+----------------------------------------------------------+-------------
+                                            43.66s 99.84% |   backpack-brawl-solver/internal/solver.observeSearchCandidate
+                                             0.07s  0.16% |   backpack-brawl-solver/internal/solver.refinePlateau
+     0.91s  0.41%  5.00%     43.73s 19.93%                | backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                            35.11s 80.29% |   backpack-brawl-solver/internal/solver.selectPlateauEntries
+                                             4.38s 10.02% |   runtime.growslice
+                                             2.96s  6.77% |   backpack-brawl-solver/internal/solver.canonicalLinkSignature
+                                             0.28s  0.64% |   backpack-brawl-solver/internal/solver.clonePlateauSolution (inline)
+                                             0.05s  0.11% |   memeqbody
+                                             0.02s 0.046% |   runtime.wbMove
+                                             0.01s 0.023% |   backpack-brawl-solver/internal/solver.(*priorityBoundContext).reached (inline)
+                                             0.01s 0.023% |   runtime.memequal
+----------------------------------------------------------+-------------
+                                             2.54s   100% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             1.31s 51.57% |   backpack-brawl-solver/internal/scoring.evaluateCompound
+     0.69s  0.31%  5.31%      2.54s  1.16%                | backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             1.52s 59.84% |   backpack-brawl-solver/internal/scoring.evaluateCompound
+                                             1.13s 44.49% |   backpack-brawl-solver/internal/scoring.conditionClass (inline)
+                                             0.36s 14.17% |   memeqbody
+                                             0.08s  3.15% |   runtime.memequal
+                                             0.05s  1.97% |   backpack-brawl-solver/internal/scoring.canonicalStatType
+----------------------------------------------------------+-------------
+                                             0.75s 51.02% |   sort.partialInsertionSort_func
+                                             0.38s 25.85% |   sort.partition_func
+                                             0.27s 18.37% |   sort.insertionSort_func
+                                             0.07s  4.76% |   sort.order2_func
+     0.68s  0.31%  5.62%      1.47s  0.67%                | backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.35s 23.81% |   backpack-brawl-solver/internal/solver.compareScores
+                                             0.21s 14.29% |   cmpbody
+                                             0.15s 10.20% |   memeqbody
+                                             0.04s  2.72% |   runtime.memequal
+                                             0.03s  2.04% |   runtime.cmpstring
+                                             0.01s  0.68% |   runtime.asyncPreempt
+----------------------------------------------------------+-------------
+                                             0.53s   100% |   backpack-brawl-solver/internal/model.CompareScores (inline)
+     0.53s  0.24%  5.87%      0.53s  0.24%                | backpack-brawl-solver/internal/model.ComparePriorityCounts
+----------------------------------------------------------+-------------
+                                             0.90s   100% |   backpack-brawl-solver/internal/solver.placementKey
+     0.53s  0.24%  6.11%      0.90s  0.41%                | backpack-brawl-solver/internal/solver.writePlacementKeyInt
+                                             0.36s 40.00% |   strings.(*Builder).WriteByte (inline)
+                                             0.01s  1.11% |   runtime.asyncPreempt
+----------------------------------------------------------+-------------
+                                             3.87s   100% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+     0.51s  0.23%  6.34%      3.87s  1.76%                | backpack-brawl-solver/internal/solver.packingFeasibility
+                                             2.49s 64.34% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.80s 20.67% |   runtime.duffcopy
+                                             0.07s  1.81% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             0.59s 46.46% |   sort.partition_func
+                                             0.58s 45.67% |   sort.insertionSort_func
+                                             0.09s  7.09% |   sort.order2_func
+                                             0.01s  0.79% |   sort.partialInsertionSort_func
+     0.50s  0.23%  6.57%      1.27s  0.58%                | backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.45s 35.43% |   backpack-brawl-solver/internal/solver.compareScores
+                                             0.19s 14.96% |   cmpbody
+                                             0.13s 10.24% |   memeqbody
+----------------------------------------------------------+-------------
+                                             4.55s 77.38% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems
+                                             1.33s 22.62% |   backpack-brawl-solver/internal/scoring.itemMatchesStar
+     0.43s   0.2%  6.76%      5.88s  2.68%                | backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+                                             2.54s 43.20% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+                                             1.92s 32.65% |   runtime.mapaccess2
+                                             0.78s 13.27% |   runtime.duffcopy
+                                             0.21s  3.57% |   runtime.duffzero
+----------------------------------------------------------+-------------
+                                             0.77s   100% |   backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+     0.43s   0.2%  6.96%      0.77s  0.35%                | backpack-brawl-solver/internal/scoring.starStructureMetrics
+                                             0.14s 18.18% |   runtime.mapassign_faststr
+                                             0.13s 16.88% |   runtime.makemap
+                                             0.04s  5.19% |   runtime.mapaccess2_faststr
+                                             0.02s  2.60% |   runtime.duffcopy
+                                             0.01s  1.30% |   runtime.duffzero
+----------------------------------------------------------+-------------
+                                             0.49s 42.61% |   sort.insertionSort_func
+                                             0.39s 33.91% |   sort.partition_func
+                                             0.23s 20.00% |   sort.partialInsertionSort_func
+                                             0.04s  3.48% |   sort.order2_func
+     0.43s   0.2%  7.16%      1.15s  0.52%                | backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+                                             0.38s 33.04% |   backpack-brawl-solver/internal/solver.compareScores
+                                             0.16s 13.91% |   memeqbody
+                                             0.14s 12.17% |   cmpbody
+                                             0.03s  2.61% |   runtime.cmpstring
+                                             0.01s  0.87% |   runtime.memequal
+----------------------------------------------------------+-------------
+                                             0.45s 34.35% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3
+                                             0.38s 29.01% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5
+                                             0.35s 26.72% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4
+                                             0.09s  6.87% |   backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func2
+                                             0.04s  3.05% |   backpack-brawl-solver/internal/solver.appendStarSeedState.sortStarSeedStates.func1
+     0.39s  0.18%  7.33%      1.31s   0.6%                | backpack-brawl-solver/internal/solver.compareScores
+                                             0.91s 69.47% |   backpack-brawl-solver/internal/model.CompareScores
+                                             0.01s  0.76% |   runtime.asyncPreempt
+----------------------------------------------------------+-------------
+                                             0.91s   100% |   backpack-brawl-solver/internal/solver.compareScores
+     0.38s  0.17%  7.51%      0.91s  0.41%                | backpack-brawl-solver/internal/model.CompareScores
+                                             0.53s 58.24% |   backpack-brawl-solver/internal/model.ComparePriorityCounts (inline)
+----------------------------------------------------------+-------------
+                                                3s   100% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+     0.35s  0.16%  7.67%         3s  1.37%                | backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+                                             1.97s 65.67% |   runtime.duffcopy
+                                             0.56s 18.67% |   backpack-brawl-solver/internal/solver.priorityGeometryCandidateHits
+                                             0.12s  4.00% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             0.56s   100% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+     0.34s  0.15%  7.82%      0.56s  0.26%                | backpack-brawl-solver/internal/solver.priorityGeometryCandidateHits
+                                             0.11s 19.64% |   backpack-brawl-solver/internal/solver.starPositionGeometryHitsTarget (inline)
+                                             0.11s 19.64% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             1.73s 61.57% |   backpack-brawl-solver/internal/solver.coveragePlacementKey
+                                             0.88s 31.32% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.09s  3.20% |   backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+                                             0.06s  2.14% |   backpack-brawl-solver/internal/solver.constellationExactKey
+                                             0.02s  0.71% |   backpack-brawl-solver/internal/solver.constellationOptions.func1
+                                             0.02s  0.71% |   backpack-brawl-solver/internal/solver.constellationSourceOptions.func1
+                                             0.01s  0.36% |   backpack-brawl-solver/internal/solver.sortPlacementOptionsForCoverage.func1
+     0.32s  0.15%  7.97%      2.81s  1.28%                | backpack-brawl-solver/internal/solver.placementKey
+                                             0.90s 32.03% |   backpack-brawl-solver/internal/solver.writePlacementKeyInt
+                                             0.77s 27.40% |   strings.(*Builder).Grow
+                                             0.69s 24.56% |   runtime.newobject
+                                             0.12s  4.27% |   strings.(*Builder).WriteByte (inline)
+                                             0.01s  0.36% |   strings.(*Builder).String (inline)
+----------------------------------------------------------+-------------
+                                             9.65s   100% |   backpack-brawl-solver/internal/solver.runRepairTask
+     0.28s  0.13%  8.10%      9.65s  4.40%                | backpack-brawl-solver/internal/solver.runRepairTask.func1
+                                             6.94s 71.92% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+                                             1.43s 14.82% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+                                             0.47s  4.87% |   runtime.growslice
+                                             0.11s  1.14% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+                                             0.11s  1.14% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.08s  0.83% |   runtime.typedslicecopy
+                                             0.07s  0.73% |   backpack-brawl-solver/internal/solver.chargeNode (inline)
+                                             0.07s  0.73% |   backpack-brawl-solver/internal/solver.removePlacementAt (inline)
+                                             0.06s  0.62% |   runtime.duffcopy
+                                             0.02s  0.21% |   backpack-brawl-solver/internal/solver.insertPlacementSorted
+                                             0.01s   0.1% |   runtime.wbMove
+----------------------------------------------------------+-------------
+                                             1.52s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     0.23s   0.1%  8.20%      1.52s  0.69%                | backpack-brawl-solver/internal/scoring.evaluateCompound
+                                             1.31s 86.18% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+----------------------------------------------------------+-------------
+                                             1.13s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition (inline)
+     0.15s 0.068%  8.27%      1.13s  0.52%                | backpack-brawl-solver/internal/scoring.conditionClass
+                                             0.98s 86.73% |   strings.LastIndex
+----------------------------------------------------------+-------------
+                                             1.17s   100% |   backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics
+     0.15s 0.068%  8.34%      1.17s  0.53%                | backpack-brawl-solver/internal/scoring.evaluateLooseStarPriority
+                                             0.34s 29.06% |   runtime.makemap
+                                             0.32s 27.35% |   runtime.mapassign_faststr
+                                             0.09s  7.69% |   runtime.mapaccess2_faststr
+                                             0.07s  5.98% |   runtime.makeslice
+                                             0.05s  4.27% |   runtime.duffcopy
+                                             0.05s  4.27% |   runtime.makemap_small
+                                             0.04s  3.42% |   runtime.mapaccess1_faststr
+                                             0.03s  2.56% |   gcWriteBarrier
+                                             0.02s  1.71% |   runtime.rand
+                                             0.01s  0.85% |   memeqbody
+----------------------------------------------------------+-------------
+                                             2.50s   100% |   backpack-brawl-solver/internal/solver.canonicalLayoutDigest
+     0.15s 0.068%  8.41%      2.50s  1.14%                | backpack-brawl-solver/internal/solver.canonicalPlacementKey
+                                             0.68s 27.20% |   sort.Slice
+                                             0.63s 25.20% |   runtime.convTslice
+                                             0.35s 14.00% |   runtime.growslice
+                                             0.28s 11.20% |   strings.(*Builder).Grow
+                                             0.08s  3.20% |   runtime.memmove
+                                             0.08s  3.20% |   strings.(*Builder).WriteString (inline)
+                                             0.07s  2.80% |   runtime.makeslice
+                                             0.07s  2.80% |   strconv.Itoa (inline)
+                                             0.07s  2.80% |   strings.(*Builder).WriteByte (inline)
+                                             0.04s  1.60% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.80s 57.14% |   backpack-brawl-solver/internal/solver.observeSearchCandidate
+                                             0.60s 42.86% |   backpack-brawl-solver/internal/solver.scoreOnlyCandidateCanEnter
+     0.14s 0.064%  8.47%      1.40s  0.64%                | backpack-brawl-solver/internal/solver.layoutKey
+                                             0.74s 52.86% |   backpack-brawl-solver/internal/solver.writePaddedInt
+                                             0.23s 16.43% |   strings.(*Builder).WriteString (inline)
+                                             0.14s 10.00% |   strings.(*Builder).Grow
+                                             0.07s  5.00% |   runtime.duffcopy
+                                             0.07s  5.00% |   strings.(*Builder).WriteByte (inline)
+                                             0.01s  0.71% |   runtime.memequal
+----------------------------------------------------------+-------------
+                                             5.29s 99.81% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts (inline)
+                                             0.01s  0.19% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates (inline)
+     0.13s 0.059%  8.53%      5.30s  2.42%                | backpack-brawl-solver/internal/solver.placementByInstanceID
+                                             4.73s 89.25% |   runtime.mapassign_faststr
+                                             0.23s  4.34% |   runtime.duffcopy
+                                             0.17s  3.21% |   runtime.wbMove
+                                             0.04s  0.75% |   runtime.rand
+----------------------------------------------------------+-------------
+                                             0.06s 50.00% |   backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly (inline)
+                                             0.03s 25.00% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog (inline)
+                                             0.02s 16.67% |   backpack-brawl-solver/internal/scoring.EvaluateStars (inline)
+                                             0.01s  8.33% |   backpack-brawl-solver/internal/solver.starPositionGeometryHitsTarget (inline)
+     0.12s 0.055%  8.58%      0.12s 0.055%                | backpack-brawl-solver/internal/geometry.CellIndex
+----------------------------------------------------------+-------------
+                                             5.22s   100% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig
+     0.10s 0.046%  8.63%      5.22s  2.38%                | backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+                                             4.28s 81.99% |   backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly
+                                             0.23s  4.41% |   backpack-brawl-solver/internal/scoring.activeCoverageGroups (inline)
+                                             0.19s  3.64% |   backpack-brawl-solver/internal/scoring.evaluateCraftScoreOnly
+                                             0.16s  3.07% |   runtime.growslice
+                                             0.11s  2.11% |   backpack-brawl-solver/internal/scoring.craftPriorityResults
+                                             0.08s  1.53% |   runtime.mapaccess1_faststr
+                                             0.06s  1.15% |   backpack-brawl-solver/internal/scoring.parsePriority
+                                             0.01s  0.19% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             1.48s   100% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+     0.10s 0.046%  8.67%      1.48s  0.67%                | backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+                                             0.79s 53.38% |   runtime.growslice
+                                             0.26s 17.57% |   runtime.mapassign_faststr
+                                             0.15s 10.14% |   runtime.wbMove
+                                             0.13s  8.78% |   runtime.duffcopy
+                                             0.02s  1.35% |   backpack-brawl-solver/internal/solver.PartialRepairState.anchoredPlacements
+                                             0.02s  1.35% |   runtime.makemap
+                                             0.01s  0.68% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             0.11s 55.00% |   sort.partition_func
+                                             0.06s 30.00% |   sort.partialInsertionSort_func
+                                             0.03s 15.00% |   sort.insertionSort_func
+     0.10s 0.046%  8.72%      0.20s 0.091%                | backpack-brawl-solver/internal/solver.appendStarSeedState.sortStarSeedStates.func1
+                                             0.06s 30.00% |   cmpbody
+                                             0.04s 20.00% |   backpack-brawl-solver/internal/solver.compareScores
+----------------------------------------------------------+-------------
+                                             0.21s 61.76% |   backpack-brawl-solver/internal/solver.packingSeedStateFirstDecisive
+                                             0.13s 38.24% |   backpack-brawl-solver/internal/solver.packingSeedStateVariantFirstDecisive
+     0.10s 0.046%  8.77%      0.34s  0.15%                | backpack-brawl-solver/internal/solver.packingSeedStateComponentCompare
+                                             0.11s 32.35% |   cmpbody
+                                             0.09s 26.47% |   backpack-brawl-solver/internal/solver.packingSeedStateComponentValue (inline)
+                                             0.04s 11.76% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.50s   100% |   backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+     0.09s 0.041%  8.81%      0.50s  0.23%                | backpack-brawl-solver/internal/scoring.EvaluateStars
+                                             0.28s 56.00% |   backpack-brawl-solver/internal/scoring.itemMatchesStar (inline)
+                                             0.07s 14.00% |   runtime.duffcopy
+                                             0.04s  8.00% |   runtime.makeslice
+                                             0.02s  4.00% |   backpack-brawl-solver/internal/geometry.CellIndex (inline)
+----------------------------------------------------------+-------------
+                                             0.55s 82.09% |   backpack-brawl-solver/internal/solver.packingSeedStateFirstDecisive
+                                             0.12s 17.91% |   backpack-brawl-solver/internal/solver.constellationRootPackingComparatorComponents
+     0.09s 0.041%  8.85%      0.67s  0.31%                | backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents
+                                             0.41s 61.19% |   runtime.growslice
+                                             0.15s 22.39% |   runtime.newobject
+                                             0.02s  2.99% |   runtime.wbMove
+----------------------------------------------------------+-------------
+                                             0.09s   100% |   backpack-brawl-solver/internal/solver.packingSeedStateComponentCompare (inline)
+     0.09s 0.041%  8.89%      0.09s 0.041%                | backpack-brawl-solver/internal/solver.packingSeedStateComponentValue
+----------------------------------------------------------+-------------
+                                             2.74s   100% |   backpack-brawl-solver/internal/solver.canonicalLinkTokens
+     0.09s 0.041%  8.93%      2.74s  1.25%                | backpack-brawl-solver/internal/solver.physicalInstanceIDs
+                                             1.04s 37.96% |   runtime.mapassign_faststr
+                                             0.40s 14.60% |   runtime.concatstring3
+                                             0.33s 12.04% |   runtime.growslice
+                                             0.18s  6.57% |   runtime.makemap
+                                             0.16s  5.84% |   runtime.convTslice
+                                             0.16s  5.84% |   sort.Slice
+                                             0.10s  3.65% |   runtime.duffcopy
+                                             0.10s  3.65% |   runtime.mapIterNext
+                                             0.08s  2.92% |   runtime.wbMove
+                                             0.07s  2.55% |   runtime.mapIterStart
+                                             0.02s  0.73% |   runtime.rand
+                                             0.01s  0.36% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             0.19s 73.08% |   backpack-brawl-solver/internal/solver.runTask.func3 (inline)
+                                             0.07s 26.92% |   backpack-brawl-solver/internal/solver.runRepairTask.func1 (inline)
+     0.09s 0.041%  8.97%      0.26s  0.12%                | backpack-brawl-solver/internal/solver.removePlacementAt
+                                             0.14s 53.85% |   runtime.typedslicecopy
+                                             0.03s 11.54% |   runtime.wbZero
+----------------------------------------------------------+-------------
+                                             0.08s   100% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog (inline)
+     0.08s 0.036%  9.01%      0.08s 0.036%                | backpack-brawl-solver/internal/geometry.InBounds
+----------------------------------------------------------+-------------
+                                             1.41s   100% |   backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+     0.08s 0.036%  9.04%      1.41s  0.64%                | backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics
+                                             1.17s 82.98% |   backpack-brawl-solver/internal/scoring.evaluateLooseStarPriority
+                                             0.06s  4.26% |   runtime.growslice
+                                             0.03s  2.13% |   backpack-brawl-solver/internal/scoring.activeCoverageGroups (inline)
+                                             0.02s  1.42% |   backpack-brawl-solver/internal/scoring.parsePriority
+                                             0.02s  1.42% |   runtime.mapaccess2_faststr
+                                             0.01s  0.71% |   backpack-brawl-solver/internal/model.PrioritySemantics.IsOutgoing (inline)
+                                             0.01s  0.71% |   runtime.makeslice
+                                             0.01s  0.71% |   runtime.wbMove
+----------------------------------------------------------+-------------
+                                             0.51s 64.56% |   backpack-brawl-solver/internal/solver.rankedPerInstanceTargets
+                                             0.28s 35.44% |   backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+     0.08s 0.036%  9.08%      0.79s  0.36%                | backpack-brawl-solver/internal/solver.directedOptionCompatibility
+                                             0.57s 72.15% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+                                             0.14s 17.72% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.09s 39.13% |   sort.partialInsertionSort_func
+                                             0.08s 34.78% |   sort.insertionSort_func
+                                             0.06s 26.09% |   sort.order2_func
+     0.08s 0.036%  9.12%      0.23s   0.1%                | backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func2
+                                             0.09s 39.13% |   backpack-brawl-solver/internal/solver.compareScores
+                                             0.03s 13.04% |   memeqbody
+                                             0.02s  8.70% |   cmpbody
+                                             0.01s  4.35% |   runtime.cmpstring
+----------------------------------------------------------+-------------
+                                             0.88s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+     0.07s 0.032%  9.15%      0.88s   0.4%                | backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations
+                                             0.68s 77.27% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.11s 12.50% |   runtime.duffcopy
+                                             0.02s  2.27% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             0.68s   100% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+     0.07s 0.032%  9.18%      0.68s  0.31%                | backpack-brawl-solver/internal/solver.scoreOnlyCandidateCanEnter
+                                             0.60s 88.24% |   backpack-brawl-solver/internal/solver.layoutKey
+                                             0.01s  1.47% |   cmpbody
+----------------------------------------------------------+-------------
+                                             0.32s   100% |   backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly
+     0.06s 0.027%  9.21%      0.32s  0.15%                | backpack-brawl-solver/internal/scoring.priorityStarSources
+                                             0.19s 59.38% |   runtime.growslice
+                                             0.07s 21.88% |   backpack-brawl-solver/internal/scoring.parsePriority
+----------------------------------------------------------+-------------
+                                            13.84s 66.60% |   backpack-brawl-solver/internal/solver.runTask.func3
+                                             6.94s 33.40% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+     0.06s 0.027%  9.23%     20.78s  9.47%                | backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+                                            20.72s 99.71% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+----------------------------------------------------------+-------------
+                                            50.54s 99.23% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+                                             0.39s  0.77% |   backpack-brawl-solver/internal/solver.refineSolution
+     0.06s 0.027%  9.26%     50.93s 23.21%                | backpack-brawl-solver/internal/solver.observeSearchCandidate
+                                            43.66s 85.73% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                             3.25s  6.38% |   backpack-brawl-solver/internal/solver.canonicalLayoutHash
+                                             2.88s  5.65% |   backpack-brawl-solver/internal/solver.evaluateLayoutForConfig (inline)
+                                             0.80s  1.57% |   backpack-brawl-solver/internal/solver.layoutKey
+                                             0.16s  0.31% |   runtime.growslice
+                                             0.07s  0.14% |   runtime.typedslicecopy
+                                             0.02s 0.039% |   runtime.duffcopy
+                                             0.02s 0.039% |   runtime.mapaccess1_faststr
+                                             0.01s  0.02% |   backpack-brawl-solver/internal/solver.(*diagnosticTrace).observeCandidate
+----------------------------------------------------------+-------------
+                                             0.20s   100% |   backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+     0.05s 0.023%  9.28%      0.20s 0.091%                | backpack-brawl-solver/internal/scoring.EvaluateCrafts
+                                             0.08s 40.00% |   runtime.duffcopy
+                                             0.03s 15.00% |   backpack-brawl-solver/internal/scoring.sortedPlacementsForCrafts
+                                             0.02s 10.00% |   runtime.growslice
+                                             0.01s  5.00% |   backpack-brawl-solver/internal/scoring.compiledIngredientRequirements (inline)
+                                             0.01s  5.00% |   runtime.duffzero
+----------------------------------------------------------+-------------
+                                             0.19s   100% |   backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+     0.05s 0.023%  9.31%      0.19s 0.087%                | backpack-brawl-solver/internal/scoring.evaluateCraftScoreOnly
+                                             0.08s 42.11% |   runtime.duffcopy
+                                             0.03s 15.79% |   runtime.makeslice
+                                             0.01s  5.26% |   backpack-brawl-solver/internal/scoring.compiledIngredientRequirements (inline)
+                                             0.01s  5.26% |   backpack-brawl-solver/internal/scoring.sortedPlacementsForCrafts
+                                             0.01s  5.26% |   memeqbody
+----------------------------------------------------------+-------------
+                                             3.16s   100% |   backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+     0.05s 0.023%  9.33%      3.16s  1.44%                | backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+                                                3s 94.94% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget
+                                             0.04s  1.27% |   runtime.growslice
+                                             0.03s  0.95% |   backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching
+                                             0.02s  0.63% |   backpack-brawl-solver/internal/solver.partialRepairSlotCanHitFixedTarget
+                                             0.01s  0.32% |   runtime.duffcopy
+                                             0.01s  0.32% |   runtime.makeslice
+----------------------------------------------------------+-------------
+                                             0.42s   100% |   backpack-brawl-solver/internal/solver.runTask.func3
+     0.05s 0.023%  9.35%      0.42s  0.19%                | backpack-brawl-solver/internal/solver.runTask.func1
+                                             0.29s 69.05% |   backpack-brawl-solver/internal/solver.chargeNode (inline)
+                                             0.08s 19.05% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.11s   100% |   backpack-brawl-solver/internal/solver.priorityGeometryCandidateHits (inline)
+     0.05s 0.023%  9.38%      0.11s  0.05%                | backpack-brawl-solver/internal/solver.starPositionGeometryHitsTarget
+                                             0.05s 45.45% |   runtime.duffcopy
+                                             0.01s  9.09% |   backpack-brawl-solver/internal/geometry.CellIndex (inline)
+----------------------------------------------------------+-------------
+                                             0.74s   100% |   backpack-brawl-solver/internal/solver.layoutKey
+     0.05s 0.023%  9.40%      0.74s  0.34%                | backpack-brawl-solver/internal/solver.writePaddedInt
+                                             0.55s 74.32% |   strings.(*Builder).WriteString (inline)
+                                             0.14s 18.92% |   strconv.Itoa (inline)
+----------------------------------------------------------+-------------
+                                             0.04s   100% |   backpack-brawl-solver/internal/scoring.sortedPlacementsForCrafts (inline)
+     0.04s 0.018%  9.42%      0.04s 0.018%                | backpack-brawl-solver/internal/scoring.placementsSortedForCrafts
+----------------------------------------------------------+-------------
+                                             2.88s 97.63% |   backpack-brawl-solver/internal/solver.observeSearchCandidate (inline)
+                                             0.04s  1.36% |   backpack-brawl-solver/internal/solver.refinePlateau (inline)
+                                             0.03s  1.02% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter (inline)
+     0.04s 0.018%  9.44%      2.95s  1.34%                | backpack-brawl-solver/internal/solver.evaluateLayoutForConfig
+                                             2.91s 98.64% |   backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+----------------------------------------------------------+-------------
+                                             0.04s   100% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+     0.04s 0.018%  9.45%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.freeSpaceFragmentation
+----------------------------------------------------------+-------------
+                                             0.22s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+     0.04s 0.018%  9.47%      0.22s   0.1%                | backpack-brawl-solver/internal/solver.newStarPotentialContext
+                                             0.08s 36.36% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog
+                                             0.05s 22.73% |   runtime.duffcopy
+                                             0.04s 18.18% |   backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+                                             0.01s  4.55% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             0.24s   100% |   backpack-brawl-solver/internal/scoring.activeCoverageGroups
+     0.03s 0.014%  9.49%      0.24s  0.11%                | backpack-brawl-solver/internal/scoring.globalPriorityOrderEnabled
+                                             0.21s 87.50% |   backpack-brawl-solver/internal/scoring.parsePriority
+----------------------------------------------------------+-------------
+                                             0.36s   100% |   backpack-brawl-solver/internal/solver.chargeNodeWithReason
+     0.03s 0.014%  9.50%      0.36s  0.16%                | backpack-brawl-solver/internal/solver.(*nodeLedger).chargeWithReason
+                                             0.14s 38.89% |   runtime.mapaccess1_faststr
+                                             0.12s 33.33% |   sync.(*Mutex).Lock (inline)
+                                             0.06s 16.67% |   runtime.mapassign_faststr
+                                             0.01s  2.78% |   sync.(*Mutex).Unlock
+----------------------------------------------------------+-------------
+                                             0.03s   100% |   sort.insertionSort_func
+     0.03s 0.014%  9.51%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.canonicalPlacementKey.func1
+----------------------------------------------------------+-------------
+                                             0.17s 39.53% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.16s 37.21% |   backpack-brawl-solver/internal/solver.runTask.func3
+                                             0.07s 16.28% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+                                             0.02s  4.65% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+                                             0.01s  2.33% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+     0.03s 0.014%  9.53%      0.43s   0.2%                | backpack-brawl-solver/internal/solver.insertPlacementSorted
+                                             0.22s 51.16% |   runtime.growslice
+                                             0.09s 20.93% |   runtime.typedslicecopy
+                                             0.03s  6.98% |   runtime.wbMove
+                                             0.03s  6.98% |   sort.Search (inline)
+                                             0.02s  4.65% |   runtime.duffcopy
+                                             0.01s  2.33% |   runtime.duffzero
+----------------------------------------------------------+-------------
+                                             0.85s   100% |   backpack-brawl-solver/internal/solver.packingSeedStateLess
+     0.03s 0.014%  9.54%      0.85s  0.39%                | backpack-brawl-solver/internal/solver.packingSeedStateFirstDecisive
+                                             0.55s 64.71% |   backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents
+                                             0.21s 24.71% |   backpack-brawl-solver/internal/solver.packingSeedStateComponentCompare
+                                             0.06s  7.06% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                            17.13s   100% |   backpack-brawl-solver/internal/solver.selectPlateauEntries (inline)
+     0.03s 0.014%  9.55%     17.13s  7.81%                | backpack-brawl-solver/internal/solver.sortPlateauEntries
+                                            16.51s 96.38% |   sort.Slice
+                                             0.59s  3.44% |   runtime.convTslice
+----------------------------------------------------------+-------------
+                                             0.05s 83.33% |   backpack-brawl-solver/internal/scoring.activeCoverageGroups (inline)
+                                             0.01s 16.67% |   backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics (inline)
+     0.02s 0.0091%  9.56%      0.06s 0.027%                | backpack-brawl-solver/internal/model.PrioritySemantics.IsOutgoing
+                                             0.03s 50.00% |   memeqbody
+                                             0.01s 16.67% |   runtime.memequal
+----------------------------------------------------------+-------------
+                                             4.52s 98.91% |   backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog (inline)
+                                             0.04s  0.88% |   backpack-brawl-solver/internal/solver.starPositionHitsTarget (inline)
+                                             0.01s  0.22% |   backpack-brawl-solver/internal/solver.looseSourceCanTarget (inline)
+     0.02s 0.0091%  9.57%      4.57s  2.08%                | backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems
+                                             4.55s 99.56% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+----------------------------------------------------------+-------------
+                                             0.01s 50.00% |   backpack-brawl-solver/internal/scoring.EvaluateCrafts (inline)
+                                             0.01s 50.00% |   backpack-brawl-solver/internal/scoring.evaluateCraftScoreOnly (inline)
+     0.02s 0.0091%  9.58%      0.02s 0.0091%                | backpack-brawl-solver/internal/scoring.compiledIngredientRequirements
+----------------------------------------------------------+-------------
+                                             0.21s 45.65% |   backpack-brawl-solver/internal/scoring.globalPriorityOrderEnabled
+                                             0.10s 21.74% |   backpack-brawl-solver/internal/scoring.craftPriorityResults
+                                             0.07s 15.22% |   backpack-brawl-solver/internal/scoring.priorityStarSources
+                                             0.06s 13.04% |   backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+                                             0.02s  4.35% |   backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics
+     0.02s 0.0091%  9.59%      0.46s  0.21%                | backpack-brawl-solver/internal/scoring.parsePriority
+                                             0.23s 50.00% |   strings.TrimSpace
+                                             0.20s 43.48% |   strings.Cut (inline)
+                                             0.01s  2.17% |   runtime.newstack
+----------------------------------------------------------+-------------
+                                             0.02s   100% |   sort.insertionSort_func
+     0.02s 0.0091%  9.60%      0.02s 0.0091%                | backpack-brawl-solver/internal/solver.canonicalPlacementKey.func2
+----------------------------------------------------------+-------------
+                                             0.38s   100% |   backpack-brawl-solver/internal/solver.chargeNode
+     0.02s 0.0091%  9.61%      0.38s  0.17%                | backpack-brawl-solver/internal/solver.chargeNodeWithReason
+                                             0.36s 94.74% |   backpack-brawl-solver/internal/solver.(*nodeLedger).chargeWithReason
+----------------------------------------------------------+-------------
+                                             2.20s 88.71% |   backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts (inline)
+                                             0.24s  9.68% |   backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement (inline)
+                                             0.04s  1.61% |   backpack-brawl-solver/internal/solver.newStarPotentialContext (inline)
+     0.02s 0.0091%  9.62%      2.48s  1.13%                | backpack-brawl-solver/internal/solver.coveragePlacementKey
+                                             1.73s 69.76% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.67s 27.02% |   runtime.concatstring3
+                                             0.06s  2.42% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                            52.38s 97.23% |   backpack-brawl-solver/internal/solver.runTask.func3
+                                             1.43s  2.65% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+                                             0.05s 0.093% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.01s 0.019% |   backpack-brawl-solver/internal/solver.collectConstellationRootPackingSolution
+     0.02s 0.0091%  9.63%     53.87s 24.55%                | backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+                                            50.54s 93.82% |   backpack-brawl-solver/internal/solver.observeSearchCandidate
+                                             2.54s  4.72% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+                                             0.68s  1.26% |   backpack-brawl-solver/internal/solver.scoreOnlyCandidateCanEnter
+                                             0.04s 0.074% |   backpack-brawl-solver/internal/solver.insertCandidate
+                                             0.03s 0.056% |   backpack-brawl-solver/internal/solver.evaluateLayoutForConfig (inline)
+                                             0.02s 0.037% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.02s   100% |   sort.Search (inline)
+     0.02s 0.0091%  9.64%      0.02s 0.0091%                | backpack-brawl-solver/internal/solver.insertPlacementSorted.func1
+----------------------------------------------------------+-------------
+                                             0.85s 97.70% |   backpack-brawl-solver/internal/solver.packingSeedSearch.func3 (inline)
+                                             0.02s  2.30% |   backpack-brawl-solver/internal/solver.packingSeedSearch (inline)
+     0.02s 0.0091%  9.64%      0.87s   0.4%                | backpack-brawl-solver/internal/solver.packingSeedStateLess
+                                             0.85s 97.70% |   backpack-brawl-solver/internal/solver.packingSeedStateFirstDecisive
+----------------------------------------------------------+-------------
+                                             0.29s   100% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+     0.02s 0.0091%  9.65%      0.29s  0.13%                | backpack-brawl-solver/internal/solver.packingStateClassKey
+                                             0.10s 34.48% |   runtime.mapassign_faststr
+                                             0.05s 17.24% |   sort.Strings
+                                             0.03s 10.34% |   runtime.makeslice
+                                             0.02s  6.90% |   runtime.mapIterNext
+                                             0.02s  6.90% |   strings.(*Builder).WriteString (inline)
+                                             0.01s  3.45% |   runtime.duffcopy
+                                             0.01s  3.45% |   runtime.mapIterStart
+                                             0.01s  3.45% |   runtime.mapaccess1_faststr
+                                             0.01s  3.45% |   runtime.newstack
+                                             0.01s  3.45% |   strings.(*Builder).Grow
+----------------------------------------------------------+-------------
+                                             2.87s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+     0.02s 0.0091%  9.66%      2.87s  1.31%                | backpack-brawl-solver/internal/solver.starSeedSearch
+                                             1.73s 60.28% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+                                             0.32s 11.15% |   backpack-brawl-solver/internal/solver.appendStarSeedState
+                                             0.24s  8.36% |   backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+                                             0.17s  5.92% |   backpack-brawl-solver/internal/solver.insertPlacementSorted
+                                             0.12s  4.18% |   backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+                                             0.08s  2.79% |   runtime.growslice
+                                             0.06s  2.09% |   backpack-brawl-solver/internal/solver.starSeedSearch.func1
+                                             0.05s  1.74% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+                                             0.03s  1.05% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.03s  1.05% |   runtime.duffcopy
+                                             0.01s  0.35% |   backpack-brawl-solver/internal/solver.sortStarSeedStates (inline)
+                                             0.01s  0.35% |   runtime.makeslice
+----------------------------------------------------------+-------------
+                                             0.05s   100% |   backpack-brawl-solver/internal/scoring.EvaluateStarCondition
+     0.01s 0.0046%  9.67%      0.05s 0.023%                | backpack-brawl-solver/internal/scoring.canonicalStatType
+                                             0.03s 60.00% |   strings.Index (inline)
+                                             0.01s 20.00% |   strings.LastIndex
+----------------------------------------------------------+-------------
+                                             0.11s   100% |   backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+     0.01s 0.0046%  9.67%      0.11s  0.05%                | backpack-brawl-solver/internal/scoring.craftPriorityResults
+                                             0.10s 90.91% |   backpack-brawl-solver/internal/scoring.parsePriority
+----------------------------------------------------------+-------------
+                                             1.81s   100% |   backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+     0.01s 0.0046%  9.68%      1.81s  0.83%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+                                             1.35s 74.59% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+                                             0.39s 21.55% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).commitDepth
+                                             0.04s  2.21% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).prepareState
+                                             0.01s  0.55% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).finish
+                                             0.01s  0.55% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             1.35s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+     0.01s 0.0046%  9.68%      1.35s  0.62%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+                                             0.88s 65.19% |   backpack-brawl-solver/internal/solver.constellationRootMRVFeasibilityWithOperations
+                                             0.21s 15.56% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).partialScore (inline)
+                                             0.14s 10.37% |   backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+                                             0.04s  2.96% |   backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+                                             0.04s  2.96% |   runtime.growslice
+                                             0.01s  0.74% |   backpack-brawl-solver/internal/solver.insertPlacementSorted
+                                             0.01s  0.74% |   runtime.concatstring3
+                                             0.01s  0.74% |   runtime.typedslicecopy
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.observeSearchCandidate
+     0.01s 0.0046%  9.69%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.(*diagnosticTrace).observeCandidate
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe (inline)
+     0.01s 0.0046%  9.69%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.(*priorityBoundContext).reached
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   sort.insertionSort_func
+     0.01s 0.0046%  9.70%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.blockingInstancesForOptions.func1
+----------------------------------------------------------+-------------
+                                             3.25s   100% |   backpack-brawl-solver/internal/solver.canonicalLayoutHash
+     0.01s 0.0046%  9.70%      3.25s  1.48%                | backpack-brawl-solver/internal/solver.canonicalLayoutDigest
+                                             2.50s 76.92% |   backpack-brawl-solver/internal/solver.canonicalPlacementKey
+                                             0.22s  6.77% |   strings.Join
+                                             0.18s  5.54% |   crypto/sha256.Sum256
+                                             0.16s  4.92% |   sort.Strings
+                                             0.10s  3.08% |   runtime.makeslice
+                                             0.04s  1.23% |   runtime.stringtoslicebyte
+                                             0.03s  0.92% |   runtime.duffcopy
+                                             0.01s  0.31% |   gcWriteBarrier
+----------------------------------------------------------+-------------
+                                             3.25s 98.19% |   backpack-brawl-solver/internal/solver.observeSearchCandidate
+                                             0.04s  1.21% |   backpack-brawl-solver/internal/solver.insertCandidate
+                                             0.01s   0.3% |   backpack-brawl-solver/internal/solver.improvedCandidate
+                                             0.01s   0.3% |   backpack-brawl-solver/internal/solver.refinePlateau
+     0.01s 0.0046%  9.70%      3.31s  1.51%                | backpack-brawl-solver/internal/solver.canonicalLayoutHash
+                                             3.25s 98.19% |   backpack-brawl-solver/internal/solver.canonicalLayoutDigest
+                                             0.05s  1.51% |   encoding/hex.EncodeToString (inline)
+----------------------------------------------------------+-------------
+                                             0.07s   100% |   backpack-brawl-solver/internal/solver.clonePlateauSolution (inline)
+     0.01s 0.0046%  9.71%      0.07s 0.032%                | backpack-brawl-solver/internal/solver.cloneEvaluation
+                                             0.04s 57.14% |   runtime.growslice
+                                             0.01s 14.29% |   runtime.duffcopy
+                                             0.01s 14.29% |   runtime.typedslicecopy
+----------------------------------------------------------+-------------
+                                             0.28s   100% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe (inline)
+     0.01s 0.0046%  9.71%      0.28s  0.13%                | backpack-brawl-solver/internal/solver.clonePlateauSolution
+                                             0.12s 42.86% |   runtime.growslice
+                                             0.08s 28.57% |   runtime.typedslicecopy
+                                             0.07s 25.00% |   backpack-brawl-solver/internal/solver.cloneEvaluation (inline)
+----------------------------------------------------------+-------------
+                                             0.12s 85.71% |   backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+                                             0.02s 14.29% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+     0.01s 0.0046%  9.72%      0.14s 0.064%                | backpack-brawl-solver/internal/solver.constellationExactKey
+                                             0.06s 42.86% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.03s 21.43% |   runtime.concatstring3
+                                             0.02s 14.29% |   sort.Strings
+                                             0.01s  7.14% |   runtime.duffcopy
+                                             0.01s  7.14% |   strings.Join
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationPrioritySourceGeometryOrbitKey
+     0.01s 0.0046%  9.72%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.constellationReflectedPrioritySourceGeometryKey
+----------------------------------------------------------+-------------
+                                             0.04s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).prepareState
+     0.01s 0.0046%  9.73%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.constellationRootMRVSelectionWithOperations
+                                             0.01s 25.00% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.01s 25.00% |   runtime.duffcopy
+                                             0.01s 25.00% |   runtime.makeslice
+----------------------------------------------------------+-------------
+                                             0.25s 64.10% |   sort.partition_func
+                                             0.07s 17.95% |   sort.insertionSort_func
+                                             0.06s 15.38% |   sort.order2_func
+                                             0.01s  2.56% |   sort.pdqsort_func
+     0.01s 0.0046%  9.73%      0.39s  0.18%                | backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations.func1
+                                             0.35s 89.74% |   backpack-brawl-solver/internal/solver.constellationRootPackingStateLess
+                                             0.03s  7.69% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.35s   100% |   backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations.func1
+     0.01s 0.0046%  9.74%      0.35s  0.16%                | backpack-brawl-solver/internal/solver.constellationRootPackingStateLess
+                                             0.17s 48.57% |   backpack-brawl-solver/internal/solver.packingSeedStateVariantFirstDecisive
+                                             0.16s 45.71% |   backpack-brawl-solver/internal/solver.constellationRootPackingComparatorComponents
+                                             0.01s  2.86% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.12s 48.00% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.09s 36.00% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+                                             0.04s 16.00% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+     0.01s 0.0046%  9.74%      0.25s  0.11%                | backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+                                             0.09s 36.00% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.07s 28.00% |   strings.(*Builder).Grow
+                                             0.06s 24.00% |   strings.(*Builder).WriteString (inline)
+                                             0.02s  8.00% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             2.54s 48.57% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter (inline)
+                                             1.73s 33.08% |   backpack-brawl-solver/internal/solver.starSeedSearch (inline)
+                                             0.51s  9.75% |   backpack-brawl-solver/internal/solver.packingSeedSearch (inline)
+                                             0.21s  4.02% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).partialScore (inline)
+                                             0.11s  2.10% |   backpack-brawl-solver/internal/solver.runRepairTask.func1 (inline)
+                                             0.08s  1.53% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+                                             0.03s  0.57% |   backpack-brawl-solver/internal/solver.refineSolution (inline)
+                                             0.02s  0.38% |   backpack-brawl-solver/internal/solver.constellationSeedSearch (inline)
+     0.01s 0.0046%  9.75%      5.23s  2.38%                | backpack-brawl-solver/internal/solver.evaluateScoreForConfig
+                                             5.22s 99.81% |   backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+----------------------------------------------------------+-------------
+                                             5.94s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+     0.01s 0.0046%  9.75%      5.94s  2.71%                | backpack-brawl-solver/internal/solver.packingSeedSearch
+                                             3.87s 65.15% |   backpack-brawl-solver/internal/solver.packingFeasibility
+                                             0.88s 14.81% |   sort.Slice
+                                             0.51s  8.59% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+                                             0.29s  4.88% |   backpack-brawl-solver/internal/solver.packingStateClassKey
+                                             0.09s  1.52% |   backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+                                             0.07s  1.18% |   backpack-brawl-solver/internal/solver.insertPlacementSorted
+                                             0.04s  0.67% |   backpack-brawl-solver/internal/solver.freeSpaceFragmentation
+                                             0.04s  0.67% |   runtime.mapassign
+                                             0.03s  0.51% |   runtime.mapaccess2
+                                             0.03s  0.51% |   runtime.typedslicecopy
+                                             0.02s  0.34% |   backpack-brawl-solver/internal/solver.packingSeedStateLess (inline)
+                                             0.02s  0.34% |   backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+                                             0.02s  0.34% |   runtime.growslice
+                                             0.01s  0.17% |   backpack-brawl-solver/internal/solver.packingSeedSearch.func1 (inline)
+                                             0.01s  0.17% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.51s 57.95% |   sort.partition_func
+                                             0.24s 27.27% |   sort.insertionSort_func
+                                             0.13s 14.77% |   sort.order2_func
+     0.01s 0.0046%  9.75%      0.88s   0.4%                | backpack-brawl-solver/internal/solver.packingSeedSearch.func3
+                                             0.85s 96.59% |   backpack-brawl-solver/internal/solver.packingSeedStateLess (inline)
+                                             0.02s  2.27% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching
+     0.01s 0.0046%  9.76%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching.func1
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.nearbyInstances (inline)
+     0.01s 0.0046%  9.76%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.placementDistance
+----------------------------------------------------------+-------------
+                                             0.45s   100% |   backpack-brawl-solver/internal/solver.refineSolutions
+     0.01s 0.0046%  9.77%      0.45s  0.21%                | backpack-brawl-solver/internal/solver.refineSolution
+                                             0.39s 86.67% |   backpack-brawl-solver/internal/solver.observeSearchCandidate
+                                             0.03s  6.67% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+                                             0.01s  2.22% |   backpack-brawl-solver/internal/solver.improvedCandidate
+                                             0.01s  2.22% |   backpack-brawl-solver/internal/solver.scoreOnlyImprovesSolution
+----------------------------------------------------------+-------------
+                                             0.05s   100% |   backpack-brawl-solver/internal/solver.(*starUpperBoundContext).matchingForSource
+     0.01s 0.0046%  9.77%      0.05s 0.023%                | backpack-brawl-solver/internal/solver.starPositionHitsTarget
+                                             0.04s 80.00% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+----------------------------------------------------------+-------------
+                                            96.19s 99.95% |   backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%  9.77%     96.24s 43.87%                | backpack-brawl-solver/internal/benchmark.RunScenarios
+                                            96.21s   100% |   backpack-brawl-solver/internal/benchmark.runScenario
+                                             0.02s 0.021% |   backpack-brawl-solver/internal/scenario.Load
+                                             0.01s  0.01% |   backpack-brawl-solver/internal/catalog.Load
+----------------------------------------------------------+-------------
+                                            96.21s 99.95% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%  9.77%     96.26s 43.88%                | backpack-brawl-solver/internal/benchmark.runScenario
+                                            96.26s   100% |   backpack-brawl-solver/internal/solver.SolveLayout
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/catalog.Load
+                                             0.01s   100% |   backpack-brawl-solver/internal/catalog.Parse
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/catalog.Load
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/catalog.Parse
+                                             0.01s   100% |   encoding/json.Unmarshal
+----------------------------------------------------------+-------------
+                                            96.10s 99.95% |   main.main
+         0     0%  9.77%     96.15s 43.83%                | backpack-brawl-solver/internal/cli.Run
+                                            96.15s   100% |   backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+----------------------------------------------------------+-------------
+                                            96.15s   100% |   backpack-brawl-solver/internal/cli.Run
+         0     0%  9.77%     96.19s 43.84%                | backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+                                            96.19s   100% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+----------------------------------------------------------+-------------
+                                             0.02s   100% |   backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%  9.77%      0.02s 0.0091%                | backpack-brawl-solver/internal/scenario.Load
+                                             0.02s   100% |   os.ReadFile
+----------------------------------------------------------+-------------
+                                             2.91s   100% |   backpack-brawl-solver/internal/solver.evaluateLayoutForConfig
+         0     0%  9.77%      2.91s  1.33%                | backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+                                             1.41s 48.45% |   backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics
+                                             0.77s 26.46% |   backpack-brawl-solver/internal/scoring.starStructureMetrics
+                                             0.50s 17.18% |   backpack-brawl-solver/internal/scoring.EvaluateStars
+                                             0.20s  6.87% |   backpack-brawl-solver/internal/scoring.EvaluateCrafts
+                                             0.03s  1.03% |   backpack-brawl-solver/internal/scoring.activeCoverageGroups (inline)
+----------------------------------------------------------+-------------
+                                             0.23s 79.31% |   backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics (inline)
+                                             0.03s 10.34% |   backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics (inline)
+                                             0.03s 10.34% |   backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics (inline)
+         0     0%  9.77%      0.29s  0.13%                | backpack-brawl-solver/internal/scoring.activeCoverageGroups
+                                             0.24s 82.76% |   backpack-brawl-solver/internal/scoring.globalPriorityOrderEnabled
+                                             0.05s 17.24% |   backpack-brawl-solver/internal/model.PrioritySemantics.IsOutgoing (inline)
+----------------------------------------------------------+-------------
+                                             1.05s 78.95% |   backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly (inline)
+                                             0.28s 21.05% |   backpack-brawl-solver/internal/scoring.EvaluateStars (inline)
+         0     0%  9.77%      1.33s  0.61%                | backpack-brawl-solver/internal/scoring.itemMatchesStar
+                                             1.33s   100% |   backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition
+----------------------------------------------------------+-------------
+                                             0.03s 75.00% |   backpack-brawl-solver/internal/scoring.EvaluateCrafts
+                                             0.01s 25.00% |   backpack-brawl-solver/internal/scoring.evaluateCraftScoreOnly
+         0     0%  9.77%      0.04s 0.018%                | backpack-brawl-solver/internal/scoring.sortedPlacementsForCrafts
+                                             0.04s   100% |   backpack-brawl-solver/internal/scoring.placementsSortedForCrafts (inline)
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).FinalizeBudgetExhausted
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).terminalProjection
+----------------------------------------------------------+-------------
+                                             0.39s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0%  9.77%      0.39s  0.18%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).commitDepth
+                                             0.39s   100% |   backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).finish
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).resultForFrontier
+----------------------------------------------------------+-------------
+                                             0.21s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption (inline)
+         0     0%  9.77%      0.21s 0.096%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).partialScore
+                                             0.21s   100% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+----------------------------------------------------------+-------------
+                                             0.04s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0%  9.77%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).prepareState
+                                             0.04s   100% |   backpack-brawl-solver/internal/solver.constellationRootMRVSelectionWithOperations
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).finish
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).resultForFrontier
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.collectConstellationRootPackingSolution
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).FinalizeBudgetExhausted
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).terminalProjection
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations
+----------------------------------------------------------+-------------
+                                             0.24s 82.76% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.03s 10.34% |   backpack-brawl-solver/internal/solver.sortPlacementOptionsForCoverage.func1
+                                             0.02s  6.90% |   backpack-brawl-solver/internal/solver.constellationOptions.func1
+         0     0%  9.77%      0.29s  0.13%                | backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+                                             0.24s 82.76% |   backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+                                             0.05s 17.24% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             0.07s   100% |   backpack-brawl-solver/internal/solver.plateauState
+         0     0%  9.77%      0.07s 0.032%                | backpack-brawl-solver/internal/solver.(*starUpperBoundContext).forPlacements
+                                             0.06s 85.71% |   backpack-brawl-solver/internal/solver.(*starUpperBoundContext).matchingForSource
+                                             0.01s 14.29% |   runtime.mapaccess2_faststr
+----------------------------------------------------------+-------------
+                                             0.06s   100% |   backpack-brawl-solver/internal/solver.(*starUpperBoundContext).forPlacements
+         0     0%  9.77%      0.06s 0.027%                | backpack-brawl-solver/internal/solver.(*starUpperBoundContext).matchingForSource
+                                             0.05s 83.33% |   backpack-brawl-solver/internal/solver.starPositionHitsTarget
+                                             0.01s 16.67% |   backpack-brawl-solver/internal/solver.maximumSlotMatching
+----------------------------------------------------------+-------------
+                                             0.02s 66.67% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+                                             0.01s 33.33% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+         0     0%  9.77%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.PartialRepairState.anchoredPlacements
+                                             0.03s   100% |   runtime.makeslice
+----------------------------------------------------------+-------------
+                                             0.03s   100% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+         0     0%  9.77%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+                                             0.01s 33.33% |   runtime.makemap
+                                             0.01s 33.33% |   runtime.makeslice
+                                             0.01s 33.33% |   runtime.mapaccess2_faststr
+----------------------------------------------------------+-------------
+                                            96.26s   100% |   backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%  9.77%     96.27s 43.88%                | backpack-brawl-solver/internal/solver.SolveLayout
+                                            96.27s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+----------------------------------------------------------+-------------
+                                             0.56s   100% |   backpack-brawl-solver/internal/solver.buildRepairNeighborhoods
+         0     0%  9.77%      0.56s  0.26%                | backpack-brawl-solver/internal/solver.addLooseStarNeighborhoods
+                                             0.56s   100% |   backpack-brawl-solver/internal/solver.addPerInstanceLooseStarNeighborhoods
+----------------------------------------------------------+-------------
+                                             0.56s   100% |   backpack-brawl-solver/internal/solver.addLooseStarNeighborhoods
+         0     0%  9.77%      0.56s  0.26%                | backpack-brawl-solver/internal/solver.addPerInstanceLooseStarNeighborhoods
+                                             0.52s 92.86% |   backpack-brawl-solver/internal/solver.rankedPerInstanceTargets
+                                             0.03s  5.36% |   backpack-brawl-solver/internal/solver.nearbyInstances
+                                             0.01s  1.79% |   backpack-brawl-solver/internal/solver.perInstanceBlockers
+----------------------------------------------------------+-------------
+                                             0.32s   100% |   backpack-brawl-solver/internal/solver.starSeedSearch
+         0     0%  9.77%      0.32s  0.15%                | backpack-brawl-solver/internal/solver.appendStarSeedState
+                                             0.31s 96.88% |   backpack-brawl-solver/internal/solver.sortStarSeedStates (inline)
+                                             0.01s  3.12% |   runtime.growslice
+----------------------------------------------------------+-------------
+                                             0.01s 50.00% |   backpack-brawl-solver/internal/solver.perInstanceBlockers
+                                             0.01s 50.00% |   backpack-brawl-solver/internal/solver.plateauIndirectBlockers
+         0     0%  9.77%      0.02s 0.0091%                | backpack-brawl-solver/internal/solver.blockingInstancesForOptions
+                                             0.01s 50.00% |   runtime.mapIterNext
+                                             0.01s 50.00% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.32s   100% |   backpack-brawl-solver/internal/solver.plateauTieBreakLNS.func1
+         0     0%  9.77%      0.32s  0.15%                | backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+                                             0.28s 87.50% |   backpack-brawl-solver/internal/solver.directedOptionCompatibility
+                                             0.02s  6.25% |   backpack-brawl-solver/internal/solver.nearbyInstances
+                                             0.01s  3.12% |   backpack-brawl-solver/internal/solver.looseSourceCanTarget
+                                             0.01s  3.12% |   backpack-brawl-solver/internal/solver.plateauIndirectBlockers
+----------------------------------------------------------+-------------
+                                             0.56s   100% |   backpack-brawl-solver/internal/solver.repairSearch
+         0     0%  9.77%      0.56s  0.26%                | backpack-brawl-solver/internal/solver.buildRepairNeighborhoods
+                                             0.56s   100% |   backpack-brawl-solver/internal/solver.addLooseStarNeighborhoods
+----------------------------------------------------------+-------------
+                                             2.96s 99.66% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                             0.01s  0.34% |   backpack-brawl-solver/internal/solver.plateauState
+         0     0%  9.77%      2.97s  1.35%                | backpack-brawl-solver/internal/solver.canonicalLinkSignature
+                                             2.91s 97.98% |   backpack-brawl-solver/internal/solver.canonicalLinkTokens
+                                             0.06s  2.02% |   strings.Join
+----------------------------------------------------------+-------------
+                                             0.12s   100% |   backpack-brawl-solver/internal/solver.canonicalLinkTokens
+         0     0%  9.77%      0.12s 0.055%                | backpack-brawl-solver/internal/solver.canonicalLinkToken
+                                             0.09s 75.00% |   runtime.concatstrings
+                                             0.03s 25.00% |   runtime.mapaccess1_faststr
+----------------------------------------------------------+-------------
+                                             2.91s   100% |   backpack-brawl-solver/internal/solver.canonicalLinkSignature
+         0     0%  9.77%      2.91s  1.33%                | backpack-brawl-solver/internal/solver.canonicalLinkTokens
+                                             2.74s 94.16% |   backpack-brawl-solver/internal/solver.physicalInstanceIDs
+                                             0.12s  4.12% |   backpack-brawl-solver/internal/solver.canonicalLinkToken
+                                             0.03s  1.03% |   runtime.makeslice
+                                             0.02s  0.69% |   sort.Strings
+----------------------------------------------------------+-------------
+                                             0.29s 69.05% |   backpack-brawl-solver/internal/solver.runTask.func1 (inline)
+                                             0.07s 16.67% |   backpack-brawl-solver/internal/solver.runRepairTask.func1 (inline)
+                                             0.04s  9.52% |   backpack-brawl-solver/internal/solver.starSeedSearch.func1 (inline)
+                                             0.01s  2.38% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func1 (inline)
+                                             0.01s  2.38% |   backpack-brawl-solver/internal/solver.packingSeedSearch.func1 (inline)
+         0     0%  9.77%      0.42s  0.19%                | backpack-brawl-solver/internal/solver.chargeNode
+                                             0.38s 90.48% |   backpack-brawl-solver/internal/solver.chargeNodeWithReason
+                                             0.04s  9.52% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).resultForFrontier
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.collectConstellationRootPackingSolution
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+----------------------------------------------------------+-------------
+                                             0.03s 75.00% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+                                             0.01s 25.00% |   backpack-brawl-solver/internal/solver.constellationOptionsForState
+         0     0%  9.77%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.constellationOptions
+                                             0.04s   100% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.04s   100% |   sort.partialInsertionSort_func
+         0     0%  9.77%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.constellationOptions.func1
+                                             0.02s 50.00% |   backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+                                             0.02s 50.00% |   backpack-brawl-solver/internal/solver.placementKey
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.constellationOptionsForState
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationOptions
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.selectConstellationV4States
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.constellationPrioritySourceGeometryOrbitKey
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationReflectedPrioritySourceGeometryKey
+----------------------------------------------------------+-------------
+                                             1.82s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0%  9.77%      1.82s  0.83%                | backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+                                             1.81s 99.45% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+                                             0.01s  0.55% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).FinalizeBudgetExhausted
+----------------------------------------------------------+-------------
+                                             0.14s   100% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+         0     0%  9.77%      0.14s 0.064%                | backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+                                             0.12s 85.71% |   backpack-brawl-solver/internal/solver.constellationExactKey
+                                             0.01s  7.14% |   backpack-brawl-solver/internal/solver.fmtMask (inline)
+                                             0.01s  7.14% |   runtime.concatstring5
+----------------------------------------------------------+-------------
+                                             0.16s   100% |   backpack-brawl-solver/internal/solver.constellationRootPackingStateLess
+         0     0%  9.77%      0.16s 0.073%                | backpack-brawl-solver/internal/solver.constellationRootPackingComparatorComponents
+                                             0.12s 75.00% |   backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents
+                                             0.04s 25.00% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.39s 97.50% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).commitDepth
+                                             0.01s  2.50% |   backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).terminalProjection
+         0     0%  9.77%      0.40s  0.18%                | backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations
+                                             0.40s   100% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             6.76s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  9.77%      6.76s  3.08%                | backpack-brawl-solver/internal/solver.constellationSeedSearch
+                                             3.69s 54.59% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+                                             1.82s 26.92% |   backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+                                             1.18s 17.46% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+                                             0.03s  0.44% |   backpack-brawl-solver/internal/solver.constellationOptions
+                                             0.02s   0.3% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+                                             0.01s  0.15% |   backpack-brawl-solver/internal/solver.constellationOptionsForState
+                                             0.01s  0.15% |   backpack-brawl-solver/internal/solver.selectConstellationStates
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.constellationSeedSearch.func1
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.chargeNode (inline)
+----------------------------------------------------------+-------------
+                                             3.69s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch (inline)
+         0     0%  9.77%      3.69s  1.68%                | backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+                                             3.53s 95.66% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+                                             0.08s  2.17% |   backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+                                             0.03s  0.81% |   backpack-brawl-solver/internal/solver.constellationSourceOptions
+                                             0.02s  0.54% |   backpack-brawl-solver/internal/solver.constellationExactKey
+                                             0.02s  0.54% |   backpack-brawl-solver/internal/solver.selectConstellationStates
+                                             0.01s  0.27% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func1
+----------------------------------------------------------+-------------
+                                             0.03s   100% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+         0     0%  9.77%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.constellationSourceOptions
+                                             0.03s   100% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.02s 66.67% |   sort.partition_func
+                                             0.01s 33.33% |   sort.insertionSort_func
+         0     0%  9.77%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.constellationSourceOptions.func1
+                                             0.02s 66.67% |   backpack-brawl-solver/internal/solver.placementKey
+                                             0.01s 33.33% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             3.53s 74.95% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+                                             1.18s 25.05% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0%  9.77%      4.71s  2.15%                | backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+                                             4.69s 99.58% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+                                             0.01s  0.21% |   backpack-brawl-solver/internal/solver.placementByInstanceID (inline)
+                                             0.01s  0.21% |   runtime.mapaccess2_faststr
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationRootMRVStateKey (inline)
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.fmtMask
+                                             0.01s   100% |   fmt.Sprintf
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.refineSolution
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.improvedCandidate
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.canonicalLayoutHash
+----------------------------------------------------------+-------------
+                                             0.04s   100% |   backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+         0     0%  9.77%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.insertCandidate
+                                             0.04s   100% |   backpack-brawl-solver/internal/solver.canonicalLayoutHash
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.looseSourceCanTarget
+                                             0.01s   100% |   backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems (inline)
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.(*starUpperBoundContext).matchingForSource
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.maximumSlotMatching
+                                             0.01s   100% |   runtime.newobject
+----------------------------------------------------------+-------------
+                                             0.02s 66.67% |   backpack-brawl-solver/internal/solver.runTask
+                                             0.01s 33.33% |   backpack-brawl-solver/internal/solver.runTasks
+         0     0%  9.77%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.mergeSolutions
+                                             0.03s   100% |   runtime.growslice
+----------------------------------------------------------+-------------
+                                             0.03s 60.00% |   backpack-brawl-solver/internal/solver.addPerInstanceLooseStarNeighborhoods
+                                             0.02s 40.00% |   backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+         0     0%  9.77%      0.05s 0.023%                | backpack-brawl-solver/internal/solver.nearbyInstances
+                                             0.02s 40.00% |   runtime.growslice
+                                             0.01s 20.00% |   backpack-brawl-solver/internal/solver.placementDistance (inline)
+                                             0.01s 20.00% |   runtime.duffcopy
+                                             0.01s 20.00% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.packingSeedSearch (inline)
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.packingSeedSearch.func1
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.chargeNode (inline)
+----------------------------------------------------------+-------------
+                                             0.17s   100% |   backpack-brawl-solver/internal/solver.constellationRootPackingStateLess
+         0     0%  9.77%      0.17s 0.077%                | backpack-brawl-solver/internal/solver.packingSeedStateVariantFirstDecisive
+                                             0.13s 76.47% |   backpack-brawl-solver/internal/solver.packingSeedStateComponentCompare
+                                             0.04s 23.53% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.03s   100% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+         0     0%  9.77%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching
+                                             0.02s 66.67% |   runtime.makeslice
+                                             0.01s 33.33% |   backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching.func1
+----------------------------------------------------------+-------------
+                                             0.02s   100% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+         0     0%  9.77%      0.02s 0.0091%                | backpack-brawl-solver/internal/solver.partialRepairSlotCanHitFixedTarget
+                                             0.02s   100% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             3.17s   100% |   backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+         0     0%  9.77%      3.17s  1.44%                | backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+                                             3.16s 99.68% |   backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+                                             0.01s  0.32% |   runtime.memequal
+----------------------------------------------------------+-------------
+                                             4.69s   100% |   backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+         0     0%  9.77%      4.69s  2.14%                | backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+                                             3.17s 67.59% |   backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+                                             1.48s 31.56% |   backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+                                             0.03s  0.64% |   backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+                                             0.01s  0.21% |   backpack-brawl-solver/internal/solver.PartialRepairState.anchoredPlacements
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.addPerInstanceLooseStarNeighborhoods
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.perInstanceBlockers
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.blockingInstancesForOptions
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.plateauIndirectBlockers
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.blockingInstancesForOptions
+----------------------------------------------------------+-------------
+                                             0.08s   100% |   backpack-brawl-solver/internal/solver.refinePlateau
+         0     0%  9.77%      0.08s 0.036%                | backpack-brawl-solver/internal/solver.plateauState
+                                             0.07s 87.50% |   backpack-brawl-solver/internal/solver.(*starUpperBoundContext).forPlacements
+                                             0.01s 12.50% |   backpack-brawl-solver/internal/solver.canonicalLinkSignature
+----------------------------------------------------------+-------------
+                                             0.32s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  9.77%      0.32s  0.15%                | backpack-brawl-solver/internal/solver.plateauTieBreakLNS
+                                             0.32s   100% |   backpack-brawl-solver/internal/solver.plateauTieBreakLNS.func1
+----------------------------------------------------------+-------------
+                                             0.32s   100% |   backpack-brawl-solver/internal/solver.plateauTieBreakLNS
+         0     0%  9.77%      0.32s  0.15%                | backpack-brawl-solver/internal/solver.plateauTieBreakLNS.func1
+                                             0.32s   100% |   backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+----------------------------------------------------------+-------------
+                                             0.52s   100% |   backpack-brawl-solver/internal/solver.addPerInstanceLooseStarNeighborhoods
+         0     0%  9.77%      0.52s  0.24%                | backpack-brawl-solver/internal/solver.rankedPerInstanceTargets
+                                             0.51s 98.08% |   backpack-brawl-solver/internal/solver.directedOptionCompatibility
+                                             0.01s  1.92% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   sort.insertionSort_func
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.rankedPerInstanceTargets.func1
+                                             0.01s   100% |   cmpbody
+----------------------------------------------------------+-------------
+                                             0.23s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  9.77%      0.23s   0.1%                | backpack-brawl-solver/internal/solver.refinePlateau
+                                             0.08s 34.78% |   backpack-brawl-solver/internal/solver.plateauState
+                                             0.07s 30.43% |   backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+                                             0.04s 17.39% |   backpack-brawl-solver/internal/solver.evaluateLayoutForConfig (inline)
+                                             0.02s  8.70% |   backpack-brawl-solver/internal/solver.sortPlateauWalk (inline)
+                                             0.01s  4.35% |   backpack-brawl-solver/internal/solver.canonicalLayoutHash
+                                             0.01s  4.35% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.45s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  9.77%      0.45s  0.21%                | backpack-brawl-solver/internal/solver.refineSolutions
+                                             0.45s   100% |   backpack-brawl-solver/internal/solver.refineSolution
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.runTask (inline)
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.remainingCellCounts
+                                             0.01s   100% |   runtime.makeslice
+----------------------------------------------------------+-------------
+                                            10.21s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  9.77%     10.21s  4.65%                | backpack-brawl-solver/internal/solver.repairSearch
+                                             9.65s 94.52% |   backpack-brawl-solver/internal/solver.runRepairNeighborhood
+                                             0.56s  5.48% |   backpack-brawl-solver/internal/solver.buildRepairNeighborhoods
+----------------------------------------------------------+-------------
+                                             9.65s   100% |   backpack-brawl-solver/internal/solver.repairSearch
+         0     0%  9.77%      9.65s  4.40%                | backpack-brawl-solver/internal/solver.runRepairNeighborhood
+                                             9.65s   100% |   backpack-brawl-solver/internal/solver.runRepairTasks
+----------------------------------------------------------+-------------
+                                             9.65s   100% |   backpack-brawl-solver/internal/solver.runRepairTasks
+         0     0%  9.77%      9.65s  4.40%                | backpack-brawl-solver/internal/solver.runRepairTask
+                                             9.65s   100% |   backpack-brawl-solver/internal/solver.runRepairTask.func1
+----------------------------------------------------------+-------------
+                                             9.65s   100% |   backpack-brawl-solver/internal/solver.runRepairNeighborhood
+         0     0%  9.77%      9.65s  4.40%                | backpack-brawl-solver/internal/solver.runRepairTasks
+                                             9.65s   100% |   backpack-brawl-solver/internal/solver.runRepairTask
+----------------------------------------------------------+-------------
+                                            69.22s   100% |   backpack-brawl-solver/internal/solver.runTasks
+         0     0%  9.77%     69.22s 31.55%                | backpack-brawl-solver/internal/solver.runTask
+                                            69.19s   100% |   backpack-brawl-solver/internal/solver.runTask.func3
+                                             0.02s 0.029% |   backpack-brawl-solver/internal/solver.mergeSolutions
+                                             0.01s 0.014% |   backpack-brawl-solver/internal/solver.remainingCellCounts (inline)
+----------------------------------------------------------+-------------
+                                            69.23s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  9.77%     69.23s 31.56%                | backpack-brawl-solver/internal/solver.runTasks
+                                            69.22s   100% |   backpack-brawl-solver/internal/solver.runTask
+                                             0.01s 0.014% |   backpack-brawl-solver/internal/solver.mergeSolutions
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.refineSolution
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.scoreOnlyImprovesSolution
+                                             0.01s   100% |   cmpbody
+----------------------------------------------------------+-------------
+                                             0.02s 66.67% |   backpack-brawl-solver/internal/solver.constellationSeedSearch.func5
+                                             0.01s 33.33% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+         0     0%  9.77%      0.03s 0.014%                | backpack-brawl-solver/internal/solver.selectConstellationStates
+                                             0.01s 33.33% |   backpack-brawl-solver/internal/solver.selectConstellationV4States
+                                             0.01s 33.33% |   runtime.mapassign_faststr
+                                             0.01s 33.33% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   sort.insertionSort_func
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.selectConstellationStates.func1
+                                             0.01s   100% |   runtime.duffcopy
+----------------------------------------------------------+-------------
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.selectConstellationStates
+         0     0%  9.77%      0.01s 0.0046%                | backpack-brawl-solver/internal/solver.selectConstellationV4States
+                                             0.01s   100% |   backpack-brawl-solver/internal/solver.constellationPrioritySourceGeometryOrbitKey
+----------------------------------------------------------+-------------
+                                            96.27s   100% |   backpack-brawl-solver/internal/solver.SolveLayout
+         0     0%  9.77%     96.27s 43.88%                | backpack-brawl-solver/internal/solver.solveLayoutStage
+                                            69.23s 71.91% |   backpack-brawl-solver/internal/solver.runTasks
+                                            10.21s 10.61% |   backpack-brawl-solver/internal/solver.repairSearch
+                                             6.76s  7.02% |   backpack-brawl-solver/internal/solver.constellationSeedSearch
+                                             5.94s  6.17% |   backpack-brawl-solver/internal/solver.packingSeedSearch
+                                             2.87s  2.98% |   backpack-brawl-solver/internal/solver.starSeedSearch
+                                             0.45s  0.47% |   backpack-brawl-solver/internal/solver.refineSolutions
+                                             0.32s  0.33% |   backpack-brawl-solver/internal/solver.plateauTieBreakLNS
+                                             0.23s  0.24% |   backpack-brawl-solver/internal/solver.refinePlateau
+                                             0.22s  0.23% |   backpack-brawl-solver/internal/solver.newStarPotentialContext
+                                             0.04s 0.042% |   backpack-brawl-solver/internal/solver.sortPlacementOptionsForCoverage
+----------------------------------------------------------+-------------
+                                             0.04s   100% |   backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%  9.77%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.sortPlacementOptionsForCoverage
+                                             0.04s   100% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.03s 75.00% |   sort.insertionSort_func
+                                             0.01s 25.00% |   sort.partialInsertionSort_func
+         0     0%  9.77%      0.04s 0.018%                | backpack-brawl-solver/internal/solver.sortPlacementOptionsForCoverage.func1
+                                             0.03s 75.00% |   backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+                                             0.01s 25.00% |   backpack-brawl-solver/internal/solver.placementKey
+----------------------------------------------------------+-------------
+                                             0.02s   100% |   backpack-brawl-solver/internal/solver.refinePlateau (inline)
+         0     0%  9.77%      0.02s 0.0091%                | backpack-brawl-solver/internal/solver.sortPlateauWalk
+                                             0.02s   100% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.31s 96.88% |   backpack-brawl-solver/internal/solver.appendStarSeedState (inline)
+                                             0.01s  3.12% |   backpack-brawl-solver/internal/solver.starSeedSearch (inline)
+         0     0%  9.77%      0.32s  0.15%                | backpack-brawl-solver/internal/solver.sortStarSeedStates
+                                             0.32s   100% |   sort.Slice
+----------------------------------------------------------+-------------
+                                             0.06s   100% |   backpack-brawl-solver/internal/solver.starSeedSearch
+         0     0%  9.77%      0.06s 0.027%                | backpack-brawl-solver/internal/solver.starSeedSearch.func1
+                                             0.04s 66.67% |   backpack-brawl-solver/internal/solver.chargeNode (inline)
+                                             0.02s 33.33% |   runtime.duffcopy
+----------------------------------------------------------+-------------

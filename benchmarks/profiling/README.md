@@ -133,6 +133,21 @@ from 14.13 sampled seconds to zero. Whole-profile allocation space falls by
 [`r1ie-findings.md`](r1ie-findings.md), and
 [`r1ie-evidence/`](r1ie-evidence/README.md).
 
+## R1I-F — post-R1I-E recalibration
+
+R1I-F rebuilt the full CPU/heap and operation hierarchy after R1I-E with six
+independent GSV1 CPU profiles and a combined V4 control. It is evidence-only
+and changes no solver source. The exact decision is **PROMOTE** one bounded
+`OriginalIndex` placement index for the outgoing upper bound, replacing both
+the per-check `placementByInstanceID` string-map construction and placed-target
+string lookups while retaining a legacy fallback for malformed domains. The
+two exclusive sibling edges total 9.01 of 219.39 sampled GSV1 CPU seconds, are
+material in all six CPU cases, reproduce at 9.23 seconds in V4, and clear the
+C1 bar at 3.08% conservative heuristic benefit. See
+[`r1if-protocol.md`](r1if-protocol.md),
+[`r1if-findings.md`](r1if-findings.md), and
+[`r1if-evidence/`](r1if-evidence/README.md).
+
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
 ### P0.1 collection protocol — only after P0.1A is merged
