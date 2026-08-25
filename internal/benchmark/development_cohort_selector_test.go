@@ -139,6 +139,59 @@ func TestDevelopmentCohortPartitionIsBalancedDeterministicAndLocallyStable(t *te
 	if len(first.WaveAIndexes) != 6 || len(first.WaveBIndexes) != 6 {
 		t.Fatalf("wave sizes A=%d B=%d", len(first.WaveAIndexes), len(first.WaveBIndexes))
 	}
+	if len(first.GreedyTrace) != 6 {
+		t.Fatalf("greedy trace steps=%d want=6", len(first.GreedyTrace))
+	}
+	descriptors := make([]DevelopmentCohortDescriptor, len(first.CandidateOrder))
+	for index, candidate := range first.CandidateOrder {
+		descriptors[index] = candidate.Descriptor
+	}
+	greedyWaveA := map[int]struct{}{}
+	for stepIndex, step := range first.GreedyTrace {
+		if step.Step != stepIndex {
+			t.Fatalf("greedy trace step=%d at index=%d", step.Step, stepIndex)
+		}
+		if step.CandidateIndex < 0 || step.CandidateIndex >= len(first.CandidateOrder) {
+			t.Fatalf("greedy trace candidate index=%d is out of range", step.CandidateIndex)
+		}
+		if _, exists := greedyWaveA[step.CandidateIndex]; exists {
+			t.Fatalf("greedy trace repeats candidate %d", step.CandidateIndex)
+		}
+		provisional := cloneDevelopmentCohortIndexSet(greedyWaveA)
+		provisional[step.CandidateIndex] = struct{}{}
+		wantMetric := publicDevelopmentCohortPartitionGreedyMetric(developmentCohortPartitionGreedyMetricFor(
+			schema,
+			descriptors,
+			provisional,
+			6,
+			first.CandidateOrder[step.CandidateIndex],
+			"fixture-partition-v1",
+		))
+		if !reflect.DeepEqual(step.Metric, wantMetric) {
+			t.Fatalf("greedy trace step %d metric=%+v want=%+v", stepIndex, step.Metric, wantMetric)
+		}
+		greedyWaveA[step.CandidateIndex] = struct{}{}
+	}
+	initialObjective := publicDevelopmentCohortPartitionObjective(
+		developmentCohortPartitionObjectiveFor(schema, descriptors, greedyWaveA, 6, "fixture-partition-v1"),
+	)
+	if !reflect.DeepEqual(initialObjective, first.InitialObjective) {
+		t.Fatalf("greedy trace objective=%+v want initial=%+v", initialObjective, first.InitialObjective)
+	}
+	for _, swap := range first.SwapTrace {
+		if _, exists := greedyWaveA[swap.RemovedFromWaveA]; !exists {
+			t.Fatalf("swap %d removes absent candidate %d", swap.Iteration, swap.RemovedFromWaveA)
+		}
+		if _, exists := greedyWaveA[swap.AddedToWaveA]; exists {
+			t.Fatalf("swap %d adds existing candidate %d", swap.Iteration, swap.AddedToWaveA)
+		}
+		delete(greedyWaveA, swap.RemovedFromWaveA)
+		greedyWaveA[swap.AddedToWaveA] = struct{}{}
+	}
+	reconstructedWaveA, _ := developmentCohortPartitionIndexes(len(first.CandidateOrder), greedyWaveA)
+	if !reflect.DeepEqual(reconstructedWaveA, first.WaveAIndexes) {
+		t.Fatalf("greedy and swap traces reconstruct Wave A %v, want %v", reconstructedWaveA, first.WaveAIndexes)
+	}
 	seen := map[int]string{}
 	for _, index := range first.WaveAIndexes {
 		seen[index] = "A"
@@ -155,10 +208,6 @@ func TestDevelopmentCohortPartitionIsBalancedDeterministicAndLocallyStable(t *te
 	assertDevelopmentCohortCategoriesRepresented(t, schema, partitionDevelopmentCohortDescriptors(first, first.WaveAIndexes))
 	assertDevelopmentCohortCategoriesRepresented(t, schema, partitionDevelopmentCohortDescriptors(first, first.WaveBIndexes))
 
-	descriptors := make([]DevelopmentCohortDescriptor, len(first.CandidateOrder))
-	for index, candidate := range first.CandidateOrder {
-		descriptors[index] = candidate.Descriptor
-	}
 	waveA := map[int]struct{}{}
 	for _, index := range first.WaveAIndexes {
 		waveA[index] = struct{}{}
@@ -191,7 +240,7 @@ func TestDevelopmentCohortPartitionGoldenTrace(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	const want = "8094450534c0cc039ef2eff543bf0d3289751fba9f83771dc14161751ab1a9e9"
+	const want = "cfd9c99b69935ef3d14dd10d9f25109521590fa36035c05bc64b3d50bc41d39b"
 	if hash != want {
 		t.Fatalf("partition trace hash=%s want=%s", hash, want)
 	}
@@ -222,6 +271,34 @@ func TestDevelopmentCohortV2SchemaAndConversionsAreFrozen(t *testing.T) {
 		if err != nil || !reflect.DeepEqual(roundTrip, descriptor) {
 			t.Fatalf("round trip=%+v want=%+v err=%v", roundTrip, descriptor, err)
 		}
+	}
+}
+
+func TestDevelopmentCohortAttainablePairCountsAreFrozen(t *testing.T) {
+	v2Pairs, err := DevelopmentCohortAttainablePairCount(SearchSuiteV2DevelopmentCohortSchema())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if v2Pairs != 164 {
+		t.Fatalf("V2 attainable categorical value pairs=%d want=164", v2Pairs)
+	}
+
+	v3Schema := DevelopmentCohortSchema{Version: 1, Dimensions: []DevelopmentCohortDimension{
+		{Name: "grid_topology", Values: []string{"full", "bottleneck", "holes", "two-lobes", "narrow-corridors"}},
+		{Name: "density", Values: []string{"sparse", "dense", "very-dense"}},
+		{Name: "source_count", Values: []string{"2", "3"}},
+		{Name: "source_copies", Values: []string{"singleton", "mixed"}},
+		{Name: "compatibility_graph", Values: []string{"mostly-exclusive", "mixed", "mostly-shared"}},
+		{Name: "target_count", Values: []string{"small", "large"}},
+		{Name: "filler_symmetry", Values: []string{"low", "high"}},
+		{Name: "rotation_entropy", Values: []string{"low", "high"}},
+	}}
+	v3Pairs, err := DevelopmentCohortAttainablePairCount(v3Schema)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if v3Pairs != 189 {
+		t.Fatalf("V3 attainable categorical value pairs=%d want=189", v3Pairs)
 	}
 }
 
@@ -301,17 +378,31 @@ func TestDevelopmentCohortImplementationHasOutcomeBlindDependencyBoundary(t *tes
 }
 
 func TestGeneralSearchV2ManifestRemainsByteFrozen(t *testing.T) {
-	content, err := os.ReadFile(filepath.Join("..", "..", "benchmarks", "suites", "general-search-v2.json"))
+	assertLFNormalizedFileSHA256(t,
+		filepath.Join("..", "..", "benchmarks", "suites", "general-search-v2.json"),
+		"5d1757c37580b04c9a85b738ea2672d8a0b3c8402c8ed5a509c8c42fd5d4b513",
+	)
+}
+
+func TestGeneralSearchV2LockRemainsByteFrozen(t *testing.T) {
+	assertLFNormalizedFileSHA256(t,
+		filepath.Join("..", "..", "benchmarks", "suites", "general-search-v2.lock"),
+		"96af8290e8741b4ef6f514b0df32820f8ccd241695eb5b1d671fc6cc2fd5aa6d",
+	)
+}
+
+func assertLFNormalizedFileSHA256(t *testing.T, path string, want string) {
+	t.Helper()
+	content, err := os.ReadFile(path)
 	if err != nil {
 		t.Fatal(err)
 	}
-	// Git stores this text file with LF. Normalize the checkout transport so
-	// core.autocrlf cannot make the repository-blob hash platform-dependent.
+	// Git stores these text files with LF. Normalize the checkout transport so
+	// core.autocrlf cannot make the repository-content hash platform-dependent.
 	content = bytes.ReplaceAll(content, []byte("\r\n"), []byte("\n"))
 	digest := sha256.Sum256(content)
-	const want = "5d1757c37580b04c9a85b738ea2672d8a0b3c8402c8ed5a509c8c42fd5d4b513"
 	if got := hex.EncodeToString(digest[:]); got != want {
-		t.Fatalf("general-search-v2.json byte hash=%s want frozen=%s", got, want)
+		t.Fatalf("%s LF-normalized SHA-256=%s want frozen=%s", path, got, want)
 	}
 }
 

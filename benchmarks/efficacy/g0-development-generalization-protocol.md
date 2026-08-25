@@ -46,21 +46,25 @@ holdout `gsv2-007..012` are outside G0 and stay closed.
 ## Immutable existing population
 
 `benchmarks/suites/general-search-v2.json` remains byte-for-byte unchanged.
-Its frozen raw SHA-256 is:
+Its frozen Git blob ID and LF-normalized content SHA-256 are:
 
 ```text
+Git blob: dddd10268eeaea28ecf6d03004d540235b61cd35
+LF-normalized SHA-256:
 5d1757c37580b04c9a85b738ea2672d8a0b3c8402c8ed5a509c8c42fd5d4b513
 ```
 
-Its lock also remains unchanged; the current raw lock SHA-256 is:
+Its lock also remains unchanged. Its frozen identities are:
 
 ```text
+Git blob: 61baa41bd6e64d0fade196ab7fd8548524b23afa
+LF-normalized SHA-256:
 96af8290e8741b4ef6f514b0df32820f8ccd241695eb5b1d671fc6cc2fd5aa6d
 ```
 
 No `gsv2-037` or later case may be appended to that manifest. New populations
 receive new names, manifests, locks, and hashes. An executable test enforces
-the manifest's byte hash.
+the manifest and lock LF-normalized content hashes across checkout platforms.
 
 ## Four manual merge boundaries
 
@@ -232,6 +236,12 @@ Wave A is filled greedily. At each addition the smallest tuple wins:
 )
 ```
 
+Every greedy winner is recorded in `greedy_trace` with its zero-based step,
+canonical candidate index, exact marginal discrepancy, exact pairwise
+discrepancy, minimum Hamming distance, and domain-separated tie-break hash.
+Thus `partition-trace.json` audits the initial Wave A construction without
+requiring the implementation to be rerun.
+
 Wave B is the complement. The complete partition objective is:
 
 ```text
@@ -255,9 +265,9 @@ SHA256(
 
 After the greedy split, the partitioner evaluates every one-for-one A/B swap,
 applies the lexicographically best strict improvement, and repeats until no
-one-swap improvement exists. Every applied swap and objective is recorded.
-Strict improvement in a total ordering guarantees termination. Synthetic
-golden tests freeze the trace.
+one-swap improvement exists. Every greedy choice, applied swap, and objective
+is recorded. Strict improvement in a total ordering guarantees termination.
+Synthetic golden tests freeze the complete trace.
 
 Official partition namespaces are frozen as:
 
@@ -336,10 +346,11 @@ V2 structural gates fixed before selection are:
 - every V2 category appears in `core + expansion`;
 - within each combined-population marginal, maximum count minus minimum count
   is at most one;
-- combined pairwise coverage is at least 90% of the 162 attainable categorical
-  value pairs and exceeds core coverage by at least 20 pairs;
-- each 18-case wave contains every category and covers at least 70% of the 162
-  attainable value pairs;
+- combined pairwise coverage is at least 148 of the 164 attainable categorical
+  value pairs (the ceiling of 90%) and exceeds core coverage by at least 20
+  pairs;
+- each 18-case wave contains every category and covers at least 115 of the 164
+  attainable value pairs (the ceiling of 70%);
 - every materialization passes requested-versus-realized validation and the
   structural packability witness;
 - `benchmark_scenario_runs=0`.
@@ -482,9 +493,9 @@ rotation:      15 / 15
 
 Each wave must have topology count 3 each, density count 5 each,
 compatibility count 5 each, and each binary marginal count difference at most
-one. Each wave must contain every category and reach at least 65% of all
-attainable V3 categorical value pairs. The official audit publishes the exact
-pairwise count and both-wave distance distributions.
+one. Each wave must contain every category and cover at least 123 of the 189
+attainable V3 categorical value pairs (the ceiling of 65%). The official audit
+publishes the exact pairwise count and both-wave distance distributions.
 
 All 30 IDs, seeds, descriptors, and materializations must be unique and
 reproducible. Every requested-versus-realized structural validation and
@@ -509,10 +520,11 @@ partition-trace.json
 freeze-record.txt
 ```
 
-The freeze record includes raw manifest and lock SHA-256 values, sampler and
-generator commits, catalog Git blob, universe hash, selection trace hash,
-partition trace hash, and seed-derivation hash. It explicitly records zero
-benchmark scenario runs. Manifests and registries contain no output fields.
+The freeze record includes manifest and lock Git blob IDs plus LF-normalized
+content SHA-256 values, sampler and generator commits, catalog Git blob,
+universe hash, selection trace hash, partition trace hash, and seed-derivation
+hash. It explicitly records zero benchmark scenario runs. Manifests and
+registries contain no output fields.
 
 ## Cohort states and seal governance
 
