@@ -1,0 +1,38 @@
+R1I-G causal CPU and memory summary
+
+GSV1 CPU:
+baseline_total_seconds=267.78
+baseline_map_builder_seconds=7.34
+baseline_target_lookup_seconds=3.77
+baseline_target_region_seconds=11.11
+candidate_total_seconds=240.68
+candidate_index_builder_seconds=0.39
+candidate_target_array_access_seconds=0.18
+candidate_target_slice_access_seconds=0.61
+candidate_target_access_seconds=0.79
+candidate_target_region_seconds=1.18
+target_region_reduction_percent=89.37893789378938
+
+V4 CPU control:
+baseline_total_seconds=293.26
+baseline_map_builder_seconds=7.23
+baseline_target_lookup_seconds=3.87
+baseline_target_region_seconds=11.10
+candidate_total_seconds=259.34
+candidate_index_builder_seconds=0.45
+candidate_target_array_access_seconds=0.22
+candidate_target_slice_access_seconds=0.79
+candidate_target_access_seconds=1.01
+candidate_target_region_seconds=1.46
+target_region_reduction_percent=86.84684684684684
+
+GSV1 heap:
+baseline_alloc_space_bytes=220492800388
+candidate_alloc_space_bytes=201775909120
+alloc_space_change_percent=-8.48866322848818
+baseline_alloc_objects=216583997
+candidate_alloc_objects=208710348
+alloc_objects_change_percent=-3.6353789333752107
+baseline_placementByInstanceID_alloc_space_mib=17361.37
+baseline_placementByInstanceID_alloc_objects=10976358
+candidate_placementByInstanceID_top_allocation=absent

@@ -43,14 +43,16 @@ foreach ($entry in $profiles) {
     Invoke-PProfExtract "$role-gsv1-cpu-top.txt" $binary $gsv1CPU @("-top")
     Invoke-PProfExtract "$role-gsv1-cpu-top-cum.txt" $binary $gsv1CPU @("-top", "-cum")
     Invoke-PProfExtract "$role-gsv1-outgoing-source.txt" $binary $gsv1CPU @("-list", "upperPriorityCounts")
-    Invoke-PProfExtract "$role-gsv1-index-source.txt" $binary $gsv1CPU @("-list", "buildOutgoingPlacementIndex")
     Invoke-PProfExtract "$role-gsv1-outgoing-callers.txt" $binary $gsv1CPU @("-peek", "upperPriorityCounts|placementByInstanceID|buildOutgoingPlacementIndex")
     Invoke-PProfExtract "$role-v4-cpu-top.txt" $binary $v4CPU @("-top")
     Invoke-PProfExtract "$role-v4-outgoing-source.txt" $binary $v4CPU @("-list", "upperPriorityCounts")
-    Invoke-PProfExtract "$role-v4-index-source.txt" $binary $v4CPU @("-list", "buildOutgoingPlacementIndex")
     Invoke-PProfExtract "$role-heap-alloc-space.txt" $binary $heap @("-sample_index=alloc_space", "-top")
     Invoke-PProfExtract "$role-heap-alloc-objects.txt" $binary $heap @("-sample_index=alloc_objects", "-top")
     Invoke-PProfExtract "$role-heap-inuse-space.txt" $binary $heap @("-sample_index=inuse_space", "-top")
+    if ($role -eq "candidate") {
+        Invoke-PProfExtract "$role-gsv1-index-source.txt" $binary $gsv1CPU @("-list", "buildOutgoingPlacementIndex")
+        Invoke-PProfExtract "$role-v4-index-source.txt" $binary $v4CPU @("-list", "buildOutgoingPlacementIndex")
+    }
 }
 
 Write-Output "Wrote R1I-G causal profile extracts to $reviewRoot"
