@@ -1,0 +1,14 @@
+R1I-E accounting validation
+baseline_revision=91af7e6e6f6469e13ae792c7d199ebad92883ea1
+candidate_revision=4289c6f5e8c63fe4d2073132ddee57cea7d0f590
+smoke_semantics=PASS
+semantic_comparisons=42
+logical_profile_equality=PASS
+priority_identities=PASS
+outgoing_identities=PASS
+profiled_runs=82
+zero_work_runs=2
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false
+decision=KEEP

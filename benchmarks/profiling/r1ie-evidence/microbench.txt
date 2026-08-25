@@ -1,0 +1,24 @@
+R1I-E placement-key microbenchmark medians
+Go 1.25.6 windows/amd64; Intel Core i5-11300H; -benchmem -count=10
+
+benchmark                                  median ns/op   B/op   allocs/op
+BenchmarkPlacementKeyLegacy/cells=1             334.40      80           3
+BenchmarkPlacementKeyCandidate/cells=1           77.27      56           2
+BenchmarkPlacementKeyLegacy/cells=4             739.40     144           4
+BenchmarkPlacementKeyCandidate/cells=4          115.30      80           2
+BenchmarkPlacementKeyLegacy/cells=8            1198.00     272           5
+BenchmarkPlacementKeyCandidate/cells=8          167.10     112           2
+
+BenchmarkPlacementKey/cells=1                    78.345     56           2
+BenchmarkPlacementKey/cells=4                   115.05      80           2
+BenchmarkPlacementKey/cells=8                   164.45     112           2
+BenchmarkCoveragePlacementKey/cells=1            97.605     56           2
+BenchmarkCoveragePlacementKey/cells=4           164.40     144           3
+BenchmarkCoveragePlacementKey/cells=8           227.55     208           3
+
+Candidate versus legacy time reduction:
+  cells=1: 76.89%
+  cells=4: 84.41%
+  cells=8: 86.05%
+
+Raw ten-count output remains in the read-only external artifact bundle.
