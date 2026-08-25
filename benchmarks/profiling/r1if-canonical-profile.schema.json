@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "r1if-canonical-profile.schema.json",
+  "title": "R1I-F canonical pprof extraction",
+  "type": "object",
+  "required": ["version", "generated_by", "binary", "cpu_profiles", "heap_profiles", "extract_invocation"],
+  "properties": {
+    "version": {"const": "r1if-canonical-profile-v1"},
+    "generated_by": {"const": "r1if-profile-extract.ps1"},
+    "binary": {"type": "string", "minLength": 1},
+    "extract_invocation": {
+      "type": "object",
+      "required": ["default_symbols", "extra_symbols"],
+      "properties": {
+        "default_symbols": {"type": "array", "items": {"$ref": "#/$defs/symbolSpec"}},
+        "extra_symbols": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "cpu_profiles": {
+      "type": "object",
+      "required": ["combined_gsv1", "combined_v4", "per_case"],
+      "properties": {
+        "combined_gsv1": {"$ref": "#/$defs/cpuProfile"},
+        "combined_v4": {"$ref": "#/$defs/cpuProfile"},
+        "per_case": {
+          "type": "object",
+          "required": ["gsv2-013", "gsv2-015", "gsv2-016", "gsv2-018", "gsv2-021", "gsv2-024"],
+          "additionalProperties": {"$ref": "#/$defs/cpuProfile"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "heap_profiles": {
+      "type": "object",
+      "required": ["alloc_space", "alloc_objects", "inuse_space"],
+      "additionalProperties": {"$ref": "#/$defs/heapProfile"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "symbolSpec": {
+      "type": "object",
+      "required": ["id", "regexp"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "regexp": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "functionRow": {
+      "type": "object",
+      "required": ["rank", "symbol", "flat", "flat_fraction", "cum", "cum_fraction"],
+      "properties": {
+        "rank": {"type": "integer", "minimum": 1},
+        "symbol": {"type": "string", "minLength": 1},
+        "flat": {"type": "number", "minimum": 0},
+        "flat_fraction": {"type": "number", "minimum": 0},
+        "cum": {"type": "number", "minimum": 0},
+        "cum_fraction": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "sourceLine": {
+      "type": "object",
+      "required": ["line", "flat_seconds", "cum_seconds", "source"],
+      "properties": {
+        "line": {"type": "integer", "minimum": 1},
+        "flat_seconds": {"type": "number", "minimum": 0},
+        "cum_seconds": {"type": "number", "minimum": 0},
+        "source": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "routine": {
+      "type": "object",
+      "required": ["symbol", "file", "lines"],
+      "properties": {
+        "symbol": {"type": "string", "minLength": 1},
+        "file": {"type": "string", "minLength": 1},
+        "lines": {"type": "array", "items": {"$ref": "#/$defs/sourceLine"}}
+      },
+      "additionalProperties": false
+    },
+    "sourceExtract": {
+      "type": "object",
+      "required": ["id", "regexp", "text_path", "routines"],
+      "properties": {
+        "id": {"type": "string"},
+        "regexp": {"type": "string"},
+        "text_path": {"type": "string"},
+        "routines": {"type": "array", "items": {"$ref": "#/$defs/routine"}}
+      },
+      "additionalProperties": false
+    },
+    "cpuProfile": {
+      "type": "object",
+      "required": ["id", "raw_profile", "total_seconds", "top", "top_cum", "source_extracts"],
+      "properties": {
+        "id": {"type": "string"},
+        "raw_profile": {"type": "string"},
+        "total_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "top": {"type": "array", "items": {"$ref": "#/$defs/functionRow"}},
+        "top_cum": {"type": "array", "items": {"$ref": "#/$defs/functionRow"}},
+        "source_extracts": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sourceExtract"}}
+      },
+      "additionalProperties": false
+    },
+    "heapProfile": {
+      "type": "object",
+      "required": ["sample_index", "raw_profile", "total", "unit", "top"],
+      "properties": {
+        "sample_index": {"enum": ["alloc_space", "alloc_objects", "inuse_space"]},
+        "raw_profile": {"type": "string"},
+        "total": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"enum": ["bytes", "objects"]},
+        "top": {"type": "array", "items": {"$ref": "#/$defs/functionRow"}}
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "r1if-review-input.schema.json",
+  "title": "R1I-F candidate classification input",
+  "type": "object",
+  "required": ["version", "frozen_sha", "candidates", "inventory", "decision"],
+  "properties": {
+    "version": {"const": "r1if-review-input-v1"},
+    "frozen_sha": {"const": "9c804a566a166fd96cb7b385a0ca9dfc43bcbb9b"},
+    "candidates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "inventory": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/inventory"}
+    },
+    "decision": {"$ref": "#/$defs/decision"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "cpuMetric": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind", "symbol", "value"],
+          "properties": {
+            "kind": {"const": "function"},
+            "symbol": {"type": "string", "minLength": 1},
+            "value": {"enum": ["flat", "cum"]}
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "extract_id", "routine", "lines", "value"],
+          "properties": {
+            "kind": {"const": "source_lines"},
+            "extract_id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+            "routine": {"type": "string", "minLength": 1},
+            "lines": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+            "value": {"enum": ["flat", "cum"]}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "heapMetric": {
+      "type": "object",
+      "required": ["sample_index", "symbol", "value"],
+      "properties": {
+        "sample_index": {"enum": ["alloc_space", "alloc_objects", "inuse_space"]},
+        "symbol": {"type": "string", "minLength": 1},
+        "value": {"enum": ["flat", "cum"]}
+      },
+      "additionalProperties": false
+    },
+    "operationMetric": {
+      "type": "object",
+      "required": ["family", "field"],
+      "properties": {
+        "family": {"enum": ["priority", "outgoing"]},
+        "field": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["id", "family", "mechanism", "parent_metric", "target_metric", "per_case_target_metric", "plausible_removal_fraction", "operation_metrics", "operation_breadth_note", "complexity_class", "semantic_risk", "evidence_quality", "extract_citations", "parent", "child", "exclusive_subregion", "overlap_group", "promotion_gate", "disposition", "rationale"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9-]+$"},
+        "family": {"type": "string", "minLength": 1},
+        "mechanism": {"type": "string", "minLength": 1},
+        "parent_metric": {"$ref": "#/$defs/cpuMetric"},
+        "target_metric": {"$ref": "#/$defs/cpuMetric"},
+        "per_case_target_metric": {"$ref": "#/$defs/cpuMetric"},
+        "v4_target_metric": {"$ref": "#/$defs/cpuMetric"},
+        "alloc_space_metric": {"$ref": "#/$defs/heapMetric"},
+        "alloc_objects_metric": {"$ref": "#/$defs/heapMetric"},
+        "plausible_removal_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "operation_metrics": {"type": "array", "items": {"$ref": "#/$defs/operationMetric"}},
+        "operation_breadth_note": {"type": "string", "minLength": 1},
+        "complexity_class": {"enum": ["C0", "C1", "C2"]},
+        "semantic_risk": {"type": "string", "minLength": 1},
+        "evidence_quality": {"type": "string", "minLength": 1},
+        "extract_citations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "parent": {"type": "string", "minLength": 1},
+        "child": {"type": "string", "minLength": 1},
+        "exclusive_subregion": {"type": "boolean"},
+        "overlap_group": {"type": "string", "minLength": 1},
+        "promotion_gate": {
+          "type": "object",
+          "required": ["causal_region_isolable", "semantic_risk_acceptable", "no_stronger_overlapping_explanation"],
+          "properties": {
+            "causal_region_isolable": {"type": "boolean"},
+            "semantic_risk_acceptable": {"type": "boolean"},
+            "no_stronger_overlapping_explanation": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        },
+        "archive_semantics": {
+          "type": "object",
+          "required": ["admission_semantics", "selected_set_equivalence", "selected_order_equivalence", "signature_diversity", "downstream_base_selection"],
+          "properties": {
+            "admission_semantics": {"type": "string", "minLength": 1},
+            "selected_set_equivalence": {"type": "string", "minLength": 1},
+            "selected_order_equivalence": {"type": "string", "minLength": 1},
+            "signature_diversity": {"type": "string", "minLength": 1},
+            "downstream_base_selection": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "disposition": {"enum": ["PROMOTE", "REJECT", "MORE_EVIDENCE"]},
+        "rationale": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "inventory": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["cpu_edge_ge_1pct", "cpu_parent_ge_1_5pct", "cpu_flat_project_owned_top20", "cpu_cum_project_owned_top20", "heap_alloc_space_ge_1pct", "heap_alloc_objects_project_owned_top10", "carry_forward"]},
+        "rank": {"type": "integer", "minimum": 1},
+        "symbol": {"type": "string"},
+        "mechanism": {"type": "string"},
+        "metric": {"$ref": "#/$defs/cpuMetric"},
+        "candidate_id": {"type": "string"},
+        "exclusion_reason": {"type": "string"}
+      },
+      "oneOf": [
+        {"required": ["candidate_id"], "not": {"required": ["exclusion_reason"]}},
+        {"required": ["exclusion_reason"], "not": {"required": ["candidate_id"]}}
+      ],
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["PROMOTE", "NEED_MORE_EVIDENCE", "DECLINE"]},
+        "candidate_id": {"type": "string"},
+        "mechanism": {"type": "string"},
+        "missing_data": {"type": "string"},
+        "instrumentation": {"type": "string"},
+        "rationale": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
