@@ -161,7 +161,10 @@ function Assert-Report([string]$Path, [string]$Variant, [int[]]$Budgets, [bool]$
     $ExpectedKeys = @($ExpectedCases | ForEach-Object { $Scenario = $_; $Budgets | ForEach-Object { "$Scenario|$_|1" } } | Sort-Object)
     if (($ActualKeys -join ',') -ne ($ExpectedKeys -join ',')) { throw "report run keys mismatch: $Path" }
     foreach ($Run in $Report.runs) {
-        if ($Run.error) { throw "solver error in $Path for $($Run.scenario): $($Run.error)" }
+        $ErrorProperty = $Run.PSObject.Properties["error"]
+        if ($null -ne $ErrorProperty -and -not [string]::IsNullOrWhiteSpace([string]$ErrorProperty.Value)) {
+            throw "solver error in $Path for $($Run.scenario): $($ErrorProperty.Value)"
+        }
     }
 }
 
