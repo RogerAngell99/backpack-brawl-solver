@@ -1,0 +1,8 @@
+R1I-G raw artifact freeze
+raw_file_count=123
+raw_total_bytes=39227586
+manifest_sha256=c4b7d5bc35da830814669d43bb143f81350a836cd5b030a26ca99211a64847ee
+read_only=true
+hash_revalidation=PASS
+post_freeze_solver_runs=0
+post_analysis_raw_hash_revalidation=PASS

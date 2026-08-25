@@ -148,6 +148,22 @@ C1 bar at 3.08% conservative heuristic benefit. See
 [`r1if-findings.md`](r1if-findings.md), and
 [`r1if-evidence/`](r1if-evidence/README.md).
 
+## R1I-G — bounded outgoing placement index
+
+R1I-G replaces per-check outgoing placement string-map construction and
+source/target string lookups with a bounded `OriginalIndex` index. It retains
+the literal legacy map path whenever inventory or placements do not prove a
+unique valid 0..63 domain, including duplicate last-write-wins inputs.
+
+R1I-G is **KEEP**: all 42 semantic comparisons and logical profiles are exact,
+all six timing medians improve, aggregate paired improvement is 24.64%,
+sum-median weighted improvement is 10.86%, and the causal map/index target
+region falls 89.38%. Combined allocation space falls 8.49% and allocation
+objects fall 3.64%; the indexed builder reports zero allocation at every
+tested size. See [`r1ig-protocol.md`](r1ig-protocol.md),
+[`r1ig-findings.md`](r1ig-findings.md), and
+[`r1ig-evidence/`](r1ig-evidence/README.md).
+
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
 ### P0.1 collection protocol — only after P0.1A is merged

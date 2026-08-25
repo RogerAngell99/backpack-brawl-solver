@@ -1,0 +1,33 @@
+R1I-G microbenchmark medians (10 samples)
+
+placement lookup/index builder:
+size role     median_ns   B/op  allocs/op
+1    legacy      393.25   1328          2
+1    indexed      17.84      0          0
+4    legacy      457.40   1328          2
+4    indexed      31.98      0          0
+8    legacy      517.20   1328          2
+8    indexed      55.02      0          0
+16   legacy     3053.00   8952          7
+16   indexed      98.80      0          0
+32   legacy     6088.50  18456          9
+32   indexed     187.95      0          0
+64   legacy    12375.00  37560         11
+64   indexed     337.85      0          0
+
+upperPriorityCounts fixture:
+size role     median_ns   B/op  allocs/op
+1    legacy      221.70     64          3
+1    indexed     155.00     64          3
+4    legacy      474.50     64          3
+4    indexed     287.10     64          3
+8    legacy     1141.00    120          5
+8    indexed     680.45    120          5
+16   legacy     6446.50   7856         14
+16   indexed    1944.00    232          9
+32   legacy    16970.50  17584         24
+32   indexed    5936.00    456         17
+64   legacy    48959.00  37136         42
+64   indexed   20594.50    904         33
+
+Gate: indexed builder valid-domain 0 B/op / 0 allocs/op at all sizes PASS.

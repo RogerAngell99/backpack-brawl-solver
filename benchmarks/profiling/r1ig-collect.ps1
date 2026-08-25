@@ -97,7 +97,8 @@ foreach ($entry in @(
 $manifestPath = Join-Path $candidateRoot "benchmarks\suites\general-search-v2.json"
 $lockPath = Join-Path $candidateRoot "benchmarks\suites\general-search-v2.lock"
 $catalogPath = Join-Path $candidateRoot "data\catalog.json"
-$generatorPath = Join-Path $candidateRoot "internal\benchmark\search_suite.go"
+$generatorRegistryPath = Join-Path $candidateRoot "internal\benchmark\suite_generator.go"
+$generatorV2Path = Join-Path $candidateRoot "internal\benchmark\suite_generator_v2.go"
 $systemLines = @(
     "R1I-G official collection provenance"
     "baseline_revision=$baseRevision"
@@ -117,7 +118,8 @@ $systemLines = @(
     "catalog_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $catalogPath).Hash.ToLowerInvariant())"
     "suite_manifest_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $manifestPath).Hash.ToLowerInvariant())"
     "suite_lock_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $lockPath).Hash.ToLowerInvariant())"
-    "generator_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $generatorPath).Hash.ToLowerInvariant())"
+    "generator_registry_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $generatorRegistryPath).Hash.ToLowerInvariant())"
+    "generator_v2_sha256=$((Get-FileHash -Algorithm SHA256 -LiteralPath $generatorV2Path).Hash.ToLowerInvariant())"
 ) + $metadataLines
 [System.IO.File]::WriteAllLines((Join-Path $provenanceRoot "provenance.txt"), $systemLines, [System.Text.UTF8Encoding]::new($false))
 
