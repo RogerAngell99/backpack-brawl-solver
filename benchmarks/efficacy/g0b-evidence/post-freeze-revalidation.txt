@@ -1,0 +1,31 @@
+G0-B POST-FREEZE REVALIDATION
+
+evidence_sha=3a2b672bdf72dde2a595df4651f003fbeda287a1
+clean_second_checkout=PASS
+semantic_lock_reproduction=PASS
+canonical_byte_lock_reproduction=PASS
+manifest_derived_coverage_reconstruction=PASS
+historical_manifest_unchanged=PASS
+historical_lock_unchanged=PASS
+frozen_selection_artifacts_unchanged=PASS
+
+gofmt_l_lf_checkout=PASS
+git_diff_check=PASS
+go_test_all=PASS
+go_test_searchprofile_all=PASS
+go_test_race_solver=PASS
+go_test_race_searchprofile_solver=PASS
+go_vet_internal_benchmark=PASS
+general_search_v1_lock=PASS
+general_search_v2_lock=PASS
+confirm_a_lock=PASS
+confirm_b_lock=PASS
+npm_ci=PASS
+npm_run_build=PASS
+
+npm_audit_observation=5 vulnerabilities (2 low, 3 high); build unaffected; no dependency mutation performed
+post_freeze_revalidation=PASS
+post_freeze_benchmark_search_runs=0
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false
