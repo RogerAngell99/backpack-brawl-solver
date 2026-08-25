@@ -1,0 +1,77 @@
+G0-B BLIND V2 DEVELOPMENT EXPANSION PROVENANCE
+
+base_main_sha=6fe47febe6ce89f110a86dc0a3ae38e285df32f5
+tooling_commit_sha=3889bfbc9f71689f6b5c3caa7f868eac70958930
+selection_freeze_commit_sha=10b63784a8db0407b2c74fa48aef3937dd71284a
+materialization_evidence_commit_sha=3a2b672bdf72dde2a595df4651f003fbeda287a1
+
+branch=codex/g0b-blind-v2-development-expansion
+selection_namespace=gsv2-devexp-v1
+partition_namespace=gsv2-devexp-partition-v1
+generator_version=search-suite-generator-v2
+catalog_canonical_sha256=0ab356afc52fa8479b627d4a917bc7f31d4cad1b6e021fd618ec17ef773c57c6
+
+official_selection_runs=1
+official_population_members=36
+confirm_a_members=18
+confirm_b_members=18
+benchmark_scenario_runs=0
+normal_solver_runs=0
+searchprofile_runs=0
+efficacy_quality_runs=0
+efficacy_diagnostic_runs=0
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false
+
+PRE-FREEZE COMMANDS
+
+git fetch origin
+git status --porcelain=v1
+git rev-parse origin/main
+go test ./...
+go test -tags searchprofile ./...
+go run ./cmd/g0b-v2-expansion preflight --repo . --out <external-exclusive-record>
+go run ./cmd/g0b-v2-expansion select --repo . --preflight <record> --out benchmarks/efficacy/g0b-evidence
+
+MATERIALIZATION COMMAND
+
+go run ./cmd/g0b-v2-expansion materialize --repo . --evidence benchmarks/efficacy/g0b-evidence --selection-freeze-sha 10b63784a8db0407b2c74fa48aef3937dd71284a
+
+The first invocation stopped before any materialization because the new
+integrity verifier used generic-map JSON key order. No manifest or lock existed
+and no structural witness ran. The verifier was corrected to hash the typed
+frozen membership. Before the successful invocation, Git verified the frozen
+selection files were byte-identical to the selection-freeze commit.
+
+POST-FREEZE REPRODUCTION
+
+clean_reproduction_worktree=C:\Users\roger\AppData\Local\Temp\g0b-repro-3a2b672
+clean_reproduction_sha=3a2b672bdf72dde2a595df4651f003fbeda287a1
+go run ./cmd/g0b-v2-expansion verify --repo . --evidence benchmarks/efficacy/g0b-evidence
+semantic_lock_reproduction=PASS
+canonical_byte_lock_reproduction=PASS
+manifest_derived_coverage_reconstruction=PASS
+post_freeze_revalidation=PASS
+post_freeze_benchmark_search_runs=0
+
+CI COMMANDS
+
+gofmt -l .
+git diff --check
+go test ./...
+go test -tags searchprofile ./...
+go test -race ./internal/solver/...
+go test -race -tags searchprofile ./internal/solver/...
+go vet ./internal/benchmark
+go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v1.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v1.lock
+go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v2.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v2.lock
+go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v2-dev-confirm-a.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v2-dev-confirm-a.lock
+go run ./cmd/backpack-brawl-solver verify-search-suite --manifest benchmarks/suites/general-search-v2-dev-confirm-b.json --catalog data/catalog.json --lock benchmarks/suites/general-search-v2-dev-confirm-b.lock
+npm ci
+npm run build
+
+The primary Windows checkout uses core.autocrlf and exact `gofmt -l .`
+therefore reports the 111 pre-existing CRLF Go files while exiting zero. The
+same exact command reported zero files in clean LF-configured clone
+C:\Users\roger\AppData\Local\Temp\g0b-ci-lf-3a2b672 at the evidence commit.
