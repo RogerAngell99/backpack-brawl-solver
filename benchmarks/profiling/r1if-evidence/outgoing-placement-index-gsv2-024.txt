@@ -1,0 +1,39 @@
+Total: 71.27s
+ROUTINE ======================== backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts in C:\Users\roger\AppData\Local\Temp\r1if-measure-9c804a5\internal\solver\outgoing_bound.go
+     0.34s      4.50s (flat, cum)  6.31% of Total
+         .          .     58:func (ctx *outgoingBoundContext) upperPriorityCounts(placements []model.Placement) []int {
+         .      1.64s     59:	placedByID := placementByInstanceID(placements)
+         .          .     60:	placedMask := uint64(0)
+     0.04s      0.04s     61:	for _, instance := range ctx.instances {
+     0.02s      0.35s     62:		if _, placed := placedByID[instance.InstanceID]; placed {
+         .          .     63:			placedMask |= uint64(1) << uint(instance.OriginalIndex)
+         .          .     64:		}
+         .          .     65:	}
+         .      0.06s     66:	upper := make([]int, len(ctx.priorityItems))
+     0.03s      0.03s     67:	for priorityIndex, sourceItemID := range ctx.priorityItems {
+     0.02s      0.02s     68:		for _, sourceInstance := range ctx.instances {
+     0.01s      0.01s     69:			if sourceInstance.ItemID != sourceItemID {
+         .          .     70:				continue
+         .          .     71:			}
+         .      0.03s     72:			starCount := len(ctx.catalog.Items[sourceItemID].Stars)
+         .          .     73:			if starCount == 0 {
+         .          .     74:				continue
+         .          .     75:			}
+         .          .     76:			var targets uint64
+         .          .     77:			if sourcePlacement, placed := placedByID[sourceInstance.InstanceID]; placed {
+     0.03s      0.03s     78:				for _, targetInstance := range ctx.instances {
+     0.02s      0.03s     79:					if targetInstance.InstanceID == sourceInstance.InstanceID {
+         .          .     80:						continue
+         .          .     81:					}
+     0.06s      0.68s     82:					targetPlacement, targetPlaced := placedByID[targetInstance.InstanceID]
+     0.08s      1.25s     83:					if targetPlaced && sourceHitsTargetWithCatalog(ctx.catalog, sourcePlacement, targetPlacement) {
+         .          .     84:						targets |= uint64(1) << uint(targetInstance.OriginalIndex)
+         .          .     85:					}
+         .          .     86:				}
+         .          .     87:				// Only targets that are still movable get geometric potential.
+     0.03s      0.33s     88:				targets |= ctx.potential.outgoingTargets[coveragePlacementKey(sourcePlacement)] &^ placedMask
+         .          .     89:			} else {
+         .          .     90:				// A free source may choose any option from the precomputed geometric
+         .          .     91:				// relaxation. Fixed-item conflicts are intentionally ignored here.
+         .          .     92:				targets = ctx.potential.instanceOutgoingTargets[sourceInstance.InstanceID]
+         .          .     93:			}
