@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "baseline_sha": "11644a7d88bd4e4bdd1f97977f8aad5e59391293",
+  "catalog_sha256": "173a43cd20aed017be5836a870ea2d249b30d3a07294be7fd08afea50c925ebe",
+  "corpus": {
+    "role": "development",
+    "cases": [
+      "gsv2-013",
+      "gsv2-014",
+      "gsv2-015",
+      "gsv2-016",
+      "gsv2-017",
+      "gsv2-018",
+      "gsv2-019",
+      "gsv2-020",
+      "gsv2-021",
+      "gsv2-022",
+      "gsv2-023",
+      "gsv2-024",
+      "gsv2-025",
+      "gsv2-026"
+    ],
+    "validation_materialized": false,
+    "public_holdout_materialized": false,
+    "private_holdout_materialized": false
+  },
+  "matrices": {
+    "quality_runs": 70,
+    "diagnostic_runs": 70,
+    "paired_runs": 70
+  },
+  "raw_manifest": {
+    "raw_file_count": 39,
+    "raw_bytes": 247565214,
+    "manifest_sha256": "46fe084450daae1bee408bc48cc26a2f0c0f216f73ae78ec0ad1575624b2c5b5"
+  },
+  "accounting": {
+    "status": "PASS",
+    "diagnostic_pairs": 70,
+    "ledger_runs": 69,
+    "no_solution_pairs": 1
+  },
+  "control_summaries": [
+    {
+      "variant": "v4",
+      "wins": 0,
+      "losses": 0,
+      "ties": 14,
+      "layout_only_changes": 0,
+      "net_wins": 0,
+      "distinct_win_scenarios": 0,
+      "high_severity_losses": 0,
+      "criterion_c": false,
+      "isolated_promotion_gate": false
+    },
+    {
+      "variant": "v5",
+      "wins": 0,
+      "losses": 0,
+      "ties": 14,
+      "layout_only_changes": 1,
+      "net_wins": 0,
+      "distinct_win_scenarios": 0,
+      "high_severity_losses": 0,
+      "criterion_c": false,
+      "isolated_promotion_gate": false
+    },
+    {
+      "variant": "v5.1",
+      "wins": 0,
+      "losses": 0,
+      "ties": 14,
+      "layout_only_changes": 1,
+      "net_wins": 0,
+      "distinct_win_scenarios": 0,
+      "high_severity_losses": 0,
+      "criterion_c": false,
+      "isolated_promotion_gate": false
+    }
+  ],
+  "phase_summary": [
+    {
+      "phase": "completion",
+      "cases": 14,
+      "invoked_cases": 0,
+      "material_cases": 0,
+      "dead_material_cases": 0,
+      "improvement_cases": 0,
+      "final_producer_cases": 0,
+      "total_charged_nodes": 0,
+      "total_returned_nodes": 0,
+      "aggregate_budget_share": 0,
+      "criterion_a": false
+    },
+    {
+      "phase": "constellation_parent_frontier_hedge",
+      "cases": 14,
+      "invoked_cases": 0,
+      "material_cases": 0,
+      "dead_material_cases": 0,
+      "improvement_cases": 0,
+      "final_producer_cases": 0,
+      "total_charged_nodes": 0,
+      "total_returned_nodes": 0,
+      "aggregate_budget_share": 0,
+      "criterion_a": false
+    },
+    {
+      "phase": "constellation_seed_v1",
+      "cases": 14,
+      "invoked_cases": 14,
+      "material_cases": 0,
+      "dead_material_cases": 0,
+      "improvement_cases": 3,
+      "final_producer_cases": 2,
+      "total_charged_nodes": 299872,
+      "total_returned_nodes": 225128,
+      "aggregate_budget_share": 0.021419428571428572,
+      "criterion_a": false
+    },
+    {
+      "phase": "coverage_seed",
+      "cases": 14,
+      "invoked_cases": 0,
+      "material_cases": 0,
+      "dead_material_cases": 0,
+      "improvement_cases": 0,
+      "final_producer_cases": 0,
+      "total_charged_nodes": 0,
+      "total_returned_nodes": 3500000,
+      "aggregate_budget_share": 0,
+      "criterion_a": false
+    },
+    {
+      "phase": "dfs",
+      "cases": 14,
+      "invoked_cases": 14,
+      "material_cases": 14,
+      "dead_material_cases": 13,
+      "improvement_cases": 1,
+      "final_producer_cases": 0,
+      "total_charged_nodes": 7168220,
+      "total_returned_nodes": 51097,
+      "aggregate_budget_share": 0.5120157142857142,
+      "criterion_a": true
+    },
+    {
+      "phase": "packing_seed",
+      "cases": 14,
+      "invoked_cases": 14,
+      "material_cases": 3,
+      "dead_material_cases": 0,
+      "improvement_cases": 14,
+      "final_producer_cases": 0,
+      "total_charged_nodes": 576653,
+      "total_returned_nodes": 648347,
+      "aggregate_budget_share": 0.0411895,
+      "criterion_a": false
+    },
+    {
+      "phase": "plateau_lns",
+      "cases": 14,
+      "invoked_cases": 6,
+      "material_cases": 2,
+      "dead_material_cases": 2,
+      "improvement_cases": 0,
+      "final_producer_cases": 0,
+      "total_charged_nodes": 173404,
+      "total_returned_nodes": 372884,
+      "aggregate_budget_share": 0.012386,
+      "criterion_a": false
+    },
+    {
+      "phase": "plateau_refine",
+      "cases": 14,
+      "invoked_cases": 5,
+      "material_cases": 0,
+      "dead_material_cases": 0,
+      "improvement_cases": 0,
+      "final_producer_cases": 0,
+      "total_charged_nodes": 10086,
+      "total_returned_nodes": 219914,
+      "aggregate_budget_share": 0.0007204285714285714,
+      "criterion_a": false
+    },
+    {
+      "phase": "post_repair",
+      "cases": 14,
+      "invoked_cases": 14,
+      "material_cases": 12,
+      "dead_material_cases": 10,
+      "improvement_cases": 2,
+      "final_producer_cases": 2,
+      "total_charged_nodes": 1538748,
+      "total_returned_nodes": 1261252,
+      "aggregate_budget_share": 0.10991057142857143,
+      "criterion_a": true
+    },
+    {
+      "phase": "pre_repair",
+      "cases": 14,
+      "invoked_cases": 14,
+      "material_cases": 10,
+      "dead_material_cases": 1,
+      "improvement_cases": 10,
+      "final_producer_cases": 8,
+      "total_charged_nodes": 1483331,
+      "total_returned_nodes": 1316669,
+      "aggregate_budget_share": 0.10595221428571429,
+      "criterion_a": false
+    },
+    {
+      "phase": "refine",
+      "cases": 14,
+      "invoked_cases": 14,
+      "material_cases": 0,
+      "dead_material_cases": 0,
+      "improvement_cases": 1,
+      "final_producer_cases": 1,
+      "total_charged_nodes": 0,
+      "total_returned_nodes": 0,
+      "aggregate_budget_share": 0,
+      "criterion_a": false
+    },
+    {
+      "phase": "star_seed",
+      "cases": 14,
+      "invoked_cases": 14,
+      "material_cases": 14,
+      "dead_material_cases": 10,
+      "improvement_cases": 4,
+      "final_producer_cases": 1,
+      "total_charged_nodes": 1620827,
+      "total_returned_nodes": 354301,
+      "aggregate_budget_share": 0.11577335714285714,
+      "criterion_a": true
+    }
+  ],
+  "repair_evidence": {
+    "material_cases": 12,
+    "improvement_cases": 11,
+    "final_producer_cases": 10,
+    "total_charged_nodes": 3022079,
+    "aggregate_budget_share": 0.21586278571428572,
+    "criterion_e": true
+  },
+  "underutilization": {
+    "cases_at_least_5_percent": 8,
+    "scenarios": [
+      "gsv2-013",
+      "gsv2-014",
+      "gsv2-017",
+      "gsv2-018",
+      "gsv2-020",
+      "gsv2-021",
+      "gsv2-022",
+      "gsv2-024"
+    ],
+    "total_unused_nodes": 1128859,
+    "criterion_b": true
+  },
+  "root_starvation_summary": [
+    {
+      "variant": "v4",
+      "matched_roots": 0,
+      "distinct_scenarios": 0,
+      "criterion_d": false
+    },
+    {
+      "variant": "v5",
+      "matched_roots": 0,
+      "distinct_scenarios": 0,
+      "criterion_d": false
+    },
+    {
+      "variant": "v5.1",
+      "matched_roots": 0,
+      "distinct_scenarios": 0,
+      "criterion_d": false
+    }
+  ],
+  "shortlist": [
+    {
+      "candidate_id": "phase-reallocation-dfs",
+      "family": "phase-budget allocation",
+      "risk_class": "Q0",
+      "exact_mechanism": "reduce the dfs reservation and transfer the reclaimed node tokens to a deterministic live downstream DFS frontier before repair completion",
+      "evidence_gate": "A",
+      "breadth": 14,
+      "material_share": 0.5120157142857142,
+      "supported_decision": "NEED MORE EVIDENCE",
+      "missing_evidence": "deterministic shadow budget-reallocation replay proving that removed quota reaches a live downstream frontier"
+    },
+    {
+      "candidate_id": "phase-reallocation-post_repair",
+      "family": "phase-budget allocation",
+      "risk_class": "Q0",
+      "exact_mechanism": "reduce the post_repair reservation and transfer the reclaimed node tokens to a deterministic live downstream DFS frontier before repair completion",
+      "evidence_gate": "A",
+      "breadth": 12,
+      "material_share": 0.10991057142857143,
+      "supported_decision": "NEED MORE EVIDENCE",
+      "missing_evidence": "deterministic shadow budget-reallocation replay proving that removed quota reaches a live downstream frontier"
+    },
+    {
+      "candidate_id": "phase-reallocation-star_seed",
+      "family": "seed portfolio",
+      "risk_class": "Q0",
+      "exact_mechanism": "reduce the star_seed reservation and transfer the reclaimed node tokens to a deterministic live downstream DFS frontier before repair completion",
+      "evidence_gate": "A",
+      "breadth": 14,
+      "material_share": 0.11577335714285714,
+      "supported_decision": "NEED MORE EVIDENCE",
+      "missing_evidence": "deterministic shadow budget-reallocation replay proving that removed quota reaches a live downstream frontier"
+    },
+    {
+      "candidate_id": "repair-weighted-v1",
+      "family": "repair allocation",
+      "risk_class": "Q0",
+      "exact_mechanism": "replace equal per-neighborhood repair quota within each elite base with deterministic rank-weighted allocation while preserving equal budget across elite bases and an exploration floor",
+      "evidence_gate": "E",
+      "breadth": 11,
+      "material_share": 0.21586278571428572,
+      "supported_decision": "NEED MORE EVIDENCE",
+      "missing_evidence": "per-neighborhood elite-base ID, stable rank/key/operator, allocated and consumed nodes, first strict semantic-improvement node, best semantic delta, and final-score producer flag"
+    },
+    {
+      "candidate_id": "stage-headroom-reclaim-v1",
+      "family": "phase-budget allocation",
+      "risk_class": "Q0",
+      "exact_mechanism": "reclaim unused stage headroom into one final deterministic normal DFS continuation before repair/refine completion",
+      "evidence_gate": "B",
+      "breadth": 8,
+      "material_share": 0.08063278571428571,
+      "supported_decision": "NEED MORE EVIDENCE",
+      "missing_evidence": "probe proving a live chargeable DFS frontier exists at the exact point capacity is returned"
+    }
+  ],
+  "decision": {
+    "kind": "NEED MORE EVIDENCE",
+    "candidate_id": "repair-weighted-v1",
+    "family": "repair allocation",
+    "risk_class": "Q0",
+    "exact_mechanism": "replace equal per-neighborhood repair quota within each elite base with deterministic rank-weighted allocation while preserving equal budget across elite bases and an exploration floor",
+    "evidence_gate": "E",
+    "rationale": "repair is material in 12 cases, improves the semantic incumbent in 11, and first produces the final score in 10, but aggregate reports cannot attribute productivity to neighborhood rank or quota",
+    "missing_evidence": "record per-neighborhood elite-base ID, stable rank/key/operator, allocated and consumed nodes, first strict semantic-improvement node, best semantic delta, and final-score producer flag without changing search"
+  }
+}

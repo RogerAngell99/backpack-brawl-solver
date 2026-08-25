@@ -1,0 +1,10 @@
+{
+  "kind": "NEED MORE EVIDENCE",
+  "candidate_id": "repair-weighted-v1",
+  "family": "repair allocation",
+  "risk_class": "Q0",
+  "exact_mechanism": "replace equal per-neighborhood repair quota within each elite base with deterministic rank-weighted allocation while preserving equal budget across elite bases and an exploration floor",
+  "evidence_gate": "E",
+  "rationale": "repair is material in 12 cases, improves the semantic incumbent in 11, and first produces the final score in 10, but aggregate reports cannot attribute productivity to neighborhood rank or quota",
+  "missing_evidence": "record per-neighborhood elite-base ID, stable rank/key/operator, allocated and consumed nodes, first strict semantic-improvement node, best semantic delta, and final-score producer flag without changing search"
+}
