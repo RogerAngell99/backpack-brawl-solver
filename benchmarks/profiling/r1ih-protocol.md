@@ -74,12 +74,15 @@ Preflight validates PowerShell and Node syntax, required paths, the exact
 generator locations, Go and pprof availability, repository tests and semantic
 snapshots, clean detached revision metadata, binary builds and VCS metadata,
 catalog and both suite locks, CLI help, and the production Web/WASM build. It
-may compile and run unit tests, but the `Preflight` control path returns before
-the collector's first `benchmark-scenarios` command. Its record must state:
+also runs the complete candidate-independent extractor against synthetic CPU
+and heap profiles produced by the semantic unit test. It may compile and run
+unit tests, but the `Preflight` control path returns before the collector's
+first `benchmark-scenarios` command. Its record must state:
 
 ```text
 status=PASS
 benchmark_scenarios_runs=0
+extractor_full_smoke=PASS
 ```
 
 It also records SHA-256 for the five tooling files. Official mode rejects the
