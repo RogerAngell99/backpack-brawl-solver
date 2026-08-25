@@ -461,6 +461,52 @@ func BuildG0BV2ConfirmManifests(historical SearchSuiteManifest, membership G0BV2
 	return a, b, err
 }
 
+// AuditG0BV2CoverageFromManifests reconstructs the complete structural audit
+// directly from the two confirmation manifests and the mechanically extracted
+// historical core. It does not consume selection or partition trace metrics.
+func AuditG0BV2CoverageFromManifests(historical SearchSuiteManifest, manifestA SearchSuiteManifest, manifestB SearchSuiteManifest) (G0BV2CoverageSummary, error) {
+	core, err := ExtractG0BV2Core(historical)
+	if err != nil {
+		return G0BV2CoverageSummary{}, err
+	}
+	schema := SearchSuiteV2DevelopmentCohortSchema()
+	membership := G0BV2CohortMembership{
+		Version: 1, SelectionNamespace: G0BV2SelectionNamespace, PartitionNamespace: G0BV2PartitionNamespace,
+		State: G0BV2ProvisionallySealed, Cases: make([]G0BV2MembershipCase, 0, G0BV2ExpansionSize),
+	}
+	appendManifest := func(manifest SearchSuiteManifest, expectedName string, wave string) error {
+		if manifest.Name != expectedName || len(manifest.Scenarios) != 0 || len(manifest.Generated) != G0BV2WaveSize {
+			return fmt.Errorf("manifest %q is not the expected G0-B Wave %s population", manifest.Name, wave)
+		}
+		for _, entry := range manifest.Generated {
+			if entry.Role != SuiteRoleDevelopment || entry.Family != GeneratedFamilyStructuralV2 || entry.Seed == nil || entry.StructuralDescriptor == nil {
+				return fmt.Errorf("manifest %q contains invalid case %q", manifest.Name, entry.ID)
+			}
+			descriptor, err := DevelopmentCohortDescriptorFromV2(*entry.StructuralDescriptor)
+			if err != nil {
+				return err
+			}
+			canonical, err := CanonicalDevelopmentCohortDescriptor(schema, descriptor)
+			if err != nil {
+				return err
+			}
+			index := len(membership.Cases)
+			membership.Cases = append(membership.Cases, G0BV2MembershipCase{
+				CaseID: entry.ID, SelectionStep: index, CanonicalDescriptor: canonical, Descriptor: descriptor,
+				StructuralDescriptor: *entry.StructuralDescriptor, PartitionCandidateIndex: index, Wave: wave, Seed: *entry.Seed,
+			})
+		}
+		return nil
+	}
+	if err := appendManifest(manifestA, G0BV2ConfirmAManifestName, "A"); err != nil {
+		return G0BV2CoverageSummary{}, err
+	}
+	if err := appendManifest(manifestB, G0BV2ConfirmBManifestName, "B"); err != nil {
+		return G0BV2CoverageSummary{}, err
+	}
+	return AuditG0BV2Coverage(schema, core, membership)
+}
+
 func AuditG0BV2Materialization(membership G0BV2CohortMembership, lockA SearchSuiteLock, lockB SearchSuiteLock) (G0BV2MaterializationAudit, error) {
 	byID := make(map[string]G0BV2MembershipCase, len(membership.Cases))
 	for _, entry := range membership.Cases {

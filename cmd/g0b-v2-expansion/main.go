@@ -266,7 +266,22 @@ func runMaterialize(args []string) error {
 		return err
 	}
 	if head != *selectionFreezeSHA {
-		return fmt.Errorf("HEAD %s does not equal selection freeze SHA %s", head, *selectionFreezeSHA)
+		if err := runCommand(root, "git", "merge-base", "--is-ancestor", *selectionFreezeSHA, "HEAD"); err != nil {
+			return fmt.Errorf("selection freeze SHA %s is not an ancestor of HEAD %s", *selectionFreezeSHA, head)
+		}
+		frozenPaths := []string{
+			"benchmarks/efficacy/g0b-evidence/core-descriptors.json",
+			"benchmarks/efficacy/g0b-evidence/selection-trace.json",
+			"benchmarks/efficacy/g0b-evidence/partition-trace.json",
+			"benchmarks/efficacy/g0b-evidence/seed-audit.json",
+			"benchmarks/efficacy/g0b-evidence/cohort-membership.json",
+			"benchmarks/efficacy/g0b-evidence/selection-freeze.json",
+		}
+		diffArgs := []string{"diff", "--quiet", *selectionFreezeSHA, "HEAD", "--"}
+		diffArgs = append(diffArgs, frozenPaths...)
+		if err := runCommand(root, "git", diffArgs...); err != nil {
+			return fmt.Errorf("selection artifacts differ from freeze commit %s", *selectionFreezeSHA)
+		}
 	}
 	evidenceDir := filepath.Join(root, filepath.FromSlash(*evidence))
 	var membership benchmark.G0BV2CohortMembership
@@ -277,7 +292,7 @@ func runMaterialize(args []string) error {
 	if err := loadJSON(filepath.Join(evidenceDir, "selection-freeze.json"), &freeze); err != nil {
 		return err
 	}
-	membershipHash, err := canonicalJSONFileSHA256(filepath.Join(evidenceDir, "cohort-membership.json"))
+	membershipHash, err := jsonValueSHA256(membership)
 	if err != nil {
 		return err
 	}
@@ -381,6 +396,34 @@ func runVerify(args []string) error {
 	if err := benchmark.VerifySearchSuiteLock(manifestBPath, catalogPath, lockBPath); err != nil {
 		return err
 	}
+	for _, population := range []struct {
+		name         string
+		manifestPath string
+		lockPath     string
+	}{
+		{name: "Confirm-A", manifestPath: manifestAPath, lockPath: lockAPath},
+		{name: "Confirm-B", manifestPath: manifestBPath, lockPath: lockBPath},
+	} {
+		observed, err := benchmark.ObserveSearchSuite(population.manifestPath, catalogPath, benchmark.SearchSuiteGeneratorV2)
+		if err != nil {
+			return err
+		}
+		observedBytes, err := json.MarshalIndent(observed, "", "  ")
+		if err != nil {
+			return err
+		}
+		committed, err := benchmark.LoadSearchSuiteLock(population.lockPath)
+		if err != nil {
+			return err
+		}
+		committedBytes, err := json.MarshalIndent(committed, "", "  ")
+		if err != nil {
+			return err
+		}
+		if !bytes.Equal(observedBytes, committedBytes) {
+			return fmt.Errorf("%s fresh observation is not byte-identical after canonical lock serialization", population.name)
+		}
+	}
 	evidenceDir := filepath.Join(root, filepath.FromSlash(*evidence))
 	var membership benchmark.G0BV2CohortMembership
 	if err := loadJSON(filepath.Join(evidenceDir, "cohort-membership.json"), &membership); err != nil {
@@ -400,6 +443,40 @@ func runVerify(args []string) error {
 	}
 	if audit.MaterializedCases != benchmark.G0BV2ExpansionSize || audit.BenchmarkScenarioRuns != 0 || audit.ValidationMaterialized || audit.PublicHoldoutMaterialized || audit.PrivateHoldoutMaterialized {
 		return fmt.Errorf("post-freeze materialization audit failed")
+	}
+	historical, err := benchmark.LoadSearchSuiteManifest(filepath.Join(root, historicalManifestRelative))
+	if err != nil {
+		return err
+	}
+	manifestA, err := benchmark.LoadSearchSuiteManifest(manifestAPath)
+	if err != nil {
+		return err
+	}
+	manifestB, err := benchmark.LoadSearchSuiteManifest(manifestBPath)
+	if err != nil {
+		return err
+	}
+	independentCoverage, err := benchmark.AuditG0BV2CoverageFromManifests(historical, manifestA, manifestB)
+	if err != nil {
+		return err
+	}
+	if !independentCoverage.Gates.Pass() {
+		return fmt.Errorf("independent manifest-derived structural audit failed")
+	}
+	var frozenCoverage benchmark.G0BV2CoverageSummary
+	if err := loadJSON(filepath.Join(evidenceDir, "v2-coverage-summary.json"), &frozenCoverage); err != nil {
+		return err
+	}
+	independentCoverageHash, err := jsonValueSHA256(independentCoverage)
+	if err != nil {
+		return err
+	}
+	frozenCoverageHash, err := jsonValueSHA256(frozenCoverage)
+	if err != nil {
+		return err
+	}
+	if independentCoverageHash != frozenCoverageHash {
+		return fmt.Errorf("manifest-derived structural audit differs from frozen coverage summary")
 	}
 	manifestLF, err := lfSHA256(filepath.Join(root, historicalManifestRelative))
 	if err != nil {
@@ -501,17 +578,7 @@ func lfSHA256(path string) (string, error) {
 	return hex.EncodeToString(digest[:]), nil
 }
 
-func canonicalJSONFileSHA256(path string) (string, error) {
-	content, err := os.ReadFile(path)
-	if err != nil {
-		return "", err
-	}
-	decoder := json.NewDecoder(bytes.NewReader(content))
-	decoder.UseNumber()
-	var value any
-	if err := decoder.Decode(&value); err != nil {
-		return "", err
-	}
+func jsonValueSHA256(value any) (string, error) {
 	encoded, err := json.Marshal(value)
 	if err != nil {
 		return "", err
