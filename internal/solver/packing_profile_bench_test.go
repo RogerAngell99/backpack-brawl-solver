@@ -23,51 +23,6 @@ func BenchmarkPlacementKey(b *testing.B) {
 	}
 }
 
-func BenchmarkPlacementKeyLegacy(b *testing.B) {
-	for _, cells := range []int{1, 4, 8} {
-		b.Run(fmt.Sprintf("cells=%d", cells), func(b *testing.B) {
-			placement := packingProfilePlacementKeyFixture(cells)
-			b.ReportAllocs()
-			b.ResetTimer()
-			for index := 0; index < b.N; index++ {
-				if key := legacyPlacementKeyForTest(placement); key == "" {
-					b.Fatal("empty placement key")
-				}
-			}
-		})
-	}
-}
-
-func BenchmarkPlacementKeyCandidate(b *testing.B) {
-	for _, cells := range []int{1, 4, 8} {
-		b.Run(fmt.Sprintf("cells=%d", cells), func(b *testing.B) {
-			placement := packingProfilePlacementKeyFixture(cells)
-			b.ReportAllocs()
-			b.ResetTimer()
-			for index := 0; index < b.N; index++ {
-				if key := placementKey(placement); key == "" {
-					b.Fatal("empty placement key")
-				}
-			}
-		})
-	}
-}
-
-func BenchmarkCoveragePlacementKey(b *testing.B) {
-	for _, cells := range []int{1, 4, 8} {
-		b.Run(fmt.Sprintf("cells=%d", cells), func(b *testing.B) {
-			placement := packingProfilePlacementKeyFixture(cells)
-			b.ReportAllocs()
-			b.ResetTimer()
-			for index := 0; index < b.N; index++ {
-				if key := coveragePlacementKey(placement); key == "" {
-					b.Fatal("empty coverage placement key")
-				}
-			}
-		})
-	}
-}
-
 func BenchmarkCanonicalCopyOrder(b *testing.B) {
 	for _, existingCopies := range []int{0, 1, 2, 4} {
 		outcomes := []struct {

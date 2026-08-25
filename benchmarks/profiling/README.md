@@ -109,30 +109,6 @@ improve, and the old priority static-predicate caller edge is eliminated. See
 [`r1ic-findings.md`](r1ic-findings.md) and
 [`r1ic-evidence/`](r1ic-evidence/README.md).
 
-## R1I-D — post-R1I-C recalibration
-
-R1I-D rebuilt the CPU/heap and operation hierarchy on post-R1I-C `main`, with
-six separate GSV1 CPU profiles and a combined V4 control. It is evidence-only
-and changes no solver code. The exact decision is **PROMOTE** direct byte
-formatting inside `placementKey` while preserving the existing key string
-byte-for-byte. The targeted formatter edge is 15.25 of 287.12 sampled CPU
-seconds, appears in all six profiled cases, and reproduces at 14.42 seconds in
-V4. See [`r1id-protocol.md`](r1id-protocol.md),
-[`r1id-findings.md`](r1id-findings.md), and
-[`r1id-evidence/`](r1id-evidence/README.md).
-
-## R1I-E — exact direct placement-key formatting
-
-R1I-E replaces the two hot `fmt.Fprintf` sites in `placementKey` with exact
-three-byte writes for values in `0..999`, while retaining `%03d` as the exact
-fallback outside that domain. It is **KEEP**: all 42 semantic comparisons and
-logical profiles are exact, the aggregate median paired wall improvement is
-18.41%, all six timing cases improve, and the targeted formatter edge falls
-from 14.13 sampled seconds to zero. Whole-profile allocation space falls by
-0.36%. See [`r1ie-protocol.md`](r1ie-protocol.md),
-[`r1ie-findings.md`](r1ie-findings.md), and
-[`r1ie-evidence/`](r1ie-evidence/README.md).
-
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
 ### P0.1 collection protocol — only after P0.1A is merged
