@@ -3043,11 +3043,30 @@ func writePaddedInt(builder *strings.Builder, value int) {
 
 func placementKey(placement model.Placement) string {
 	var builder strings.Builder
-	fmt.Fprintf(&builder, "%03d|%03d|%03d|", placement.Rotation, placement.Origin.Row, placement.Origin.Col)
+	builder.Grow(12 + len(placement.Cells)*8)
+	writePlacementKeyInt(&builder, placement.Rotation)
+	builder.WriteByte('|')
+	writePlacementKeyInt(&builder, placement.Origin.Row)
+	builder.WriteByte('|')
+	writePlacementKeyInt(&builder, placement.Origin.Col)
+	builder.WriteByte('|')
 	for _, cell := range placement.Cells {
-		fmt.Fprintf(&builder, "%03d,%03d;", cell.Row, cell.Col)
+		writePlacementKeyInt(&builder, cell.Row)
+		builder.WriteByte(',')
+		writePlacementKeyInt(&builder, cell.Col)
+		builder.WriteByte(';')
 	}
 	return builder.String()
+}
+
+func writePlacementKeyInt(builder *strings.Builder, value int) {
+	if value < 0 || value > 999 {
+		fmt.Fprintf(builder, "%03d", value)
+		return
+	}
+	builder.WriteByte(byte('0' + value/100))
+	builder.WriteByte(byte('0' + value/10%10))
+	builder.WriteByte(byte('0' + value%10))
 }
 
 func uniqueStrings(values []string) []string {
