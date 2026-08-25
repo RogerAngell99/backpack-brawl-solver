@@ -20,6 +20,24 @@ type DevelopmentCohortPartitionObjective struct {
 	MembershipSHA256         string `json:"membership_sha256"`
 }
 
+// DevelopmentCohortPartitionGreedyMetric is the frozen lexicographic tuple
+// that selected one Wave A member during the initial greedy pass. The first
+// two fields are exact rational discrepancies.
+type DevelopmentCohortPartitionGreedyMetric struct {
+	MarginalDiscrepancy string `json:"marginal_discrepancy"`
+	PairwiseDiscrepancy string `json:"pairwise_discrepancy"`
+	MinimumHamming      int    `json:"minimum_hamming"`
+	TieBreakSHA256      string `json:"tie_break_sha256"`
+}
+
+// DevelopmentCohortPartitionGreedyStep records the winning descriptor and
+// metric at one step of the initial Wave A construction.
+type DevelopmentCohortPartitionGreedyStep struct {
+	Step           int                                    `json:"step"`
+	CandidateIndex int                                    `json:"candidate_index"`
+	Metric         DevelopmentCohortPartitionGreedyMetric `json:"metric"`
+}
+
 // DevelopmentCohortPartitionSwap records each strict one-swap improvement.
 type DevelopmentCohortPartitionSwap struct {
 	Iteration        int                                 `json:"iteration"`
@@ -31,14 +49,15 @@ type DevelopmentCohortPartitionSwap struct {
 // DevelopmentCohortPartition is a complete reproducible structural audit for
 // splitting a selected cohort into two independent waves.
 type DevelopmentCohortPartition struct {
-	Version          int                                 `json:"version"`
-	Namespace        string                              `json:"namespace"`
-	CandidateOrder   []DevelopmentCohortCandidate        `json:"candidate_order"`
-	WaveAIndexes     []int                               `json:"wave_a_indexes"`
-	WaveBIndexes     []int                               `json:"wave_b_indexes"`
-	InitialObjective DevelopmentCohortPartitionObjective `json:"initial_objective"`
-	FinalObjective   DevelopmentCohortPartitionObjective `json:"final_objective"`
-	SwapTrace        []DevelopmentCohortPartitionSwap    `json:"swap_trace"`
+	Version          int                                    `json:"version"`
+	Namespace        string                                 `json:"namespace"`
+	CandidateOrder   []DevelopmentCohortCandidate           `json:"candidate_order"`
+	WaveAIndexes     []int                                  `json:"wave_a_indexes"`
+	WaveBIndexes     []int                                  `json:"wave_b_indexes"`
+	GreedyTrace      []DevelopmentCohortPartitionGreedyStep `json:"greedy_trace"`
+	InitialObjective DevelopmentCohortPartitionObjective    `json:"initial_objective"`
+	FinalObjective   DevelopmentCohortPartitionObjective    `json:"final_objective"`
+	SwapTrace        []DevelopmentCohortPartitionSwap       `json:"swap_trace"`
 }
 
 type developmentCohortPartitionObjectiveInternal struct {
@@ -85,7 +104,9 @@ func PartitionDevelopmentCohort(
 	}
 
 	waveA := make(map[int]struct{}, waveASize)
+	greedyTrace := make([]DevelopmentCohortPartitionGreedyStep, 0, waveASize)
 	for len(waveA) < waveASize {
+		step := len(waveA)
 		bestIndex := -1
 		var best developmentCohortPartitionGreedyMetric
 		for index, candidate := range candidates {
@@ -111,6 +132,11 @@ func PartitionDevelopmentCohort(
 			return DevelopmentCohortPartition{}, fmt.Errorf("partitioner exhausted candidates while filling wave A")
 		}
 		waveA[bestIndex] = struct{}{}
+		greedyTrace = append(greedyTrace, DevelopmentCohortPartitionGreedyStep{
+			Step:           step,
+			CandidateIndex: bestIndex,
+			Metric:         publicDevelopmentCohortPartitionGreedyMetric(best),
+		})
 	}
 
 	initial := developmentCohortPartitionObjectiveFor(schema, descriptors, waveA, waveASize, namespace)
@@ -153,6 +179,7 @@ func PartitionDevelopmentCohort(
 		CandidateOrder:   candidates,
 		WaveAIndexes:     waveAIndexes,
 		WaveBIndexes:     waveBIndexes,
+		GreedyTrace:      greedyTrace,
 		InitialObjective: publicDevelopmentCohortPartitionObjective(initial),
 		FinalObjective:   publicDevelopmentCohortPartitionObjective(current),
 		SwapTrace:        swaps,
@@ -202,6 +229,15 @@ func developmentCohortPartitionGreedyMetricLess(left developmentCohortPartitionG
 		return left.tieBreakSHA256 < right.tieBreakSHA256
 	}
 	return left.canonical < right.canonical
+}
+
+func publicDevelopmentCohortPartitionGreedyMetric(metric developmentCohortPartitionGreedyMetric) DevelopmentCohortPartitionGreedyMetric {
+	return DevelopmentCohortPartitionGreedyMetric{
+		MarginalDiscrepancy: metric.marginalDiscrepancy.RatString(),
+		PairwiseDiscrepancy: metric.pairwiseDiscrepancy.RatString(),
+		MinimumHamming:      metric.minimumHamming,
+		TieBreakSHA256:      metric.tieBreakSHA256,
+	}
 }
 
 func developmentCohortPartitionObjectiveFor(

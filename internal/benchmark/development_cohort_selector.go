@@ -103,6 +103,32 @@ func EnumerateDevelopmentCohortUniverse(schema DevelopmentCohortSchema) ([]Devel
 	return universe, nil
 }
 
+// DevelopmentCohortAttainablePairCount returns the number of categorical
+// value pairs in the complete Cartesian descriptor universe. It is derived
+// from the schema so acceptance-gate denominators are never hand-counted.
+func DevelopmentCohortAttainablePairCount(schema DevelopmentCohortSchema) (int, error) {
+	if err := schema.validate(); err != nil {
+		return 0, err
+	}
+	maximumInt := int(^uint(0) >> 1)
+	total := 0
+	for left := 0; left < len(schema.Dimensions); left++ {
+		leftValues := len(schema.Dimensions[left].Values)
+		for right := left + 1; right < len(schema.Dimensions); right++ {
+			rightValues := len(schema.Dimensions[right].Values)
+			if leftValues > maximumInt/rightValues {
+				return 0, fmt.Errorf("development cohort attainable pair count overflows int")
+			}
+			pairs := leftValues * rightValues
+			if total > maximumInt-pairs {
+				return 0, fmt.Errorf("development cohort attainable pair count overflows int")
+			}
+			total += pairs
+		}
+	}
+	return total, nil
+}
+
 // SelectDevelopmentCohort applies the frozen stratified deterministic
 // max-coverage algorithm. It minimizes exact marginal imbalance, then
 // maximizes new pairwise coverage and minimum Hamming distance, and finally
