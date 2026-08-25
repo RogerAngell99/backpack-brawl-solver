@@ -1,0 +1,10 @@
+status=PASS
+baseline_sha=11644a7d88bd4e4bdd1f97977f8aad5e59391293
+diagnostic_pairs=70
+ledger_runs=69
+no_solution_pairs=1
+quality_runs=70
+diagnostic_runs=70
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false

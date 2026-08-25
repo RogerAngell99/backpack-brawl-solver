@@ -1,0 +1,13 @@
+phase,cases,invoked_cases,material_cases,dead_material_cases,improvement_cases,final_producer_cases,total_charged_nodes,total_returned_nodes,aggregate_budget_share,criterion_a
+completion,14,0,0,0,0,0,0,0,0,false
+constellation_parent_frontier_hedge,14,0,0,0,0,0,0,0,0,false
+constellation_seed_v1,14,14,0,0,3,2,299872,225128,0.021419428571428572,false
+coverage_seed,14,0,0,0,0,0,0,3500000,0,false
+dfs,14,14,14,13,1,0,7168220,51097,0.5120157142857142,true
+packing_seed,14,14,3,0,14,0,576653,648347,0.0411895,false
+plateau_lns,14,6,2,2,0,0,173404,372884,0.012386,false
+plateau_refine,14,5,0,0,0,0,10086,219914,0.0007204285714285714,false
+post_repair,14,14,12,10,2,2,1538748,1261252,0.10991057142857143,true
+pre_repair,14,14,10,1,10,8,1483331,1316669,0.10595221428571429,false
+refine,14,14,0,0,1,1,0,0,0,false
+star_seed,14,14,14,10,4,1,1620827,354301,0.11577335714285714,true

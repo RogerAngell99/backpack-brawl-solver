@@ -1,0 +1,8 @@
+status=PASS
+baseline_sha=11644a7d88bd4e4bdd1f97977f8aad5e59391293
+raw_file_count=39
+raw_bytes=247565214
+raw_manifest_sha256=46fe084450daae1bee408bc48cc26a2f0c0f216f73ae78ec0ad1575624b2c5b5
+raw_files_read_only=true
+post_freeze_solver_runs=0
+frozen_at=2026-08-25T15:05:24.0086215-03:00
