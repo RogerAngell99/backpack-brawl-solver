@@ -1,0 +1,294 @@
+{
+  "version": 1,
+  "namespace": "gsv2-devexp-v1",
+  "cases": [
+    {
+      "case_id": "gsv2x-001",
+      "selection_step": 0,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "d9c8e0e297adc4aa0ced7e42059382f2c8ac678a2967cc0a51cc0344fe1f4fd8",
+      "derived_seed": 6469668128529695914
+    },
+    {
+      "case_id": "gsv2x-002",
+      "selection_step": 1,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "05e3f6334d203a57bedfd876499e36c43df3a5fd735e3279e006d0f72ba162fe",
+      "derived_seed": 424453490100681303
+    },
+    {
+      "case_id": "gsv2x-003",
+      "selection_step": 2,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "7d1443be6fd27277ca25334f8e817d76fa1b507a3493764f832839fdbd035316",
+      "derived_seed": 9012903239474115191
+    },
+    {
+      "case_id": "gsv2x-004",
+      "selection_step": 3,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "37a50e3922bffd2469b1e7ca23defae772738b320f280e10be3ac13515c0f711",
+      "derived_seed": 4009626681802226980
+    },
+    {
+      "case_id": "gsv2x-005",
+      "selection_step": 4,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "1e81a7452019cb13e53fcf46b16ae817256fa2d09e7605fe4218cb8eaa3c0f63",
+      "derived_seed": 2198222008466656019
+    },
+    {
+      "case_id": "gsv2x-006",
+      "selection_step": 5,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "d73b24037c3207479a6924e2fefa6fb3e2c7ae8d30bd8204c007f3b69687b6e1",
+      "derived_seed": 6285657302312814407
+    },
+    {
+      "case_id": "gsv2x-007",
+      "selection_step": 6,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "12090cdfa399b1b736b70b14cb7fd368623e3e717e6075313ec4780efdd34f5f",
+      "derived_seed": 1299584122135097783
+    },
+    {
+      "case_id": "gsv2x-008",
+      "selection_step": 7,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "787a02c2e250f154bfea4da4720b2bd2168f9d3c51761dd54d3086d5c8b12dcc",
+      "derived_seed": 8681254267753918804
+    },
+    {
+      "case_id": "gsv2x-009",
+      "selection_step": 8,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "6dcd7b376b822b6028654e056fa0a5d91f017059c1ac355ec149367511d926db",
+      "derived_seed": 7912115598316940128
+    },
+    {
+      "case_id": "gsv2x-010",
+      "selection_step": 9,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "b26ad0b2fc9c1b2989c3f6dbac6a384c24d3adbfcf908fcf0352c7b746e3b6fc",
+      "derived_seed": 3632945516588571433
+    },
+    {
+      "case_id": "gsv2x-011",
+      "selection_step": 10,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "55987129d39cfcc62689b31ac6d7beb20778488a244af8eb1715806a703b8413",
+      "derived_seed": 6167804114141772998
+    },
+    {
+      "case_id": "gsv2x-012",
+      "selection_step": 11,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "222b8eab1244b73e5f87b394247fff206fc8001bcbdf49a235008ef758521b9f",
+      "derived_seed": 2462218486685153086
+    },
+    {
+      "case_id": "gsv2x-013",
+      "selection_step": 12,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "ea92e58f10fc812e6199335cb6162e9e140896a66754d2ab12970be5f0f2965a",
+      "derived_seed": 7679452717248184622
+    },
+    {
+      "case_id": "gsv2x-014",
+      "selection_step": 13,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "b778859de2938c0c8ffbe17a78cf83340d2c5b1d9fba4b22ce5b17fe50363ecd",
+      "derived_seed": 3997091582448995340
+    },
+    {
+      "case_id": "gsv2x-015",
+      "selection_step": 14,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "f5656460c16979fe8a169e41897aa14d52f1db9d20f8dc617fc26d22abac1616",
+      "derived_seed": 8459277841809897982
+    },
+    {
+      "case_id": "gsv2x-016",
+      "selection_step": 15,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "6137bce03867090ba6b0208561df5cc2a149e5f1151791f66dcb7795806fb281",
+      "derived_seed": 7005275416603068683
+    },
+    {
+      "case_id": "gsv2x-017",
+      "selection_step": 16,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "ba2ee21ed36d2332431f23c0bad3cc2cd04fdf2a23fe5c94cb2170f0ec466237",
+      "derived_seed": 4192536925152551730
+    },
+    {
+      "case_id": "gsv2x-018",
+      "selection_step": 17,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "e918f8c5766aa7d0d4ba7861cd45708935057a1405d6e1758d9f8b724bcee5d0",
+      "derived_seed": 7573076300402436048
+    },
+    {
+      "case_id": "gsv2x-019",
+      "selection_step": 18,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "8cc5f17b70ec3fa8bda2451ef9305414d0aed105424428fec5b7a50311188a7b",
+      "derived_seed": 920407211344936872
+    },
+    {
+      "case_id": "gsv2x-020",
+      "selection_step": 19,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "ff7c7d5ea1a8c2bff7cd5329d99927ea8dbedafa9b7dab972dfca62784c3731e",
+      "derived_seed": 9186355185321558719
+    },
+    {
+      "case_id": "gsv2x-021",
+      "selection_step": 20,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "feba588dd31777f98196ef1d46df6ef91514d324a0b39fb7c234a225830bf78a",
+      "derived_seed": 9131708560602265593
+    },
+    {
+      "case_id": "gsv2x-022",
+      "selection_step": 21,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "dbf1f36af16dfeb1260128fc1ca98bfb9d1a67f744af9b7fa13ff9f33b98bca0",
+      "derived_seed": 6625344167481310897
+    },
+    {
+      "case_id": "gsv2x-023",
+      "selection_step": 22,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "15d17552adf2e3e3b40b5407435fdbb938a1334b6ae2c49456be58783147edaf",
+      "derived_seed": 1572166742895158243
+    },
+    {
+      "case_id": "gsv2x-024",
+      "selection_step": 23,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "035abc9a22ea614b8020426d1611d2eef014bd8b9a9675fc06da5c71c51b0dc1",
+      "derived_seed": 241712900214513995
+    },
+    {
+      "case_id": "gsv2x-025",
+      "selection_step": 24,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "a8ef9ff9f34f0aaf86cc1c422e2a3d2ed18a2584785e9829e53cb3aeb0bf4c96",
+      "derived_seed": 2949752176828680879
+    },
+    {
+      "case_id": "gsv2x-026",
+      "selection_step": 25,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "42e1dd713de6e85a7a18a94efc054ec96d19220353d2d425058e7f43a5948a26",
+      "derived_seed": 4819376554702727258
+    },
+    {
+      "case_id": "gsv2x-027",
+      "selection_step": 26,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "fb9808e6fff0f30666542184bc0cc8670bab699ab37fbacf0bc233180e966e67",
+      "derived_seed": 8905878051354637062
+    },
+    {
+      "case_id": "gsv2x-028",
+      "selection_step": 27,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "40f8e26b19ad49d96e3198e43475000bd67b7117884e899cf88ffbf7978b2f74",
+      "derived_seed": 4681740762271795673
+    },
+    {
+      "case_id": "gsv2x-029",
+      "selection_step": 28,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "821ded2e0498ec4db41d0d5115c3019c7daf706c5abeb4b7002a8f4e5c2f8478",
+      "derived_seed": 152538744301874253
+    },
+    {
+      "case_id": "gsv2x-030",
+      "selection_step": 29,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "a691f1d001cfd433a38dfc19b3de303d20d64644ab75776ec9dc29a6fdcc1046",
+      "derived_seed": 2779268320750195763
+    },
+    {
+      "case_id": "gsv2x-031",
+      "selection_step": 30,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "c46173ae7b03e59dd4c5fbeb0536212164540b268e9f87f71ee69276ec714fd8",
+      "derived_seed": 4927346660545389981
+    },
+    {
+      "case_id": "gsv2x-032",
+      "selection_step": 31,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "9404f0c620d0720373d1622861f14773de5535355c12678b2b84b4978f8d125d",
+      "derived_seed": 1442542514410123779
+    },
+    {
+      "case_id": "gsv2x-033",
+      "selection_step": 32,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "17b7b0310e2520a7d6c73913064c076caf4726f7cbbf2a2c956575f523adadd4",
+      "derived_seed": 1709028308347592871
+    },
+    {
+      "case_id": "gsv2x-034",
+      "selection_step": 33,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "0eb8893ff9059cbdef81ce9cd3abbc8824cb85b0aba848c0e50b159b947bf684",
+      "derived_seed": 1060748620099591357
+    },
+    {
+      "case_id": "gsv2x-035",
+      "selection_step": 34,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "77d13dd06bf2fb3d2b8e07606bb13822670a0be6473233213538d6d1f221a860",
+      "derived_seed": 8633749926019529533
+    },
+    {
+      "case_id": "gsv2x-036",
+      "selection_step": 35,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "namespace": "gsv2-devexp-v1",
+      "digest": "a78c28f279fc4ce2bd7b3784023c7af55836c6e2920caf152b13ffa6417a1964",
+      "derived_seed": 2849697686112455906
+    }
+  ]
+}

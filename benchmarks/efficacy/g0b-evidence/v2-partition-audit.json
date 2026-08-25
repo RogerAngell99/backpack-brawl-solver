@@ -1,0 +1,783 @@
+{
+  "version": 1,
+  "namespace": "gsv2-devexp-partition-v1",
+  "candidate_order": [
+    {
+      "index": 0,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d60",
+          "1/1",
+          "mostly-exclusive",
+          "high",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "55a95941c51c647e55ba124e96e17e94215ed766a4431fa3754f4f985d89300d"
+    },
+    {
+      "index": 1,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d60",
+          "2/1",
+          "mixed",
+          "low",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "fe3cb3b4704c6d835dcdd1d7a962fa24d39ed78cb66c51ad1a003cdec101e414"
+    },
+    {
+      "index": 2,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d75",
+          "2/1",
+          "mixed",
+          "high",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "b880827168b04c616b9f9469a5d63b5e7d75ec91a564509f49bf9c4a6f6f6f37"
+    },
+    {
+      "index": 3,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d75",
+          "2/1",
+          "mostly-exclusive",
+          "low",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "ddaf8620d61318405bb86e855da66e423760fe82a12807b88f004d45c6d6cce1"
+    },
+    {
+      "index": 4,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d90",
+          "1/1",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "0dab2016c9d391e921565c6302a1932a7f7af04416f25df43de9a53315c9e141"
+    },
+    {
+      "index": 5,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d97",
+          "1/1",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "a37f565a03b075b9e5198df153ef19ff8babc3c84afcdba085025b871fb3a629"
+    },
+    {
+      "index": 6,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d97",
+          "1/1",
+          "mostly-shared",
+          "low",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "d15cb2a2c63091dd8acb3de37ce92f2e219d98e2de76c66942fb799a18cfb97a"
+    },
+    {
+      "index": 7,
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d97",
+          "2/2",
+          "mostly-shared",
+          "high",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "92e2b13126e5e4d864d58b63dc067d750c8fdd8a02858df4d9625a38d533e272"
+    },
+    {
+      "index": 8,
+      "descriptor": {
+        "values": [
+          "full",
+          "d60",
+          "1/1",
+          "mixed",
+          "low",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "33b3cc654646c25055fe5f6296afc3f4c581e2c548d269ed7bc2ef1a695fac74"
+    },
+    {
+      "index": 9,
+      "descriptor": {
+        "values": [
+          "full",
+          "d60",
+          "2/2",
+          "mostly-exclusive",
+          "low",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "ed172437b5ddd062e831d5a5c2d801af8cce78ed8c1f8bade6889af53f5ed97a"
+    },
+    {
+      "index": 10,
+      "descriptor": {
+        "values": [
+          "full",
+          "d60",
+          "2/2",
+          "mostly-shared",
+          "low",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "23aeef209246e9842120f693b5d6e5f2fbb3038d68e3c01b784a1925eaf91b7a"
+    },
+    {
+      "index": 11,
+      "descriptor": {
+        "values": [
+          "full",
+          "d75",
+          "1/1",
+          "mostly-shared",
+          "low",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "708df80abe0e662b46cd6df7b2ba386401704503aaab421ca94376b554eb2e52"
+    },
+    {
+      "index": 12,
+      "descriptor": {
+        "values": [
+          "full",
+          "d90",
+          "1/1",
+          "mixed",
+          "low",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "8328ad4da5afde7b4ad2ad40f1bf1b1d12b0118d766e753e0512746c31e925b2"
+    },
+    {
+      "index": 13,
+      "descriptor": {
+        "values": [
+          "full",
+          "d90",
+          "2/2",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "339f0cc4e3ca4543932bb8ca39e95bfa4f8f893587c0cb563a262ceba2f2d32d"
+    },
+    {
+      "index": 14,
+      "descriptor": {
+        "values": [
+          "full",
+          "d97",
+          "2/1",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "7b00edd590d3f5696bf1e8941e585a7092a5d068f0af75b0d070951a97df2dd9"
+    },
+    {
+      "index": 15,
+      "descriptor": {
+        "values": [
+          "holes",
+          "d60",
+          "1/1",
+          "mixed",
+          "high",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "6dc2eba519b2e1d950d0b25181e01a3a686c653b77a385711d71e856bd4f7e2b"
+    },
+    {
+      "index": 16,
+      "descriptor": {
+        "values": [
+          "holes",
+          "d75",
+          "2/1",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "dcf932bc1c9f0a4ba0aec9f1d54ea6d53beeaddbc7c349579daa7f214ce2a2d2"
+    },
+    {
+      "index": 17,
+      "descriptor": {
+        "values": [
+          "holes",
+          "d75",
+          "2/2",
+          "mixed",
+          "low",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "b85bb9a835f923ab45d89eb370bc3b03a3c6ab4b49a16f4d26c76a349c809090"
+    },
+    {
+      "index": 18,
+      "descriptor": {
+        "values": [
+          "holes",
+          "d75",
+          "2/2",
+          "mostly-shared",
+          "low",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "7a9429ce3e569173aedce6456e3115bab3a4e1a6c23105331a745d70b30abdfe"
+    },
+    {
+      "index": 19,
+      "descriptor": {
+        "values": [
+          "holes",
+          "d90",
+          "2/1",
+          "mostly-shared",
+          "low",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "0fa0d48c32f0ed549dd5a07b699a04fa310e3ea8e43eba0646692fca289fecce"
+    },
+    {
+      "index": 20,
+      "descriptor": {
+        "values": [
+          "holes",
+          "d97",
+          "2/1",
+          "mostly-exclusive",
+          "low",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "5fd46855e8e0b6bfe510c039bc179b764df54ff8ff3fb3bbb9078d7feab0df17"
+    },
+    {
+      "index": 21,
+      "descriptor": {
+        "values": [
+          "holes",
+          "d97",
+          "2/2",
+          "mostly-exclusive",
+          "low",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "7cc0829afd16b14cdca3f8add0d293aa9ecd9933346a3966dfdc38ca0eac0081"
+    },
+    {
+      "index": 22,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "1/1",
+          "mostly-shared",
+          "high",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "e0e7a22d3021b5103b53211650564ad91f856391867cbd27220d11770785f6bd"
+    },
+    {
+      "index": 23,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "1/1",
+          "mostly-shared",
+          "low",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "582b1a930eb36ae21fdbae5f190fe66774a6638e4c8612327c0464e565a8929f"
+    },
+    {
+      "index": 24,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "2/1",
+          "mostly-shared",
+          "low",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "216fceac83f28d9760a1483393949e286d80628e30c4f5ed721cfc19feebd9f4"
+    },
+    {
+      "index": 25,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "2/2",
+          "mixed",
+          "high",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "5f2b4d0fec29a800bfb6564888d08b90de26199b795192921ac20a014bcb96e9"
+    },
+    {
+      "index": 26,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d75",
+          "1/1",
+          "mostly-exclusive",
+          "low",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "5fbf622142056b910f3c3ff07606c4db5009cb7fca1418cd6f0029b79a1f75d9"
+    },
+    {
+      "index": 27,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d75",
+          "2/1",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "74d4a57fb887a5e52644ff07d553329f34c8e7223d4f0f82213882a44e29433c"
+    },
+    {
+      "index": 28,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d90",
+          "2/2",
+          "mostly-shared",
+          "high",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "4ba0ba8b3c0f13d49ecd17651c9642013aa569f6a54c4a2e111d66777ec3b7ba"
+    },
+    {
+      "index": 29,
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d97",
+          "2/2",
+          "mixed",
+          "low",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "5ea5700cdab497c0fcc2339d50cbad3050bf122d52a103a8ce687119b63f51b1"
+    },
+    {
+      "index": 30,
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d75",
+          "2/2",
+          "mixed",
+          "high",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "4115ab08aa899b2cb69c50f5edb578438cef3ad05fc15f94cf66cc60bd2f125a"
+    },
+    {
+      "index": 31,
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "1/1",
+          "mostly-exclusive",
+          "high",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "06303034e75ad82e2a1f47d252103b838c88d806c5ea90ebfcf3050beaf0be1b"
+    },
+    {
+      "index": 32,
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "2/1",
+          "mixed",
+          "high",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "c8ffeff4b7cce246a7f7f38d7dbe6cefbaef5cff7a0281570b3ef6e221fdcb26"
+    },
+    {
+      "index": 33,
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "2/1",
+          "mostly-exclusive",
+          "high",
+          "low"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "tie_break_sha256": "c9bfc0532ed300e5e55b6f9d566ef228c43c1305c435b95faef8473f95cc09e8"
+    },
+    {
+      "index": 34,
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d97",
+          "2/2",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "tie_break_sha256": "0a3f4f23836d6e5e985641ac6d4abe21da90a97a5260d0f4bbb8899c62c0c92d"
+    },
+    {
+      "index": 35,
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d97",
+          "2/2",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "canonical": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "tie_break_sha256": "1dc9618ece214fa0a67f66257dbc295e517c5a5110e712953c699db6af24ad72"
+    }
+  ],
+  "wave_a_indexes": [
+    3,
+    4,
+    5,
+    6,
+    8,
+    9,
+    14,
+    15,
+    17,
+    18,
+    19,
+    24,
+    25,
+    27,
+    28,
+    30,
+    31,
+    35
+  ],
+  "wave_b_indexes": [
+    0,
+    1,
+    2,
+    7,
+    10,
+    11,
+    12,
+    13,
+    16,
+    20,
+    21,
+    22,
+    23,
+    26,
+    29,
+    32,
+    33,
+    34
+  ],
+  "greedy_trace": [
+    {
+      "step": 0,
+      "candidate_index": 25,
+      "metric": {
+        "marginal_discrepancy": "1290006/5",
+        "pairwise_discrepancy": "75195",
+        "minimum_hamming": 6,
+        "tie_break_sha256": "949983749da423d3e555d45fb7314e88e25c7711ebe3ccae0d2d4853dc80fcc5"
+      }
+    },
+    {
+      "step": 1,
+      "candidate_index": 5,
+      "metric": {
+        "marginal_discrepancy": "1142694/5",
+        "pairwise_discrepancy": "338103/5",
+        "minimum_hamming": 5,
+        "tie_break_sha256": "02c8c141ea6fc27f4413eea3a3cce3a11cfe97abafe772870dddcb05a75c5a07"
+      }
+    },
+    {
+      "step": 2,
+      "candidate_index": 17,
+      "metric": {
+        "marginal_discrepancy": "1003158/5",
+        "pairwise_discrepancy": "303111/5",
+        "minimum_hamming": 4,
+        "tie_break_sha256": "57ffcf372b5ca9a64afd8e743f896d12a81fd72e76df44d374527c835b49a335"
+      }
+    },
+    {
+      "step": 3,
+      "candidate_index": 14,
+      "metric": {
+        "marginal_discrepancy": "877662/5",
+        "pairwise_discrepancy": "271683/5",
+        "minimum_hamming": 4,
+        "tie_break_sha256": "26839dc330930b33893c92e3ba4b87baf6ff26d6f10d5ec6fa55d7e0c0429dd8"
+      }
+    },
+    {
+      "step": 4,
+      "candidate_index": 24,
+      "metric": {
+        "marginal_discrepancy": "758322/5",
+        "pairwise_discrepancy": "238509/5",
+        "minimum_hamming": 3,
+        "tie_break_sha256": "a8b1459137b2577d7a3c34884f539035264b951e1a2c06d0d6184b0d49d98953"
+      }
+    },
+    {
+      "step": 5,
+      "candidate_index": 31,
+      "metric": {
+        "marginal_discrepancy": "645462/5",
+        "pairwise_discrepancy": "41895",
+        "minimum_hamming": 3,
+        "tie_break_sha256": "6059321fa9f3a54b1d3fd65e57c40b6cc2d98331dcf33ec2798c4db92ce70d4a"
+      }
+    },
+    {
+      "step": 6,
+      "candidate_index": 9,
+      "metric": {
+        "marginal_discrepancy": "543618/5",
+        "pairwise_discrepancy": "185589/5",
+        "minimum_hamming": 3,
+        "tie_break_sha256": "10109e3a1602660f4c09b39e1a2a040f21738934ce637b23e50ccb76fa17b13d"
+      }
+    },
+    {
+      "step": 7,
+      "candidate_index": 18,
+      "metric": {
+        "marginal_discrepancy": "453114/5",
+        "pairwise_discrepancy": "167337/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "a2cd5b5b0c64975b5ced6dffb3c93c95a3f2a5e134ca1882a94d1acfad912e06"
+      }
+    },
+    {
+      "step": 8,
+      "candidate_index": 4,
+      "metric": {
+        "marginal_discrepancy": "362934/5",
+        "pairwise_discrepancy": "146331/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "3e8f5bba0939cf7ae10548407895a5c95f32e2ff0860d3cdb3672e4942b9a7c8"
+      }
+    },
+    {
+      "step": 9,
+      "candidate_index": 27,
+      "metric": {
+        "marginal_discrepancy": "289926/5",
+        "pairwise_discrepancy": "24309",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "f3e090e15cfde99e50398d2c37fdaeec756b94477ab28d9fbc0fd768f72d9dec"
+      }
+    },
+    {
+      "step": 10,
+      "candidate_index": 6,
+      "metric": {
+        "marginal_discrepancy": "223398/5",
+        "pairwise_discrepancy": "101799/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "d8cddbd3ac4c448357b8bf772e8dc0d143795a40d110de9950b293502c64f42e"
+      }
+    },
+    {
+      "step": 11,
+      "candidate_index": 30,
+      "metric": {
+        "marginal_discrepancy": "33318",
+        "pairwise_discrepancy": "17325",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "9e831b55efb2b8ec53fd594e7d37a46a69a26ef0f0923d3ee6b491f36b60a050"
+      }
+    },
+    {
+      "step": 12,
+      "candidate_index": 19,
+      "metric": {
+        "marginal_discrepancy": "115938/5",
+        "pairwise_discrepancy": "76131/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "f2f12a2adec63290f31e9a731cf3a800d1c313edc84afd9abe935b6147123bb6"
+      }
+    },
+    {
+      "step": 13,
+      "candidate_index": 8,
+      "metric": {
+        "marginal_discrepancy": "76086/5",
+        "pairwise_discrepancy": "59877/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "4bb44624a1695cd9d99a267422e741bd1ad6f54b029516a1812acc49c2712b1d"
+      }
+    },
+    {
+      "step": 14,
+      "candidate_index": 35,
+      "metric": {
+        "marginal_discrepancy": "8694",
+        "pairwise_discrepancy": "52173/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "84d7d2b7cf7aacefb2fba59c3b826282879d4fde2eebcd41391936c15487b0e6"
+      }
+    },
+    {
+      "step": 15,
+      "candidate_index": 3,
+      "metric": {
+        "marginal_discrepancy": "24894/5",
+        "pairwise_discrepancy": "45189/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "378ddc2cc9e61d85ff5dee71ce236241eae0ef724c81bb5a4674628ccd5c71e5"
+      }
+    },
+    {
+      "step": 16,
+      "candidate_index": 15,
+      "metric": {
+        "marginal_discrepancy": "10314/5",
+        "pairwise_discrepancy": "45783/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "a69f896eee82d63a4f97236fa70635ac161fc91a05fe1db168631160daf0024a"
+      }
+    },
+    {
+      "step": 17,
+      "candidate_index": 28,
+      "metric": {
+        "marginal_discrepancy": "5238/5",
+        "pairwise_discrepancy": "43029/5",
+        "minimum_hamming": 2,
+        "tie_break_sha256": "0781889a45b169b236bafbc6f735cc4da29edbfca86a4fd436652e6f481a5575"
+      }
+    }
+  ],
+  "initial_objective": {
+    "marginal_discrepancy": "5238/5",
+    "pairwise_discrepancy": "43029/5",
+    "minimum_within_wave_hamming": 2,
+    "total_within_wave_hamming": 1305,
+    "membership_sha256": "c0397582c47766658541b506bc783b2ab3f7cd6778c8b6542b2d065fb518cbba"
+  },
+  "final_objective": {
+    "marginal_discrepancy": "5238/5",
+    "pairwise_discrepancy": "43029/5",
+    "minimum_within_wave_hamming": 2,
+    "total_within_wave_hamming": 1305,
+    "membership_sha256": "c0397582c47766658541b506bc783b2ab3f7cd6778c8b6542b2d065fb518cbba"
+  },
+  "swap_trace": []
+}
