@@ -1,0 +1,66 @@
+R1I-E direct placement-key formatting provenance
+
+baseline_revision=91af7e6e6f6469e13ae792c7d199ebad92883ea1
+candidate_revision=4289c6f5e8c63fe4d2073132ddee57cea7d0f590
+protocol_commit=39cc14b
+implementation_commit=269c4a4
+candidate_test_commit=4289c6f
+baseline_clone=C:\r1ie-e-base-91af7e6
+candidate_clone=C:\r1ie-e-candidate-4289c6f
+baseline_git_status_entries=0
+candidate_git_status_entries=0
+
+go_version=go1.25.6 windows/amd64
+node_version=v22.13.1
+os=Microsoft Windows 11 Home 10.0.26200 build 26200
+cpu=11th Gen Intel(R) Core(TM) i5-11300H @ 3.10GHz
+logical_processors=8
+visible_ram_bytes=8362713088
+timezone=Bahia Standard Time
+workers=1
+
+base_normal_sha256=ed82c528db724d1454027b849fa7f95ed5a5b175f3acd4f2983dfd72971829b3
+base_searchprofile_sha256=d6b2371c29c4605e048e061ca40945f0418d34aacc06ea91b991a034dd84c79b
+candidate_normal_sha256=9bd142253777265590ae69115453d2ec8b113dadf90d93b7ae2fc46e0803ef35
+candidate_searchprofile_sha256=e6a69ccf3a2aabffca23efb18735813bbeaae9536c04de5147edb98837fc5b62
+all_binary_revisions_match=true
+all_binary_vcs_modified_false=true
+
+catalog_file_sha256=173a43cd20aed017be5836a870ea2d249b30d3a07294be7fd08afea50c925ebe
+catalog_verified_digest=0ab356afc52fa8479b627d4a917bc7f31d4cad1b6e021fd618ec17ef773c57c6
+suite_manifest_sha256=6b8bef8d2eef6a6359c77b7f901f9096a41266abba20a8f6229c29c4b3053127
+suite_lock_sha256=b65771885c98d6a2fc93cfca64e013fdcc94485f92ed935d1426a304cd37e775
+suite_generator_sha256=e5eb9e755e77395d2cd43b6b8aaa8568209826759d3ba4768aa993494834ec6c
+suite_verified=true
+materialized_cases=gsv2-013..gsv2-026
+materialized_role=development
+materialized_case_count=14
+validation_materialized=false
+public_holdout_materialized=false
+private_holdout_materialized=false
+
+smoke_solver_runs=5
+matrix_solver_runs=84
+timing_solver_runs=84
+combined_profile_solver_runs=12
+official_solver_runs=185
+semantic_matrix_comparisons=42
+timing_pairs=42
+timing_order=AB BA AB BA AB BA AB
+last_solver_run=candidate combined GSV1 CPU/heap profile
+
+raw_bundle=C:\r1ie-e-artifacts\4289c6f5e8c63fe4d2073132ddee57cea7d0f590
+raw_payload_count=152
+raw_payload_bytes=40240402
+read_only_entries=153
+manifest_entries=152
+manifest_sha256=2ce8fde1bdb1a7c1ac0a9e5c910b10bf70109c57a62041e87212fcd03fdb7422
+hash_revalidation=PASS
+post_freeze_solver_runs=0
+
+repository_gates=PASS
+smoke_semantics=PASS
+matrix_semantics=PASS
+matrix_logical_profiles=PASS
+timing_semantics=PASS
+decision=KEEP
