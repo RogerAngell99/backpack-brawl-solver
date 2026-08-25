@@ -228,15 +228,28 @@ if ($Mode -eq "Preflight") {
 
     $TestBinary = Join-Path $BuildDir "solver-preflight.test.exe"
     $TestProfile = Join-Path $BuildDir "solver-preflight.cpu.pprof"
+    $TestHeapProfile = Join-Path $BuildDir "solver-preflight.heap.pprof"
     $OldSnapshotEnv = $env:R1I_SEMANTIC_SNAPSHOT
     try {
         $env:R1I_SEMANTIC_SNAPSHOT = Join-Path $BuildDir "pprof-semantic.json"
-        [void](Invoke-Logged "go" @("test", "-run", "^TestR1ICrossBuildSemanticSnapshot$", "-count=1", "-cpuprofile", $TestProfile, "-o", $TestBinary, "./internal/solver") $RepoDir (Join-Path $LogDir "pprof-test-profile.txt"))
+        [void](Invoke-Logged "go" @("test", "-run", "^TestR1ICrossBuildSemanticSnapshot$", "-count=5", "-cpuprofile", $TestProfile, "-memprofile", $TestHeapProfile, "-o", $TestBinary, "./internal/solver") $RepoDir (Join-Path $LogDir "pprof-test-profile.txt"))
     } finally {
         $env:R1I_SEMANTIC_SNAPSHOT = $OldSnapshotEnv
     }
     [void](Invoke-Logged "go" @("tool", "pprof", "-top", "-unit=seconds", "-nodefraction=0", "-edgefraction=0", "-nodecount=0", $TestBinary, $TestProfile) $RepoDir (Join-Path $LogDir "pprof-top-smoke.txt"))
     [void](Invoke-Logged "go" @("tool", "pprof", "-tree", "-unit=seconds", "-nodefraction=0", "-edgefraction=0", "-nodecount=50", $TestBinary, $TestProfile) $RepoDir (Join-Path $LogDir "pprof-tree-smoke.txt"))
+
+    $ExtractorSmokeDir = Join-Path $ArtifactDir "extractor-smoke"
+    New-Item -ItemType Directory -Force -Path (Join-Path $ExtractorSmokeDir "binaries"), (Join-Path $ExtractorSmokeDir "profiles/per-case") | Out-Null
+    Copy-Item -LiteralPath $TestBinary -Destination (Join-Path $ExtractorSmokeDir "binaries/r1ih-normal.exe")
+    Copy-Item -LiteralPath $TestProfile -Destination (Join-Path $ExtractorSmokeDir "profiles/r1ih-gsv1.cpu.pprof")
+    Copy-Item -LiteralPath $TestProfile -Destination (Join-Path $ExtractorSmokeDir "profiles/r1ih-v4.cpu.pprof")
+    Copy-Item -LiteralPath $TestHeapProfile -Destination (Join-Path $ExtractorSmokeDir "profiles/r1ih-gsv1.heap.pprof")
+    foreach ($Scenario in $ProfileCases) {
+        Copy-Item -LiteralPath $TestProfile -Destination (Join-Path $ExtractorSmokeDir "profiles/per-case/$Scenario.cpu.pprof")
+    }
+    [void](Invoke-Logged "powershell.exe" @("-NoProfile", "-File", (Join-Path $ToolingRepoDir $ToolFiles.extractor), "-ArtifactDir", $ExtractorSmokeDir) $ToolingRepoDir (Join-Path $LogDir "extractor-full-smoke.txt"))
+    Assert-File (Join-Path $ExtractorSmokeDir "derived/canonical-profile-data.json")
 
     $Hashes = Get-ToolHashes
     $Record = @(
@@ -250,6 +263,7 @@ if ($Mode -eq "Preflight") {
         "paths=PASS",
         "go_tools=PASS",
         "pprof_commands=PASS",
+        "extractor_full_smoke=PASS",
         "repository_tests=PASS",
         "semantic_snapshot=PASS",
         "catalog_and_suite_locks=PASS",

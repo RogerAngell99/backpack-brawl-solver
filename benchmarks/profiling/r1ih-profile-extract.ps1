@@ -49,7 +49,7 @@ function Invoke-Pprof([string[]]$Arguments, [string]$Profile, [string]$OutputPat
     $ExitCode = $LASTEXITCODE
     Write-Utf8Text $OutputPath (($Output -join "`n") + "`n")
     if ($ExitCode -ne 0) { throw "pprof failed ($ExitCode): go tool pprof $($Arguments -join ' '); see $OutputPath" }
-    return ,$Output
+    return $Output
 }
 
 function Convert-TimeSeconds([string]$Token) {
@@ -334,7 +334,7 @@ for ($Index = 0; $Index -lt [Math]::Min(10, $AllocObjectsProject.Count); $Index+
         project_rank = $Index + 1
     })
 }
-$DuplicateKeys = @($Inventory | Group-Object key | Where-Object Count -ne 1)
+$DuplicateKeys = @($Inventory | Group-Object { $_["key"] } | Where-Object Count -ne 1)
 if ($DuplicateKeys.Count -ne 0) { throw "duplicate mechanical inventory keys" }
 
 $TopHeaders = @("rank", "symbol", "flat", "flat_fraction", "cumulative", "cumulative_fraction")
@@ -360,7 +360,7 @@ foreach ($Entry in $Inventory | Where-Object { $_.kind -in @("function", "source
             $CumSeconds = if ($null -ne $Line) { $Line.cumulative_seconds } else { 0 }
         }
         $CaseRows += [ordered]@{
-            inventory_key = $Entry.key
+            inventory_key = $Entry["key"]
             scenario = $Scenario
             total_seconds = $Profile.total_seconds
             flat_seconds = $FlatSeconds
@@ -384,7 +384,7 @@ $Canonical = [ordered]@{
         per_case = $PerCase
     }
     heap_profiles = $HeapProfiles
-    eligible_inventory = @($Inventory | Sort-Object key)
+    eligible_inventory = @($Inventory | Sort-Object { $_["key"] })
 }
 Write-Utf8Text (Join-Path $DerivedDir "canonical-profile-data.json") (($Canonical | ConvertTo-Json -Depth 100) + "`n")
 Write-Output "status=PASS"
