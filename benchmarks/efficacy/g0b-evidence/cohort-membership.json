@@ -1,0 +1,980 @@
+{
+  "version": 1,
+  "selection_namespace": "gsv2-devexp-v1",
+  "partition_namespace": "gsv2-devexp-partition-v1",
+  "state": "provisionally_sealed",
+  "cases": [
+    {
+      "case_id": "gsv2x-001",
+      "selection_step": 0,
+      "selection_candidate_index": 685,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "2/2",
+          "mixed",
+          "high",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d60",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 25,
+      "wave": "A",
+      "seed": 6469668128529695914
+    },
+    {
+      "case_id": "gsv2x-002",
+      "selection_step": 1,
+      "selection_candidate_index": 72,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d75",
+          "2/1",
+          "mixed",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d75",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 2,
+      "wave": "B",
+      "seed": 424453490100681303
+    },
+    {
+      "case_id": "gsv2x-003",
+      "selection_step": 2,
+      "selection_candidate_index": 261,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d60",
+          "2/2",
+          "mostly-exclusive",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d60",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 9,
+      "wave": "A",
+      "seed": 9012903239474115191
+    },
+    {
+      "case_id": "gsv2x-004",
+      "selection_step": 3,
+      "selection_candidate_index": 433,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d60",
+          "1/1",
+          "mixed",
+          "high",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d60",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 15,
+      "wave": "A",
+      "seed": 4009626681802226980
+    },
+    {
+      "case_id": "gsv2x-005",
+      "selection_step": 4,
+      "selection_candidate_index": 179,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d97",
+          "1/1",
+          "mostly-shared",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d97",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 6,
+      "wave": "A",
+      "seed": 2198222008466656019
+    },
+    {
+      "case_id": "gsv2x-006",
+      "selection_step": 5,
+      "selection_candidate_index": 726,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d75",
+          "2/1",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d75",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 27,
+      "wave": "A",
+      "seed": 6285657302312814407
+    },
+    {
+      "case_id": "gsv2x-007",
+      "selection_step": 6,
+      "selection_candidate_index": 955,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d75",
+          "2/2",
+          "mixed",
+          "high",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d75",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 30,
+      "wave": "A",
+      "seed": 1299584122135097783
+    },
+    {
+      "case_id": "gsv2x-008",
+      "selection_step": 7,
+      "selection_candidate_index": 573,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d90",
+          "2/1",
+          "mostly-shared",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d90",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 19,
+      "wave": "A",
+      "seed": 8681254267753918804
+    },
+    {
+      "case_id": "gsv2x-009",
+      "selection_step": 8,
+      "selection_candidate_index": 851,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d97",
+          "2/2",
+          "mixed",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d97",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mixed",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 29,
+      "wave": "B",
+      "seed": 7912115598316940128
+    },
+    {
+      "case_id": "gsv2x-010",
+      "selection_step": 9,
+      "selection_candidate_index": 7,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d60",
+          "1/1",
+          "mostly-exclusive",
+          "high",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d60",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 0,
+      "wave": "B",
+      "seed": 3632945516588571433
+    },
+    {
+      "case_id": "gsv2x-011",
+      "selection_step": 10,
+      "selection_candidate_index": 285,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d75",
+          "1/1",
+          "mostly-shared",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d75",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 11,
+      "wave": "B",
+      "seed": 6167804114141772998
+    },
+    {
+      "case_id": "gsv2x-012",
+      "selection_step": 11,
+      "selection_candidate_index": 362,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d90",
+          "2/2",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d90",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 13,
+      "wave": "B",
+      "seed": 2462218486685153086
+    },
+    {
+      "case_id": "gsv2x-013",
+      "selection_step": 12,
+      "selection_candidate_index": 622,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d97",
+          "2/1",
+          "mostly-exclusive",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d97",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 20,
+      "wave": "B",
+      "seed": 7679452717248184622
+    },
+    {
+      "case_id": "gsv2x-014",
+      "selection_step": 13,
+      "selection_candidate_index": 662,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "1/1",
+          "mostly-shared",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d60",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 22,
+      "wave": "B",
+      "seed": 3997091582448995340
+    },
+    {
+      "case_id": "gsv2x-015",
+      "selection_step": 14,
+      "selection_candidate_index": 22,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d60",
+          "2/1",
+          "mixed",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d60",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 1,
+      "wave": "B",
+      "seed": 8459277841809897982
+    },
+    {
+      "case_id": "gsv2x-016",
+      "selection_step": 15,
+      "selection_candidate_index": 1068,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d97",
+          "2/2",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d97",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 35,
+      "wave": "A",
+      "seed": 7005275416603068683
+    },
+    {
+      "case_id": "gsv2x-017",
+      "selection_step": 16,
+      "selection_candidate_index": 980,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "1/1",
+          "mostly-exclusive",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d90",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 31,
+      "wave": "A",
+      "seed": 4192536925152551730
+    },
+    {
+      "case_id": "gsv2x-018",
+      "selection_step": 17,
+      "selection_candidate_index": 525,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d75",
+          "2/2",
+          "mixed",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d75",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mixed",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 17,
+      "wave": "A",
+      "seed": 7573076300402436048
+    },
+    {
+      "case_id": "gsv2x-019",
+      "selection_step": 18,
+      "selection_candidate_index": 682,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "2/1",
+          "mostly-shared",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d60",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 24,
+      "wave": "A",
+      "seed": 920407211344936872
+    },
+    {
+      "case_id": "gsv2x-020",
+      "selection_step": 19,
+      "selection_candidate_index": 211,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d97",
+          "2/2",
+          "mostly-shared",
+          "high",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d97",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "high",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 7,
+      "wave": "B",
+      "seed": 9186355185321558719
+    },
+    {
+      "case_id": "gsv2x-021",
+      "selection_step": 20,
+      "selection_candidate_index": 329,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d90",
+          "1/1",
+          "mixed",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d90",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 12,
+      "wave": "B",
+      "seed": 9131708560602265593
+    },
+    {
+      "case_id": "gsv2x-022",
+      "selection_step": 21,
+      "selection_candidate_index": 510,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d75",
+          "2/1",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d75",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 16,
+      "wave": "B",
+      "seed": 6625344167481310897
+    },
+    {
+      "case_id": "gsv2x-023",
+      "selection_step": 22,
+      "selection_candidate_index": 804,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d90",
+          "2/2",
+          "mostly-shared",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d90",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 28,
+      "wave": "A",
+      "seed": 1572166742895158243
+    },
+    {
+      "case_id": "gsv2x-024",
+      "selection_step": 23,
+      "selection_candidate_index": 83,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d75",
+          "2/1",
+          "mostly-exclusive",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d75",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 3,
+      "wave": "A",
+      "seed": 241712900214513995
+    },
+    {
+      "case_id": "gsv2x-025",
+      "selection_step": 24,
+      "selection_candidate_index": 220,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d60",
+          "1/1",
+          "mixed",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d60",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 8,
+      "wave": "A",
+      "seed": 2949752176828680879
+    },
+    {
+      "case_id": "gsv2x-026",
+      "selection_step": 25,
+      "selection_candidate_index": 1064,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d97",
+          "2/2",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d97",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 34,
+      "wave": "B",
+      "seed": 4819376554702727258
+    },
+    {
+      "case_id": "gsv2x-027",
+      "selection_step": 26,
+      "selection_candidate_index": 663,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d60",
+          "1/1",
+          "mostly-shared",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d60",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 23,
+      "wave": "B",
+      "seed": 8905878051354637062
+    },
+    {
+      "case_id": "gsv2x-028",
+      "selection_step": 27,
+      "selection_candidate_index": 997,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "2/1",
+          "mostly-exclusive",
+          "high",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d90",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 33,
+      "wave": "B",
+      "seed": 4681740762271795673
+    },
+    {
+      "case_id": "gsv2x-029",
+      "selection_step": 28,
+      "selection_candidate_index": 538,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d75",
+          "2/2",
+          "mostly-shared",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d75",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 18,
+      "wave": "A",
+      "seed": 152538744301874253
+    },
+    {
+      "case_id": "gsv2x-030",
+      "selection_step": 29,
+      "selection_candidate_index": 168,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d97",
+          "1/1",
+          "mostly-exclusive",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d97",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 5,
+      "wave": "A",
+      "seed": 2779268320750195763
+    },
+    {
+      "case_id": "gsv2x-031",
+      "selection_step": 30,
+      "selection_candidate_index": 398,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d97",
+          "2/1",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d97",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 14,
+      "wave": "A",
+      "seed": 4927346660545389981
+    },
+    {
+      "case_id": "gsv2x-032",
+      "selection_step": 31,
+      "selection_candidate_index": 713,
+      "canonical_descriptor": "[[\"grid_topology\",\"narrow-corridors\"],[\"density_band\",\"d75\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "narrow-corridors",
+          "d75",
+          "1/1",
+          "mostly-exclusive",
+          "low",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "narrow-corridors",
+        "density_band": "d75",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 26,
+      "wave": "B",
+      "seed": 1442542514410123779
+    },
+    {
+      "case_id": "gsv2x-033",
+      "selection_step": 32,
+      "selection_candidate_index": 990,
+      "canonical_descriptor": "[[\"grid_topology\",\"two-lobes\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"2/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "two-lobes",
+          "d90",
+          "2/1",
+          "mixed",
+          "high",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "two-lobes",
+        "density_band": "d90",
+        "source_multiplicity": "2/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 32,
+      "wave": "B",
+      "seed": 1709028308347592871
+    },
+    {
+      "case_id": "gsv2x-034",
+      "selection_step": 33,
+      "selection_candidate_index": 268,
+      "canonical_descriptor": "[[\"grid_topology\",\"full\"],[\"density_band\",\"d60\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-shared\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"low\"]]",
+      "descriptor": {
+        "values": [
+          "full",
+          "d60",
+          "2/2",
+          "mostly-shared",
+          "low",
+          "low"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "full",
+        "density_band": "d60",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-shared",
+        "copy_symmetry": "low",
+        "rotation_entropy": "low"
+      },
+      "partition_candidate_index": 10,
+      "wave": "B",
+      "seed": 1060748620099591357
+    },
+    {
+      "case_id": "gsv2x-035",
+      "selection_step": 34,
+      "selection_candidate_index": 639,
+      "canonical_descriptor": "[[\"grid_topology\",\"holes\"],[\"density_band\",\"d97\"],[\"source_multiplicity\",\"2/2\"],[\"target_overlap\",\"mostly-exclusive\"],[\"copy_symmetry\",\"low\"],[\"rotation_entropy\",\"high\"]]",
+      "descriptor": {
+        "values": [
+          "holes",
+          "d97",
+          "2/2",
+          "mostly-exclusive",
+          "low",
+          "high"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "holes",
+        "density_band": "d97",
+        "source_multiplicity": "2/2",
+        "target_overlap": "mostly-exclusive",
+        "copy_symmetry": "low",
+        "rotation_entropy": "high"
+      },
+      "partition_candidate_index": 21,
+      "wave": "B",
+      "seed": 8633749926019529533
+    },
+    {
+      "case_id": "gsv2x-036",
+      "selection_step": 35,
+      "selection_candidate_index": 110,
+      "canonical_descriptor": "[[\"grid_topology\",\"bottleneck\"],[\"density_band\",\"d90\"],[\"source_multiplicity\",\"1/1\"],[\"target_overlap\",\"mixed\"],[\"copy_symmetry\",\"high\"],[\"rotation_entropy\",\"medium\"]]",
+      "descriptor": {
+        "values": [
+          "bottleneck",
+          "d90",
+          "1/1",
+          "mixed",
+          "high",
+          "medium"
+        ]
+      },
+      "structural_descriptor": {
+        "grid_topology": "bottleneck",
+        "density_band": "d90",
+        "source_multiplicity": "1/1",
+        "target_overlap": "mixed",
+        "copy_symmetry": "high",
+        "rotation_entropy": "medium"
+      },
+      "partition_candidate_index": 4,
+      "wave": "A",
+      "seed": 2849697686112455906
+    }
+  ]
+}
