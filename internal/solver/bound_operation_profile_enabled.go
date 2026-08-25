@@ -364,9 +364,18 @@ func (ctx *outgoingBoundContext) shouldPruneProfiled(
 	return comparePriorityCounts(upper, results[len(results)-1].Evaluation.Score.PriorityCounts) < 0
 }
 
-// upperPriorityCountsProfiled mirrors upperPriorityCounts without reordering
-// its map, mask, priority, source, target, potential, popcount, or clamp work.
 func (ctx *outgoingBoundContext) upperPriorityCountsProfiled(placements []model.Placement, profile *model.OutgoingBoundSiteProfile) []int {
+	index, ok := ctx.buildOutgoingPlacementIndex(placements)
+	if !ok {
+		return ctx.upperPriorityCountsLegacyProfiled(placements, profile)
+	}
+	return ctx.upperPriorityCountsIndexedProfiled(placements, index, profile)
+}
+
+// upperPriorityCountsLegacyProfiled mirrors upperPriorityCountsLegacy without
+// reordering its map, mask, priority, source, target, potential, popcount, or
+// clamp work.
+func (ctx *outgoingBoundContext) upperPriorityCountsLegacyProfiled(placements []model.Placement, profile *model.OutgoingBoundSiteProfile) []int {
 	profile.PlacedMapBuilds++
 	profile.PlacedMapInsertions += int64(len(placements))
 	placedByID := placementByInstanceID(placements)
@@ -408,6 +417,75 @@ func (ctx *outgoingBoundContext) upperPriorityCountsProfiled(placements []model.
 					}
 					profile.PlacedTargetsFound++
 					profile.SourceHitsTargetCalls++
+					if sourceHitsTargetWithCatalog(ctx.catalog, sourcePlacement, targetPlacement) {
+						profile.SourceHitsTargetTrue++
+						targets |= uint64(1) << uint(targetInstance.OriginalIndex)
+					}
+				}
+				profile.CoveragePlacementKeyCalls++
+				key := coveragePlacementKey(sourcePlacement)
+				profile.PlacedPotentialLookups++
+				targets |= ctx.potential.outgoingTargets[key] &^ placedMask
+			} else {
+				profile.FreeSourceIterations++
+				profile.FreePotentialLookups++
+				targets = ctx.potential.instanceOutgoingTargets[sourceInstance.InstanceID]
+			}
+			targets &^= uint64(1) << uint(sourceInstance.OriginalIndex)
+			profile.PopcountCalls++
+			count := bits.OnesCount64(targets)
+			if count > starCount {
+				profile.StarCountClamps++
+				count = starCount
+			}
+			upper[priorityIndex] += count
+		}
+	}
+	return upper
+}
+
+// upperPriorityCountsIndexedProfiled preserves the public counters as logical
+// work-site counts. PlacedMapBuilds, PlacedMapInsertions, mask checks, and
+// target lookups retain their historical meaning even though the indexed path
+// performs no physical string-map work.
+func (ctx *outgoingBoundContext) upperPriorityCountsIndexedProfiled(placements []model.Placement, index outgoingPlacementIndex, profile *model.OutgoingBoundSiteProfile) []int {
+	profile.PlacedMapBuilds++
+	profile.PlacedMapInsertions += int64(len(placements))
+	profile.PlacedMaskInstanceChecks += int64(len(ctx.instances))
+	placedMask := index.presentMask
+	upper := make([]int, len(ctx.priorityItems))
+	for priorityIndex, sourceItemID := range ctx.priorityItems {
+		profile.PriorityIterations++
+		for _, sourceInstance := range ctx.instances {
+			profile.SourceInstanceIterations++
+			if sourceInstance.ItemID != sourceItemID {
+				continue
+			}
+			profile.PrioritySourceMatches++
+			starCount := len(ctx.catalog.Items[sourceItemID].Stars)
+			if starCount == 0 {
+				profile.ZeroStarSourceSkips++
+				continue
+			}
+			var targets uint64
+			if sourcePosition := index.positionPlusOne[sourceInstance.OriginalIndex]; sourcePosition != 0 {
+				profile.PlacedSourceIterations++
+				sourcePlacement := placements[int(sourcePosition)-1]
+				for _, targetInstance := range ctx.instances {
+					profile.PlacedSourceTargetIterations++
+					if targetInstance.InstanceID == sourceInstance.InstanceID {
+						profile.SelfTargetSkips++
+						continue
+					}
+					profile.TargetPlacementLookups++
+					targetPosition := index.positionPlusOne[targetInstance.OriginalIndex]
+					if targetPosition == 0 {
+						profile.UnplacedTargets++
+						continue
+					}
+					profile.PlacedTargetsFound++
+					profile.SourceHitsTargetCalls++
+					targetPlacement := placements[int(targetPosition)-1]
 					if sourceHitsTargetWithCatalog(ctx.catalog, sourcePlacement, targetPlacement) {
 						profile.SourceHitsTargetTrue++
 						targets |= uint64(1) << uint(targetInstance.OriginalIndex)
