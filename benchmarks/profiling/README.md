@@ -170,10 +170,13 @@ R1I-H is an evidence-only gate that rebuilds the current CPU, allocation, and
 operation hierarchy after R1I-G. It adds a formal zero-benchmark tooling
 preflight, candidate-independent mechanical hotspot extraction, explicit
 `E_min`, exact inventory classification, and post-analysis raw-hash
-revalidation. It changes no solver source and ends in exactly one of
-`PROMOTE`, `NEED MORE EVIDENCE`, or `DECLINE`. See
-[`r1ih-protocol.md`](r1ih-protocol.md); findings and the compact evidence bundle
-are added only after the protocol/tooling commit and frozen official collection.
+revalidation. The decision is **DECLINE**: every broad C1 target is below its
+2.5% bar even under perfect removal, while the large plateau family remains
+concentrated in two cases and search-trajectory sensitive. R1I-H changes no
+solver source and closes the Efficiency loop. See
+[`r1ih-protocol.md`](r1ih-protocol.md),
+[`r1ih-findings.md`](r1ih-findings.md), and
+[`r1ih-evidence/`](r1ih-evidence/README.md).
 
 The normal build keeps the existing feasibility and canonical implementations. The instrumented versions are selected only by the compile-time `searchprofile` tag with `--operation-profile`; CPU and heap collection must use the normal binary.
 
