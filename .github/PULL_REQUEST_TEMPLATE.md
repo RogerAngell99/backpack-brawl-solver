@@ -34,3 +34,11 @@ go test ./...
 ## Riscos e Holdout
 
 <!-- Declare riscos conhecidos e se holdout ainda está pendente. -->
+
+## Merge boundary
+
+- [ ] Base is the intended `main` revision.
+- [ ] CI/evidence is complete.
+- [ ] No auto-merge has been enabled.
+- [ ] This PR has NOT been merged by the implementation agent.
+- [ ] Awaiting repository-owner manual review/merge.
