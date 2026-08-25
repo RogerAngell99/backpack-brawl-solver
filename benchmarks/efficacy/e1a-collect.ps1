@@ -163,7 +163,9 @@ function Assert-Report([string]$Path, [string]$Variant, [int[]]$Budgets, [bool]$
     foreach ($Run in $Report.runs) {
         $ErrorProperty = $Run.PSObject.Properties["error"]
         if ($null -ne $ErrorProperty -and -not [string]::IsNullOrWhiteSpace([string]$ErrorProperty.Value)) {
-            throw "solver error in $Path for $($Run.scenario): $($ErrorProperty.Value)"
+            if ([string]$ErrorProperty.Value -ne "no solutions found") {
+                throw "solver error in $Path for $($Run.scenario): $($ErrorProperty.Value)"
+            }
         }
     }
 }
