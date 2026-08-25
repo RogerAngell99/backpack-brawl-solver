@@ -1,0 +1,35 @@
+R1I-E targeted CPU and heap extracts
+
+Baseline CPU total samples: 273.78s
+Candidate CPU total samples: 258.07s
+
+baseline placementKey (flat, cumulative): 0.42s, 15.21s
+  header fmt.Fprintf line cumulative:       5.94s
+  cell fmt.Fprintf line cumulative:         8.19s
+  targeted formatter edge total:           14.13s
+  coveragePlacementKey cumulative:           9.78s
+
+candidate placementKey (flat, cumulative): 0.44s, 2.98s
+  fallback fmt.Fprintf line:                 0.00s sampled
+  writePlacementKeyInt child:                0.88s
+  targeted formatter edge total:             0.00s
+  coveragePlacementKey cumulative:            2.43s
+
+formatter edge reduction: 100%
+placementKey cumulative reduction: 80.41%
+coveragePlacementKey cumulative reduction: 75.15%
+
+Heap sample totals:
+  baseline alloc_space:     221144341413 B
+  candidate alloc_space:    220356550800 B
+  change:                         -0.3562%
+  baseline alloc_objects:       258420017
+  candidate alloc_objects:      219121247
+  change:                        -15.2074%
+
+placementKey sampled cumulative alloc_space:
+  baseline:  2572.60 MB
+  candidate: 1704.56 MB
+
+The candidate fallback is exact but cold for the valid production domain.
+Unrelated global fmt cost is deliberately excluded from the causal claim.
