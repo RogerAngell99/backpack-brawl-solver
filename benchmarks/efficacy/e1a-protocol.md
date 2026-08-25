@@ -225,4 +225,3 @@ Any tooling or collection defect invalidates the bundle. After a fix, every
 official run is recollected into a new empty bundle. Large raw reports remain
 external; the pull request contains compact derived evidence and the raw
 manifest needed for audit.
-
