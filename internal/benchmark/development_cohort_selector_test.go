@@ -1,6 +1,7 @@
 package benchmark
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"os"
@@ -304,8 +305,11 @@ func TestGeneralSearchV2ManifestRemainsByteFrozen(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	// Git stores this text file with LF. Normalize the checkout transport so
+	// core.autocrlf cannot make the repository-blob hash platform-dependent.
+	content = bytes.ReplaceAll(content, []byte("\r\n"), []byte("\n"))
 	digest := sha256.Sum256(content)
-	const want = "6b8bef8d2eef6a6359c77b7f901f9096a41266abba20a8f6229c29c4b3053127"
+	const want = "5d1757c37580b04c9a85b738ea2672d8a0b3c8402c8ed5a509c8c42fd5d4b513"
 	if got := hex.EncodeToString(digest[:]); got != want {
 		t.Fatalf("general-search-v2.json byte hash=%s want frozen=%s", got, want)
 	}

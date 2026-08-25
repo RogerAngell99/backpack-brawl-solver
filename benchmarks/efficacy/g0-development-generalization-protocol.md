@@ -49,13 +49,13 @@ holdout `gsv2-007..012` are outside G0 and stay closed.
 Its frozen raw SHA-256 is:
 
 ```text
-6b8bef8d2eef6a6359c77b7f901f9096a41266abba20a8f6229c29c4b3053127
+5d1757c37580b04c9a85b738ea2672d8a0b3c8402c8ed5a509c8c42fd5d4b513
 ```
 
 Its lock also remains unchanged; the current raw lock SHA-256 is:
 
 ```text
-b65771885c98d6a2fc93cfca64e013fdcc94485f92ed935d1426a304cd37e775
+96af8290e8741b4ef6f514b0df32820f8ccd241695eb5b1d671fc6cc2fd5aa6d
 ```
 
 No `gsv2-037` or later case may be appended to that manifest. New populations
