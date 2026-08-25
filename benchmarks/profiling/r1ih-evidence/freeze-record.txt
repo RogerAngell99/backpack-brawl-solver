@@ -1,0 +1,9 @@
+R1I-H raw artifact freeze
+artifact_dir=C:\r1ih-artifacts\0cac463a79238ecaea9d95af33468cc04dd5809b-official-02
+raw_file_count=80
+raw_total_bytes=21307949
+raw_manifest_sha256=cf676f97e64780ba30c01a1e511ca60276dcecd7d8faeb63fa0eb5cc353712c7
+raw_manifest_revalidation=PASS
+raw_read_only_revalidation=PASS
+post_freeze_solver_runs=0
+frozen_at=2026-08-25T11:58:12.8645655-03:00

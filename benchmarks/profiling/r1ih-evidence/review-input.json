@@ -1,0 +1,1155 @@
+{
+  "version": "r1ih-classification-v1",
+  "frozen_sha": "0cac463a79238ecaea9d95af33468cc04dd5809b",
+  "carry_forward": [
+    {
+      "family": "plateau/archive reselection",
+      "status": "candidate",
+      "candidate_id": "plateau-full-reselection",
+      "rationale": "fresh CPU and heap evidence keeps the family visible, without inheriting prior priority"
+    },
+    {
+      "family": "outgoing static compatibility",
+      "status": "candidate",
+      "candidate_id": "outgoing-static-compatibility",
+      "rationale": "fresh exclusive source-line and operation breadth are available"
+    },
+    {
+      "family": "coveragePlacementKey residual",
+      "status": "candidate",
+      "candidate_id": "outgoing-coverage-key-residual",
+      "rationale": "fresh CPU, heap, and operation evidence are available"
+    },
+    {
+      "family": "canonical-copy ranks",
+      "status": "candidate",
+      "candidate_id": "canonical-copy-ranks",
+      "rationale": "fresh function and per-case evidence are available"
+    },
+    {
+      "family": "priority residual geometry",
+      "status": "candidate",
+      "candidate_id": "priority-residual-geometry",
+      "rationale": "fresh function and deterministic operation evidence are available"
+    },
+    {
+      "family": "filteredRemovedOptions",
+      "status": "candidate",
+      "candidate_id": "filtered-removed-options-residual",
+      "rationale": "fresh CPU, allocation, and operation evidence are available"
+    },
+    {
+      "family": "target/source scans",
+      "status": "candidate",
+      "candidate_id": "outgoing-static-compatibility",
+      "rationale": "the exact source-target static-match child represents the remaining scan family"
+    },
+    {
+      "family": "placement-index residual",
+      "status": "excluded",
+      "rationale": "the post-R1I-G index builder is only 0.41 sampled seconds (0.17%); no mechanically eligible exclusive residual mechanism remains"
+    },
+    {
+      "family": "new post-R1I-G hotspot",
+      "status": "candidate",
+      "candidate_id": "star-score-evaluation-residual",
+      "rationale": "star-score evaluation is the strongest fresh broad non-carry-forward project hotspot"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "plateau-full-reselection",
+      "mechanism": "replace per-observation full plateau regrouping and reselection with an incremental capacity-bounded structure while preserving exact selected set and order",
+      "family": "plateau/archive reselection",
+      "source_region": "plateau.go selectPlateauEntries called from plateauArchive.observe",
+      "parent": "plateauArchive.observe",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.(*plateauArchive).observe",
+        "value": "cumulative"
+      },
+      "target_region": "selectPlateauEntries full cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.selectPlateauEntries",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.selectPlateauEntries",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.selectPlateauEntries",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.selectPlateauEntries",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.selectPlateauEntries",
+        "value": "flat"
+      },
+      "overlap_group": "plateau-full-reselection",
+      "operation_breadth_note": "unavailable: no serialized archive observation, admission, reselection, selected-set, or selected-order counter exists",
+      "complexity_class": "C2",
+      "semantic_risk": "high: archive membership/order and downstream repair-base selection are search-trajectory semantics",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": false,
+      "overlap_dominated": false,
+      "archive_semantics": {
+        "admission_semantics": "duplicate-layout rejection and every archive admission/rejection outcome must remain exact",
+        "selected_set_invariants": "the capacity-bounded canonical-layout set must equal the current full reselection after every observation",
+        "selected_order_invariants": "score, priority, signature, and hash tie ordering must remain byte-for-byte equivalent",
+        "signature_diversity": "one-representative-per-signature and diversity fallback behavior must remain exact",
+        "downstream_base_selection": "repair-base enumeration consumes archive membership and order and therefore must remain identical",
+        "search_trajectory_risk": "any changed membership or order changes downstream repair bases and the search trajectory"
+      },
+      "disposition": "REJECT",
+      "rationale": "large CPU and allocation ownership, but material in only two of six CPU cases, operation breadth is unavailable, E is not structurally defensible, and the C2 trajectory risk is unacceptable"
+    },
+    {
+      "id": "plateau-multi-sort",
+      "mechanism": "eliminate repeated full sortPlateauEntries passes inside plateau reselection while preserving the exact selected order",
+      "family": "plateau/archive sort",
+      "source_region": "plateau.go sortPlateauEntries and its three comparison closures inside selectPlateauEntries",
+      "parent": "selectPlateauEntries",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.selectPlateauEntries",
+        "value": "cumulative"
+      },
+      "target_region": "sortPlateauEntries cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.sortPlateauEntries",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.sortPlateauEntries",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.sortPlateauEntries",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.sortPlateauEntries",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.sortPlateauEntries",
+        "value": "flat"
+      },
+      "overlap_group": "plateau-full-reselection",
+      "operation_breadth_note": "unavailable: sort calls/comparisons and archive observations are not serialized",
+      "complexity_class": "C2",
+      "semantic_risk": "high: exact archive order is consumed by downstream repair-base selection",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": false,
+      "overlap_dominated": true,
+      "archive_semantics": {
+        "admission_semantics": "duplicate-layout rejection and every archive admission/rejection outcome must remain exact",
+        "selected_set_invariants": "the capacity-bounded canonical-layout set must equal the current full reselection after every observation",
+        "selected_order_invariants": "score, priority, signature, and hash tie ordering must remain byte-for-byte equivalent",
+        "signature_diversity": "one-representative-per-signature and diversity fallback behavior must remain exact",
+        "downstream_base_selection": "repair-base enumeration consumes archive membership and order and therefore must remain identical",
+        "search_trajectory_risk": "any changed membership or order changes downstream repair bases and the search trajectory"
+      },
+      "disposition": "REJECT",
+      "rationale": "nested within full plateau reselection, concentrated in the same two cases, non-additive with its parent, and lacks a defensible exact-removal fraction"
+    },
+    {
+      "id": "outgoing-static-compatibility",
+      "mechanism": "replace repeated static catalog star source-target matching with an immutable bounded compatibility relation",
+      "family": "outgoing static compatibility",
+      "source_region": "coverage.go:540 StarMatchesCatalogItems call inside sourceHitsTargetWithCatalog",
+      "parent": "sourceHitsTargetWithCatalog",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog",
+        "value": "cumulative"
+      },
+      "target_region": "exclusive cumulative call edge at coverage.go:540",
+      "target_metric": {
+        "kind": "source_line",
+        "routine": "backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog",
+        "file": "coverage.go",
+        "line": 540,
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "source_line",
+        "routine": "backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog",
+        "file": "coverage.go",
+        "line": 540,
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "source_line",
+        "routine": "backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog",
+        "file": "coverage.go",
+        "line": 540,
+        "value": "cumulative"
+      },
+      "overlap_group": "outgoing-source-target-scan",
+      "operation_metric": {
+        "family": "outgoing",
+        "field": "source_hits_target_calls"
+      },
+      "operation_breadth_note": "source-hit calls provide deterministic development-case breadth",
+      "complexity_class": "C1",
+      "semantic_risk": "medium: catalog/star fallbacks and all target outcomes must remain exact",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "broad and isolated, but the entire target is only 1.90% of whole CPU, so E_min exceeds 100% for C1 before relation-lookup cost"
+    },
+    {
+      "id": "outgoing-coverage-key-residual",
+      "mechanism": "reuse an exact owned coverage placement key instead of reconstructing it in indexed outgoing-bound checks",
+      "family": "coveragePlacementKey residual",
+      "source_region": "coverage.go coveragePlacementKey called at outgoing_bound.go:201",
+      "parent": "outgoingBoundContext.upperPriorityCountsIndexed",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCountsIndexed",
+        "value": "cumulative"
+      },
+      "target_region": "coveragePlacementKey cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.coveragePlacementKey",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.coveragePlacementKey",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.coveragePlacementKey",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.coveragePlacementKey",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.coveragePlacementKey",
+        "value": "flat"
+      },
+      "overlap_group": "placement-key-family",
+      "operation_metric": {
+        "family": "outgoing",
+        "field": "coverage_placement_key_calls"
+      },
+      "operation_breadth_note": "coverage key calls provide deterministic development-case breadth",
+      "complexity_class": "C1",
+      "semantic_risk": "medium: ownership, placement immutability, and cache lifetime must remain exact",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "broad but only 1.07% of whole CPU; even perfect removal cannot reach the 2.5% C1 bar"
+    },
+    {
+      "id": "priority-residual-geometry",
+      "mechanism": "precompute the remaining fixed/removed star-slot geometry relation used by partialRepairSlotCanHitRemovedTarget",
+      "family": "priority residual geometry",
+      "source_region": "partial_repair_bound.go partialRepairSlotCanHitRemovedTarget child",
+      "parent": "partialRepairV3PriorityUpperBound",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound",
+        "value": "cumulative"
+      },
+      "target_region": "partialRepairSlotCanHitRemovedTarget cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.partialRepairSlotCanHitRemovedTarget",
+        "value": "cumulative"
+      },
+      "overlap_group": "priority-geometry",
+      "operation_metric": {
+        "family": "priority",
+        "field": "geometry_candidate_checks"
+      },
+      "operation_breadth_note": "geometry candidate checks provide deterministic development-case breadth",
+      "complexity_class": "C1",
+      "semantic_risk": "medium: all option/fixed geometry regimes and malformed inputs must remain exact",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "broad and causally named, but 1.29% whole CPU makes E_min far above 100% for C1"
+    },
+    {
+      "id": "canonical-copy-ranks",
+      "mechanism": "replace repeated canonical physical-copy string comparisons with exact preindexed copy ranks",
+      "family": "canonical-copy ranks",
+      "source_region": "solver.go placementRespectsCanonicalCopyOrder",
+      "parent": "placementRespectsCanonicalCopyOrder",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder",
+        "value": "cumulative"
+      },
+      "target_region": "full canonical-copy comparison function",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder",
+        "value": "cumulative"
+      },
+      "overlap_group": "canonical-copy-order",
+      "operation_breadth_note": "unavailable: canonical-copy comparison attempts are not serialized independently",
+      "complexity_class": "C1",
+      "semantic_risk": "medium-high: rejection changes candidate generation unless the canonical oracle is exact",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "broad at 1.68% whole CPU, but even perfect removal cannot reach the C1 bar"
+    },
+    {
+      "id": "physical-instance-id-construction",
+      "mechanism": "reuse exact preindexed physical instance IDs instead of rebuilding and sorting them for plateau link signatures",
+      "family": "physical instance ID construction",
+      "source_region": "plateau.go physicalInstanceIDs child of canonicalLinkTokens",
+      "parent": "canonicalLinkTokens",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.canonicalLinkTokens",
+        "value": "cumulative"
+      },
+      "target_region": "physicalInstanceIDs cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.physicalInstanceIDs",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.physicalInstanceIDs",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.physicalInstanceIDs",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.physicalInstanceIDs",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.physicalInstanceIDs",
+        "value": "flat"
+      },
+      "overlap_group": "plateau-link-signature",
+      "archive_semantics": {
+        "admission_semantics": "physical IDs feed signatures used during archive admission and must preserve every acceptance and rejection",
+        "selected_set_invariants": "unchanged signatures must yield the identical capacity-bounded selected set",
+        "selected_order_invariants": "physical-copy naming and token order must remain byte-for-byte exact",
+        "signature_diversity": "signature grouping and diversity fallback must observe identical link tokens",
+        "downstream_base_selection": "unchanged archive membership and order must preserve repair-base enumeration",
+        "search_trajectory_risk": "a changed physical ID can change signature grouping, archive selection, and downstream search"
+      },
+      "operation_breadth_note": "unavailable: link-signature and physical-ID constructions are not serialized",
+      "complexity_class": "C1",
+      "semantic_risk": "medium: physical-copy naming and signature order must remain exact",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "large allocation count but CPU is concentrated in two cases and only 1.22% whole CPU"
+    },
+    {
+      "id": "filtered-removed-options-residual",
+      "mechanism": "reuse state-valid filtered removed-option slices across repeated priority-upper-bound calls",
+      "family": "filteredRemovedOptions",
+      "source_region": "partial_repair_bound.go PartialRepairState.filteredRemovedOptions",
+      "parent": "partialRepairV3PriorityUpperBound",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound",
+        "value": "cumulative"
+      },
+      "target_region": "filteredRemovedOptions cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions",
+        "value": "flat"
+      },
+      "overlap_group": "priority-preparation",
+      "operation_metric": {
+        "family": "priority",
+        "field": "removed_option_candidates"
+      },
+      "operation_breadth_note": "removed-option candidates provide deterministic development-case breadth",
+      "complexity_class": "C1",
+      "semantic_risk": "medium: cache keys must include anchored occupancy, free cells, removed membership, and option ownership",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "broad allocation source but only 0.93% whole CPU, making perfect removal insufficient for C1"
+    },
+    {
+      "id": "star-score-evaluation-residual",
+      "mechanism": "avoid repeated full star-score evaluation for search candidates through an exact bounded evaluation reuse mechanism",
+      "family": "post-R1I-G star-score evaluation",
+      "source_region": "scoring evaluateStarScoreOnly and its catalog-star children",
+      "parent": "evaluateStarScoreOnly",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly",
+        "value": "cumulative"
+      },
+      "target_region": "full evaluateStarScoreOnly cumulative region",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly",
+        "value": "flat"
+      },
+      "overlap_group": "candidate-score-evaluation",
+      "operation_breadth_note": "unavailable: score-only evaluation calls/layout reuse are not serialized independently",
+      "complexity_class": "C1",
+      "semantic_risk": "medium-high: any cache key must cover placements, catalog, coverage groups, priorities, and semantics",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": false,
+      "semantic_risk_acceptable": false,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "the strongest broad new hotspot is 2.03% whole CPU, but any credible reuse is C1 and therefore cannot reach its 2.5% bar even at perfect removal"
+    },
+    {
+      "id": "canonical-layout-key-residual",
+      "mechanism": "reuse exact canonical layout and link identity material instead of rebuilding placement-key strings and hashes during plateau observation",
+      "family": "canonical layout/link identity",
+      "source_region": "diagnostics.go canonicalLayoutHash/canonicalLayoutDigest and plateau.go canonical link identity",
+      "parent": "plateauArchive.observe",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.(*plateauArchive).observe",
+        "value": "cumulative"
+      },
+      "target_region": "canonicalLayoutHash cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.canonicalLayoutHash",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.canonicalLayoutHash",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.canonicalLayoutHash",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.canonicalPlacementKey",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.canonicalPlacementKey",
+        "value": "flat"
+      },
+      "overlap_group": "placement-key-family",
+      "archive_semantics": {
+        "admission_semantics": "canonical hashes and link identities participate in archive deduplication/admission and must remain exact",
+        "selected_set_invariants": "identical identity bytes must preserve the selected canonical-layout set",
+        "selected_order_invariants": "hash, digest, token, and tie-order bytes must remain byte-for-byte exact",
+        "signature_diversity": "canonical link signatures must preserve all grouping and diversity behavior",
+        "downstream_base_selection": "unchanged archive membership and order must preserve repair-base enumeration",
+        "search_trajectory_risk": "an identity mismatch can alter archive membership/order and downstream search trajectory"
+      },
+      "operation_breadth_note": "unavailable: canonical layout/link identity builds are not serialized independently",
+      "complexity_class": "C1",
+      "semantic_risk": "medium-high: identity bytes, copy naming, and archive deduplication keys must remain exact",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": false,
+      "semantic_risk_acceptable": false,
+      "overlap_dominated": true,
+      "disposition": "REJECT",
+      "rationale": "concentrated in the same two plateau cases, overlaps shared placement-key work, and is only 1.65% whole CPU"
+    },
+    {
+      "id": "packing-comparator-allocation",
+      "mechanism": "precompute exact packing-seed comparator components instead of allocating them during repeated state comparisons",
+      "family": "packing-seed comparator",
+      "source_region": "packing_seed.go packingSeedStateComparatorComponents",
+      "parent": "packingSeedSearch",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.packingSeedSearch",
+        "value": "cumulative"
+      },
+      "target_region": "packingSeedStateComparatorComponents cumulative child",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents",
+        "value": "flat"
+      },
+      "overlap_group": "packing-seed-ranking",
+      "operation_breadth_note": "unavailable to this analyzer: packing comparator constructions are not a bound-attribution counter",
+      "complexity_class": "C1",
+      "semantic_risk": "medium: exact comparator tuple and ordering must remain unchanged",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": false,
+      "disposition": "REJECT",
+      "rationale": "top-ten allocation source but only 0.25% whole CPU and material in at most two cases"
+    },
+    {
+      "id": "placement-key-residual",
+      "mechanism": "reuse exact placement-key bytes across coverage and canonical consumers after direct integer formatting",
+      "family": "residual placement-key construction",
+      "source_region": "solver placementKey and writePlacementKeyInt",
+      "parent": "placementKey",
+      "parent_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementKey",
+        "value": "cumulative"
+      },
+      "target_region": "full placementKey cumulative region",
+      "target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementKey",
+        "value": "cumulative"
+      },
+      "per_case_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementKey",
+        "value": "cumulative"
+      },
+      "v4_target_metric": {
+        "kind": "function",
+        "symbol": "backpack-brawl-solver/internal/solver.placementKey",
+        "value": "cumulative"
+      },
+      "alloc_space_metric": {
+        "sample_index": "alloc_space",
+        "symbol": "backpack-brawl-solver/internal/solver.placementKey",
+        "value": "flat"
+      },
+      "alloc_objects_metric": {
+        "sample_index": "alloc_objects",
+        "symbol": "backpack-brawl-solver/internal/solver.placementKey",
+        "value": "flat"
+      },
+      "overlap_group": "placement-key-family",
+      "operation_breadth_note": "unavailable: shared placementKey calls across coverage/canonical consumers are not serialized independently",
+      "complexity_class": "C1",
+      "semantic_risk": "medium: key ownership/lifetime and exact byte identity must remain stable",
+      "plausible_removal_fraction": null,
+      "removal_basis": "unknown",
+      "causal_isolated": true,
+      "semantic_risk_acceptable": true,
+      "overlap_dominated": true,
+      "disposition": "REJECT",
+      "rationale": "large allocation-object count but shared overlapping CPU is below 1% after R1I-E and cannot justify another C1 cache"
+    }
+  ],
+  "inventory": [
+    {
+      "key": "function:backpack-brawl-solver/internal/benchmark.runScenario",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/benchmark.RunScenarios",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/cli.Run",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/cli.runBenchmarkScenarios",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/model.ComparePriorityCounts",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/model.CompareScores",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/scoring.EvaluateCatalogStarCondition",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/scoring.EvaluateStarCondition",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/scoring.StarMatchesCatalogItems",
+      "candidate_id": "outgoing-static-compatibility"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/scoring.starStructureMetrics",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune",
+      "exclusion_reason": "Composite outgoing-bound parent combines indexed lookup, static matching, coverage-key work, and irreducible control; exclusive children are scored separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts",
+      "exclusion_reason": "Composite outgoing-bound parent combines indexed lookup, static matching, coverage-key work, and irreducible control; exclusive children are scored separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCountsIndexed",
+      "exclusion_reason": "Composite outgoing-bound parent combines indexed lookup, static matching, coverage-key work, and irreducible control; exclusive children are scored separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.(*plateauArchive).observe",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.canonicalLayoutDigest",
+      "candidate_id": "canonical-layout-key-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.canonicalLayoutHash",
+      "candidate_id": "canonical-layout-key-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.compareScores (partial-inline)",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.constellationSeedSearch",
+      "exclusion_reason": "Seed-search orchestration parent is not an exclusive mechanism; its priority, canonical-copy, and comparator children are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.constellationSeedSearch.func5",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.evaluateLayoutForConfig",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.evaluateScoreForConfig",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter",
+      "exclusion_reason": "Candidate-observation composite parent spans scoring, canonical identity, and archive reselection; those non-additive children are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.observeSearchCandidate",
+      "exclusion_reason": "Candidate-observation composite parent spans scoring, canonical identity, and archive reselection; those non-additive children are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.packingFeasibility",
+      "candidate_id": "canonical-copy-ranks"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.packingSeedSearch",
+      "exclusion_reason": "Seed-search orchestration parent is not an exclusive mechanism; its priority, canonical-copy, and comparator children are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.placementKey",
+      "candidate_id": "placement-key-residual"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder",
+      "candidate_id": "canonical-copy-ranks"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.priorityGeometryCandidateHits",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.repairSearch",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.runRepairNeighborhood",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.runRepairTask",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.runRepairTask.func1",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.runRepairTasks",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.runTask",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.runTask.func3",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.runTasks",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.selectPlateauEntries",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func3",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func4",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.selectPlateauEntries.sortPlateauEntries.func5",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.SolveLayout",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.solveLayoutStage",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.sortPlateauEntries",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog",
+      "candidate_id": "outgoing-static-compatibility"
+    },
+    {
+      "key": "function:backpack-brawl-solver/internal/solver.writePlacementKeyInt",
+      "candidate_id": "placement-key-residual"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/scoring.evaluateLooseStarPriority",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/scoring.priorityStarSources",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCountsIndexed",
+      "exclusion_reason": "Allocation caller has no isolated CPU-removal mechanism capable of reaching its class bar; retained explicitly as allocation evidence."
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.canonicalPlacementKey",
+      "candidate_id": "canonical-layout-key-residual"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.coveragePlacementKey",
+      "candidate_id": "outgoing-coverage-key-residual"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents",
+      "candidate_id": "packing-comparator-allocation"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.physicalInstanceIDs",
+      "candidate_id": "physical-instance-id-construction"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.placementKey",
+      "candidate_id": "placement-key-residual"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.selectPlateauEntries",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "heap:alloc_objects:backpack-brawl-solver/internal/solver.sortPlateauEntries",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "heap:alloc_space:backpack-brawl-solver/internal/solver.(*plateauArchive).observe",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "heap:alloc_space:backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions",
+      "candidate_id": "filtered-removed-options-residual"
+    },
+    {
+      "key": "heap:alloc_space:backpack-brawl-solver/internal/solver.physicalInstanceIDs",
+      "candidate_id": "physical-instance-id-construction"
+    },
+    {
+      "key": "heap:alloc_space:backpack-brawl-solver/internal/solver.runRepairTask.func1",
+      "exclusion_reason": "Repair recursion placement-slice copying owns 1.13% alloc_space, but no exclusive CPU region or safe ownership-free replacement is isolated; mutation aliasing risk prevents candidacy."
+    },
+    {
+      "key": "heap:alloc_space:backpack-brawl-solver/internal/solver.selectPlateauEntries",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune:outgoing_bound.go:114",
+      "exclusion_reason": "Composite outgoing-bound parent combines indexed lookup, static matching, coverage-key work, and irreducible control; exclusive children are scored separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts:outgoing_bound.go:123",
+      "exclusion_reason": "Composite outgoing-bound parent combines indexed lookup, static matching, coverage-key work, and irreducible control; exclusive children are scored separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCountsIndexed:outgoing_bound.go:195",
+      "exclusion_reason": "Composite outgoing-bound parent combines indexed lookup, static matching, coverage-key work, and irreducible control; exclusive children are scored separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCountsIndexed:outgoing_bound.go:201",
+      "exclusion_reason": "Composite outgoing-bound parent combines indexed lookup, static matching, coverage-key work, and irreducible control; exclusive children are scored separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.(*plateauArchive).observe:plateau.go:76",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.(*plateauArchive).observe:plateau.go:87",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.(*plateauArchive).observe:plateau.go:88",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.canonicalLayoutDigest:diagnostics.go:763",
+      "candidate_id": "canonical-layout-key-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.canonicalLayoutHash:diagnostics.go:770",
+      "candidate_id": "canonical-layout-key-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.canonicalLinkSignature:plateau.go:486",
+      "candidate_id": "canonical-layout-key-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.canonicalLinkTokens:plateau.go:490",
+      "candidate_id": "canonical-layout-key-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.constellationSeedSearch:constellation_seed.go:274",
+      "exclusion_reason": "Seed-search orchestration parent is not an exclusive mechanism; its priority, canonical-copy, and comparator children are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.constellationSeedSearch.func5:constellation_seed.go:269",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.coveragePlacementKey:coverage.go:548",
+      "candidate_id": "outgoing-coverage-key-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.evaluateLayoutForConfig:solver.go:2506",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.evaluateScoreForConfig:solver.go:2510",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates:constellation_seed.go:852",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter:solver.go:2735",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter:solver.go:2736",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.observeSearchCandidate:plateau.go:616",
+      "candidate_id": "star-score-evaluation-residual"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.observeSearchCandidate:plateau.go:622",
+      "exclusion_reason": "Candidate-observation composite parent spans scoring, canonical identity, and archive reselection; those non-additive children are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.observeSearchCandidate:plateau.go:628",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.packingFeasibility:packing_seed.go:261",
+      "candidate_id": "canonical-copy-ranks"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.packingSeedSearch:packing_seed.go:138",
+      "candidate_id": "canonical-copy-ranks"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper:partial_repair_bound.go:231",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem:partial_repair_bound.go:193",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound:partial_repair_bound.go:52",
+      "candidate_id": "priority-residual-geometry"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder:solver.go:2830",
+      "candidate_id": "canonical-copy-ranks"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.repairSearch:repair.go:178",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runRepairNeighborhood:repair.go:834",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runRepairTask:repair.go:1216",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runRepairTask.func1:repair.go:1150",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runRepairTask.func1:repair.go:1197",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runRepairTasks:repair.go:1000",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runTask:solver.go:2387",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runTask.func3:solver.go:2321",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runTask.func3:solver.go:2331",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runTask.func3:solver.go:2370",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.runTasks:solver.go:2116",
+      "exclusion_reason": "Search/repair recursion or call-site parent owns downstream work rather than an exclusive removable mechanism; child hotspots are classified separately."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.selectPlateauEntries:plateau.go:426",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.selectPlateauEntries:plateau.go:431",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.selectPlateauEntries:plateau.go:433",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.selectPlateauEntries:plateau.go:434",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.selectPlateauEntries:plateau.go:443",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.selectPlateauEntries:plateau.go:454",
+      "candidate_id": "plateau-full-reselection"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.SolveLayout:solver.go:541",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.solveLayoutStage:solver.go:1006",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.solveLayoutStage:solver.go:1107",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.solveLayoutStage:solver.go:1191",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.solveLayoutStage:solver.go:1229",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.solveLayoutStage:solver.go:989",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.solveLayoutStage:solver.go:994",
+      "exclusion_reason": "Whole-program orchestration wrapper is not a mechanism; its cumulative samples are entirely attributed to classified solver children."
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.sortPlateauEntries:plateau.go:459",
+      "candidate_id": "plateau-multi-sort"
+    },
+    {
+      "key": "source:backpack-brawl-solver/internal/solver.sourceHitsTargetWithCatalog:coverage.go:540",
+      "candidate_id": "outgoing-static-compatibility"
+    }
+  ],
+  "decision": {
+    "kind": "DECLINE",
+    "rationale": "no broad C0 mechanism reaches 2%; every broad C1 target is below 2.5% even at perfect removal or lacks an isolated safe replacement; the only large C2 plateau family is concentrated in two of six cases, allocation/GC-dominated, and search-trajectory sensitive"
+  }
+}

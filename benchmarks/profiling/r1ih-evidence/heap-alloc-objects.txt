@@ -1,0 +1,244 @@
+File: r1ih-normal.exe
+Build ID: C:\r1ih-artifacts\0cac463a79238ecaea9d95af33468cc04dd5809b-official-02\binaries\r1ih-normal.exe2026-08-25 11:38:51.9317613 -0300 -03
+Type: alloc_objects
+Time: 2026-08-25 11:54:03 -03
+Showing nodes accounting for 207422391objects, 100% of 207422391objects total
+      flat  flat%   sum%        cum   cum%
+36955051objects 17.82% 17.82% 36955051objects 17.82%  strings.(*Builder).grow
+26493689objects 12.77% 30.59% 52495859objects 25.31%  backpack-brawl-solver/internal/solver.placementKey
+26174057objects 12.62% 43.21% 26174057objects 12.62%  backpack-brawl-solver/internal/solver.physicalInstanceIDs
+23633693objects 11.39% 54.60% 39594468objects 19.09%  backpack-brawl-solver/internal/solver.canonicalPlacementKey
+14303204objects  6.90% 61.50% 26158775objects 12.61%  backpack-brawl-solver/internal/solver.selectPlateauEntries
+13971879objects  6.74% 68.23% 42377125objects 20.43%  backpack-brawl-solver/internal/solver.coveragePlacementKey (inline)
+10731538objects  5.17% 73.41% 10731538objects  5.17%  internal/reflectlite.Swapper
+8978633objects  4.33% 77.74% 11855571objects  5.72%  backpack-brawl-solver/internal/solver.sortPlateauEntries (inline)
+8775127objects  4.23% 81.97% 8775127objects  4.23%  backpack-brawl-solver/internal/solver.packingSeedStateComparatorComponents
+5013571objects  2.42% 84.38% 40726565objects 19.63%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCountsIndexed
+3876673objects  1.87% 86.25% 3876673objects  1.87%  backpack-brawl-solver/internal/scoring.evaluateLooseStarPriority
+3620943objects  1.75% 88.00% 3620943objects  1.75%  backpack-brawl-solver/internal/scoring.priorityStarSources
+2981407objects  1.44% 89.44% 6602350objects  3.18%  backpack-brawl-solver/internal/scoring.evaluateStarScoreOnly
+2861811objects  1.38% 90.82% 2881223objects  1.39%  backpack-brawl-solver/internal/solver.PartialRepairState.filteredRemovedOptions
+2785320objects  1.34% 92.16% 9387670objects  4.53%  backpack-brawl-solver/internal/scoring.EvaluateScoreOnlyWithCoverageGroupsAndSemantics
+1978015objects  0.95% 93.11% 17925722objects  8.64%  backpack-brawl-solver/internal/solver.runRepairTask.func1
+1272540objects  0.61% 93.73% 1272540objects  0.61%  backpack-brawl-solver/internal/solver.canonicalLinkToken
+1025229objects  0.49% 94.22% 4901902objects  2.36%  backpack-brawl-solver/internal/scoring.EvaluatePriorityScoreWithCoverageGroupsAndSemantics
+1013028objects  0.49% 94.71% 1013028objects  0.49%  backpack-brawl-solver/internal/scoring.starStructureMetrics
+948095objects  0.46% 95.16% 948095objects  0.46%  backpack-brawl-solver/internal/solver.insertPlacementSorted
+937485objects  0.45% 95.62% 2503414objects  1.21%  backpack-brawl-solver/internal/solver.constellationExactKey
+890193objects  0.43% 96.05% 890193objects  0.43%  strings.(*Builder).WriteString (inline)
+799195objects  0.39% 96.43% 1183650objects  0.57%  backpack-brawl-solver/internal/solver.partialRepairSourceStarUpper
+696362objects  0.34% 96.77% 696362objects  0.34%  encoding/hex.EncodeToString (inline)
+653707objects  0.32% 97.08% 40479859objects 19.52%  backpack-brawl-solver/internal/solver.canonicalLayoutDigest
+622599objects   0.3% 97.38% 622599objects   0.3%  strconv.formatBits
+622045objects   0.3% 97.68% 11993920objects  5.78%  backpack-brawl-solver/internal/solver.starSeedSearch
+542156objects  0.26% 97.94% 1291646objects  0.62%  backpack-brawl-solver/internal/solver.packingStateClassKey
+488877objects  0.24% 98.18% 751025objects  0.36%  backpack-brawl-solver/internal/solver.cloneEvaluation (inline)
+424752objects   0.2% 98.38% 15845941objects  7.64%  backpack-brawl-solver/internal/solver.packingSeedSearch
+384455objects  0.19% 98.57% 384455objects  0.19%  backpack-brawl-solver/internal/solver.partialRepairMaximumSlotMatching
+346734objects  0.17% 98.74% 346734objects  0.17%  backpack-brawl-solver/internal/scoring.EvaluateStars
+341749objects  0.16% 98.90% 1092774objects  0.53%  backpack-brawl-solver/internal/solver.clonePlateauSolution (inline)
+339967objects  0.16% 99.07% 55563921objects 26.79%  backpack-brawl-solver/internal/solver.(*plateauArchive).observe
+322798objects  0.16% 99.22% 103543288objects 49.92%  backpack-brawl-solver/internal/solver.observeSearchCandidate
+262148objects  0.13% 99.35% 262148objects  0.13%  backpack-brawl-solver/internal/solver.cloneScore (inline)
+223926objects  0.11% 99.46% 27670523objects 13.34%  backpack-brawl-solver/internal/solver.canonicalLinkTokens
+190954objects 0.092% 99.55% 3221266objects  1.55%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).expandOption
+180234objects 0.087% 99.63% 180234objects 0.087%  backpack-brawl-solver/internal/scoring.EvaluateCrafts
+102331objects 0.049% 99.68% 178789objects 0.086%  backpack-brawl-solver/internal/solver.blockingInstancesForOptions
+73728objects 0.036% 99.72% 75913objects 0.037%  encoding/json.(*decodeState).literalStore
+65536objects 0.032% 99.75% 4211352objects  2.03%  backpack-brawl-solver/internal/solver.partialRepairV3PriorityUpperBound
+62796objects  0.03% 99.78% 2208574objects  1.06%  backpack-brawl-solver/internal/solver.constellationRootMRVStateKey
+59160objects 0.029% 99.81% 59160objects 0.029%  backpack-brawl-solver/internal/solver.PartialRepairState.unplacedRemoved
+43948objects 0.021% 99.83% 43948objects 0.021%  backpack-brawl-solver/internal/solver.constellationRootMRVSelectionWithOperations
+41195objects  0.02% 99.85% 41195objects  0.02%  backpack-brawl-solver/internal/solver.PartialRepairState.anchoredPlacements
+39024objects 0.019% 99.87% 39479objects 0.019%  fmt.Sprintf
+35466objects 0.017% 99.89% 39158objects 0.019%  backpack-brawl-solver/internal/solver.nearbyInstances
+25541objects 0.012% 99.90% 25541objects 0.012%  backpack-brawl-solver/internal/solver.uniqueInstanceIDs
+20334objects 0.0098% 99.91% 4231686objects  2.04%  backpack-brawl-solver/internal/solver.filterConstellationPriorityFeasibleStates
+19725objects 0.0095% 99.92% 54294objects 0.026%  backpack-brawl-solver/internal/solver.appendRepairNeighborhood
+17864objects 0.0086% 99.93% 4780950objects  2.30%  backpack-brawl-solver/internal/solver.constellationSeedSearch.func5 (inline)
+13915objects 0.0067% 99.93% 142308objects 0.069%  backpack-brawl-solver/internal/solver.perInstanceBlockers
+13268objects 0.0064% 99.94% 13268objects 0.0064%  strings.(*Builder).WriteByte (inline)
+12467objects 0.006% 99.95% 12467objects 0.006%  reflect.growslice
+10947objects 0.0053%   100% 10947objects 0.0053%  encoding/json.typeFields
+10923objects 0.0053%   100% 229946objects  0.11%  backpack-brawl-solver/internal/solver.addPerInstanceLooseStarNeighborhoods
+8740objects 0.0042%   100% 8740objects 0.0042%  runtime/pprof.allFrames
+8716objects 0.0042%   100% 8716objects 0.0042%  backpack-brawl-solver/internal/solver.neighborhoodShapeWeight (inline)
+8192objects 0.0039%   100% 8192objects 0.0039%  backpack-brawl-solver/internal/geometry.TranslateCells (inline)
+6554objects 0.0032%   100% 6554objects 0.0032%  reflect.New
+6205objects 0.003%   100% 68217objects 0.033%  backpack-brawl-solver/internal/solver.plateauIndirectBlockers
+5480objects 0.0026%   100% 5480objects 0.0026%  runtime/pprof.(*profileBuilder).emitLocation
+4908objects 0.0024%   100% 12430218objects  5.99%  backpack-brawl-solver/internal/solver.constellationSeedSearch
+4096objects 0.002%   100% 14448objects 0.007%  backpack-brawl-solver/internal/solver.repairNeighborhoodKey
+3743objects 0.0018%   100% 394381objects  0.19%  backpack-brawl-solver/internal/solver.insertCandidate
+3692objects 0.0018%   100% 3692objects 0.0018%  backpack-brawl-solver/internal/solver.stringSet (inline)
+3277objects 0.0016%   100% 3277objects 0.0016%  backpack-brawl-solver/internal/solver.perInstanceTargetSubsets.func1
+3252objects 0.0016%   100% 830664objects   0.4%  backpack-brawl-solver/internal/solver.constellationOptions
+2934objects 0.0014%   100% 2934objects 0.0014%  backpack-brawl-solver/internal/solver.mergeSolutions
+2666objects 0.0013%   100% 66564objects 0.032%  backpack-brawl-solver/internal/solver.constellationReflectedPrioritySourceGeometryKey
+2612objects 0.0013%   100% 17930195objects  8.64%  backpack-brawl-solver/internal/solver.runRepairNeighborhood
+2259objects 0.0011%   100% 54142objects 0.026%  backpack-brawl-solver/internal/solver.PlacementOptions
+2185objects 0.0011%   100% 2185objects 0.0011%  encoding/json.unquoteBytes
+1668objects 0.0008%   100% 1668objects 0.0008%  backpack-brawl-solver/internal/solver.placementByInstanceID (inline)
+1660objects 0.0008%   100% 999871objects  0.48%  backpack-brawl-solver/internal/solver.refineSolution
+1126objects 0.00054%   100% 473843objects  0.23%  backpack-brawl-solver/internal/solver.refinePlateau
+1053objects 0.00051%   100% 2077objects 0.001%  backpack-brawl-solver/internal/solver.(*starUpperBoundContext).forPlacements
+1026objects 0.00049%   100% 1026objects 0.00049%  runtime.allocm
+1024objects 0.00049%   100% 1317objects 0.00063%  backpack-brawl-solver/internal/solver.buildRepairSearchTasks
+592objects 0.00029%   100% 300788objects  0.15%  backpack-brawl-solver/internal/solver.constellationOptionsForState
+479objects 0.00023%   100% 479objects 0.00023%  runtime/pprof.(*profMap).lookup
+455objects 0.00022%   100% 455objects 0.00022%  sync.(*Pool).pinSlow
+293objects 0.00014%   100% 293objects 0.00014%  backpack-brawl-solver/internal/solver.buildRepairSearchTasks.func1
+256objects 0.00012%   100% 256objects 0.00012%  backpack-brawl-solver/internal/solver.buildTasksWithStats.func1
+232objects 0.00011%   100% 953263objects  0.46%  backpack-brawl-solver/internal/solver.newStarPotentialContext
+229objects 0.00011%   100% 884971objects  0.43%  backpack-brawl-solver/internal/solver.constellationSourceOptions
+207objects 0.0001%   100% 66771objects 0.032%  backpack-brawl-solver/internal/solver.selectConstellationStates
+195objects 9.4e-05%   100% 195objects 9.4e-05%  backpack-brawl-solver/internal/solver.prioritizePlateauNeighborhoods
+150objects 7.2e-05%   100% 150objects 7.2e-05%  backpack-brawl-solver/internal/solver.appendStarSeedState
+ 85objects 4.1e-05%   100% 230302objects  0.11%  backpack-brawl-solver/internal/solver.buildRepairNeighborhoods
+ 53objects 2.6e-05%   100% 2154869objects  1.04%  backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations
+ 39objects 1.9e-05%   100%  39objects 1.9e-05%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).beginDepth
+ 27objects 1.3e-05%   100%  27objects 1.3e-05%  encoding/json.appendIndent
+ 13objects 6.3e-06%   100% 999884objects  0.48%  backpack-brawl-solver/internal/solver.refineSolutions
+  5objects 2.4e-06%   100%   5objects 2.4e-06%  backpack-brawl-solver/internal/solver.filterInventoryImpossibleRecipes
+  2objects 9.6e-07%   100%   2objects 9.6e-07%  compress/flate.(*compressor).init
+  2objects 9.6e-07%   100%   2objects 9.6e-07%  os.readFileContents
+  1objects 4.8e-07%   100%   3objects 1.4e-06%  compress/flate.NewWriter (inline)
+  1objects 4.8e-07%   100%   1objects 4.8e-07%  runtime/pprof.StartCPUProfile
+         0     0%   100% 207406662objects   100%  backpack-brawl-solver/internal/benchmark.RunScenarios
+         0     0%   100%   1objects 4.8e-07%  backpack-brawl-solver/internal/benchmark.catalogSHA256
+         0     0%   100% 207311726objects 99.95%  backpack-brawl-solver/internal/benchmark.runScenario
+         0     0%   100% 10950objects 0.0053%  backpack-brawl-solver/internal/benchmark.solutionRawJSON
+         0     0%   100% 94935objects 0.046%  backpack-brawl-solver/internal/catalog.Load
+         0     0%   100% 94934objects 0.046%  backpack-brawl-solver/internal/catalog.Parse
+         0     0%   100% 207406663objects   100%  backpack-brawl-solver/internal/cli.Run
+         0     0%   100% 207406663objects   100%  backpack-brawl-solver/internal/cli.runBenchmarkScenarios
+         0     0%   100% 10950objects 0.0053%  backpack-brawl-solver/internal/render.SolutionsJSON
+         0     0%   100% 6440874objects  3.11%  backpack-brawl-solver/internal/scoring.EvaluateLayoutWithCoverageGroupsAndSemantics
+         0     0%   100% 76462objects 0.037%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).FinalizeBudgetExhausted
+         0     0%   100% 5345618objects  2.58%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).Run
+         0     0%   100% 2078407objects  1.00%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).commitDepth
+         0     0%   100% 1958objects 0.00094%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).finish
+         0     0%   100% 573883objects  0.28%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).partialScore (inline)
+         0     0%   100% 43948objects 0.021%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).prepareState
+         0     0%   100% 1958objects 0.00094%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).resultForFrontier
+         0     0%   100% 76462objects 0.037%  backpack-brawl-solver/internal/solver.(*constellationRootPackingSession).terminalProjection
+         0     0%   100% 40726565objects 19.63%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).shouldPrune
+         0     0%   100% 40726565objects 19.63%  backpack-brawl-solver/internal/solver.(*outgoingBoundContext).upperPriorityCounts
+         0     0%   100% 1473objects 0.00071%  backpack-brawl-solver/internal/solver.(*plateauArchive).bases
+         0     0%   100% 5711100objects  2.75%  backpack-brawl-solver/internal/solver.(*starPotentialContext).priorityForPlacement
+         0     0%   100% 43691objects 0.021%  backpack-brawl-solver/internal/solver.PlacementOptions.func1
+         0     0%   100% 207300776objects 99.94%  backpack-brawl-solver/internal/solver.SolveLayout
+         0     0%   100% 229946objects  0.11%  backpack-brawl-solver/internal/solver.addLooseStarNeighborhoods
+         0     0%   100% 92148objects 0.044%  backpack-brawl-solver/internal/solver.buildPlateauStarOpportunityNeighborhoods
+         0     0%   100% 256objects 0.00012%  backpack-brawl-solver/internal/solver.buildTasksWithStats
+         0     0%   100% 41176221objects 19.85%  backpack-brawl-solver/internal/solver.canonicalLayoutHash
+         0     0%   100% 28085557objects 13.54%  backpack-brawl-solver/internal/solver.canonicalLinkSignature
+         0     0%   100% 1958objects 0.00094%  backpack-brawl-solver/internal/solver.collectConstellationRootPackingSolution
+         0     0%   100% 827412objects   0.4%  backpack-brawl-solver/internal/solver.constellationOptions.func1
+         0     0%   100% 32768objects 0.016%  backpack-brawl-solver/internal/solver.constellationPrioritySourceGeometryKey
+         0     0%   100% 66564objects 0.032%  backpack-brawl-solver/internal/solver.constellationPrioritySourceGeometryOrbitKey
+         0     0%   100% 5422080objects  2.61%  backpack-brawl-solver/internal/solver.constellationProgressiveRootPacking
+         0     0%   100% 2154816objects  1.04%  backpack-brawl-solver/internal/solver.constellationRootPackingComparatorComponents
+         0     0%   100% 2154816objects  1.04%  backpack-brawl-solver/internal/solver.constellationRootPackingFinishMRVDepthWithOperations.func1
+         0     0%   100% 2154816objects  1.04%  backpack-brawl-solver/internal/solver.constellationRootPackingStateLess
+         0     0%   100% 32768objects 0.016%  backpack-brawl-solver/internal/solver.constellationSeedSearch.func6
+         0     0%   100% 884742objects  0.43%  backpack-brawl-solver/internal/solver.constellationSourceOptions.func1
+         0     0%   100% 2849471objects  1.37%  backpack-brawl-solver/internal/solver.coverageSeedAppendKey
+         0     0%   100% 6440874objects  3.11%  backpack-brawl-solver/internal/solver.evaluateLayoutForConfig (inline)
+         0     0%   100% 9387670objects  4.53%  backpack-brawl-solver/internal/solver.evaluateScoreForConfig (inline)
+         0     0%   100% 32768objects 0.016%  backpack-brawl-solver/internal/solver.fmtMask (inline)
+         0     0%   100% 107156782objects 51.66%  backpack-brawl-solver/internal/solver.insertCandidateWithScoreOnlyFilter
+         0     0%   100% 1698091objects  0.82%  backpack-brawl-solver/internal/solver.layoutKey
+         0     0%   100% 469objects 0.00023%  backpack-brawl-solver/internal/solver.looseLinksBySource
+         0     0%   100%  13objects 6.3e-06%  backpack-brawl-solver/internal/solver.mergeRepairPhases
+         0     0%   100% 345objects 0.00017%  backpack-brawl-solver/internal/solver.mergeRepairTaskResult
+         0     0%   100%  32objects 1.5e-05%  backpack-brawl-solver/internal/solver.mergeSeedResults
+         0     0%   100% 5090119objects  2.45%  backpack-brawl-solver/internal/solver.packingFeasibility
+         0     0%   100% 6532910objects  3.15%  backpack-brawl-solver/internal/solver.packingSeedSearch.func3
+         0     0%   100% 6620311objects  3.19%  backpack-brawl-solver/internal/solver.packingSeedStateFirstDecisive
+         0     0%   100% 6620311objects  3.19%  backpack-brawl-solver/internal/solver.packingSeedStateLess (inline)
+         0     0%   100% 1183650objects  0.57%  backpack-brawl-solver/internal/solver.partialRepairStarUpperForItem
+         0     0%   100% 3277objects 0.0016%  backpack-brawl-solver/internal/solver.perInstanceTargetSubsets
+         0     0%   100% 19524830objects  9.41%  backpack-brawl-solver/internal/solver.placementRespectsCanonicalCopyOrder
+         0     0%   100% 113756objects 0.055%  backpack-brawl-solver/internal/solver.plateauState
+         0     0%   100% 92451objects 0.045%  backpack-brawl-solver/internal/solver.plateauTieBreakLNS
+         0     0%   100% 92343objects 0.045%  backpack-brawl-solver/internal/solver.plateauTieBreakLNS.func1
+         0     0%   100% 455objects 0.00022%  backpack-brawl-solver/internal/solver.repairBestSummary
+         0     0%   100% 18161437objects  8.76%  backpack-brawl-solver/internal/solver.repairSearch
+         0     0%   100%  24objects 1.2e-05%  backpack-brawl-solver/internal/solver.resolvedExecutionFingerprint
+         0     0%   100%  24objects 1.2e-05%  backpack-brawl-solver/internal/solver.resolvedPolicyFingerprint
+         0     0%   100% 17925934objects  8.64%  backpack-brawl-solver/internal/solver.runRepairTask
+         0     0%   100% 17926266objects  8.64%  backpack-brawl-solver/internal/solver.runRepairTasks
+         0     0%   100% 145671516objects 70.23%  backpack-brawl-solver/internal/solver.runTask
+         0     0%   100% 145670891objects 70.23%  backpack-brawl-solver/internal/solver.runTask.func3
+         0     0%   100% 145672751objects 70.23%  backpack-brawl-solver/internal/solver.runTasks
+         0     0%   100% 864958objects  0.42%  backpack-brawl-solver/internal/solver.scoreOnlyCandidateCanEnter
+         0     0%   100% 11698objects 0.0056%  backpack-brawl-solver/internal/solver.scoreOnlyImprovesSolution
+         0     0%   100% 66564objects 0.032%  backpack-brawl-solver/internal/solver.selectConstellationV4States
+         0     0%   100% 207300752objects 99.94%  backpack-brawl-solver/internal/solver.solveLayoutStage
+         0     0%   100% 622596objects   0.3%  backpack-brawl-solver/internal/solver.sortPlacementOptionsForCoverage
+         0     0%   100% 622596objects   0.3%  backpack-brawl-solver/internal/solver.sortPlacementOptionsForCoverage.func1
+         0     0%   100% 977objects 0.00047%  backpack-brawl-solver/internal/solver.sortPlateauWalk (inline)
+         0     0%   100% 495066objects  0.24%  backpack-brawl-solver/internal/solver.writePaddedInt
+         0     0%   100%   3objects 1.4e-06%  compress/gzip.(*Writer).Write
+         0     0%   100% 94934objects 0.046%  encoding/json.(*decodeState).array
+         0     0%   100% 94934objects 0.046%  encoding/json.(*decodeState).object
+         0     0%   100% 94934objects 0.046%  encoding/json.(*decodeState).unmarshal
+         0     0%   100% 94934objects 0.046%  encoding/json.(*decodeState).value
+         0     0%   100% 10947objects 0.0053%  encoding/json.(*encodeState).marshal
+         0     0%   100% 10947objects 0.0053%  encoding/json.(*encodeState).reflectValue
+         0     0%   100% 10947objects 0.0053%  encoding/json.Marshal
+         0     0%   100% 10950objects 0.0053%  encoding/json.MarshalIndent
+         0     0%   100% 94934objects 0.046%  encoding/json.Unmarshal
+         0     0%   100% 10947objects 0.0053%  encoding/json.cachedTypeFields
+         0     0%   100% 6554objects 0.0032%  encoding/json.indirect
+         0     0%   100% 10923objects 0.0053%  encoding/json.newArrayEncoder
+         0     0%   100% 10923objects 0.0053%  encoding/json.newPtrEncoder
+         0     0%   100% 10923objects 0.0053%  encoding/json.newSliceEncoder
+         0     0%   100% 10947objects 0.0053%  encoding/json.newStructEncoder (inline)
+         0     0%   100% 10947objects 0.0053%  encoding/json.newTypeEncoder
+         0     0%   100% 10947objects 0.0053%  encoding/json.typeEncoder
+         0     0%   100% 10947objects 0.0053%  encoding/json.typeEncoder.OnceValue[go.shape.func].func3 (inline)
+         0     0%   100% 10947objects 0.0053%  encoding/json.typeEncoder.func1
+         0     0%   100% 10947objects 0.0053%  encoding/json.typeEncoder.typeEncoder.OnceValue[go.shape.func].func3.func4
+         0     0%   100% 10947objects 0.0053%  encoding/json.valueEncoder
+         0     0%   100% 455objects 0.00022%  fmt.newPrinter
+         0     0%   100% 207406663objects   100%  main.main
+         0     0%   100%   2objects 9.6e-07%  os.ReadFile
+         0     0%   100% 12467objects 0.006%  reflect.Value.Grow
+         0     0%   100% 12467objects 0.006%  reflect.Value.grow
+         0     0%   100% 207406663objects   100%  runtime.main
+         0     0%   100% 513objects 0.00025%  runtime.mcall
+         0     0%   100% 513objects 0.00025%  runtime.mstart
+         0     0%   100% 513objects 0.00025%  runtime.mstart0
+         0     0%   100% 513objects 0.00025%  runtime.mstart1
+         0     0%   100% 1026objects 0.00049%  runtime.newm
+         0     0%   100% 513objects 0.00025%  runtime.park_m
+         0     0%   100% 1026objects 0.00049%  runtime.resetspinning
+         0     0%   100% 1026objects 0.00049%  runtime.schedule
+         0     0%   100% 1026objects 0.00049%  runtime.startm
+         0     0%   100% 1026objects 0.00049%  runtime.wakep
+         0     0%   100% 479objects 0.00023%  runtime/pprof.(*profileBuilder).addCPUData
+         0     0%   100% 14220objects 0.0069%  runtime/pprof.(*profileBuilder).appendLocsForStack
+         0     0%   100% 14223objects 0.0069%  runtime/pprof.(*profileBuilder).build
+         0     0%   100%   3objects 1.4e-06%  runtime/pprof.(*profileBuilder).flush
+         0     0%   100%   3objects 1.4e-06%  runtime/pprof.(*profileBuilder).pbSample
+         0     0%   100% 14702objects 0.0071%  runtime/pprof.profileWriter
+         0     0%   100% 21797705objects 10.51%  sort.Slice
+         0     0%   100% 887476objects  0.43%  sort.choosePivot_func
+         0     0%   100% 2182057objects  1.05%  sort.insertionSort_func
+         0     0%   100% 346791objects  0.17%  sort.medianAdjacent_func (inline)
+         0     0%   100% 887476objects  0.43%  sort.median_func
+         0     0%   100% 887476objects  0.43%  sort.order2_func (inline)
+         0     0%   100% 802836objects  0.39%  sort.partialInsertionSort_func
+         0     0%   100% 7113246objects  3.43%  sort.partition_func
+         0     0%   100% 11066167objects  5.34%  sort.pdqsort_func
+         0     0%   100% 229378objects  0.11%  strconv.FormatInt
+         0     0%   100% 393221objects  0.19%  strconv.FormatUint
+         0     0%   100% 229378objects  0.11%  strconv.Itoa (inline)
+         0     0%   100% 36955051objects 17.82%  strings.(*Builder).Grow
+         0     0%   100% 871574objects  0.42%  strings.Join
+         0     0%   100% 10947objects 0.0053%  sync.(*Once).Do (inline)
+         0     0%   100% 10947objects 0.0053%  sync.(*Once).doSlow
+         0     0%   100% 455objects 0.00022%  sync.(*Pool).Get
+         0     0%   100% 455objects 0.00022%  sync.(*Pool).pin
