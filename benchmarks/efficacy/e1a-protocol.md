@@ -88,6 +88,13 @@ configured budget, consumed budget, and unused nodes as its quality run. A
 pair mismatch invalidates the entire bundle. Diagnostic elapsed time is never
 used for candidate selection.
 
+`no solutions found` is a valid bounded-search outcome, not a tooling error.
+The quality and diagnostic twins must agree on it exactly. A solution ranks
+above no solution; two no-solution outcomes tie. The current report contract
+does not retain phase or node-ledger telemetry when solve returns this outcome,
+so the analyzer records its accounting as `UNAVAILABLE_NO_SOLUTION` and does
+not infer zero work. Every other run error invalidates the bundle.
+
 ## Per-run census
 
 The analyzer records:
@@ -202,9 +209,14 @@ sum(PhaseWork.ChargedNodes) == GlobalBudgetConsumed
 all charged/reserved/consumed/returned values >= 0
 ```
 
-The collector and analyzer reject run errors, duplicate/missing run keys,
-unexpected variants, unexpected cases, catalog/hash drift, revision drift,
-diagnostic-pair drift, or accounting failure.
+The sole exception is a deterministic paired `no solutions found` outcome,
+whose ledger fields are unavailable under the frozen solver report contract.
+It must be counted explicitly and is excluded, not treated as zeros, in phase
+and accounting aggregates.
+
+The collector and analyzer reject all other run errors, duplicate/missing run
+keys, unexpected variants, unexpected cases, catalog/hash drift, revision
+drift, diagnostic-pair drift, or accounting failure.
 
 ## Freeze and provenance
 

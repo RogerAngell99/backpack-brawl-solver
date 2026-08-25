@@ -137,6 +137,10 @@ function runKey(run) {
   return `${run.scenario}|${run.budget}|${run.repeat}`;
 }
 
+function runError(run) {
+  return typeof run?.error === "string" ? run.error : "";
+}
+
 function indexRuns(report) {
   const indexed = new Map();
   for (const run of report.runs ?? []) {
@@ -167,11 +171,12 @@ function validateReport(report, spec) {
   for (const key of expectedKeys) if (!actual.has(key)) errors.push(`missing run ${key}`);
   for (const key of actual.keys()) if (!expectedKeys.has(key)) errors.push(`unexpected run ${key}`);
   for (const run of report.runs ?? []) {
-    if (run.error) errors.push(`${runKey(run)} error=${run.error}`);
+    const error = runError(run);
+    if (error && error !== "no solutions found") errors.push(`${runKey(run)} error=${error}`);
     if (run.constellation_seed_variant !== spec.variant) errors.push(`${runKey(run)} run variant=${run.constellation_seed_variant}`);
     if (run.repeat !== 1) errors.push(`${runKey(run)} repeat=${run.repeat}`);
     if (run.operation_profiling) errors.push(`${runKey(run)} operation profiling enabled`);
-    if (spec.kind === "diagnostic" && !run.search?.diagnostics_enabled) errors.push(`${runKey(run)} diagnostics missing`);
+    if (spec.kind === "diagnostic" && !error && !run.search?.diagnostics_enabled) errors.push(`${runKey(run)} diagnostics missing`);
     if (spec.kind === "quality" && run.search?.diagnostics_enabled) errors.push(`${runKey(run)} diagnostics unexpectedly enabled`);
   }
   if (errors.length > 0) throw new Error(`${spec.id} invalid: ${errors.join("; ")}`);
@@ -196,6 +201,7 @@ function semanticInvariant(run) {
 export function validateDiagnosticPair(quality, diagnostic) {
   const failures = [];
   if (!sameJSON(semanticInvariant(quality), semanticInvariant(diagnostic))) failures.push("semantic run invariants");
+  if (runError(quality) !== runError(diagnostic)) failures.push("run outcome");
   if (!scoresEqual(quality.score, diagnostic.score)) failures.push("semantic score");
   if ((quality.layout_key ?? "") !== (diagnostic.layout_key ?? "")) failures.push("layout key");
   if ((quality.canonical_layout_hash ?? "") !== (diagnostic.canonical_layout_hash ?? "")) failures.push("canonical hash");
@@ -210,6 +216,9 @@ export function validateDiagnosticPair(quality, diagnostic) {
 }
 
 function validateAccounting(run) {
+  if (runError(run) === "no solutions found") {
+    return { status: "UNAVAILABLE_NO_SOLUTION" };
+  }
   const search = run.search ?? {};
   const configured = asInteger(search.normal_budget_configured);
   const global = asInteger(search.global_budget_consumed);
@@ -231,10 +240,11 @@ function validateAccounting(run) {
     phaseCharged += asInteger(phase.charged_nodes);
   }
   if (phaseCharged !== global) throw new Error(`${runKey(run)} phase charged ${phaseCharged} != global ${global}`);
-  return { configured, global, normal, unused, executionConfigured, executionConsumed, phaseCharged };
+  return { status: "PASS", configured, global, normal, unused, executionConfigured, executionConsumed, phaseCharged };
 }
 
 function firstCheckpointProducingFinal(run) {
+  if (runError(run) === "no solutions found") return "no_solution";
   const checkpoints = [
     ["seed_best", run.search?.seed_best],
     ["search_best", run.search?.search_best],
@@ -297,7 +307,11 @@ function comparisonRow(baseline, candidate, baselineDiagnostic, candidateDiagnos
   if (!sameJSON(semanticInvariant(baseline), semanticInvariant(candidate))) {
     throw new Error(`control invariant mismatch ${variant} ${runKey(candidate)}`);
   }
-  const difference = firstDifference(candidate.score, baseline.score);
+  const baselineError = runError(baseline);
+  const candidateError = runError(candidate);
+  const difference = baselineError || candidateError
+    ? { difference_level: baselineError === candidateError ? 7 : null, component: "solution_availability", priority_index: null, baseline_value: baselineError ? "no_solution" : "solution", candidate_value: candidateError ? "no_solution" : "solution", signed_delta: baselineError === candidateError ? 0 : candidateError ? -1 : 1 }
+    : firstDifference(candidate.score, baseline.score);
   const compare = Math.sign(difference.signed_delta);
   const semanticStatus = compare > 0 ? "WIN" : compare < 0 ? "LOSS" : "TIE";
   const layoutKeyEqual = (baseline.layout_key ?? "") === (candidate.layout_key ?? "");
@@ -331,6 +345,8 @@ function comparisonRow(baseline, candidate, baselineDiagnostic, candidateDiagnos
     candidate_first_complete_node: asInteger(candidateDiagnostic.search?.first_complete_nodes),
     baseline_final_phase: firstFinalPhase(baselineDiagnostic),
     candidate_final_phase: firstFinalPhase(candidateDiagnostic),
+    baseline_outcome: baselineError || "solution",
+    candidate_outcome: candidateError || "solution",
   };
 }
 
@@ -674,6 +690,8 @@ function runCensusRows(reports, phaseRows) {
         scenario: run.scenario,
         budget: run.budget,
         variant,
+        solution_status: runError(run) || "solution",
+        accounting_status: runError(run) ? "UNAVAILABLE_NO_SOLUTION" : "PASS",
         semantic_score: scoreText(run.score),
         canonical_hash: run.canonical_layout_hash ?? "",
         layout_key: run.layout_key ?? "",
@@ -736,7 +754,7 @@ function findingsMarkdown(summary) {
 
 Baseline: \`${EXPECTED_SHA}\`. Only locked development cases \`gsv2-013..026\` were materialized. Validation and both holdouts remained closed.
 
-The official matrix contains ${summary.matrices.quality_runs} non-diagnostic quality runs and ${summary.matrices.diagnostic_runs} diagnostic twins. All diagnostic pairs, node ledgers, catalog identities, run keys, and frozen raw hashes passed validation.
+The official matrix contains ${summary.matrices.quality_runs} non-diagnostic quality runs and ${summary.matrices.diagnostic_runs} diagnostic twins. All ${summary.accounting.diagnostic_pairs} pairs matched; ${summary.accounting.ledger_runs} runs exposed and passed full node-ledger reconciliation, while ${summary.accounting.no_solution_pairs} deterministic no-solution pair(s) were explicitly recorded with unavailable ledger telemetry. Catalog identities, run keys, and frozen raw hashes passed validation.
 
 ## Existing-policy controls at 1M
 
@@ -785,6 +803,8 @@ async function analyze(artifactDir, outDir) {
   const preManifest = await validateFrozenManifest(artifactDir);
   const { reports, diagnosticReports, catalogSHA } = await loadReports(artifactDir);
   let pairedRuns = 0;
+  let ledgerRuns = 0;
+  let noSolutionPairs = 0;
   const phaseRows = [];
   for (const variant of reports.keys()) {
     const quality = indexRuns(reports.get(variant));
@@ -793,7 +813,9 @@ async function analyze(artifactDir, outDir) {
       const diagnosticRun = diagnostic.get(key);
       if (!diagnosticRun) throw new Error(`missing diagnostic twin ${variant} ${key}`);
       validateDiagnosticPair(qualityRun, diagnosticRun);
-      validateAccounting(diagnosticRun);
+      const accounting = validateAccounting(diagnosticRun);
+      if (accounting.status === "PASS") ledgerRuns += 1;
+      else noSolutionPairs += 1;
       pairedRuns += 1;
       phaseRows.push(...phaseRowsForRun(diagnosticRun, variant));
     }
@@ -826,7 +848,7 @@ async function analyze(artifactDir, outDir) {
     corpus: { role: "development", cases: EXPECTED_CASES, validation_materialized: false, public_holdout_materialized: false, private_holdout_materialized: false },
     matrices: { quality_runs: [...reports.values()].reduce((sum, report) => sum + report.runs.length, 0), diagnostic_runs: [...diagnosticReports.values()].reduce((sum, report) => sum + report.runs.length, 0), paired_runs: pairedRuns },
     raw_manifest: preManifest,
-    accounting: { status: "PASS", diagnostic_pairs: pairedRuns, ledger_runs: pairedRuns },
+    accounting: { status: "PASS", diagnostic_pairs: pairedRuns, ledger_runs: ledgerRuns, no_solution_pairs: noSolutionPairs },
     control_summaries: controlSummaries,
     phase_summary: phases,
     repair_evidence: repair,
@@ -846,7 +868,7 @@ async function analyze(artifactDir, outDir) {
   await writeFile(path.join(outDir, "candidate-shortlist.csv"), csv(shortlist), "utf8");
   await writeFile(path.join(outDir, "decision.json"), `${JSON.stringify(decision, null, 2)}\n`, "utf8");
   await writeFile(path.join(outDir, "e1a-findings.generated.md"), findingsMarkdown(summary), "utf8");
-  await writeFile(path.join(outDir, "accounting-validation.txt"), `status=PASS\nbaseline_sha=${EXPECTED_SHA}\ndiagnostic_pairs=${pairedRuns}\nledger_runs=${pairedRuns}\nquality_runs=${summary.matrices.quality_runs}\ndiagnostic_runs=${summary.matrices.diagnostic_runs}\nvalidation_materialized=false\npublic_holdout_materialized=false\nprivate_holdout_materialized=false\n`, "utf8");
+  await writeFile(path.join(outDir, "accounting-validation.txt"), `status=PASS\nbaseline_sha=${EXPECTED_SHA}\ndiagnostic_pairs=${pairedRuns}\nledger_runs=${ledgerRuns}\nno_solution_pairs=${noSolutionPairs}\nquality_runs=${summary.matrices.quality_runs}\ndiagnostic_runs=${summary.matrices.diagnostic_runs}\nvalidation_materialized=false\npublic_holdout_materialized=false\nprivate_holdout_materialized=false\n`, "utf8");
   const postManifest = await validateFrozenManifest(artifactDir);
   if (!sameJSON(preManifest, postManifest)) throw new Error("raw manifest changed during analysis");
   await writeFile(path.join(outDir, "post-analysis-validation.txt"), `status=PASS\nraw_file_count=${postManifest.raw_file_count}\nraw_bytes=${postManifest.raw_bytes}\nraw_manifest_sha256=${postManifest.manifest_sha256}\npost_freeze_solver_runs=0\n`, "utf8");

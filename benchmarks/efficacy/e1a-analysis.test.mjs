@@ -38,6 +38,16 @@ test("diagnostic twins must preserve deterministic quality fields", () => {
   assert.throws(() => validateDiagnosticPair(quality, diagnostic), /canonical hash/);
 });
 
+test("paired no-solution outcomes are accepted but outcome drift is rejected", () => {
+  const quality = pairedRun(false);
+  const diagnostic = pairedRun(false);
+  quality.error = "no solutions found";
+  diagnostic.error = "no solutions found";
+  assert.equal(validateDiagnosticPair(quality, diagnostic), true);
+  delete diagnostic.error;
+  assert.throws(() => validateDiagnosticPair(quality, diagnostic), /run outcome/);
+});
+
 test("isolated v4 direct evidence outranks every indirect family", () => {
   const decision = classifyDecision({
     controlSummaries: [
